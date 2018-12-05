@@ -1,0 +1,19 @@
+{
+    "name": "joint-usq-jk",
+    "port": 3017,
+    "database": "joint-usq-jk",
+    "secret": "dddd-wwww",
+    "testGitIgnore": "ignore1",
+
+    "mysqlConn.do": {
+        "host": "do.thplay.cn",
+        "user": "root",
+        "password": "MySql688283^&&&(("
+    },
+
+    "mysqlConn": {
+        "host": "101.200.46.56",
+        "user": "root",
+        "password": "wpmKMPS2xwlG3ZC"
+    }
+}
