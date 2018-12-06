@@ -1,3 +1,4 @@
+import { map } from "./map";
 
 export const consts = {
     unit: 24,
@@ -6,6 +7,7 @@ export const consts = {
     ],
 }
 
-export async function saveTuid(tuid:string, data:any):Promise<number> {
-    return 0;
+export async function saveTuid(tuid:string, no:string, data:any):Promise<void> {
+    let id = 33;
+    await map(tuid, id, no);
 }

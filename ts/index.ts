@@ -22,6 +22,12 @@ import { startTimer } from './joint/timer';
             error: err
         });
     });
+    app.use(async (req:express.Request, res:express.Response, next:express.NextFunction) => {
+        let s= req.socket;
+        console.log('%s:%s - %s %s', s.remoteAddress, s.remotePort, req.method, req.originalUrl);
+        console.log(req.headers);
+        console.log(req.body);
+    });
     app.use(bodyParser.json());
     app.use(cors());
     app.set('json replacer', (key:string, value:any) => {

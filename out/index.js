@@ -32,6 +32,12 @@ const timer_1 = require("./joint/timer");
             error: err
         });
     });
+    app.use(async (req, res, next) => {
+        let s = req.socket;
+        console.log('%s:%s - %s %s', s.remoteAddress, s.remotePort, req.method, req.originalUrl);
+        console.log(req.headers);
+        console.log(req.body);
+    });
     app.use(bodyParser.json());
     app.use(cors_1.default());
     app.set('json replacer', (key, value) => {
