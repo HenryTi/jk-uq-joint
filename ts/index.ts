@@ -12,7 +12,6 @@ import { startTimer } from './joint/timer';
         console.log("mysql connection must defined in config/default.json or config/production.json");
         return;
     }
-    //var cors = require('cors');
     let app = express();
 
     app.use((err:any, req:Request, res:Response, next:NextFunction) => {
@@ -21,12 +20,6 @@ import { startTimer } from './joint/timer';
             message: err.message,
             error: err
         });
-    });
-    app.use(async (req:express.Request, res:express.Response, next:express.NextFunction) => {
-        let s= req.socket;
-        console.log('%s:%s - %s %s', s.remoteAddress, s.remotePort, req.method, req.originalUrl);
-        console.log(req.headers);
-        console.log(req.body);
     });
     app.use(bodyParser.json());
     app.use(cors());

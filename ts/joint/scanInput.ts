@@ -9,7 +9,7 @@ export async function scanInput() {
             if (!retp || retp.length === 0) break;
             let {id, body, date} = retp[0];
             let func = inputs[i];
-            await func(body);
+            let stamp = await func(body);
             console.log(`process in ${id} ${(date as Date).toLocaleString()}: `, body);
             await execProc('write_queue_in_p', [i, id]);
         }

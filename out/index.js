@@ -23,7 +23,6 @@ const timer_1 = require("./joint/timer");
         console.log("mysql connection must defined in config/default.json or config/production.json");
         return;
     }
-    //var cors = require('cors');
     let app = express_1.default();
     app.use((err, req, res, next) => {
         res.status(err.status || 500);
@@ -31,12 +30,6 @@ const timer_1 = require("./joint/timer");
             message: err.message,
             error: err
         });
-    });
-    app.use(async (req, res, next) => {
-        let s = req.socket;
-        console.log('%s:%s - %s %s', s.remoteAddress, s.remotePort, req.method, req.originalUrl);
-        console.log(req.headers);
-        console.log(req.body);
     });
     app.use(bodyParser.json());
     app.use(cors_1.default());
