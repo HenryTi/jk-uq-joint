@@ -51,11 +51,15 @@ exports.getNetIp = getNetIp;
 ;
 const myIps = ['1', '::1', '127.0.0.1', '::ffff:127.0.0.1'];
 function validIp(regIp, ips) {
-    for (let ip of ips) {
-        if (myIps.find(v => v === ip) !== undefined)
-            return true;
-        if (ip === regIp)
-            return true;
+    if (typeof regIp === 'string')
+        regIp = [regIp];
+    for (let ri of regIp) {
+        for (let ip of ips) {
+            if (myIps.find(v => v === ip) !== undefined)
+                return true;
+            if (ip === ri)
+                return true;
+        }
     }
     return false;
 }

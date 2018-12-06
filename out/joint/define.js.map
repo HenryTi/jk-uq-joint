@@ -1,1 +1,1 @@
-{"version":3,"file":"define.js","sourceRoot":"","sources":["../../ts/joint/define.ts"],"names":[],"mappings":";;AAAa,QAAA,MAAM,GAAG;IAClB,IAAI,EAAE,EAAE;IACR,SAAS,EAAE,EAAE;CAChB,CAAA"}
+{"version":3,"file":"define.js","sourceRoot":"","sources":["../../ts/joint/define.ts"],"names":[],"mappings":";;AAAa,QAAA,MAAM,GAAG;IAClB,IAAI,EAAE,EAAE;IACR,SAAS,EAAE;QACP,iBAAiB;KACpB;CACJ,CAAA"}
