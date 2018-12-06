@@ -10,8 +10,17 @@ const moniker = {
         "UNIQUE INDEX moniker_id(`moniker`, `id`)",
     ],
 };
-const queue = {
-    name: 'queue',
+const queueIn = {
+    name: 'queue_in',
+    code: [
+        "`id` BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY",
+        "`moniker` INT NOT NULL",
+        "`body` TEXT NOT NULL",
+        "date TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+    ]
+};
+const queueOut = {
+    name: 'queue_out',
     code: [
         "`id` BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY",
         "`moniker` INT NOT NULL",
@@ -29,6 +38,6 @@ const faceProcessed = {
     ]
 };
 exports.default = [
-    moniker, queue, faceProcessed
+    moniker, queueIn, queueOut, faceProcessed
 ];
 //# sourceMappingURL=queue.js.map

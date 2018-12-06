@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { getIp, getNetIp, getClientIp } from "./getIp";
 
-export async function readBus(req: Request, res: Response) {
+export async function busPage(req: Request, res: Response) {
     res.writeHead(200, {
         'Content-Type': 'text/html; charset=utf-8'
     });

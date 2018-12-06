@@ -3,22 +3,31 @@ import {Procedure} from '../tool';
 const readQueue:Procedure = {
     name: 'read_queue',
     params: [
+        "_inOut tinyint", 
         "_moniker varchar(200)",
         "_queue bigint",
     ],
     label: '_exit',
     code:
 `
-    select a.id, b.moniker, a.boday
-        from queue a join moniker b on a.moniker=b.id
+    if _inOut=1 then
+        select a.id as \`queue\`, b.moniker, a.body as \`data\`
+            from queue_in a join moniker b on a.moniker=b.id
+            where b.moniker=_moniker and a.id>_queue
+            limit 1;
+    else
+        select a.id as \`queue\`, b.moniker, a.body as \`data\`
+        from queue_out a join moniker b on a.moniker=b.id
         where b.moniker=_moniker and a.id>_queue
         limit 1;
+    end if;
 `
 }
 
 const writeQueue:Procedure = {
     name: 'write_queue',
     params: [
+        "_inOut tinyint", 
         "_moniker varchar(200)",
         "_body text"
     ],
@@ -31,7 +40,11 @@ const writeQueue:Procedure = {
         insert into moniker (moniker) values (_moniker);
         set _monikerId=last_insert_id();
     end if;
-    insert into queue (moniker, body) values (_monikerId, _body);
+    if _inOut=1 then
+        insert into queue_in (moniker, body) values (_monikerId, _body);
+    else
+        insert into queue_out (moniker, body) values (_monikerId, _body);
+    end if;
 `
 }
 

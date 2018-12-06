@@ -5,23 +5,22 @@ const express_1 = require("express");
 //import { consts } from '../../core';
 //import { writeDataToBus } from '../../queue/processBusMessage';
 const getIp_1 = require("./getIp");
-const readBus_1 = require("./readBus");
-const writeBus_1 = require("./writeBus");
-const allowedIP = '';
-const unit = 24;
+const busPage_1 = require("./busPage");
+const busExchange_1 = require("./busExchange");
+const define_1 = require("./define");
 exports.router = express_1.Router({ mergeParams: true });
 exports.router.get('/', async (req, res) => {
-    await routerProcess(req, res, readBus_1.readBus);
+    await routerProcess(req, res, busPage_1.busPage);
 });
 exports.router.post('/', async (req, res) => {
-    await routerProcess(req, res, writeBus_1.writeBus);
+    await routerProcess(req, res, busExchange_1.busExchange);
 });
 async function routerProcess(req, res, action) {
     try {
         let reqIP = getIp_1.getClientIp(req);
         let innerIP = getIp_1.getIp(req);
         let netIP = getIp_1.getNetIp(req);
-        if (getIp_1.validIp(allowedIP, [innerIP, netIP]) === false) {
+        if (getIp_1.validIp(define_1.define.allowedIP, [innerIP, netIP]) === false) {
             res.end('<div>Your IP ' + (netIP || innerIP || reqIP) + ' is not valid!</div>');
             return;
         }
