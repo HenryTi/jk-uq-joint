@@ -55,10 +55,10 @@ const timer_1 = require("./joint/timer");
     app.use('/joint-usq-jk', joint_1.router);
     let port = config_1.default.get('port');
     app.listen(port, async () => {
-        timer_1.startTimer();
         console.log('USQL-API listening on port ' + port);
         let { host, user } = connection;
         console.log('process.env.NODE_ENV: %s\nDB host: %s, user: %s', process.env.NODE_ENV, host, user);
+        await timer_1.startTimer();
     });
 })();
 //# sourceMappingURL=index.js.map

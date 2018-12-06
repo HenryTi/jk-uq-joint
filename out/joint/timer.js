@@ -2,8 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const scanInput_1 = require("./scanInput");
 const scanUsq_1 = require("./scanUsq");
+const createMapTables_1 = require("./tool/createMapTables");
 const interval = 60 * 1000;
-function startTimer() {
+async function startTimer() {
+    await createMapTables_1.createMapTables();
     setTimeout(tick, 3 * 1000);
 }
 exports.startTimer = startTimer;

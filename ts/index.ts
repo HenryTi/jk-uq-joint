@@ -46,13 +46,13 @@ import { startTimer } from './joint/timer';
 
     let port = config.get<number>('port');
     app.listen(port, async ()=>{
-        startTimer();
         console.log('USQL-API listening on port ' + port);
         let {host, user} = connection;
         console.log('process.env.NODE_ENV: %s\nDB host: %s, user: %s',
             process.env.NODE_ENV,
             host,
             user);
+        await startTimer();
     });
 })();
 
