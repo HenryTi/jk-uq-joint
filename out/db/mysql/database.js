@@ -12,4 +12,8 @@ exports.createDatabase = 'CREATE DATABASE IF NOT EXISTS `'
     + exports.databaseName
     + '` default CHARACTER SET utf8 COLLATE utf8_unicode_ci;';
 exports.useDatabase = 'USE `' + exports.databaseName + '`;';
+function alterTableIncrement(tbl, inc) {
+    return `ALTER TABLE \`${exports.databaseName}\`.\`${tbl}\` auto_increment=${inc}`;
+}
+exports.alterTableIncrement = alterTableIncrement;
 //# sourceMappingURL=database.js.map

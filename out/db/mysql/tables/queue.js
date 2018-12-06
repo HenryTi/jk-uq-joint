@@ -28,16 +28,16 @@ const queueOut = {
         "date TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
     ]
 };
-const faceProcessed = {
-    name: 'face_processed',
+const queueP = {
+    name: 'queue_p',
     code: [
-        "face INT NOT NULL",
-        "queue BIGINT NOT NULL DEFAULT 0",
-        "flag TINYINT",
-        "PRIMARY KEY(face, queue)"
+        "moniker INT NOT NULL",
+        "queue_in BIGINT NOT NULL DEFAULT 0",
+        "queue_out BIGINT NOT NULL DEFAULT 0",
+        "PRIMARY KEY(moniker)"
     ]
 };
 exports.default = [
-    moniker, queueIn, queueOut, faceProcessed
+    moniker, queueIn, queueOut, queueP
 ];
 //# sourceMappingURL=queue.js.map

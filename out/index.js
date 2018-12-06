@@ -15,6 +15,7 @@ const bodyParser = __importStar(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
 const config_1 = __importDefault(require("config"));
 const joint_1 = require("./joint");
+const timer_1 = require("./joint/timer");
 (async function () {
     console.log(process.env.NODE_ENV);
     let connection = config_1.default.get("mysqlConn");
@@ -54,6 +55,7 @@ const joint_1 = require("./joint");
     app.use('/joint-usq-jk', joint_1.router);
     let port = config_1.default.get('port');
     app.listen(port, async () => {
+        timer_1.startTimer();
         console.log('USQL-API listening on port ' + port);
         let { host, user } = connection;
         console.log('process.env.NODE_ENV: %s\nDB host: %s, user: %s', process.env.NODE_ENV, host, user);

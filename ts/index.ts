@@ -3,6 +3,7 @@ import * as bodyParser from 'body-parser';
 import cors from 'cors';
 import config from 'config';
 import {router as jointRouter} from './joint';
+import { startTimer } from './joint/timer';
 
 (async function () {
     console.log(process.env.NODE_ENV);
@@ -45,6 +46,7 @@ import {router as jointRouter} from './joint';
 
     let port = config.get<number>('port');
     app.listen(port, async ()=>{
+        startTimer();
         console.log('USQL-API listening on port ' + port);
         let {host, user} = connection;
         console.log('process.env.NODE_ENV: %s\nDB host: %s, user: %s',

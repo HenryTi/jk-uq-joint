@@ -11,3 +11,7 @@ export const createDatabase = 'CREATE DATABASE IF NOT EXISTS `'
     + '` default CHARACTER SET utf8 COLLATE utf8_unicode_ci;';
 
 export const useDatabase = 'USE `' + databaseName + '`;';
+
+export function alterTableIncrement(tbl:string, inc:number):string {
+    return `ALTER TABLE \`${ databaseName}\`.\`${tbl}\` auto_increment=${inc}`
+}

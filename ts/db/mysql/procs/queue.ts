@@ -1,5 +1,19 @@
 import {Procedure} from '../tool';
 
+const readQueueOutP:Procedure = {
+    name: 'read_queue_out_p',
+    params: [
+        "_moniker varchar(200)",
+    ],
+    label: '_exit',
+    code:
+`
+    select a.queue_out as queue
+        from queue_p a join moniker b on a.moniker=b.id
+        where b.moniker=_moniker;
+`
+}
+
 const readQueue:Procedure = {
     name: 'read_queue',
     params: [
@@ -24,10 +38,9 @@ const readQueue:Procedure = {
 `
 }
 
-const writeQueue:Procedure = {
-    name: 'write_queue',
+const writeQueueIn:Procedure = {
+    name: 'write_queue_in',
     params: [
-        "_inOut tinyint", 
         "_moniker varchar(200)",
         "_body text"
     ],
@@ -40,43 +53,107 @@ const writeQueue:Procedure = {
         insert into moniker (moniker) values (_moniker);
         set _monikerId=last_insert_id();
     end if;
-    if _inOut=1 then
-        insert into queue_in (moniker, body) values (_monikerId, _body);
-    else
-        insert into queue_out (moniker, body) values (_monikerId, _body);
+    insert into queue_in (moniker, body) values (_monikerId, _body);
+`
+}
+
+const writeQueueOut:Procedure = {
+    name: 'write_queue_out',
+    params: [
+        "_moniker varchar(200)",
+        "_queue bigint",
+        "_body text"
+    ],
+    label: '_exit',
+    code:
+`
+    declare _monikerId int;
+    select a.id into _monikerId from moniker as a where a.moniker=_moniker;
+    if _monikerId is null then
+        insert into moniker (moniker) values (_moniker);
+        set _monikerId=last_insert_id();
     end if;
+    insert into queue_out (moniker, body) values (_monikerId, _body);
+    insert into queue_p(moniker, queue_out)
+        values (_monikerId, _queue)
+        on duplicate key update queue_out=_queue;
 `
 }
 
-const readFaceProcessed:Procedure = {
-    name: 'read_face_processed',
+const readQueueIn:Procedure = {
+    name: 'read_queue_in',
     params: [
-        "_face varchar(200)",
+        "_moniker varchar(200)",
     ],
     label: '_exit',
     code:
 `
-    select a.queue
-        from face_processed a join moniker b on a.face=b.id
-        where b.moniker=_face;
+    declare _monikerId int;
+    declare _queue bigint;
+    select id into _monikerId from moniker where moniker=_moniker;
+    if _monikerId is null then
+        leave _exit;
+    end if;
+
+    select queue_in into _queue from queue_p where moniker=_monikerId;
+    if _queue is null then
+        set _queue=0;
+    end if;
+
+    select a.id, a.body, a.date
+        from queue_in a
+        where a.moniker=_monikerId
+            and a.id>_queue
+        limit 1;
 `
 }
 
-const writeFaceProcessed:Procedure = {
-    name: 'write_face_processed',
+const readQueueOut:Procedure = {
+    name: 'read_queue_out',
     params: [
-        "_face varchar(200)",
-        "_queue BIGINT"
+        "_moniker varchar(200)",
+        "_queue bigint"
     ],
     label: '_exit',
     code:
 `
-    declare _faceId int;
-    select a.id into _faceId from moniker as a where a.moniker=_face;
-    insert into face_processed (face, queue)
-        values (_faceId, _queue)
-        on duplicate key update ex=0;
+    declare _monikerId int;
+    select id into _monikerId from moniker where moniker=_moniker;
+    if _monikerId is null then
+        leave _exit;
+    end if;
+
+    if _queue is null then
+        set _queue=0;
+    end if;
+
+    select a.id, a.body, a.date
+        from queue_out a
+        where a.moniker=_monikerId
+            and a.id>_queue
+        limit 1;
 `
 }
 
-export default [readQueue, writeQueue, readFaceProcessed, writeFaceProcessed];
+const writeQueueInP:Procedure = {
+    name: 'write_queue_in_p',
+    params: [
+        "_moniker varchar(200)",
+        "_queue BIGINT",
+    ],
+    label: '_exit',
+    code:
+`
+    declare _monikerId int;
+    select a.id into _monikerId from moniker as a where a.moniker=_moniker;
+    insert into queue_p (moniker, queue_in)
+        values (_monikerId, _queue)
+        on duplicate key update queue_in=_queue;
+`
+}
+
+export default [
+    readQueueOutP, readQueue, 
+    writeQueueIn, writeQueueOut,
+    readQueueIn, readQueueOut, writeQueueInP
+];

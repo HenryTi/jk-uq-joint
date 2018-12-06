@@ -1,0 +1,1 @@
+{"version":3,"file":"product.js","sourceRoot":"","sources":["../../../ts/joint/inputs/product.ts"],"names":[],"mappings":";;AAAA,uCAAwC;AACxC,qCAAkC;AAE3B,KAAK,UAAU,OAAO,CAAC,IAAQ;IAClC,IAAI,EAAE,GAAG,IAAI,CAAC,IAAI,CAAC,CAAC;IACpB,IAAI,EAAE,GAAG,MAAM,eAAQ,CAAC,SAAS,EAAE,IAAI,CAAC,CAAC;IACzC,MAAM,SAAG,CAAC,SAAS,EAAE,EAAE,EAAE,EAAE,CAAC,CAAC;AACjC,CAAC;AAJD,0BAIC"}
