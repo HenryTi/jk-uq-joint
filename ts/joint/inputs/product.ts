@@ -1,12 +1,11 @@
-import { saveTuid } from "../tool/tuid";
+import { saveTuid, Mapper } from "../tool/tuid";
 
 export async function product(data:any):Promise<number> {
-    // tranfer data, no => id
-    let key = data['no'] || '333';
-    let pk = data['packType'];
-    let body = {
-        discription: 'kkk',
-        packType: {tuid:'packType', val:pk},
+    let mapper: Mapper = {
+        $key: 'no',
+        $import: 'all',
+        discription: 'disc',
+        packType: 'pk@packType',
     };
-    return await saveTuid('product', key, body);
+    return await saveTuid('product', data, mapper);
 }

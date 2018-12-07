@@ -21,20 +21,60 @@ function getUsqFromTuid(tuid) {
     }
     return;
 }
-async function saveTuid(tuid, key, data) {
-    for (let i in data) {
-        let prop = data[i];
-        if (typeof prop === 'object') {
-            let propId = await getTuidId(prop.tuid, prop.val);
-            data[i] = propId;
+async function saveTuid(tuid, data, mapper) {
+    let { $key, $import } = mapper;
+    let key = data[$key];
+    if (key === undefined)
+        throw 'key is not defined';
+    let body = {};
+    async function setFromProp(from, prop) {
+        let pos = prop.indexOf('@');
+        if (pos < 0) {
+            body[prop] = data[from];
+        }
+        else {
+            let v = prop.substr(0, pos);
+            let tuid = prop.substr(pos + 1);
+            let val = data[from];
+            let propId = await getTuidId(tuid, val);
+            data[from] = propId;
+        }
+    }
+    if ($import === 'all') {
+        for (let i in data) {
+            let prop = mapper[i];
+            if (prop === undefined) {
+                body[i] = data[i];
+            }
+            else if (prop === true) {
+                body[i] = data[i];
+            }
+            else {
+                await setFromProp(i, prop);
+            }
+        }
+    }
+    else {
+        for (let i in mapper) {
+            if (i === '$key')
+                continue;
+            if (i === '$import')
+                continue;
+            let prop = mapper[i];
+            if (prop === true) {
+                body[i] = data[i];
+            }
+            else {
+                await setFromProp(i, prop);
+            }
         }
     }
     let usq = getUsqFromTuid(tuid);
     if (usq === undefined)
         throw 'tuid ' + tuid + ' not defined';
     let openApi = await openApi_1.getOpenApi(usq, settings_1.settings.unit);
-    let ret = await openApi.saveTuid(tuid, data);
-    let { id, inId, stamp } = ret;
+    let ret = await openApi.saveTuid(tuid, body);
+    let { id, inId } = ret;
     if (id < 0)
         id = -id;
     await map_1.map(tuid, id, key);

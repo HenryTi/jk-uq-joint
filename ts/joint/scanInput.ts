@@ -1,5 +1,6 @@
 import { inputs } from './inputs';
 import { execProc, tableFromProc } from '../db/mysql/tool';
+import { saveTuid } from './tool';
 
 export async function scanInput() {
     for (let i in inputs) {
@@ -9,7 +10,10 @@ export async function scanInput() {
             if (!retp || retp.length === 0) break;
             let {id, body, date} = retp[0];
             let func = inputs[i];
-            let stamp = await func(body);
+            if (typeof func === 'function')
+                await func(body);
+            else
+                await saveTuid(i, body, func);
             console.log(`process in ${id} ${(date as Date).toLocaleString()}: `, body);
             await execProc('write_queue_in_p', [i, id]);
         }

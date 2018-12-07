@@ -2,14 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const tuid_1 = require("../tool/tuid");
 async function product(data) {
-    // tranfer data, no => id
-    let key = data['no'] || '333';
-    let pk = data['packType'];
-    let body = {
-        discription: 'kkk',
-        packType: { tuid: 'packType', val: pk },
+    let mapper = {
+        $key: 'no',
+        $import: 'all',
+        discription: 'disc',
+        packType: 'pk@packType',
     };
-    return await tuid_1.saveTuid('product', key, body);
+    return await tuid_1.saveTuid('product', data, mapper);
 }
 exports.product = product;
 //# sourceMappingURL=product.js.map
