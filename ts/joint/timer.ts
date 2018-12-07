@@ -1,11 +1,9 @@
 import { scanInput } from "./scanInput";
 import { scanUsq } from "./scanUsq";
-import { createMapTables } from "./tool/createMapTables";
 
 const interval = 60*1000;
 
 export async function startTimer() {
-    await createMapTables();
     setTimeout(tick, 3*1000);
 }
 

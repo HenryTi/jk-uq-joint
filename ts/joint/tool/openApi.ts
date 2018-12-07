@@ -1,9 +1,14 @@
-import fetch from "node-fetch";
+import fetch, { Headers } from "node-fetch";
 import { Fetch } from "./fetch";
 import { centerApi } from "./centerApi";
 import { urlSetUsqHost, urlSetUnitxHost } from "./setHostUrl";
+import { settings } from "../settings";
 
 export class OpenApi extends Fetch {
+    protected appendHeaders(headers:Headers) {
+        headers.append('unit', String(settings.unit));
+    }
+
     async fresh(unit:number, stamps:any):Promise<any> {
         let ret = await this.post('open/fresh', {
             unit: unit,
@@ -27,8 +32,12 @@ export class OpenApi extends Fetch {
         });
         return ret;
     }
-    async saveTuid(tuid:string, unit:number, data:any):Promise<any> {
+    async saveTuid(tuid:string, data:any):Promise<any> {
         let ret = await this.post('joint/tuid/' + tuid, data);
+        return ret;
+    }
+    async getTuidVId(tuid:string):Promise<number> {
+        let ret = await this.get('joint/tuid/' + tuid);
         return ret;
     }
 }

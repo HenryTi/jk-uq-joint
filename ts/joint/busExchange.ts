@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { consts } from "./tool/tool";
+import { settings } from "./settings";
 import { execProc, tableFromProc, execSql } from "../db/mysql/tool";
 import { alterTableIncrement } from "../db/mysql/database";
 

@@ -31,16 +31,16 @@ class Fetch {
     async post(url, params) {
         return await this.innerFetch(url, 'POST', params);
     }
+    appendHeaders(headers) {
+    }
     async innerFetch(url, method, body) {
         console.log('innerFetch ' + method + '  ' + this.baseUrl + url);
         var headers = new node_fetch_1.Headers();
         headers.append('Accept', 'application/json'); // This one is enough for GET requests
         headers.append('Content-Type', 'application/json'); // This one sends body
+        this.appendHeaders(headers);
         let res = await node_fetch_1.default(encodeURI(this.baseUrl + url), {
-            headers: {
-                "Content-Type": 'application/json',
-                "Accept": 'application/json',
-            },
+            headers: headers,
             method: method,
             body: JSON.stringify(body),
         });

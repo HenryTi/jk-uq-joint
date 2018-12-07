@@ -7,11 +7,22 @@ const node_fetch_1 = __importDefault(require("node-fetch"));
 const fetch_1 = require("./fetch");
 const centerApi_1 = require("./centerApi");
 const setHostUrl_1 = require("./setHostUrl");
+const settings_1 = require("../settings");
 class OpenApi extends fetch_1.Fetch {
+    appendHeaders(headers) {
+        headers.append('unit', String(settings_1.settings.unit));
+    }
     async fresh(unit, stamps) {
         let ret = await this.post('open/fresh', {
             unit: unit,
             stamps: stamps
+        });
+        return ret;
+    }
+    async bus(faces, faceUnitMessages) {
+        let ret = await this.post('open/bus', {
+            faces: faces,
+            faceUnitMessages: faceUnitMessages,
         });
         return ret;
     }
@@ -24,11 +35,12 @@ class OpenApi extends fetch_1.Fetch {
         });
         return ret;
     }
-    async bus(faces, faceUnitMessages) {
-        let ret = await this.post('open/bus', {
-            faces: faces,
-            faceUnitMessages: faceUnitMessages,
-        });
+    async saveTuid(tuid, data) {
+        let ret = await this.post('joint/tuid/' + tuid, data);
+        return ret;
+    }
+    async getTuidVId(tuid) {
+        let ret = await this.get('joint/tuid/' + tuid);
         return ret;
     }
 }

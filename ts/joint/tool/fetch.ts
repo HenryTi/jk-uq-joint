@@ -25,20 +25,24 @@ export abstract class Fetch {
         return await this.innerFetch(url, 'POST', params);
     }
 
+    protected appendHeaders(headers:Headers) {
+    }
+
     private async innerFetch(url: string, method:string, body?:any): Promise<any> {
         console.log('innerFetch ' + method + '  ' + this.baseUrl + url);
         var headers = new Headers();
         headers.append('Accept', 'application/json'); // This one is enough for GET requests
         headers.append('Content-Type', 'application/json'); // This one sends body
+        this.appendHeaders(headers);
         let res = await fetch(
             encodeURI(this.baseUrl + url), 
             {
-                headers: {
+                headers: headers, /*{
                     "Content-Type": 'application/json',
                     "Accept": 'application/json',
                     //"Authorization": 'this.apiToken',
                     //"Access-Control-Allow-Origin": '*'
-                },
+                },*/
                 method: method,
                 body: JSON.stringify(body),
             }

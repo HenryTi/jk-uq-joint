@@ -5,7 +5,7 @@ import {Router, Request, Response, NextFunction} from 'express';
 import { getClientIp, getIp, getNetIp, validIp } from './getIp';
 import { busPage } from './busPage';
 import { busExchange } from './busExchange';
-import { consts } from './tool/tool';
+import { settings } from './settings';
 
 export const router: Router = Router({ mergeParams: true });
 
@@ -24,7 +24,7 @@ async function routerProcess(req: Request, res: Response,
         let reqIP = getClientIp(req);
         let innerIP = getIp(req);
         let netIP = getNetIp(req);
-        if (validIp(consts.allowedIP, [innerIP, netIP]) === false) {
+        if (validIp(settings.allowedIP, [innerIP, netIP]) === false) {
             res.end('<div>Your IP ' + (netIP || innerIP || reqIP) + ' is not valid!</div>');
             return;
         }
