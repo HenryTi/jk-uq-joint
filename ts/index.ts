@@ -2,7 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import * as bodyParser from 'body-parser';
 import cors from 'cors';
 import config from 'config';
-import {router as jointRouter} from './joint';
+import {router as jointRouter} from './joint/router';
 import { startTimer } from './joint/timer';
 
 (async function () {

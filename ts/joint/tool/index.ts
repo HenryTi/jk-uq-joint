@@ -1,1 +1,1 @@
-export * from './tuid';
+export * from './saveTuid';

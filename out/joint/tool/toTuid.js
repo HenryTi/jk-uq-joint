@@ -6,6 +6,7 @@ const openApi_1 = require("./openApi");
 const database_1 = require("../../db/mysql/database");
 const tool_1 = require("../../db/mysql/tool");
 const createMapTable_1 = require("./createMapTable");
+const convert_1 = require("./convert");
 const tuidUsq = {};
 function getUsqFromTuid(tuid) {
     let usq = tuidUsq[tuid];
@@ -22,57 +23,11 @@ function getUsqFromTuid(tuid) {
     return;
 }
 async function saveTuid(tuid, data, mapper) {
-    let { $key, $import } = mapper;
+    let { $key } = mapper;
     let key = data[$key];
     if (key === undefined)
         throw 'key is not defined';
-    let body = {};
-    async function setFromProp(from, prop) {
-        let pos = prop.indexOf('@');
-        if (pos < 0) {
-            body[prop] = data[from];
-        }
-        else {
-            let v = prop.substr(0, pos);
-            let tuid = prop.substr(pos + 1);
-            let val = data[from];
-            let propId = await getTuidId(tuid, val);
-            body[v] = propId;
-        }
-    }
-    if ($import === 'all') {
-        for (let i in data) {
-            let prop = mapper[i];
-            if (prop === undefined) {
-                body[i] = data[i];
-            }
-            else if (prop === true) {
-                body[i] = data[i];
-            }
-            else if (prop === false) {
-            }
-            else {
-                await setFromProp(i, prop);
-            }
-        }
-    }
-    else {
-        for (let i in mapper) {
-            if (i === '$key')
-                continue;
-            if (i === '$import')
-                continue;
-            let prop = mapper[i];
-            if (prop === true) {
-                body[i] = data[i];
-            }
-            else if (prop === false) {
-            }
-            else {
-                await setFromProp(i, prop);
-            }
-        }
-    }
+    let body = await convert_1.convert(data, mapper, convertTo);
     let usq = getUsqFromTuid(tuid);
     if (usq === undefined)
         throw 'tuid ' + tuid + ' not defined';
@@ -85,6 +40,21 @@ async function saveTuid(tuid, data, mapper) {
     return id;
 }
 exports.saveTuid = saveTuid;
+async function convertTo(prop, value) {
+    let pos = prop.indexOf('@');
+    if (pos < 0) {
+        //body[prop] = value; // data[from];
+        return { p: prop, val: value };
+    }
+    else {
+        let v = prop.substr(0, pos);
+        let tuid = prop.substr(pos + 1);
+        //let val = data[from];
+        let propId = await getTuidId(tuid, value);
+        //body[v] = propId;
+        return { p: v, val: propId };
+    }
+}
 async function getTuidId(tuid, key) {
     let sql = `select id from \`${database_1.databaseName}\`.map_${tuid} where no='${key}'`;
     let ret;
@@ -106,4 +76,4 @@ async function getTuidId(tuid, key) {
     }
     return ret[0]['id'];
 }
-//# sourceMappingURL=tuid.js.map
+//# sourceMappingURL=toTuid.js.map

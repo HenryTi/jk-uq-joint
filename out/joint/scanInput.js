@@ -12,10 +12,11 @@ async function scanInput() {
                 break;
             let { id, body, date } = retp[0];
             let func = inputs_1.inputs[i];
+            let data = JSON.parse(body);
             if (typeof func === 'function')
-                await func(body);
+                await func(data);
             else
-                await tool_2.saveTuid(i, body, func);
+                await tool_2.saveTuid(i, data, func);
             console.log(`process in ${id} ${date.toLocaleString()}: `, body);
             await tool_1.execProc('write_queue_in_p', [i, id]);
         }

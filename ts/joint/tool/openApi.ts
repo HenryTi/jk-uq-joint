@@ -37,7 +37,7 @@ export class OpenApi extends Fetch {
         return ret;
     }
     async getTuidVId(tuid:string):Promise<number> {
-        let ret = await this.get('joint/tuid/' + tuid);
+        let ret = await this.get('joint/tuid-vid/' + tuid);
         return ret;
     }
 }

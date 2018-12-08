@@ -9,6 +9,7 @@ exports.settings = {
     usqs: {
         'JKDev/jkProduct': [
             'product',
+            'packType',
         ]
     }
 };

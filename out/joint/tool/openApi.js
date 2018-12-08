@@ -40,7 +40,7 @@ class OpenApi extends fetch_1.Fetch {
         return ret;
     }
     async getTuidVId(tuid) {
-        let ret = await this.get('joint/tuid/' + tuid);
+        let ret = await this.get('joint/tuid-vid/' + tuid);
         return ret;
     }
 }

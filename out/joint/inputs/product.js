@@ -1,14 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const tuid_1 = require("../tool/tuid");
+const saveTuid_1 = require("../tool/saveTuid");
 async function product(data) {
     let mapper = {
         $key: 'no',
-        $import: 'all',
-        discription: 'disc',
-        packType: 'pk@packType',
+        // $import: 'all',
+        discription: 'discription',
+        packType: 'packType@packType',
+        a: false,
+        b: true,
+        c: true,
     };
-    return await tuid_1.saveTuid('product', data, mapper);
+    return await saveTuid_1.saveTuid('product', data, mapper);
 }
 exports.product = product;
 //# sourceMappingURL=product.js.map

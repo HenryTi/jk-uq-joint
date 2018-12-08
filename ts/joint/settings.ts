@@ -7,6 +7,7 @@ export const settings = {
     usqs: {
         'JKDev/jkProduct': [
             'product',
+            'packType',
         ]
     }
 }
