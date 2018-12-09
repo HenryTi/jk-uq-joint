@@ -1,17 +1,22 @@
 import { Mapper } from "./mapper";
 import { databaseName } from "../../db/mysql/database";
 import { execSql, execProc } from "../../db/mysql/tool";
-import { convert } from "./convert";
+import { MapFromUsq } from "./mapData";
+import { UsqOut } from "../defines";
+import { map } from "./map";
 
-export async function readyOut(moniker:string, data:any, mapper:Mapper):Promise<void> {
-    let {$key} = mapper;
-    let key = data[$key];
+export async function mapFromSheet(outName:string, usqOut:UsqOut, data:any):Promise<void> {
+    let {entity, key, mapper} = usqOut;
+    let keyVal = data[key];
     if (key === undefined) throw 'key is not defined';
-    let body = await convert(data, mapper, convertTo);
-    let no = undefined;
-    throw 'no is not defined in readyOut'
-    body['$no'] = no;
-    await execProc('write_queue_out', [moniker, body]);
+    let mapFromUsq = new MapFromUsq();
+    let body = await mapFromUsq.map(data, mapper);
+    let {id} = data;
+    let no = id;
+    //throw 'no is not defined in readyOut'
+    body[key] = no;
+    await map(entity, id, no);
+    await execProc('write_queue_out', [outName, JSON.stringify(body)]);
 }
 
 async function convertTo(prop:string, value:any): Promise<{p:string, val:any}> {

@@ -1,1 +1,1 @@
-export * from './saveTuid';
+export * from './mapToTuid';

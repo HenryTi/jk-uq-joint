@@ -134,9 +134,25 @@ const writeQueueInP = {
         on duplicate key update queue_in=_queue;
 `
 };
+const writeQueueOutP = {
+    name: 'write_queue_out_p',
+    params: [
+        "_moniker varchar(200)",
+        "_queue BIGINT",
+    ],
+    label: '_exit',
+    code: `
+    declare _monikerId int;
+    select a.id into _monikerId from moniker as a where a.moniker=_moniker;
+    insert into queue_p (moniker, queue_out)
+        values (_monikerId, _queue)
+        on duplicate key update queue_out=_queue;
+`
+};
 exports.default = [
     readQueueOutP, readQueue,
     writeQueueIn, writeQueueOut,
-    readQueueIn, readQueueOut, writeQueueInP
+    readQueueIn, readQueueOut,
+    writeQueueInP, writeQueueOutP
 ];
 //# sourceMappingURL=queue.js.map

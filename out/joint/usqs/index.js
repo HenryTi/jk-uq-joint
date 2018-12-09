@@ -1,7 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const product_1 = require("./product");
-exports.usqs = {
-    "product": product_1.product,
-};
+/*
+import { product } from "./product";
+
+export const usqs:{[moniker:string]:(queue:number)=>Promise<{queue:number, data:any}>} = {
+    "product": product,
+}
+*/ 
 //# sourceMappingURL=index.js.map

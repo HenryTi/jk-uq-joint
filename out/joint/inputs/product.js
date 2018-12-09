@@ -1,8 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const saveTuid_1 = require("../tool/saveTuid");
-async function product(data) {
-    let mapper = {
+/*
+import { mapToTuid } from "../tool/mapToTuid";
+import { Mapper } from "../tool/mapper";
+
+export async function product(data:any):Promise<number> {
+    let mapper: Mapper = {
         $key: 'no',
         // $import: 'all',
         discription: 'discription',
@@ -11,7 +12,7 @@ async function product(data) {
         b: true,
         c: true,
     };
-    return await saveTuid_1.saveTuid('product', data, mapper);
+    return await mapToTuid('product', data, mapper);
 }
-exports.product = product;
+*/ 
 //# sourceMappingURL=product.js.map

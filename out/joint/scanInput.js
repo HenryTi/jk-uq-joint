@@ -16,7 +16,7 @@ async function scanInput() {
             if (typeof func === 'function')
                 await func(data);
             else
-                await tool_2.saveTuid(i, data, func);
+                await tool_2.mapToTuid(i, data, func);
             console.log(`process in ${id} ${date.toLocaleString()}: `, body);
             await tool_1.execProc('write_queue_in_p', [i, id]);
         }

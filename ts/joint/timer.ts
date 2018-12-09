@@ -1,5 +1,5 @@
-import { scanInput } from "./scanInput";
-import { scanUsq } from "./scanUsq";
+import { scanIn } from "./scanIn";
+import { scanOut } from "./scanOut";
 
 const interval = 60*1000;
 
@@ -16,12 +16,12 @@ function wait(minutes: number):Promise<void> {
 async function tick() {
     try {
         console.log('tick ' + new Date().toLocaleString());
-        await scanInput();
-        await scanUsq();
+        await scanIn();
+        await scanOut();
     }
     catch (err) {
-        console.error('timer error');
-        console.log(err && err.message);
+        console.error('error in timer tick');
+        console.error(err);
     }
     finally {
         setTimeout(tick, interval);
