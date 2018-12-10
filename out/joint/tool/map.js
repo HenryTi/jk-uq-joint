@@ -5,7 +5,7 @@ const database_1 = require("../../db/mysql/database");
 const createMapTable_1 = require("./createMapTable");
 async function map(moniker, id, no) {
     let sql = `
-        insert into \`${database_1.databaseName}\`.map_${moniker} (id, no) values (${id}, ${no}) 
+        insert into \`${database_1.databaseName}\`.map_${moniker} (id, no) values (${id}, '${no}') 
         on duplicate key update id=${id};
     `;
     try {

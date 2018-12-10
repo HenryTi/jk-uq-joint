@@ -1,10 +1,11 @@
 import { Mapper } from "./tool/mapper";
 
 export const usqs = {
+    jkOrder: 'JKDev/jkOrder',
     jkProduct: 'JKDev/jkProduct',
 }
 
-export type Converter = (data:any)=>Promise<void>;
+export type UsqInConverter = (data:any)=>Promise<void>;
 export interface UsqIn {
     usq: string;
     type: 'tuid';
@@ -13,6 +14,7 @@ export interface UsqIn {
     mapper: Mapper;
 }
 
+export type UsqOutConverter = (queue:number)=>Promise<{queue:number, data:any}>;
 export interface UsqOut {
     usq: string;
     type: 'sheet';
@@ -24,8 +26,8 @@ export interface UsqOut {
 export interface Settings {
     unit: number;
     allowedIP: string[];
-    in: {[name:string]: UsqIn | Converter};
-    out: {[name:string]: UsqOut | Converter};
+    in: {[name:string]: UsqIn | UsqInConverter};
+    out: {[name:string]: UsqOut | UsqOutConverter};
     /*
     usqs: {[usq:string]: {
         [type:string]: {

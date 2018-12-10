@@ -61,6 +61,7 @@ const writeQueueOut:Procedure = {
     name: 'write_queue_out',
     params: [
         "_moniker varchar(200)",
+        "_queue bigint",
         "_body text"
     ],
     label: '_exit',
@@ -73,6 +74,9 @@ const writeQueueOut:Procedure = {
         set _monikerId=last_insert_id();
     end if;
     insert into queue_out (moniker, body) values (_monikerId, _body);
+    insert into queue_p (moniker, queue_out)
+        values (_monikerId, _queue)
+        on duplicate key update queue_out=_queue;
 `
 }
 

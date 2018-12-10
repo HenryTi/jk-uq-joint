@@ -43,6 +43,10 @@ class OpenApi extends fetch_1.Fetch {
         let ret = await this.get('joint/tuid-vid/' + tuid);
         return ret;
     }
+    async scanSheet(sheet, scanStartId) {
+        let ret = await this.get('joint/sheet-scan/' + sheet + '/' + scanStartId);
+        return ret;
+    }
 }
 exports.OpenApi = OpenApi;
 const usqOpenApis = {};

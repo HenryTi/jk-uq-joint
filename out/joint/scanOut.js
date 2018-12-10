@@ -15,22 +15,29 @@ async function scanOut() {
                 queue = 0;
             else
                 queue = retp[0].queue;
-            let data = { id: queue };
-            let { id } = data;
+            /*
+            let data = {id: queue};
+            let {id} = data;
+
             // 中断queue
-            if (id <= queue)
-                break;
+            if (id <= queue) break;
+            */
+            let ret;
             if (typeof usqOut === 'function')
-                await usqOut(data);
+                ret = await usqOut(queue);
             else {
                 let { type } = usqOut;
                 switch (type) {
                     case 'sheet':
-                        await mapFromSheet_1.mapFromSheet(i, usqOut, data);
+                        ret = await mapFromSheet_1.mapFromSheet(usqOut, queue);
                         break;
                 }
             }
-            await tool_1.execProc('write_queue_out_p', [i, id]);
+            if (ret === undefined)
+                break;
+            let { queue: newQueue, data } = ret;
+            await tool_1.execProc('write_queue_out', [i, newQueue, JSON.stringify(data)]);
+            //await execProc('write_queue_out_p', [i, newQueue]);
         }
     }
 }

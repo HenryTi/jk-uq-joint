@@ -40,6 +40,10 @@ export class OpenApi extends Fetch {
         let ret = await this.get('joint/tuid-vid/' + tuid);
         return ret;
     }
+    async scanSheet(sheet:string, scanStartId:number):Promise<any> {
+        let ret = await this.get('joint/sheet-scan/' + sheet + '/' + scanStartId);
+        return ret;
+    }
 }
 
 const usqOpenApis: {[usqFullName:string]: {[unit:number]:OpenApi}} = {};

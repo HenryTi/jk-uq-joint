@@ -1,7 +1,7 @@
 import { UsqOut, usqs } from "../defines";
 
 export const order: UsqOut = {
-    usq: usqs.jkProduct,
+    usq: usqs.jkOrder,
     type: 'sheet',
     entity: 'order',
     key: 'no',
