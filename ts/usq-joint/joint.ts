@@ -1,9 +1,5 @@
-import { Settings, UsqIn, UsqOut, DataPush } from "./defines";
+import { Settings, UsqIn, UsqOut, DataPush, UsqInConverter } from "./defines";
 import { tableFromProc, execProc } from "./db/mysql/tool";
-//import { usqInDefault } from "./scanIn";
-//import { usqInTuid, usqInMap, usqInAction } from "./tool";
-//import { usqOutDefault } from "./scanOut";
-//import { usqOutSheet } from "./tool/usqOutSheet";
 import { getOpenApi } from "./tool/openApi";
 import { MapFromUsq, MapToUsq } from "./tool/mapData";
 import { map } from "./tool/map";
@@ -49,11 +45,16 @@ export class Joint {
             let pull = this.settings.pull[i];
             for (;;) {
                 let retp = await tableFromProc('read_queue_in_p', [i]);
-                if (!retp || retp.length === 0) break;
-                let {id} = retp[0];
-                let queue = await pull(this.settings, id);
-                if (queue === undefined) break;
-                await execProc('write_queue_in_p', [i, queue]);
+                let queue:number;
+                if (!retp || retp.length === 0) {
+                    queue = 0;
+                }
+                else {
+                    queue = retp[0].queue;
+                }
+                let newQueue = await pull(this, queue);
+                if (newQueue === undefined) break;
+                await execProc('write_queue_in_p', [i, newQueue]);
             }
         }
     }
@@ -67,10 +68,7 @@ export class Joint {
                 if (!retp || retp.length === 0) break;
                 let {id, body, date} = retp[0];
                 let data = JSON.parse(body);
-                if (typeof usqIn === 'function')
-                    await usqIn(this.settings, data);
-                else 
-                    await this.usqInDefault(usqIn, data);
+                await this.usqIn(usqIn, data);
                 console.log(`process in ${id} ${(date as Date).toLocaleString()}: `, body);
                 await execProc('write_queue_in_p', [i, id]);
             }
@@ -82,11 +80,20 @@ export class Joint {
         return openApi;
     }
 
-    async usqInDefault(usqIn:UsqIn, data:any) {
-        switch (usqIn.type) {
-            case 'tuid': await this.usqInTuid(usqIn, data); break;
-            case 'map': await this.usqInMap(usqIn, data); break;
-            case 'action': await this.usqInAction(usqIn, data); break;
+    async pushToUsq(usqInName:string, data:any) {
+        let usqIn = this.settings.in[usqInName];
+        await this.usqIn(usqIn, data);
+    }
+
+    private async usqIn(usqIn:UsqIn|UsqInConverter, data:any) {
+        if (typeof usqIn === 'function')
+            await usqIn(this.settings, data);
+        else {
+            switch (usqIn.type) {
+                case 'tuid': await this.usqInTuid(usqIn, data); break;
+                case 'map': await this.usqInMap(usqIn, data); break;
+                case 'action': await this.usqInAction(usqIn, data); break;
+            }
         }
     }
 
@@ -158,7 +165,7 @@ export class Joint {
                     await execProc('write_queue_out', [i, newQueue, JSON.stringify(data)]);
                 }
                 else {
-                    await push(this.settings, data);
+                    await push(this, data);
                     await execProc('write_queue_out_p', [i, newQueue]);
                 }
             }

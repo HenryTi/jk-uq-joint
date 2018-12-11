@@ -1,1 +1,0 @@
-{"version":3,"file":"user.js","sourceRoot":"","sources":["../../../../ts/db/mysql/tables/user.ts"],"names":[],"mappings":";;AAEA,MAAM,IAAI,GAAS;IACf,IAAI,EAAE,MAAM;IACf,IAAI,EAAE;QACC,qDAAqD;QACrD,yCAAyC;QACzC,sBAAsB;QACtB,sBAAsB;QACtB,yCAAyC;QACzC,uCAAuC;QACvC,wCAAwC;QACxC,gCAAgC;KAEnC;CACJ,CAAC;AAEF,kBAAe;IACX,IAAI;CACP,CAAC"}

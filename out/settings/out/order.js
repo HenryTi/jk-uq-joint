@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const joint_1 = require("../../joint");
+const usqs_1 = require("../usqs");
 exports.order = {
-    usq: joint_1.usqs.jkOrder,
+    usq: usqs_1.usqs.jkOrder,
     type: 'sheet',
     entity: 'order',
     key: 'no',

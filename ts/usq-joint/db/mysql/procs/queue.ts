@@ -161,6 +161,10 @@ const writeQueueInP:Procedure = {
 `
     declare _monikerId int;
     select a.id into _monikerId from moniker as a where a.moniker=_moniker;
+    if _monikerId is null then
+        insert into moniker (moniker) values (_moniker);
+        set _monikerId=last_insert_id();
+    end if;
     insert into queue_p (moniker, queue_in)
         values (_monikerId, _queue)
         on duplicate key update queue_in=_queue;
@@ -178,6 +182,10 @@ const writeQueueOutP:Procedure = {
 `
     declare _monikerId int;
     select a.id into _monikerId from moniker as a where a.moniker=_moniker;
+    if _monikerId is null then
+        insert into moniker (moniker) values (_moniker);
+        set _monikerId=last_insert_id();
+    end if;
     insert into queue_p (moniker, queue_out)
         values (_monikerId, _queue)
         on duplicate key update queue_out=_queue;

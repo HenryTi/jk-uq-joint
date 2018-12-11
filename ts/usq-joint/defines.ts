@@ -1,7 +1,8 @@
 import { Mapper } from "./tool/mapper";
+import { Joint } from "./joint";
 
-export type DataPull = (settings:Settings, queue:number)=>Promise<number>;
-export type DataPush = (settings:Settings, data:any)=>Promise<void>;
+export type DataPull = (joint:Joint, queue:number)=>Promise<number>;
+export type DataPush = (joint:Joint, data:any)=>Promise<void>;
 
 export type UsqInConverter = (settings:Settings, data:any)=>Promise<void>;
 export interface UsqIn {
