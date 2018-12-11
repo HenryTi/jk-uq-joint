@@ -10,6 +10,6 @@ export interface ArrMapper extends Mapper {
 }
 
 export interface Mapper {
-    all?: boolean;
+    //all?: boolean;
     [prop:string]: string | boolean | number | ArrMapper;
 }

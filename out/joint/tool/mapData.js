@@ -22,76 +22,116 @@ class MapData {
             return { p: v, val: propId };
         }
     }
+    async mapStringProp(prop, data) {
+        let pos = prop.indexOf('@');
+        if (pos < 0) {
+            //body[prop] = value; // data[from];
+            return data[prop];
+        }
+        else {
+            let v = prop.substr(0, pos);
+            let tuid = prop.substr(pos + 1);
+            //let val = data[from];
+            let propId = await this.tuidId(tuid, data[v]);
+            //body[v] = propId;
+            return propId;
+        }
+    }
     async map(data, mapper) {
         let body = {};
-        let { $import } = data;
+        for (let i in mapper) {
+            let prop = mapper[i];
+            //let value = data[i];
+            switch (typeof prop) {
+                case 'undefined':
+                    //body[i] = value;
+                    break;
+                case 'boolean':
+                    if (prop === true) {
+                        body[i] = data[i];
+                    }
+                    else {
+                    }
+                    break;
+                case 'number':
+                    body[i] = prop;
+                    break;
+                case 'string':
+                    //await setFromProp(body, prop, value);
+                    let val = await this.mapStringProp(prop, data);
+                    body[i] = val;
+                    break;
+                case 'object':
+                    let arr = prop.$name || i;
+                    body[i] = await this.map(data, prop);
+                    break;
+            }
+        }
+        /*
+        let {$import} = data;
         if ($import === 'all') {
             for (let i in data) {
                 let prop = mapper[i];
                 let value = data[i];
                 switch (typeof prop) {
-                    case 'undefined':
+                case 'undefined':
+                    body[i] = value;
+                    break;
+                case 'boolean':
+                    if (prop === true) {
                         body[i] = value;
-                        break;
-                    case 'boolean':
-                        if (prop === true) {
-                            body[i] = value;
-                        }
-                        else {
-                        }
-                        break;
-                    case 'number':
-                        body[i] = prop;
-                        break;
-                    case 'string':
-                        //await setFromProp(body, prop, value);
-                        let { p, val } = await this.mapProp(prop, value);
-                        body[p] = val;
-                        break;
-                    case 'object':
-                        let arr = prop.$name || i;
-                        body[arr] = await this.map(value, prop);
-                        break;
+                    }
+                    else {
+                    }
+                    break;
+                case 'number':
+                    body[i] = prop;
+                    break;
+                case 'string':
+                    //await setFromProp(body, prop, value);
+                    let {p, val} = await this.mapProp(prop, value);
+                    body[p] = val;
+                    break;
+                case 'object':
+                    let arr = prop.$name || i;
+                    body[arr] = await this.map(value, prop)
+                    break;
                 }
             }
         }
         else {
             for (let i in mapper) {
-                if (i.substr(0, 1) === '$')
-                    continue;
+                if (i.substr(0, 1) === '$') continue;
                 let prop = mapper[i];
                 let value = data[i];
                 switch (typeof prop) {
-                    case 'boolean':
-                        if (prop === true) {
-                            body[i] = value;
-                        }
-                        else {
-                        }
-                        break;
-                    case 'number':
-                        body[i] = prop;
-                        break;
-                    case 'string':
-                        //await setFromProp(body, prop, value);
-                        let { p, val } = await this.mapProp(prop, value);
-                        body[p] = val;
-                        break;
-                    case 'object':
-                        let arr = prop.$name || i;
-                        body[arr] = await this.map(value, prop);
-                        break;
+                case 'boolean':
+                    if (prop === true) {
+                        body[i] = value;
+                    }
+                    else {
+                    }
+                    break;
+                case 'number':
+                    body[i] = prop;
+                    break;
+                case 'string':
+                    //await setFromProp(body, prop, value);
+                    let {p, val} = await this.mapProp(prop, value);
+                    body[p] = val;
+                    break;
+                case 'object':
+                    let arr = prop.$name || i;
+                    body[arr] = await this.map(value, prop);
+                    break;
                 }
             }
         }
+        */
         return body;
     }
 }
 class MapToUsq extends MapData {
-    constructor(usq) {
-        super();
-        this.usq = usq;
-    }
     async tuidId(tuid, value) {
         let sql = `select id from \`${database_1.databaseName}\`.map_${tuid} where no='${value}'`;
         let ret;

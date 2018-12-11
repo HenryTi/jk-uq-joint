@@ -25,8 +25,54 @@ abstract class MapData {
         }
     }
         
+    protected async mapStringProp(prop:string, data:any): Promise<any> {
+        let pos = prop.indexOf('@');
+        if (pos < 0) {
+            //body[prop] = value; // data[from];
+            return data[prop];
+        }
+        else {
+            let v = prop.substr(0, pos);
+            let tuid = prop.substr(pos+1);
+            //let val = data[from];
+            let propId = await this.tuidId(tuid, data[v]);
+            //body[v] = propId;
+            return propId;
+        }
+    }
+        
     async map(data:any, mapper:Mapper):Promise<any> {
         let body:any = {};
+        for (let i in mapper) {
+            let prop = mapper[i];
+            //let value = data[i];
+            switch (typeof prop) {
+            case 'undefined':
+                //body[i] = value;
+                break;
+            case 'boolean':
+                if (prop === true) {
+                    body[i] = data[i];
+                }
+                else {
+                }
+                break;
+            case 'number':
+                body[i] = prop;
+                break;
+            case 'string':
+                //await setFromProp(body, prop, value);
+                let val = await this.mapStringProp(prop, data);
+                body[i] = val;
+                break;
+            case 'object':
+                let arr = prop.$name || i;
+                body[i] = await this.map(data, prop)
+                break;
+            }
+        }
+
+        /*
         let {$import} = data;
         if ($import === 'all') {
             for (let i in data) {
@@ -40,7 +86,7 @@ abstract class MapData {
                     if (prop === true) {
                         body[i] = value;
                     }
-                    else {                    
+                    else {
                     }
                     break;
                 case 'number':
@@ -86,17 +132,12 @@ abstract class MapData {
                 }
             }
         }
+        */
         return body;
     }
 }
 
 export class MapToUsq extends MapData {
-    private usq: string;
-    constructor(usq: string) {
-        super();
-        this.usq = usq;
-    }
-
     protected async tuidId(tuid:string, value:any): Promise<string|number> {
         let sql = `select id from \`${databaseName}\`.map_${tuid} where no='${value}'`;
         let ret:any[];

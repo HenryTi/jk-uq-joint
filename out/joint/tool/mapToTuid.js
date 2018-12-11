@@ -11,7 +11,7 @@ async function mapToTuid(usqIn, data) {
     let keyVal = data[key];
     if (key === undefined)
         throw 'key is not defined';
-    let mapToUsq = new mapData_1.MapToUsq(usq);
+    let mapToUsq = new mapData_1.MapToUsq();
     let body = await mapToUsq.map(data, mapper);
     if (usq === undefined)
         throw 'tuid ' + tuid + ' not defined';

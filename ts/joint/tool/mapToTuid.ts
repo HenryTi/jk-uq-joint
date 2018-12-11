@@ -10,7 +10,7 @@ export async function mapToTuid(usqIn:UsqIn, data:any):Promise<number> {
     //let key = data[$key];
     let keyVal = data[key];
     if (key === undefined) throw 'key is not defined';
-    let mapToUsq = new MapToUsq(usq);
+    let mapToUsq = new MapToUsq();
     let body = await mapToUsq.map(data, mapper);
     if (usq === undefined) throw 'tuid ' + tuid + ' not defined';
     let openApi = await getOpenApi(usq, settings.unit);
