@@ -1,12 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const tool_1 = require("../../db/mysql/tool");
+const tool_1 = require("../db/mysql/tool");
 const createMapTable_1 = require("./createMapTable");
 const openApi_1 = require("./openApi");
-const settings_1 = require("../settings");
-const database_1 = require("../../db/mysql/database");
+//import { settings } from "../../settings";
+const database_1 = require("../db/mysql/database");
 const map_1 = require("./map");
 class MapData {
+    constructor(settings) {
+        this.settings = settings;
+    }
     async mapProp(prop, value) {
         let pos = prop.indexOf('@');
         if (pos < 0) {
@@ -144,11 +147,11 @@ class MapToUsq extends MapData {
         }
         if (ret.length === 0) {
             //if (this.usq === undefined) throw 'tuid ' + tuid + ' not defined';
-            let usqIn = settings_1.settings.in[tuid];
+            let usqIn = this.settings.in[tuid];
             if (typeof usqIn !== 'object') {
                 throw `tuid ${tuid} is not defined in settings.in`;
             }
-            let openApi = await openApi_1.getOpenApi(usqIn.usq, settings_1.settings.unit);
+            let openApi = await openApi_1.getOpenApi(usqIn.usq, this.settings.unit);
             let vId = await openApi.getTuidVId(tuid);
             await map_1.map(tuid, vId, value);
             return vId;

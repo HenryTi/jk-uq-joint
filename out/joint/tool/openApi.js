@@ -7,10 +7,14 @@ const node_fetch_1 = __importDefault(require("node-fetch"));
 const fetch_1 = require("./fetch");
 const centerApi_1 = require("./centerApi");
 const setHostUrl_1 = require("./setHostUrl");
-const settings_1 = require("../settings");
+//import { settings } from "../../settings";
 class OpenApi extends fetch_1.Fetch {
+    constructor(baseUrl, unit) {
+        super(baseUrl);
+        this.unit = unit;
+    }
     appendHeaders(headers) {
-        headers.append('unit', String(settings_1.settings.unit));
+        headers.append('unit', String(this.unit));
     }
     async fresh(unit, stamps) {
         let ret = await this.post('open/fresh', {
@@ -74,7 +78,7 @@ async function getOpenApi(usqFullName, unit) {
         catch (err) {
         }
     }
-    return openApis[unit] = new OpenApi(url);
+    return openApis[unit] = new OpenApi(url, unit);
 }
 exports.getOpenApi = getOpenApi;
 //# sourceMappingURL=openApi.js.map

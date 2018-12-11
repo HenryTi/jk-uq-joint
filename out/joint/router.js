@@ -7,7 +7,7 @@ const express_1 = require("express");
 const getIp_1 = require("./getIp");
 const busPage_1 = require("./busPage");
 const busExchange_1 = require("./busExchange");
-const settings_1 = require("./settings");
+const settings_1 = require("../settings");
 exports.router = express_1.Router({ mergeParams: true });
 exports.router.get('/', async (req, res) => {
     await routerProcess(req, res, busPage_1.busPage);

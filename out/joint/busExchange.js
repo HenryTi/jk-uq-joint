@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const tool_1 = require("../db/mysql/tool");
-const database_1 = require("../db/mysql/database");
+//import { settings } from "../settings";
+const tool_1 = require("./db/mysql/tool");
+const database_1 = require("./db/mysql/database");
 // [
 //    {face: 'owner/bus/face', queue: 0}
 // ]

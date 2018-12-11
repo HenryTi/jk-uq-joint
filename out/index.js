@@ -14,8 +14,8 @@ const express_1 = __importDefault(require("express"));
 const bodyParser = __importStar(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
 const config_1 = __importDefault(require("config"));
-const router_1 = require("./joint/router");
-const timer_1 = require("./joint/timer");
+const joint_1 = require("./joint");
+const settings_1 = require("./settings");
 (async function () {
     console.log(process.env.NODE_ENV);
     let connection = config_1.default.get("mysqlConn");
@@ -51,13 +51,15 @@ const timer_1 = require("./joint/timer");
             console.error(e);
         }
     });
-    app.use('/joint-usq-jk', router_1.router);
+    app.use('/joint-usq-jk', joint_1.router);
     let port = config_1.default.get('port');
     app.listen(port, async () => {
         console.log('USQL-API listening on port ' + port);
         let { host, user } = connection;
         console.log('process.env.NODE_ENV: %s\nDB host: %s, user: %s', process.env.NODE_ENV, host, user);
-        await timer_1.startTimer();
+        let joint = new joint_1.Joint(settings_1.settings);
+        joint.startTimer();
+        //await startTimer();
     });
 })();
 //# sourceMappingURL=index.js.map

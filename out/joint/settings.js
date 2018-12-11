@@ -1,7 +1,10 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const in_1 = require("./in");
-const out_1 = require("./out");
+const in_1 = __importDefault(require("./in"));
+const out_1 = __importDefault(require("./out"));
 exports.settings = {
     unit: 27,
     allowedIP: [
@@ -18,12 +21,7 @@ exports.settings = {
         }
     },
     */
-    in: {
-        'product': in_1.product,
-        'packType': in_1.packType,
-    },
-    out: {
-        'order': out_1.order,
-    }
+    in: in_1.default,
+    out: out_1.default,
 };
 //# sourceMappingURL=settings.js.map

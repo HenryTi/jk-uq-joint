@@ -2,8 +2,8 @@ import express, { Request, Response, NextFunction } from 'express';
 import * as bodyParser from 'body-parser';
 import cors from 'cors';
 import config from 'config';
-import {router as jointRouter} from './joint/router';
-import { startTimer } from './joint/timer';
+import { Joint } from './usq-joint';
+import { settings } from './settings';
 
 (async function () {
     console.log(process.env.NODE_ENV);
@@ -41,7 +41,8 @@ import { startTimer } from './joint/timer';
         }
     });
 
-    app.use('/joint-usq-jk', jointRouter);
+    let joint = new Joint(settings);
+    app.use('/joint-usq-jk', joint.createRouter());
 
     let port = config.get<number>('port');
     app.listen(port, async ()=>{
@@ -51,8 +52,7 @@ import { startTimer } from './joint/timer';
             process.env.NODE_ENV,
             host,
             user);
-        await startTimer();
+        joint.startTimer();
+        //await startTimer();
     });
 })();
-
-
