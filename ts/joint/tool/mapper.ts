@@ -11,5 +11,5 @@ export interface ArrMapper extends Mapper {
 
 export interface Mapper {
     all?: boolean;
-    [prop:string]: string | boolean | ArrMapper;
+    [prop:string]: string | boolean | number | ArrMapper;
 }

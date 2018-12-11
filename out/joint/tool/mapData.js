@@ -40,6 +40,9 @@ class MapData {
                         else {
                         }
                         break;
+                    case 'number':
+                        body[i] = prop;
+                        break;
                     case 'string':
                         //await setFromProp(body, prop, value);
                         let { p, val } = await this.mapProp(prop, value);
@@ -65,6 +68,9 @@ class MapData {
                         }
                         else {
                         }
+                        break;
+                    case 'number':
+                        body[i] = prop;
                         break;
                     case 'string':
                         //await setFromProp(body, prop, value);
@@ -97,9 +103,12 @@ class MapToUsq extends MapData {
             ret = await tool_1.execSql(sql);
         }
         if (ret.length === 0) {
-            if (this.usq === undefined)
-                throw 'tuid ' + tuid + ' not defined';
-            let openApi = await openApi_1.getOpenApi(this.usq, settings_1.settings.unit);
+            //if (this.usq === undefined) throw 'tuid ' + tuid + ' not defined';
+            let usqIn = settings_1.settings.in[tuid];
+            if (typeof usqIn !== 'object') {
+                throw `tuid ${tuid} is not defined in settings.in`;
+            }
+            let openApi = await openApi_1.getOpenApi(usqIn.usq, settings_1.settings.unit);
             let vId = await openApi.getTuidVId(tuid);
             await map_1.map(tuid, vId, value);
             return vId;
@@ -118,65 +127,4 @@ class MapFromUsq extends MapData {
     }
 }
 exports.MapFromUsq = MapFromUsq;
-/*
-export type ConvertId = (prop:string, value:any) => Promise<{p:string, val:any}>;
-
-export async function mapData(data:any, mapper:Mapper, convertId: ConvertId):Promise<any> {
-    let body:any = {};
-    let {$import} = data;
-    if ($import === 'all') {
-        for (let i in data) {
-            let prop = mapper[i];
-            let value = data[i];
-            switch (typeof prop) {
-            case 'undefined':
-                body[i] = value;
-                break;
-            case 'boolean':
-                if (prop === true) {
-                    body[i] = value;
-                }
-                else {
-                }
-                break;
-            case 'string':
-                //await setFromProp(body, prop, value);
-                let {p, val} = await convertId(prop, value);
-                body[p] = val;
-                break;
-            case 'object':
-                let arr = prop.$name || i;
-                body[arr] = await mapData(value, prop, convertId)
-                break;
-            }
-        }
-    }
-    else {
-        for (let i in mapper) {
-            if (i.substr(0, 1) === '$') continue;
-            let prop = mapper[i];
-            let value = data[i];
-            switch (typeof prop) {
-            case 'boolean':
-                if (prop === true) {
-                    body[i] = value;
-                }
-                else {
-                }
-                break;
-            case 'string':
-                //await setFromProp(body, prop, value);
-                let {p, val} = await convertId(prop, value);
-                body[p] = val;
-                break;
-            case 'object':
-                let arr = prop.$name || i;
-                body[arr] = await mapData(value, prop, convertId)
-                break;
-            }
-        }
-    }
-    return body;
-}
-*/
 //# sourceMappingURL=mapData.js.map
