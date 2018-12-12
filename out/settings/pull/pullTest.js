@@ -8,6 +8,8 @@ async function pullTest(joint, queue) {
             return 1;
         case 1:
             await joint.pushToUsq('product', { no: 'no-2', discription: 'aaa-bbb' });
+            await joint.pushToUsq('price', { product: 'no-2', arr1: [{ pack: '23', retail: 5.3 }] });
+            //await joint.pushToUsq('price-2', {product: 'no-2', pack: '23', retail: 5.3})
             return 2;
     }
 }

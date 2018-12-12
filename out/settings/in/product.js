@@ -14,4 +14,18 @@ exports.product = {
         c: true,
     }
 };
+exports.productPack = {
+    usq: usqs_1.usqs.jkProduct,
+    type: 'tuid-arr',
+    entity: 'product.pack',
+    key: 'no',
+    owner: 'packNo@product',
+    mapper: {
+        discription: 'discription',
+        packType: 'packType@packType',
+        a: false,
+        b: true,
+        c: true,
+    }
+};
 //# sourceMappingURL=product.js.map

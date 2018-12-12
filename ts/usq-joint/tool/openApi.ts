@@ -41,13 +41,32 @@ export class OpenApi extends Fetch {
         let ret = await this.post('joint/tuid/' + tuid, data);
         return ret;
     }
+    async saveTuidArr(tuid:string, arr:string, owner:number, data:any):Promise<any> {
+        let ret = await this.post(`joint/tuid-arr/${tuid}/${owner}/${arr}`, data);
+        return ret;
+    }
     async getTuidVId(tuid:string):Promise<number> {
-        let ret = await this.get('joint/tuid-vid/' + tuid);
+        let parts = tuid.split('.');
+        let url:string;
+        if (parts.length === 1)
+            url = `joint/tuid-vid/${tuid}`;
+        else
+            url = `joint/tuid-arr-vid/${parts[0]}/${parts[1]}`;
+        let ret = await this.get(url);
         return ret;
     }
     async scanSheet(sheet:string, scanStartId:number):Promise<any> {
         let ret = await this.get('joint/sheet-scan/' + sheet + '/' + scanStartId);
         return ret;
+    }
+    async action(action:string, data:any):Promise<void> {
+        await this.post('joint/action-json/' + action, data);
+    }
+    async setMap(map:string, data:any):Promise<void> {
+        await this.post('joint/action-json/' + map + '$add$', data);
+    }
+    async delMap(map:string, data:any):Promise<void> {
+        await this.post('joint/action-json/' + map + '$del$', data);
     }
 }
 

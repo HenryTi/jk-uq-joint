@@ -7,10 +7,28 @@ export type DataPush = (joint:Joint, data:any)=>Promise<void>;
 export type UsqInConverter = (settings:Settings, data:any)=>Promise<void>;
 export interface UsqIn {
     usq: string;
-    type: 'tuid' | 'map' | 'action';
+    type: 'tuid' | 'tuid-arr' | 'map' | 'action';
     entity: string;
-    key: string;
     mapper: Mapper;
+}
+
+export interface UsqInTuid extends UsqIn {
+    type: 'tuid';
+    key: string;
+}
+
+export interface UsqInTuidArr extends UsqIn {
+    type: 'tuid-arr';
+    key: string;
+    owner: string;
+}
+
+export interface UsqInMap extends UsqIn {
+    type: 'map';
+}
+
+export interface UsqInAction extends UsqIn {
+    type: 'action';
 }
 
 export type UsqOutConverter = (settings:Settings, queue:number)=>Promise<{queue:number, data:any}>;

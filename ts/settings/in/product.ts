@@ -1,7 +1,7 @@
-import { UsqIn } from "../../usq-joint";
+import { UsqIn, UsqInTuid, UsqInTuidArr } from "../../usq-joint";
 import { usqs } from '../usqs';
 
-export const product: UsqIn = {
+export const product: UsqInTuid = {
     usq: usqs.jkProduct,
     type: 'tuid',
     entity: 'product',
@@ -14,3 +14,18 @@ export const product: UsqIn = {
         c: true,
     }
 };
+
+export const productPack: UsqInTuidArr = {
+    usq: usqs.jkProduct,
+    type: 'tuid-arr',
+    entity: 'product.pack',
+    key: 'no',
+    owner: 'packNo@product',
+    mapper: {
+        discription: 'discription',
+        packType: 'packType@packType',
+        a: false,
+        b: true,
+        c: true,
+    }
+}
