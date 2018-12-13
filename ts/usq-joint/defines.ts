@@ -34,11 +34,15 @@ export interface UsqInAction extends UsqIn {
 export type UsqOutConverter = (settings:Settings, queue:number)=>Promise<{queue:number, data:any}>;
 export interface UsqOut {
     usq: string;
-    type: 'sheet';
+    type: 'sheet' | 'action';
     entity: string;
-    key: string;    
+    key: string;
     mapper: Mapper;
     push?: DataPush;
+}
+
+export interface UsqOutSheet extends UsqOut {
+    type: 'sheet';
 }
 
 export interface Settings {

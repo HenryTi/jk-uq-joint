@@ -20,7 +20,7 @@ export const productPack: UsqInTuidArr = {
     type: 'tuid-arr',
     entity: 'product.pack',
     key: 'no',
-    owner: 'packNo@product',
+    owner: 'prodNo',
     mapper: {
         discription: 'discription',
         packType: 'packType@packType',

@@ -13,12 +13,12 @@ abstract class MapData {
     }
     protected abstract tuidId(tuid:string, value:any): Promise<string|number>;
 
-    async mapOwner(owner:string, data:any): Promise<any> {
-        let pos = owner.indexOf('@');
-        if (pos <= 0) return;
-        let v:string = owner.substr(0, pos);
-        let tuid = owner.substr(pos+1);
-        let propId = await this.tuidId(tuid, data[v]);
+    async mapOwner(tuid:string, ownerVal:any): Promise<number> {
+        //let pos = owner.indexOf('@');
+        //if (pos <= 0) return;
+        //let v:string = owner.substr(0, pos);
+        //let tuid = owner.substr(pos+1);
+        let propId = await this.tuidId(tuid, ownerVal) as number;
         return propId;
     }
 

@@ -1,7 +1,7 @@
-import { UsqOut } from "../../usq-joint";
 import { usqs } from '../usqs';
+import { UsqOutSheet } from "../../usq-joint";
 
-export const order: UsqOut = {
+export const order: UsqOutSheet = {
     usq: usqs.jkOrder,
     type: 'sheet',
     entity: 'order',

@@ -117,26 +117,29 @@ class Joint {
         return id;
     }
     async usqInTuidArr(usqIn, data) {
-        let { key, owner, mapper, usq, entity: tuid } = usqIn;
+        let { key, owner, mapper, usq, entity } = usqIn;
         if (key === undefined)
             throw 'key is not defined';
         if (usq === undefined)
             throw 'usq ' + usq + ' not defined';
-        if (tuid === undefined)
-            throw 'tuid ' + tuid + ' not defined';
+        if (entity === undefined)
+            throw 'tuid ' + entity + ' not defined';
+        let parts = entity.split('.');
+        let tuid = parts[0];
+        if (parts.length === 1)
+            throw 'tuid ' + entity + ' must has .arr';
+        let tuidArr = parts[1];
         let keyVal = data[key];
         if (owner === undefined)
             throw 'owner is not defined';
+        let ownerVal = data[owner];
         let mapToUsq = new mapData_1.MapToUsq(this.settings);
-        let ownerVal = await mapToUsq.mapOwner(owner, data);
-        if (ownerVal === undefined)
+        let ownerId = await mapToUsq.mapOwner(owner, ownerVal);
+        if (ownerId === undefined)
             throw 'owner value is undefined';
         let body = await mapToUsq.map(data, mapper);
         let openApi = await this.getOpenApi(usq);
-        let parts = tuid.split('.');
-        if (parts.length === 1)
-            throw 'tuid ' + tuid + ' must has .arr';
-        let ret = await openApi.saveTuidArr(parts[0], parts[1], ownerVal, body);
+        let ret = await openApi.saveTuidArr(tuid, tuidArr, ownerId, body);
         let { id, inId } = ret;
         if (id < 0)
             id = -id;

@@ -9,13 +9,12 @@ class MapData {
     constructor(settings) {
         this.settings = settings;
     }
-    async mapOwner(owner, data) {
-        let pos = owner.indexOf('@');
-        if (pos <= 0)
-            return;
-        let v = owner.substr(0, pos);
-        let tuid = owner.substr(pos + 1);
-        let propId = await this.tuidId(tuid, data[v]);
+    async mapOwner(tuid, ownerVal) {
+        //let pos = owner.indexOf('@');
+        //if (pos <= 0) return;
+        //let v:string = owner.substr(0, pos);
+        //let tuid = owner.substr(pos+1);
+        let propId = await this.tuidId(tuid, ownerVal);
         return propId;
     }
     async mapProp(i, prop, data) {
