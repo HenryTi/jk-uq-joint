@@ -134,7 +134,7 @@ class Joint {
             throw 'owner is not defined';
         let ownerVal = data[owner];
         let mapToUsq = new mapData_1.MapToUsq(this.settings);
-        let ownerId = await mapToUsq.mapOwner(owner, ownerVal);
+        let ownerId = await mapToUsq.mapOwner(entity, ownerVal);
         if (ownerId === undefined)
             throw 'owner value is undefined';
         let body = await mapToUsq.map(data, mapper);
