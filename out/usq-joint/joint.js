@@ -5,6 +5,8 @@ const openApi_1 = require("./tool/openApi");
 const mapData_1 = require("./tool/mapData");
 const map_1 = require("./tool/map");
 const router_1 = require("./router");
+const database_1 = require("./db/mysql/database");
+const createMapTable_1 = require("./tool/createMapTable");
 const interval = 60 * 1000;
 class Joint {
     constructor(settings) {
@@ -134,7 +136,8 @@ class Joint {
             throw 'owner is not defined';
         let ownerVal = data[owner];
         let mapToUsq = new mapData_1.MapToUsq(this.settings);
-        let ownerId = await mapToUsq.mapOwner(entity, ownerVal);
+        //let ownerId = await mapToUsq.mapOwner(entity, ownerVal);
+        let ownerId = await this.mapOwner(usqIn, ownerVal);
         if (ownerId === undefined)
             throw 'owner value is undefined';
         let body = await mapToUsq.map(data, mapper);
@@ -145,6 +148,31 @@ class Joint {
             id = -id;
         await map_1.map(tuid, id, keyVal);
         return id;
+    }
+    async mapOwner(usqIn, ownerVal) {
+        let { usq, entity } = usqIn;
+        let sql = `select id from \`${database_1.databaseName}\`.\`map_${entity}\` where no='${ownerVal}'`;
+        let ret;
+        try {
+            ret = await tool_1.execSql(sql);
+        }
+        catch (err) {
+            await createMapTable_1.createMapTable(entity);
+            ret = await tool_1.execSql(sql);
+        }
+        if (ret.length === 0) {
+            /*
+            let usqIn = this.settings.in[tuid];
+            if (typeof usqIn !== 'object') {
+                throw `tuid ${tuid} is not defined in settings.in`;
+            }
+            */
+            let openApi = await openApi_1.getOpenApi(usq, this.settings.unit);
+            let vId = await openApi.getTuidVId(entity);
+            await map_1.map(entity, vId, ownerVal);
+            return vId;
+        }
+        return ret[0]['id'];
     }
     async usqInMap(usqIn, data) {
         let { mapper, usq, entity } = usqIn;

@@ -1,9 +1,11 @@
 import { Router } from "express";
 import { Settings, UsqIn, UsqOut, DataPush, UsqInConverter, UsqInTuid, UsqInMap, UsqInAction, UsqInTuidArr } from "./defines";
-import { tableFromProc, execProc } from "./db/mysql/tool";
+import { tableFromProc, execProc, execSql } from "./db/mysql/tool";
 import { getOpenApi } from "./tool/openApi";
 import { MapFromUsq, MapToUsq } from "./tool/mapData";
 import { map } from "./tool/map";import { createRouter } from './router';
+import { databaseName } from "./db/mysql/database";
+import { createMapTable } from "./tool/createMapTable";
 
 const interval = 60*1000;
 
@@ -129,7 +131,8 @@ export class Joint {
         if (owner === undefined) throw 'owner is not defined';
         let ownerVal = data[owner];
         let mapToUsq = new MapToUsq(this.settings);
-        let ownerId = await mapToUsq.mapOwner(entity, ownerVal);
+        //let ownerId = await mapToUsq.mapOwner(entity, ownerVal);
+        let ownerId = await this.mapOwner(usqIn, ownerVal);
         if (ownerId === undefined) throw 'owner value is undefined';
         let body = await mapToUsq.map(data, mapper);
         let openApi = await this.getOpenApi(usq);
@@ -138,6 +141,32 @@ export class Joint {
         if (id < 0) id = -id;
         await map(tuid, id, keyVal);
         return id;
+    }
+
+    private async mapOwner(usqIn:UsqInTuidArr, ownerVal:any) {
+        let {usq, entity} = usqIn;
+        let sql = `select id from \`${databaseName}\`.\`map_${entity}\` where no='${ownerVal}'`;
+        let ret:any[];
+        try {
+            ret = await execSql(sql);
+        }
+        catch (err) {
+            await createMapTable(entity);
+            ret = await execSql(sql);
+        }
+        if (ret.length === 0) {
+            /*
+            let usqIn = this.settings.in[tuid];
+            if (typeof usqIn !== 'object') {
+                throw `tuid ${tuid} is not defined in settings.in`;
+            }
+            */
+            let openApi = await getOpenApi(usq, this.settings.unit);
+            let vId = await openApi.getTuidVId(entity);
+            await map(entity, vId, ownerVal);
+            return vId;
+        }
+        return ret[0]['id'];
     }
     
     protected async usqInMap(usqIn:UsqInMap, data:any):Promise<void> {
