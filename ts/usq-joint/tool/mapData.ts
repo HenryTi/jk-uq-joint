@@ -135,23 +135,24 @@ abstract class MapData {
 
 export class MapToUsq extends MapData {
     protected async tuidId(tuid:string, value:any): Promise<string|number> {
-        let sql = `select id from \`${databaseName}\`.\`map_${tuid}\` where no='${value}'`;
+        let usqIn = this.settings.in[tuid];
+        if (typeof usqIn !== 'object') {
+            throw `tuid ${tuid} is not defined in settings.in`;
+        }
+        let { entity, usq } = usqIn;
+        let sql = `select id from \`${databaseName}\`.\`map_${entity}\` where no='${value}'`;
         let ret:any[];
         try {
             ret = await execSql(sql);
         }
         catch (err) {
-            await createMapTable(tuid);
+            await createMapTable(entity);
             ret = await execSql(sql);
         }
         if (ret.length === 0) {
-            let usqIn = this.settings.in[tuid];
-            if (typeof usqIn !== 'object') {
-                throw `tuid ${tuid} is not defined in settings.in`;
-            }
-            let openApi = await getOpenApi(usqIn.usq, this.settings.unit);
-            let vId = await openApi.getTuidVId(tuid);
-            await map(tuid, vId, value);
+            let openApi = await getOpenApi(usq, this.settings.unit);
+            let vId = await openApi.getTuidVId(entity);
+            await map(entity, vId, value);
             return vId;
         }
         return ret[0]['id'];

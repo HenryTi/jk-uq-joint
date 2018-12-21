@@ -21,11 +21,8 @@ exports.productPack = {
     key: 'no',
     owner: 'prodNo',
     mapper: {
-        discription: 'discription',
-        packType: 'packType@packType',
-        a: false,
-        b: true,
-        c: true,
+        ratio: true,
+        name: true,
     }
 };
 //# sourceMappingURL=product.js.map

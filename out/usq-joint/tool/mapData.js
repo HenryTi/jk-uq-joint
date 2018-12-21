@@ -126,23 +126,24 @@ class MapData {
 }
 class MapToUsq extends MapData {
     async tuidId(tuid, value) {
-        let sql = `select id from \`${database_1.databaseName}\`.\`map_${tuid}\` where no='${value}'`;
+        let usqIn = this.settings.in[tuid];
+        if (typeof usqIn !== 'object') {
+            throw `tuid ${tuid} is not defined in settings.in`;
+        }
+        let { entity, usq } = usqIn;
+        let sql = `select id from \`${database_1.databaseName}\`.\`map_${entity}\` where no='${value}'`;
         let ret;
         try {
             ret = await tool_1.execSql(sql);
         }
         catch (err) {
-            await createMapTable_1.createMapTable(tuid);
+            await createMapTable_1.createMapTable(entity);
             ret = await tool_1.execSql(sql);
         }
         if (ret.length === 0) {
-            let usqIn = this.settings.in[tuid];
-            if (typeof usqIn !== 'object') {
-                throw `tuid ${tuid} is not defined in settings.in`;
-            }
-            let openApi = await openApi_1.getOpenApi(usqIn.usq, this.settings.unit);
-            let vId = await openApi.getTuidVId(tuid);
-            await map_1.map(tuid, vId, value);
+            let openApi = await openApi_1.getOpenApi(usq, this.settings.unit);
+            let vId = await openApi.getTuidVId(entity);
+            await map_1.map(entity, vId, value);
             return vId;
         }
         return ret[0]['id'];
