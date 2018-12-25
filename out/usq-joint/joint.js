@@ -137,7 +137,7 @@ class Joint {
         let ownerVal = data[owner];
         let mapToUsq = new mapData_1.MapToUsq(this.settings);
         //let ownerId = await mapToUsq.mapOwner(entity, ownerVal);
-        let ownerId = await this.mapOwner(usqIn, ownerVal);
+        let ownerId = await this.mapOwner(usqIn, tuid, ownerVal);
         if (ownerId === undefined)
             throw 'owner value is undefined';
         let body = await mapToUsq.map(data, mapper);
@@ -149,9 +149,9 @@ class Joint {
         await map_1.map(tuid, id, keyVal);
         return id;
     }
-    async mapOwner(usqIn, ownerVal) {
+    async mapOwner(usqIn, ownerEntity, ownerVal) {
         let { usq, entity } = usqIn;
-        let sql = `select id from \`${database_1.databaseName}\`.\`map_${entity}\` where no='${ownerVal}'`;
+        let sql = `select id from \`${database_1.databaseName}\`.\`map_${ownerEntity}\` where no='${ownerVal}'`;
         let ret;
         try {
             ret = await tool_1.execSql(sql);
