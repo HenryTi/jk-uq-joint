@@ -144,20 +144,22 @@ class Joint {
         let openApi = await this.getOpenApi(usq);
         let ret = await openApi.saveTuidArr(tuid, tuidArr, ownerId, body);
         let { id, inId } = ret;
-        if (id < 0)
+        if (id === undefined)
+            id = inId;
+        else if (id < 0)
             id = -id;
-        await map_1.map(tuid, id, keyVal);
+        await map_1.map(entity, id, keyVal);
         return id;
     }
     async mapOwner(usqIn, ownerEntity, ownerVal) {
-        let { usq, entity } = usqIn;
+        let { usq } = usqIn;
         let sql = `select id from \`${database_1.databaseName}\`.\`map_${ownerEntity}\` where no='${ownerVal}'`;
         let ret;
         try {
             ret = await tool_1.execSql(sql);
         }
         catch (err) {
-            await createMapTable_1.createMapTable(entity);
+            await createMapTable_1.createMapTable(ownerEntity);
             ret = await tool_1.execSql(sql);
         }
         if (ret.length === 0) {
@@ -168,8 +170,8 @@ class Joint {
             }
             */
             let openApi = await openApi_1.getOpenApi(usq, this.settings.unit);
-            let vId = await openApi.getTuidVId(entity);
-            await map_1.map(entity, vId, ownerVal);
+            let vId = await openApi.getTuidVId(ownerEntity);
+            await map_1.map(ownerEntity, vId, ownerVal);
             return vId;
         }
         return ret[0]['id'];
