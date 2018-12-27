@@ -4,11 +4,11 @@ const database_1 = require("../db/mysql/database");
 const tool_1 = require("../db/mysql/tool");
 async function createMapTable(moniker) {
     let sql = `
-    create table if not exists \`${database_1.databaseName}\`.map_${moniker} (
-        id bigint not null, 
+    create table if not exists \`${database_1.databaseName}\`.\`map_${moniker}\` (
+        id bigint not null,
         no varchar(32) not null,
-        primary key(id, no),
-        unique index no_id(no, id)
+        primary key(id),
+        unique index no_idx(no)
     );
     `;
     await tool_1.execSql(sql);

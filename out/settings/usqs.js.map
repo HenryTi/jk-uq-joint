@@ -1,1 +1,1 @@
-{"version":3,"file":"usqs.js","sourceRoot":"","sources":["../../ts/settings/usqs.ts"],"names":[],"mappings":";;AAAa,QAAA,IAAI,GAAG;IAChB,OAAO,EAAE,eAAe;IACxB,SAAS,EAAE,iBAAiB;CAC/B,CAAA"}
+{"version":3,"file":"usqs.js","sourceRoot":"","sources":["../../ts/settings/usqs.ts"],"names":[],"mappings":";;AAAA,MAAM,KAAK,GAAG,UAAU,CAAC;AAEZ,QAAA,IAAI,GAAG;IAChB,QAAQ,EAAE,KAAK,GAAG,SAAS;IAC3B,OAAO,EAAE,KAAK,GAAG,OAAO;IACxB,SAAS,EAAE,KAAK,GAAG,UAAU;IAC7B,UAAU,EAAE,KAAK,GAAG,WAAW;IAC/B,WAAW,EAAE,KAAK,GAAG,YAAY;IACjC,WAAW,EAAE,KAAK,GAAG,YAAY;IACjC,UAAU,EAAE,KAAK,GAAG,WAAW;CAClC,CAAC"}

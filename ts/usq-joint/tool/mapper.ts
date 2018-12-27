@@ -6,7 +6,7 @@ export interface MapperBase {
 */
 
 export interface ArrMapper extends Mapper {
-    $name:string;
+    $name?: string;
 }
 
 export interface Mapper {

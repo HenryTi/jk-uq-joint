@@ -5,7 +5,7 @@ import pull from "./pull";
 //import push from "./push";
 
 export const settings:Settings = {
-    unit: 27,
+    unit: 24,
     allowedIP: [
         '218.249.142.140',
         '211.5.7.60'

@@ -8,7 +8,7 @@ const out_1 = __importDefault(require("./out"));
 const pull_1 = __importDefault(require("./pull"));
 //import push from "./push";
 exports.settings = {
-    unit: 27,
+    unit: 24,
     allowedIP: [
         '218.249.142.140',
         '211.5.7.60'

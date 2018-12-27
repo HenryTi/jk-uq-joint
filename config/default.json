@@ -3,14 +3,14 @@
     "port": 3017,
     "database": "joint-usq-jk",
     "mysqlConn": {
-        "host": "0.0.0.0",
-        "user": "usr",
-        "password": "pwd",
+        "host": "47.92.87.6",
+        "user": "henry",
+        "password": "jk@20180402!@#",
         "multipleStatements": true
     },
-    "centerhost": "localhost:3000",
+    "centerhost": "101.200.46.56",
     "center": "http://centerhost/tv/",
-    "unitxhost": "localhost:3015",
-    "usqhost": "localhost:3015",
+    "unitxhost": "47.92.87.6",
+    "usqhost": "47.92.87.6",
     "option": 1
 }

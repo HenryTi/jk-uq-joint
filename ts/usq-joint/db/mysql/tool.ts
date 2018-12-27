@@ -32,7 +32,7 @@ export interface Table extends TableBase {
 export interface TableEx extends TableBase {
     fields: Field[];
     key: Index;
-    indexes: Index[];    
+    indexes: Index[];
 }
 
 export interface Procedure {
@@ -81,6 +81,11 @@ export async function execProc(proc:string, values?:any[]): Promise<any> {
     });
 }
 
+/**
+ * 执行存储过程，从queue_in中读取指定entity最后一个尚未导入joint的数据
+ * @param proc 存储过程名
+ * @param values 参数及其值
+ */
 export async function tableFromProc(proc:string, values?:any[]): Promise<any[]> {
     let res = await execProc(proc, values);
     if (Array.isArray(res) === false) return [];

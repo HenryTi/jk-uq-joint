@@ -9,33 +9,51 @@ class MapData {
     constructor(settings) {
         this.settings = settings;
     }
-    async mapProp(prop, value) {
-        let pos = prop.indexOf('@');
-        if (pos < 0) {
-            //body[prop] = value; // data[from];
-            return { p: prop, val: value };
-        }
-        else {
-            let v = prop.substr(0, pos);
-            let tuid = prop.substr(pos + 1);
-            //let val = data[from];
-            let propId = await this.tuidId(tuid, value);
-            //body[v] = propId;
-            return { p: v, val: propId };
-        }
+    async mapOwner(tuidAndArr, ownerVal) {
+        //let pos = owner.indexOf('@');
+        //if (pos <= 0) return;
+        //let v:string = owner.substr(0, pos);
+        //let tuid = owner.substr(pos+1);
+        let propId = await this.tuidId(tuidAndArr, ownerVal);
+        return propId;
     }
-    async mapStringProp(prop, data) {
+    async mapProp(i, prop, data) {
         let pos = prop.indexOf('@');
         if (pos < 0) {
-            //body[prop] = value; // data[from];
             return data[prop];
         }
         else {
-            let v = prop.substr(0, pos);
+            let v;
+            if (pos === 0)
+                v = i;
+            else
+                v = prop.substr(0, pos);
             let tuid = prop.substr(pos + 1);
-            //let val = data[from];
             let propId = await this.tuidId(tuid, data[v]);
-            //body[v] = propId;
+            return propId;
+        }
+    }
+    async mapArrProp(i, prop, row, data) {
+        let p;
+        if (prop.startsWith('^')) {
+            prop = prop.substr(1);
+            p = data;
+        }
+        else {
+            p = row;
+        }
+        let pos = prop.indexOf('@');
+        if (pos < 0) {
+            return p[prop];
+        }
+        else {
+            let v;
+            if (pos === 0)
+                v = i;
+            else
+                v = prop.substr(0, pos);
+            let tuid = prop.substr(pos + 1);
+            let propId = await this.tuidId(tuid, p[v]);
             return propId;
         }
     }
@@ -46,7 +64,6 @@ class MapData {
             //let value = data[i];
             switch (typeof prop) {
                 case 'undefined':
-                    //body[i] = value;
                     break;
                 case 'boolean':
                     if (prop === true) {
@@ -59,100 +76,75 @@ class MapData {
                     body[i] = prop;
                     break;
                 case 'string':
-                    //await setFromProp(body, prop, value);
-                    let val = await this.mapStringProp(prop, data);
+                    let val = await this.mapProp(i, prop, data);
                     body[i] = val;
                     break;
                 case 'object':
                     let arr = prop.$name || i;
-                    body[i] = await this.map(data, prop);
+                    body[i] = await this.mapArr(data, arr, prop);
                     break;
             }
         }
-        /*
-        let {$import} = data;
-        if ($import === 'all') {
-            for (let i in data) {
-                let prop = mapper[i];
-                let value = data[i];
-                switch (typeof prop) {
-                case 'undefined':
-                    body[i] = value;
-                    break;
-                case 'boolean':
-                    if (prop === true) {
-                        body[i] = value;
-                    }
-                    else {
-                    }
-                    break;
-                case 'number':
-                    body[i] = prop;
-                    break;
-                case 'string':
-                    //await setFromProp(body, prop, value);
-                    let {p, val} = await this.mapProp(prop, value);
-                    body[p] = val;
-                    break;
-                case 'object':
-                    let arr = prop.$name || i;
-                    body[arr] = await this.map(value, prop)
-                    break;
-                }
-            }
-        }
-        else {
-            for (let i in mapper) {
-                if (i.substr(0, 1) === '$') continue;
-                let prop = mapper[i];
-                let value = data[i];
-                switch (typeof prop) {
-                case 'boolean':
-                    if (prop === true) {
-                        body[i] = value;
-                    }
-                    else {
-                    }
-                    break;
-                case 'number':
-                    body[i] = prop;
-                    break;
-                case 'string':
-                    //await setFromProp(body, prop, value);
-                    let {p, val} = await this.mapProp(prop, value);
-                    body[p] = val;
-                    break;
-                case 'object':
-                    let arr = prop.$name || i;
-                    body[arr] = await this.map(value, prop);
-                    break;
-                }
-            }
-        }
-        */
         return body;
+    }
+    async mapArr(data, arr, mapper) {
+        let arrRows = data[arr];
+        if (arrRows === undefined)
+            arrRows = [{}];
+        let ret = [];
+        if (Array.isArray(arrRows) === false)
+            arrRows = [arrRows];
+        for (let row of arrRows) {
+            let r = {};
+            for (let i in mapper) {
+                let prop = mapper[i];
+                switch (typeof prop) {
+                    case 'undefined':
+                        break;
+                    case 'boolean':
+                        if (prop === true) {
+                            r[i] = row[i];
+                        }
+                        else {
+                        }
+                        break;
+                    case 'number':
+                        r[i] = prop;
+                        break;
+                    case 'string':
+                        let val = await this.mapArrProp(i, prop, row, data);
+                        r[i] = val;
+                        break;
+                    case 'object':
+                        break;
+                }
+            }
+            ret.push(r);
+        }
+        return ret;
     }
 }
 class MapToUsq extends MapData {
     async tuidId(tuid, value) {
-        let sql = `select id from \`${database_1.databaseName}\`.map_${tuid} where no='${value}'`;
+        let usqIn = this.settings.in[tuid];
+        if (typeof usqIn !== 'object') {
+            throw `tuid ${tuid} is not defined in settings.in`;
+        }
+        let { entity, usq } = usqIn;
+        let sql = `select id from \`${database_1.databaseName}\`.\`map_${entity}\` where no='${value}'`;
         let ret;
         try {
             ret = await tool_1.execSql(sql);
         }
         catch (err) {
-            await createMapTable_1.createMapTable(tuid);
+            await createMapTable_1.createMapTable(entity);
             ret = await tool_1.execSql(sql);
         }
         if (ret.length === 0) {
-            //if (this.usq === undefined) throw 'tuid ' + tuid + ' not defined';
-            let usqIn = this.settings.in[tuid];
-            if (typeof usqIn !== 'object') {
-                throw `tuid ${tuid} is not defined in settings.in`;
-            }
-            let openApi = await openApi_1.getOpenApi(usqIn.usq, this.settings.unit);
-            let vId = await openApi.getTuidVId(tuid);
-            await map_1.map(tuid, vId, value);
+            let openApi = await openApi_1.getOpenApi(usq, this.settings.unit);
+            // let vId = await openApi.getTuidVId(tuid);
+            let vId = await openApi.getTuidVId(entity);
+            await map_1.map(entity, vId, value);
             return vId;
         }
         return ret[0]['id'];
@@ -161,7 +153,7 @@ class MapToUsq extends MapData {
 exports.MapToUsq = MapToUsq;
 class MapFromUsq extends MapData {
     async tuidId(tuid, value) {
-        let sql = `select no from \`${database_1.databaseName}\`.map_${tuid} where no='${value}'`;
+        let sql = `select no from \`${database_1.databaseName}\`.\`map_${tuid}\` where no='${value}'`;
         let ret = await tool_1.execSql(sql);
         if (ret.length === 0)
             return 'n/a';

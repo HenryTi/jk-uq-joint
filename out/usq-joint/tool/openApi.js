@@ -42,13 +42,32 @@ class OpenApi extends fetch_1.Fetch {
         let ret = await this.post('joint/tuid/' + tuid, data);
         return ret;
     }
+    async saveTuidArr(tuid, arr, owner, data) {
+        let ret = await this.post(`joint/tuid-arr/${tuid}/${owner}/${arr}`, data);
+        return ret;
+    }
     async getTuidVId(tuid) {
-        let ret = await this.get('joint/tuid-vid/' + tuid);
+        let parts = tuid.split('.');
+        let url;
+        if (parts.length === 1)
+            url = `joint/tuid-vid/${tuid}`;
+        else
+            url = `joint/tuid-arr-vid/${parts[0]}/${parts[1]}`;
+        let ret = await this.get(url);
         return ret;
     }
     async scanSheet(sheet, scanStartId) {
         let ret = await this.get('joint/sheet-scan/' + sheet + '/' + scanStartId);
         return ret;
+    }
+    async action(action, data) {
+        await this.post('joint/action-json/' + action, data);
+    }
+    async setMap(map, data) {
+        await this.post('joint/action-json/' + map + '$add$', data);
+    }
+    async delMap(map, data) {
+        await this.post('joint/action-json/' + map + '$del$', data);
     }
 }
 exports.OpenApi = OpenApi;

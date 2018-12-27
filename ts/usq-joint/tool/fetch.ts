@@ -57,10 +57,13 @@ export abstract class Fetch {
             //console.log('statusMessage=', response.statusMessage);
         }
         let json = await res.json();
-        if (json.ok !== true) {
+        if (json.error !== undefined) {
             throw json.error;
         }
-        return json.res;
+        if (json.ok === true) {
+            return json.res;
+        }
+        return json;
     }
 }
 
