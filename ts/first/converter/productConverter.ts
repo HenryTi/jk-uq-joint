@@ -27,7 +27,7 @@ export const readProduct: UsqOutConverter = async (maxId: string): Promise<{ las
 
     let sqlstring = `select top 1 p.jkid as ID, p.manufactory as BrandID, p.originalId as ProductNumber
         , isnull(p.Description, 'N/A') as Description, p.DescriptionC
-        , pc.chemid as ChemicalID, p.CAS, p.MF as MolecularFomula, p.MW as molecularWeight, p.Purity
+        , pc.chemid as ChemicalID, zcl_mess.dbo.fc_recas(p.CAS) as CAS, p.MF as MolecularFomula, p.MW as molecularWeight, p.Purity
         from zcl_mess.dbo.products p inner join zcl_mess.dbo.productschem pc on pc.jkid = p.jkid
         where p.jkid > '${maxId}' order by p.jkid`;
     return await read(sqlstring);

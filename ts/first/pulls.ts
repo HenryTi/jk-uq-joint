@@ -6,13 +6,12 @@ import { readWarehouse, readSalesRegionWarehouse } from "./converter/warehouseCo
 import { readChemical } from "./converter/chemicalConverter";
 import { PackTypePullWrite } from "./converter/commonPullWrite";
 import { readPromotion, readPromotionLanguage, readPromotionPack, promotionPullWrite } from "./converter/promotionConveter";
-import { readCustomer, readOrgnization, readCustomerConsigneeContact, readCustomerInvoiceContact } from "./converter/customerConveter";
+import { readCustomer, readOrganization, readCustomerConsigneeContact, readCustomerInvoiceContact } from "./converter/customerConveter";
 import { customerPullWrite } from "./converter/customerPullWrite";
 
 export type UsqOutConverter = (maxId: string) => Promise<{ lastId: string, data: any }>;
 export type PullWrite = (join:Joint, data:any) => Promise<void>;
 export const pulls: { read: UsqOutConverter, usqIn: string | PullWrite }[] = [
-    /*
     { read: readLanguage, usqIn: 'Language' },
     { read: readCountry, usqIn: 'Country' },
     { read: readProvince, usqIn: 'Province' },
@@ -23,7 +22,6 @@ export const pulls: { read: UsqOutConverter, usqIn: string | PullWrite }[] = [
 
     { read: readCurrency, usqIn: 'Currency' },
     { read: readSalesRegion, usqIn: 'SalesRegion' },
-
     { read: readChemical, usqIn: 'Chemical' },
 
     { read: readBrand, usqIn: 'Brand' },
@@ -40,12 +38,13 @@ export const pulls: { read: UsqOutConverter, usqIn: string | PullWrite }[] = [
     { read: readWarehouse, usqIn: "Warehouse" },
     { read: readSalesRegionWarehouse, usqIn: 'SalesRegionWarehouse'},
 
+    /*
     { read: readPromotion, usqIn: promotionPullWrite },
     { read: readPromotionLanguage, usqIn: 'PromotionLanguage' },
     { read: readPromotionPack, usqIn: 'PromotionPack' },
     */
 
-    { read: readOrgnization, usqIn: 'Organization' },
+    { read: readOrganization, usqIn: 'Organization' },
     { read: readCustomer, usqIn: customerPullWrite },
     { read: readCustomerConsigneeContact, usqIn: 'CustomerConsigneeContact' },
     { read: readCustomerInvoiceContact, usqIn: 'CustomerInvoiceContact' },

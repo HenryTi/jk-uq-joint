@@ -13,7 +13,7 @@ export const readCustomer: UsqOutConverter = async (maxId: string): Promise<{ la
     return await read(sqlstring);
 };
 
-export const readOrgnization: UsqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
+export const readOrganization: UsqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
     let sqlstring = `select top 1 UnitID as ID, unitName as Name, convert(nvarchar(30), creaDate, 121) as CreateTime
         from dbs.dbo.CustUnits where UnitID > '${maxId}' order by UnitID`;
@@ -23,7 +23,7 @@ export const readOrgnization: UsqOutConverter = async (maxId: string): Promise<{
 export const readCustomerConsigneeContact: UsqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
     let sqlstring = `select top 1 ID, CID as CustomerID, userName as Name, userUnit as OrganizationName, userMobile as Mobile
-        , email as Email, userZipCode as Zip, userAdd
+        , email as Email, userZipCode as Zip, userAdd, isDefault
         from dbs.dbo.net_OrderBase_txt where ID > '${maxId}' order by ID`;
     return await read(sqlstring);
 };
@@ -31,7 +31,7 @@ export const readCustomerConsigneeContact: UsqOutConverter = async (maxId: strin
 export const readCustomerInvoiceContact: UsqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
     let sqlstring = `select top 1 ID, CID as CustomerID, Name, Unit as OrganizationName, Mobile, Tel as Telephone
-        , Email, Zip, Addr
+        , Email, Zip, Addr, isDefault
         from dbs.dbo.order_InvoiceInfo_txt where ID > '${maxId}' order by ID`;
     return await read(sqlstring);
 };

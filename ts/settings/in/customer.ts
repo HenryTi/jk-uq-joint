@@ -68,7 +68,9 @@ export const CustomerConsigneeContact: UsqInMap = {
         mobile: 'Mobile',
         telephone: 'Telephone',
         email: 'Email',
+        addressString: '',
         address: "AddressID@Address",
+        isDefault: 'isDefault',
     }
 };
 
@@ -83,7 +85,9 @@ export const CustomerInvoiceContact: UsqInMap = {
         mobile: 'Mobile',
         telephone: 'Telephone',
         email: 'Email',
+        addressString: 'userAdd',
         address: "AddressID@Address",
+        isDefault: 'isDefault',
     }
 };
 

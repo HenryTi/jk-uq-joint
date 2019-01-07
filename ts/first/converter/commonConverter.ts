@@ -31,7 +31,7 @@ export const readSalesRegion: UsqOutConverter = async (maxId: string): Promise<{
 
 export const readLanguage: UsqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
-    let sqlstring = `select top 1 LanguageID as ID, LanguageStr from dbs.dbo.Lanugages where LanguageId > '${maxId}' order by LanguageID`;
+    let sqlstring = `select top 1 LanguageID as ID, LanguageStr from dbs.dbo.Languages where LanguageId > '${maxId}' order by LanguageID`;
     return await read(sqlstring);
 };
 

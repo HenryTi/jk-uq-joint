@@ -169,8 +169,8 @@ exports.PriceX = {
     type: 'map',
     entity: 'Price2',
     mapper: {
-        productx: "ProductID@ProductX",
-        packx: "PackingID@ProductPackX",
+        product: "ProductID@ProductX",
+        pack: "PackingID@ProductPackX",
         arr1: {
             salesRegion: "^SalesRegionID@SalesRegion",
             // expireDate: "Expire_Date",
