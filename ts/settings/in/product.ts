@@ -63,7 +63,7 @@ export const ProductChemical: UsqInMap = {
     type: 'map',
     entity: 'ProductChemical',
     mapper: {
-        product: "ID@Product",
+        product: "ID@ProductX",
         arr1: {
             chemical: "^ChemicalID@Chemical",
             CAS: "^CAS",
@@ -79,7 +79,7 @@ export const ProductSalesRegion: UsqInMap = {
     type: 'map',
     entity: 'ProductSalesRegion',
     mapper: {
-        product: 'ProductID@Product',
+        product: 'ProductID@ProductX',
         arr1: {
             salesRegion: '^SalesRegionID@SalesRegion',
             isValid: '^IsValid',
@@ -92,7 +92,7 @@ export const ProductLegallyProhibited: UsqInMap = {
     type: 'map',
     entity: 'ProductLegallyProhibited',
     mapper: {
-        product: 'ProductID@Product',
+        product: 'ProductID@ProductX',
         arr1: {
             salesRegion: '^SalesRegionID@SalesRegion',
             reason: '^Reason',
@@ -182,7 +182,7 @@ export const PriceX: UsqInMap = {
         pack: "PackingID@ProductPackX",
         arr1: {
             salesRegion: "^SalesRegionID@SalesRegion",
-            // expireDate: "Expire_Date",
+            expireDate: "Expire_Date",
             discountinued: "^Discontinued",
             retail: "^Price",
         }

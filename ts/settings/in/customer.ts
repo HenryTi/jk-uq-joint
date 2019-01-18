@@ -57,6 +57,7 @@ export const CustomerContact: UsqInTuidArr = {
     }
 };
 
+/*
 export const CustomerConsigneeContact: UsqInMap = {
     usq: usqs.jkCustomer,
     type: 'map',
@@ -68,7 +69,7 @@ export const CustomerConsigneeContact: UsqInMap = {
         mobile: 'Mobile',
         telephone: 'Telephone',
         email: 'Email',
-        addressString: '',
+        addressString: 'Addr',
         address: "AddressID@Address",
         isDefault: 'isDefault',
     }
@@ -85,13 +86,13 @@ export const CustomerInvoiceContact: UsqInMap = {
         mobile: 'Mobile',
         telephone: 'Telephone',
         email: 'Email',
-        addressString: 'userAdd',
+        addressString: 'Addr',
         address: "AddressID@Address",
         isDefault: 'isDefault',
     }
 };
+*/
 
-/*
 export const CustomerConsigneeContact: UsqInMap = {
     usq: usqs.jkCustomer,
     type: 'map',
@@ -99,7 +100,7 @@ export const CustomerConsigneeContact: UsqInMap = {
     mapper: {
         customer: 'CustomerID@Customer',
         arr1: {
-            contact: '^ContactID@Contact',
+            contact: '^ID@Contact',
         }
     }
 };
@@ -111,7 +112,7 @@ export const CustomerInvoiceContact: UsqInMap = {
     mapper: {
         customer: 'CustomerID@Customer',
         arr1: {
-            contact: '^ContactID@Contact',
+            contact: '^ID@Contact',
         }
     }
 };
@@ -128,7 +129,7 @@ export const Contact: UsqInTuid = {
         mobile: 'Mobile',
         telephone: 'Telephone',
         email: 'Email',
+        addressString: 'Addr',
         address: "AddressID@Address",
     }
 };
-*/

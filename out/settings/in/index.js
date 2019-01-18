@@ -7,6 +7,7 @@ const warehouse_1 = require("./warehouse");
 const chemical_1 = require("./chemical");
 const promotion_1 = require("./promotion");
 const customer_1 = require("./customer");
+const productCategory_1 = require("./productCategory");
 const _in = {
     'Language': salesRegion_1.Lanugage,
     'Country': Address_1.Country,
@@ -35,6 +36,9 @@ const _in = {
     'ProductX': product_1.ProductX,
     'ProductPackX': product_1.ProductPackX,
     'PriceX': product_1.PriceX,
+    'ProductCategory': productCategory_1.ProductCategory,
+    'ProductCategoryLanguage': productCategory_1.ProductCategoryLanguage,
+    'ProductProductCategory': productCategory_1.ProductProductCategory,
     'Warehouse': warehouse_1.Warehouse,
     'SalesRegionWarehouse': warehouse_1.SalesRegionWarehouse,
     'Promotion': promotion_1.Promotion,
@@ -47,6 +51,7 @@ const _in = {
     'CustomerContact': customer_1.CustomerContact,
     'CustomerConsigneeContact': customer_1.CustomerConsigneeContact,
     'CustomerInvoiceContact': customer_1.CustomerInvoiceContact,
+    'Contact': customer_1.Contact,
 };
 exports.default = _in;
 //# sourceMappingURL=index.js.map

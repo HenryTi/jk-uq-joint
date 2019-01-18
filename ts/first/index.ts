@@ -2,7 +2,7 @@ import { settings } from "../settings";
 import { Joint } from '../usq-joint';
 import { pulls } from "./pulls";
 
-const maxRows = 200;
+const maxRows = 20;
 
 (async function () {
     let joint = new Joint(settings);
