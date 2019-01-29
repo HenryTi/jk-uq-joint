@@ -117,6 +117,12 @@ export class Joint {
     }
     */
 
+    async toUsqIn(usqInName:string, data:any) {
+        let usqIn = this.usqInDict[usqInName];
+        if (usqIn === undefined) throw usqInName + ' not defined';
+        await this.usqIn(usqIn, data);
+    }
+
     private async usqIn(usqIn:UsqIn, data:any) {
         /*
         if (typeof usqIn === 'function')
@@ -258,7 +264,6 @@ export class Joint {
         let {name:joinName, bus} = this.settings;
         if (bus === undefined) return;
         let monikerPrefix = '$bus/';
-        let $unitx = '$$$/$unitx'
         let openApi = await this.getOpenApi($unitx);
 
         for (let usqBus of bus) {

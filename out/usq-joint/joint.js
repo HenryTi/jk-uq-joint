@@ -39,6 +39,8 @@ class Joint {
             switch (type) {
                 case 'tuid':
                 case 'tuid-arr':
+                    if (this.usqInDict[entity] !== undefined)
+                        throw 'can not have multiple ' + entity;
                     this.usqInDict[entity] = usqIn;
                     break;
             }
@@ -105,6 +107,12 @@ class Joint {
         await this.usqIn(usqIn, data);
     }
     */
+    async toUsqIn(usqInName, data) {
+        let usqIn = this.usqInDict[usqInName];
+        if (usqIn === undefined)
+            throw usqInName + ' not defined';
+        await this.usqIn(usqIn, data);
+    }
     async usqIn(usqIn, data) {
         /*
         if (typeof usqIn === 'function')
@@ -261,7 +269,6 @@ class Joint {
         if (bus === undefined)
             return;
         let monikerPrefix = '$bus/';
-        let $unitx = '$$$/$unitx';
         let openApi = await this.getOpenApi($unitx);
         for (let usqBus of bus) {
             let { face } = usqBus;
