@@ -138,6 +138,8 @@ abstract class MapData {
 
 export class MapToUsq extends MapData {
     protected async tuidId(tuid:string, value:any): Promise<string|number> {
+        if (value === undefined || value === null) return;
+
         //let usqIn = this.settings.in[tuid];
         let usqIn = this.usqInDict[tuid];
         if (typeof usqIn !== 'object') {

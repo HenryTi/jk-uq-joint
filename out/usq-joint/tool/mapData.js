@@ -130,6 +130,8 @@ class MapData {
 }
 class MapToUsq extends MapData {
     async tuidId(tuid, value) {
+        if (value === undefined || value === null)
+            return;
         //let usqIn = this.settings.in[tuid];
         let usqIn = this.usqInDict[tuid];
         if (typeof usqIn !== 'object') {
