@@ -1,6 +1,7 @@
 import { usqs } from '../usqs';
-import { UsqOutSheet } from "../../usq-joint";
+//import { UsqOutSheet } from "../../usq-joint";
 
+/*
 export const order: UsqOutSheet = {
     usq: usqs.jkOrder,
     type: 'sheet',
@@ -10,3 +11,4 @@ export const order: UsqOutSheet = {
         $all: true,
     }
 };
+*/

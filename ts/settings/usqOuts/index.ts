@@ -1,3 +1,4 @@
+/*
 import {order} from './order';
 
 const _out = {
@@ -5,3 +6,4 @@ const _out = {
 }
 
 export default _out;
+*/

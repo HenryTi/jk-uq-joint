@@ -4,12 +4,17 @@ import { createMapTable } from "./createMapTable";
 import { getOpenApi } from "./openApi";
 import { databaseName } from "../db/mysql/database";
 import { map } from "./map";
-import { Settings } from "../defines";
+import { Settings, UsqIn } from "../defines";
 
 abstract class MapData {
-    protected settings: Settings;
-    constructor(settings: Settings) {
-        this.settings = settings;
+    protected unit: number;
+    protected usqInDict: {[tuid:string]:UsqIn};
+    //protected settings: Settings;
+    //constructor(settings: Settings) {
+    constructor(usqInDict:{[tuid:string]:UsqIn}, unit:number) {
+        //this.settings = settings;
+        this.usqInDict = usqInDict;
+        this.unit = unit;
     }
     protected abstract tuidId(tuid:string, value:any): Promise<string|number>;
 
@@ -39,8 +44,6 @@ abstract class MapData {
         }
     }
 
-
-        
     protected async mapArrProp(i:string, prop:string, row:any, data:any): Promise<any> {
         let p:any;
         if (prop.startsWith('^')) {
@@ -135,11 +138,19 @@ abstract class MapData {
 
 export class MapToUsq extends MapData {
     protected async tuidId(tuid:string, value:any): Promise<string|number> {
-        let usqIn = this.settings.in[tuid];
+        //let usqIn = this.settings.in[tuid];
+        let usqIn = this.usqInDict[tuid];
         if (typeof usqIn !== 'object') {
             throw `tuid ${tuid} is not defined in settings.in`;
         }
-        let { entity, usq } = usqIn;
+        switch (usqIn.type) {
+            default:
+                throw `${tuid} is not tuid in settings.in`;
+            case 'tuid':
+            case 'tuid-arr':
+                break;
+        }
+        let { entity, usq } = usqIn as UsqIn;
         let sql = `select id from \`${databaseName}\`.\`map_${entity}\` where no='${value}'`;
         let ret:any[];
         try {
@@ -150,7 +161,8 @@ export class MapToUsq extends MapData {
             ret = await execSql(sql);
         }
         if (ret.length === 0) {
-            let openApi = await getOpenApi(usq, this.settings.unit);
+            //let openApi = await getOpenApi(usq, this.settings.unit);
+            let openApi = await getOpenApi(usq, this.unit);
             let vId = await openApi.getTuidVId(entity);
             await map(entity, vId, value);
             return vId;

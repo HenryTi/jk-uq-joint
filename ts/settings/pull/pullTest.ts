@@ -1,3 +1,4 @@
+/*
 import { Joint } from "../../usq-joint";
 
 export async function pullTest(joint:Joint, queue:number): Promise<number> {
@@ -14,3 +15,4 @@ export async function pullTest(joint:Joint, queue:number): Promise<number> {
             return 2;
     }
 }
+*/

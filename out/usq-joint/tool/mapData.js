@@ -6,8 +6,12 @@ const openApi_1 = require("./openApi");
 const database_1 = require("../db/mysql/database");
 const map_1 = require("./map");
 class MapData {
-    constructor(settings) {
-        this.settings = settings;
+    //protected settings: Settings;
+    //constructor(settings: Settings) {
+    constructor(usqInDict, unit) {
+        //this.settings = settings;
+        this.usqInDict = usqInDict;
+        this.unit = unit;
     }
     async mapOwner(tuidAndArr, ownerVal) {
         //let pos = owner.indexOf('@');
@@ -126,9 +130,17 @@ class MapData {
 }
 class MapToUsq extends MapData {
     async tuidId(tuid, value) {
-        let usqIn = this.settings.in[tuid];
+        //let usqIn = this.settings.in[tuid];
+        let usqIn = this.usqInDict[tuid];
         if (typeof usqIn !== 'object') {
             throw `tuid ${tuid} is not defined in settings.in`;
+        }
+        switch (usqIn.type) {
+            default:
+                throw `${tuid} is not tuid in settings.in`;
+            case 'tuid':
+            case 'tuid-arr':
+                break;
         }
         let { entity, usq } = usqIn;
         let sql = `select id from \`${database_1.databaseName}\`.\`map_${entity}\` where no='${value}'`;
@@ -141,7 +153,8 @@ class MapToUsq extends MapData {
             ret = await tool_1.execSql(sql);
         }
         if (ret.length === 0) {
-            let openApi = await openApi_1.getOpenApi(usq, this.settings.unit);
+            //let openApi = await getOpenApi(usq, this.settings.unit);
+            let openApi = await openApi_1.getOpenApi(usq, this.unit);
             let vId = await openApi.getTuidVId(entity);
             await map_1.map(entity, vId, value);
             return vId;

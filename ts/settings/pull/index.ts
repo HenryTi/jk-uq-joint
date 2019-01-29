@@ -1,3 +1,4 @@
+/*
 import { pullTest } from "./pullTest";
 
 const pull = {
@@ -5,3 +6,4 @@ const pull = {
 }
 
 export default pull;
+*/

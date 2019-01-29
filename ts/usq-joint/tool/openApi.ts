@@ -2,6 +2,15 @@ import fetch, { Headers } from "node-fetch";
 import { Fetch } from "./fetch";
 import { centerApi } from "./centerApi";
 import { urlSetUsqHost, urlSetUnitxHost } from "./setHostUrl";
+import { format } from "url";
+import { IncomingMessage } from "http";
+
+export interface BusMessage {
+    id: number;
+    face: string;
+    from: string;
+    body: string;
+}
 
 export class OpenApi extends Fetch {
     protected unit:number;
@@ -25,6 +34,24 @@ export class OpenApi extends Fetch {
         let ret = await this.post('open/bus', {
             faces: faces,
             faceUnitMessages: faceUnitMessages,
+        });
+        return ret;
+    }
+    async readBus(face:string, queue:number):Promise<BusMessage> {
+        let ret = await this.post('open/joint-read-bus', {
+            unit: this.unit, 
+            face: face, 
+            queue: queue
+        });
+        return ret;
+    }
+    async writeBus(face:string, from:string, queue:number, body:string):Promise<BusMessage> {
+        let ret = await this.post('open/joint-write-bus', {
+            unit: this.unit, 
+            face: face, 
+            from: from,
+            sourceId: queue,
+            body: body,
         });
         return ret;
     }

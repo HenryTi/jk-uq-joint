@@ -29,6 +29,24 @@ class OpenApi extends fetch_1.Fetch {
         });
         return ret;
     }
+    async readBus(face, queue) {
+        let ret = await this.post('open/joint-read-bus', {
+            unit: this.unit,
+            face: face,
+            queue: queue
+        });
+        return ret;
+    }
+    async writeBus(face, from, queue, body) {
+        let ret = await this.post('open/joint-write-bus', {
+            unit: this.unit,
+            face: face,
+            from: from,
+            sourceId: queue,
+            body: body,
+        });
+        return ret;
+    }
     async tuid(unit, id, tuid, maps) {
         let ret = await this.post('open/tuid', {
             unit: unit,
