@@ -9,8 +9,8 @@ export const SalesRegion: UsqInTuid = {
     mapper: {
         $id: 'ID@SalesRegion',
         no: "ID",
-        name: "market_name",
-        currency: "currency@Currency",
+        name: "Market_name",
+        currency: "Currency@Currency",
     }
 };
 
@@ -33,8 +33,8 @@ export const PackType: UsqInTuid = {
     mapper: {
         $id: 'ID@PackType',
         no: 'ID',
-        name: 'unitE',
-        description: "unitC"
+        name: 'UnitE',
+        description: "UnitC"
     }
 };
 
@@ -45,7 +45,7 @@ export const PackTypeMapToStandard: UsqInMap = {
     mapper: {
         packType: "ID@PackType",
         arr1: {
-            packTypeStandard: "standardUnitID@PackTypeStandard",
+            packTypeStandard: "StandardUnitID@PackTypeStandard",
         }
     }
 };
@@ -58,8 +58,8 @@ export const PackTypeStandard: UsqInTuid = {
     mapper: {
         $id: 'ID@PackTypeStandard',
         no: "ID",
-        name: 'unit',
-        class: "name"
+        name: 'Unit',
+        class: "Name"
     }
 };
 

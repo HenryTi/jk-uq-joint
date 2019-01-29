@@ -36,17 +36,7 @@ export async function consigneeContactPullWrite(joint: Joint, contactData: any) 
 
     try {
         await joint.pushToUsq("Contact", contactData);
-        await joint.pushToUsq("CustomerConsigneeContact", _.pick(contactData, ["ID", "CustomerID"]));
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-export async function invoiceContactPullWrite(joint: Joint, contactData: any) {
-
-    try {
-        await joint.pushToUsq("Contact", contactData);
-        await joint.pushToUsq("CustomerInvoiceContact", _.pick(contactData, ["ID", "CustomerID"]));
+        await joint.pushToUsq("CustomerContacts", _.pick(contactData, ["ID", "CustomerID"]));
     } catch (error) {
         console.log(error);
     }

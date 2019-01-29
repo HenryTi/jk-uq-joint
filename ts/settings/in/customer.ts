@@ -93,10 +93,10 @@ export const CustomerInvoiceContact: UsqInMap = {
 };
 */
 
-export const CustomerConsigneeContact: UsqInMap = {
+export const CustomerContacts: UsqInMap = {
     usq: usqs.jkCustomer,
     type: 'map',
-    entity: 'CustomerConsigneeContact',
+    entity: 'CustomerContacts',
     mapper: {
         customer: 'CustomerID@Customer',
         arr1: {
@@ -105,6 +105,7 @@ export const CustomerConsigneeContact: UsqInMap = {
     }
 };
 
+/*
 export const CustomerInvoiceContact: UsqInMap = {
     usq: usqs.jkCustomer,
     type: 'map',
@@ -116,6 +117,7 @@ export const CustomerInvoiceContact: UsqInMap = {
         }
     }
 };
+*/
 
 export const Contact: UsqInTuid = {
     usq: usqs.jkCustomer,

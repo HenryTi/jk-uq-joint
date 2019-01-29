@@ -22,7 +22,7 @@ export const readOrganization: UsqOutConverter = async (maxId: string): Promise<
 
 export const readCustomerConsigneeContact: UsqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
-    let sqlstring = `select top 1 ID, CID as CustomerID, userName as Name, userUnit as OrganizationName, userMobile as Mobile
+    let sqlstring = `select top 1 ID, CID as CustomerID, userName as Name, userUnit as OrganizationName, isnull(userMobile, '') as Mobile
         , email as Email, userZipCode as Zip, userAdd as Addr, isDefault
         from dbs.dbo.net_OrderBase_txt where ID > '${maxId}' order by ID`;
     return await read(sqlstring);
@@ -30,7 +30,7 @@ export const readCustomerConsigneeContact: UsqOutConverter = async (maxId: strin
 
 export const readCustomerInvoiceContact: UsqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
-    let sqlstring = `select top 1 ID, CID as CustomerID, Name, Unit as OrganizationName, Mobile, Tel as Telephone
+    let sqlstring = `select top 1 ID, CID as CustomerID, Name, Unit as OrganizationName, isnull(Mobile, '') as Mobile, Tel as Telephone
         , Email, Zip, Addr, isDefault
         from dbs.dbo.order_InvoiceInfo_txt where ID > '${maxId}' order by ID`;
     return await read(sqlstring);

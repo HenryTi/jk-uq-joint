@@ -59,7 +59,7 @@ exports.ProductChemical = {
     type: 'map',
     entity: 'ProductChemical',
     mapper: {
-        product: "ID@Product",
+        product: "ID@ProductX",
         arr1: {
             chemical: "^ChemicalID@Chemical",
             CAS: "^CAS",
@@ -74,7 +74,7 @@ exports.ProductSalesRegion = {
     type: 'map',
     entity: 'ProductSalesRegion',
     mapper: {
-        product: 'ProductID@Product',
+        product: 'ProductID@ProductX',
         arr1: {
             salesRegion: '^SalesRegionID@SalesRegion',
             isValid: '^IsValid',
@@ -86,7 +86,7 @@ exports.ProductLegallyProhibited = {
     type: 'map',
     entity: 'ProductLegallyProhibited',
     mapper: {
-        product: 'ProductID@Product',
+        product: 'ProductID@ProductX',
         arr1: {
             salesRegion: '^SalesRegionID@SalesRegion',
             reason: '^Reason',
@@ -167,13 +167,13 @@ exports.ProductPackX = {
 exports.PriceX = {
     usq: usqs_1.usqs.jkProduct,
     type: 'map',
-    entity: 'Price2',
+    entity: 'PriceX',
     mapper: {
         product: "ProductID@ProductX",
         pack: "PackingID@ProductPackX",
         arr1: {
             salesRegion: "^SalesRegionID@SalesRegion",
-            // expireDate: "Expire_Date",
+            expireDate: "Expire_Date",
             discountinued: "^Discontinued",
             retail: "^Price",
         }

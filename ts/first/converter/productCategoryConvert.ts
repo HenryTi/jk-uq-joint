@@ -11,7 +11,7 @@ export const readProductCategory: UsqOutConverter = async (maxId: string): Promi
 
 export const readProductCategoryLanguage: UsqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
-    let sqlstring = `select top 1 ID, ProductCategoryID, languageID, ProductCategoryName
+    let sqlstring = `select top 1 ID, ProductCategoryID, LanguageID, ProductCategoryName
         from opdata.dbo.ProductCategoryLanguage where ID > '${maxId}' order by ID`;
     return await read(sqlstring);
 };

@@ -176,7 +176,7 @@ export const ProductPackX: UsqInTuidArr = {
 export const PriceX: UsqInMap = {
     usq: usqs.jkProduct,
     type: 'map',
-    entity: 'Price2',
+    entity: 'PriceX',
     mapper: {
         product: "ProductID@ProductX",
         pack: "PackingID@ProductPackX",

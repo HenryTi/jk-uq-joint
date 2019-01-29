@@ -10,7 +10,7 @@ export const Country: UsqInTuid = {
         $id: 'ID@Country',
         no: "ID",
         code: "ID",
-        englishName: "countries",
+        englishName: "Countries",
         chineseName: "ChineseName"
     }
 };
@@ -24,7 +24,7 @@ export const Province: UsqInTuid = {
     mapper: {
         $id: 'ID@Province',
         no: "ID",
-        englishName: "countries",
+        englishName: "Countries",
         chineseName: "ChineseName",
         country: "parentCode@Country",
     }
@@ -39,7 +39,7 @@ export const City: UsqInTuid = {
     mapper: {
         $id: 'ID@City',
         no: "ID",
-        englishName: "countries",
+        englishName: "Countries",
         chineseName: "ChineseName",
         province: "parentCode@Province",
     }
@@ -53,7 +53,7 @@ export const County: UsqInTuid = {
     mapper: {
         $id: 'ID@County',
         no: "ID",
-        englishName: "countries",
+        englishName: "Countries",
         chineseName: "ChineseName",
         city: "parentCode@City",
     }

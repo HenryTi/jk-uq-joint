@@ -9,7 +9,7 @@ export const ProductCategory: UsqInTuid = {
     mapper: {
         $id: 'ID@ProductCategory',
         no: "ID",
-        parent: "ParentProductCategoryID",
+        parent: "ParentProductCategoryID@ProductCategory",
         isLeaf: "IsLeaf",
         orderWithinParent: "OrderWithinParentCategory",
     }

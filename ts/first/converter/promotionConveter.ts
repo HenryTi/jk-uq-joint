@@ -13,7 +13,7 @@ export const readPromotion: UsqOutConverter = async (maxId: string): Promise<{ l
 
 export const readPromotionLanguage: UsqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
-    let sqlstring = `select top 1 ExcID as ID, Marketing as PromotionID, LanguageID, messageText as Description, Url
+    let sqlstring = `select top 1 ExcID as ID, MarketingID as PromotionID, LanguageID, messageText as Description, Url
         from dbs.dbo.MarketingMessageLanguages where ExcID > '${maxId}' order by ExcID`;
     return await read(sqlstring);
 };
@@ -21,7 +21,7 @@ export const readPromotionLanguage: UsqOutConverter = async (maxId: string): Pro
 export const readPromotionPack: UsqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
     let sqlstring = `select top 1 ExcID as ID, MarketingID as PromotionID, jkid as ProductID, jkcat as PackageID, activeDiscount as Discount, isStock as WhenHasStorage
-        from dbs.dbo.ProductMarketing where ExcID > '${maxId}' order by ExcID`;
+        from zcl_mess.dbo.ProductsMarketing where ExcID > '${maxId}' order by ExcID`;
     return await read(sqlstring);
 };
 

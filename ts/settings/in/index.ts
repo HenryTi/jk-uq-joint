@@ -4,7 +4,7 @@ import { Brand, Product, ProductSalesRegion, ProductLegallyProhibited, ProductX,
 import { Warehouse, SalesRegionWarehouse } from "./warehouse";
 import { Chemical } from "./chemical";
 import { Promotion, PromotionSalesRegion, PromotionLanguage, PromotionPack } from "./promotion";
-import { Customer, Organization, OrganizationCustomer, CustomerContact, CustomerConsigneeContact, CustomerInvoiceContact, Contact } from "./customer";
+import { Customer, Organization, OrganizationCustomer, CustomerContact, CustomerContacts, Contact } from "./customer";
 import { ProductCategory, ProductCategoryLanguage, ProductProductCategory } from "./productCategory";
 
 const _in = {
@@ -57,8 +57,8 @@ const _in = {
     'Organization': Organization,
     'OrganizationCustomer': OrganizationCustomer,
     'CustomerContact': CustomerContact,
-    'CustomerConsigneeContact': CustomerConsigneeContact,
-    'CustomerInvoiceContact': CustomerInvoiceContact,
+    'CustomerContacts': CustomerContacts,
+    // 'CustomerInvoiceContact': CustomerInvoiceContact,
     'Contact': Contact,
 }
 

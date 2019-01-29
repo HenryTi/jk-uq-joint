@@ -7,7 +7,7 @@ import { readChemical } from "./converter/chemicalConverter";
 import { PackTypePullWrite } from "./converter/commonPullWrite";
 import { readPromotion, readPromotionLanguage, readPromotionPack, promotionPullWrite } from "./converter/promotionConveter";
 import { readCustomer, readOrganization, readCustomerConsigneeContact, readCustomerInvoiceContact } from "./converter/customerConveter";
-import { customerPullWrite, consigneeContactPullWrite, invoiceContactPullWrite } from "./converter/customerPullWrite";
+import { customerPullWrite, consigneeContactPullWrite } from "./converter/customerPullWrite";
 import { readProductCategory, readProductCategoryLanguage, readProductProductCategory } from "./converter/productCategoryConvert";
 
 /**
@@ -21,6 +21,7 @@ export type PullWrite = (join:Joint, data:any) => Promise<void>;
 
 /** */
 export const pulls: { read: UsqOutConverter, usqIn: string | PullWrite }[] = [
+    /*
     { read: readLanguage, usqIn: 'Language' },
     { read: readCountry, usqIn: 'Country' },
     { read: readProvince, usqIn: 'Province' },
@@ -38,25 +39,28 @@ export const pulls: { read: UsqOutConverter, usqIn: string | PullWrite }[] = [
     { read: readBrandSalesRegion, usqIn: 'BrandSalesRegion' },
     { read: readBrandDeliveryTime, usqIn: 'BrandDeliveryTime' },
     { read: readProduct, usqIn: productPullWrite },
-    { read: readProductSalesRegion, usqIn: 'ProductSalesRegion' },
-    { read: readProductLegallyProhibited, usqIn: 'ProductLegallyProhibited' },
     // { read: readPack, usqIn: 'ProductPack' },
     // { read: readPrice, usqIn: 'Price' },
     { read: readPack, usqIn: 'ProductPackX' },
     { read: readPrice, usqIn: 'PriceX' },
-
+    */
+    /*
+    { read: readProductSalesRegion, usqIn: 'ProductSalesRegion' },
+    { read: readProductLegallyProhibited, usqIn: 'ProductLegallyProhibited' },
+    */
     // 目录树
     { read: readProductCategory, usqIn: 'ProductCategory' },
     { read: readProductCategoryLanguage, usqIn: 'ProductCategoryLanguage' },
     { read: readProductProductCategory, usqIn: 'ProductProductCategory' },
+    /*
 
     // 库存
     { read: readWarehouse, usqIn: "Warehouse" },
     { read: readSalesRegionWarehouse, usqIn: 'SalesRegionWarehouse'},
 
-    { read: readPromotion, usqIn: promotionPullWrite },
-    { read: readPromotionLanguage, usqIn: 'PromotionLanguage' },
-    { read: readPromotionPack, usqIn: 'PromotionPack' },
+    // { read: readPromotion, usqIn: promotionPullWrite },
+    // { read: readPromotionLanguage, usqIn: 'PromotionLanguage' },
+    // { read: readPromotionPack, usqIn: 'PromotionPack' },
 
     // 客户和客户单位基本信息
     { read: readOrganization, usqIn: 'Organization' },
@@ -66,5 +70,6 @@ export const pulls: { read: UsqOutConverter, usqIn: string | PullWrite }[] = [
     { read: readCustomerInvoiceContact, usqIn: 'CustomerInvoiceContact' },
     // 使用map方式的导数据代码
     { read: readCustomerConsigneeContact, usqIn: consigneeContactPullWrite },
-    { read: readCustomerInvoiceContact, usqIn: invoiceContactPullWrite },
+    { read: readCustomerInvoiceContact, usqIn: consigneeContactPullWrite },
+    */
 ]

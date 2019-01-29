@@ -49,8 +49,8 @@ const _in = {
     'Organization': customer_1.Organization,
     'OrganizationCustomer': customer_1.OrganizationCustomer,
     'CustomerContact': customer_1.CustomerContact,
-    'CustomerConsigneeContact': customer_1.CustomerConsigneeContact,
-    'CustomerInvoiceContact': customer_1.CustomerInvoiceContact,
+    'CustomerContacts': customer_1.CustomerContacts,
+    // 'CustomerInvoiceContact': CustomerInvoiceContact,
     'Contact': customer_1.Contact,
 };
 exports.default = _in;
