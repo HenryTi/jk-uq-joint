@@ -4,7 +4,7 @@ import { createMapTable } from "./createMapTable";
 import { getOpenApi } from "./openApi";
 import { databaseName } from "../db/mysql/database";
 import { map } from "./map";
-import { Settings, UsqIn } from "../defines";
+import { UsqIn } from "../defines";
 
 abstract class MapData {
     protected unit: number;

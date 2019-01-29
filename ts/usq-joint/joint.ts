@@ -27,6 +27,7 @@ export class Joint {
             switch (type) {
                 case 'tuid':
                 case 'tuid-arr':
+                    if (this.usqInDict[entity] !== undefined) throw 'can not have multiple ' + entity;
                     this.usqInDict[entity] = usqIn;
                     break;
             }
