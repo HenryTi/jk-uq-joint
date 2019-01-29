@@ -1,3 +1,4 @@
+/*
 import { Joint } from "../../usq-joint";
 import { pullEntity } from ".";
 
@@ -7,3 +8,4 @@ export async function pullChemical(joint: Joint, queue: number): Promise<number>
         where code > '${queue}' and level = 1 order by code`;
     return await pullEntity(joint, 'Chemical', sqlstring, queue);
 }
+*/

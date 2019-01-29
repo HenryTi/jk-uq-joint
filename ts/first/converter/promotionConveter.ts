@@ -2,6 +2,7 @@ import { UsqOutConverter } from "../pulls";
 import { read } from ".";
 import { Joint } from "../../usq-joint";
 import * as _ from 'lodash';
+import { Promotion, PromotionSalesRegion } from "../../settings/in/promotion";
 
 export const readPromotion: UsqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
@@ -28,8 +29,8 @@ export const readPromotionPack: UsqOutConverter = async (maxId: string): Promise
 export async function promotionPullWrite(joint: Joint, data: any) {
 
     try {
-        await joint.pushToUsq("Promotion",  _.pick(data, ["ID", "Name", "Type", "Status", "StartDate", 'EndDate', 'CreateDate']));
-        await joint.pushToUsq("PromotionSalesRegion", _.pick(data, ["ID", "SalesRegionID"]));
+        await joint.usqIn(Promotion,  _.pick(data, ["ID", "Name", "Type", "Status", "StartDate", 'EndDate', 'CreateDate']));
+        await joint.usqIn(PromotionSalesRegion, _.pick(data, ["ID", "SalesRegionID"]));
     } catch (error) {
         console.error(error);
     }

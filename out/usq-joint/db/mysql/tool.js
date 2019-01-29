@@ -56,11 +56,6 @@ async function execProc(proc, values) {
     });
 }
 exports.execProc = execProc;
-/**
- * 执行存储过程，从queue_in中读取指定entity最后一个尚未导入joint的数据
- * @param proc 存储过程名
- * @param values 参数及其值
- */
 async function tableFromProc(proc, values) {
     let res = await execProc(proc, values);
     if (Array.isArray(res) === false)

@@ -63,7 +63,7 @@ export const PackTypeStandard: UsqInTuid = {
     }
 };
 
-export const Lanugage: UsqInTuid = {
+export const Language: UsqInTuid = {
     usq: usqs.jkCommon,
     type: 'tuid',
     entity: 'Language',

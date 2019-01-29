@@ -1,4 +1,11 @@
+/*
 import { pullTest } from "./pullTest";
+
+const pull = {
+    a: pullTest,
+}
+
+export default pull;
 import { pullCountry, pullProvince, pullCity, pullCounty, pullPackTypeStandard, pullPackType, pullCurrency, pullSalesRegion } from "./common";
 import { pullChemical } from "./Chemical";
 import { Joint } from "../../usq-joint";
@@ -19,14 +26,14 @@ const pull = {
 
     Chemical: pullChemical,
 
-    a: pullTest,
 }
 
 export async function pullEntity(joint: Joint, entityName: string, sqlstring: string, queue: number): Promise<number> {
 
     let data = await execSql(sqlstring);
-    await joint.pushToUsq(entityName, data);
+    await joint.usqIn(entityName, data);
     return queue + 1;
 }
 
 export default pull;
+*/

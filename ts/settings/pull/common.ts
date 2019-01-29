@@ -1,3 +1,4 @@
+/*
 import { Joint } from "../../usq-joint";
 import { pullEntity } from ".";
 
@@ -56,3 +57,4 @@ export async function pullSalesRegion(joint: Joint, queue: number): Promise<numb
         where code > '${queue}' and level = 1 order by code`;
     return await pullEntity(joint, 'SalesRegion', sqlstring, queue);
 }
+*/

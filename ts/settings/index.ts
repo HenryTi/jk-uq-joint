@@ -1,17 +1,21 @@
 import { Settings } from "../usq-joint";
-import _in from "./in";
-import _out from "./out";
-import pull from "./pull";
+//import _out from "./out";
+//import pull from "./pull";
+import { bus } from "./bus";
+import usqIns from "./in";
 //import push from "./push";
 
-export const settings:Settings = {
+export const settings: Settings = {
+    name: 'j&k_usq_joint',
     unit: 24,
     allowedIP: [
         '218.249.142.140',
         '211.5.7.60'
     ],
-    in: _in,
-    out: _out,
-    pull: pull,
+    usqIns: usqIns,
+    usqOuts: undefined,
+    //out: _out,
+    //pull: pull,
     //push: push,
+    bus: bus,
 }

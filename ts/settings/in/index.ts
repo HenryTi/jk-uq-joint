@@ -1,12 +1,12 @@
 import { Country, Province, City, County, Address } from "./Address";
-import { SalesRegion, Currency, PackType, PackTypeStandard, PackTypeMapToStandard, Lanugage } from "./salesRegion";
+import { SalesRegion, Currency, PackType, PackTypeStandard, PackTypeMapToStandard, Language } from "./salesRegion";
 import { Brand, Product, ProductSalesRegion, ProductLegallyProhibited, ProductX, ProductPackX, PriceX, BrandSalesRegion, BrandDeliveryTime, ProductChemical } from "./product";
 import { Warehouse, SalesRegionWarehouse } from "./warehouse";
 import { Chemical } from "./chemical";
 import { Promotion, PromotionSalesRegion, PromotionLanguage, PromotionPack } from "./promotion";
 import { Customer, Organization, OrganizationCustomer, CustomerContact, CustomerContacts, Contact } from "./customer";
 import { ProductCategory, ProductCategoryLanguage, ProductProductCategory } from "./productCategory";
-
+/*
 const _in = {
     'Language': Lanugage,
     'Country': Country,
@@ -31,11 +31,9 @@ const _in = {
     'ProductSalesRegion': ProductSalesRegion,
     'ProductLegallyProhibited': ProductLegallyProhibited,
 
-    /*
     'ProductPackType': ProductPackType,
     'ProductPack': ProductPack,
     'Price': Price,
-    */
 
     'ProductX': ProductX,
     'ProductPackX': ProductPackX,
@@ -63,3 +61,61 @@ const _in = {
 }
 
 export default _in;
+*/
+
+const usqIns = [
+    Language,
+    Country,
+    Province,
+    City,
+    County,
+    Address,
+    Currency,
+    SalesRegion,
+    PackType,
+    PackTypeMapToStandard,
+    PackTypeStandard,
+
+    Chemical,
+
+    Brand,
+    BrandSalesRegion,
+    BrandDeliveryTime,
+
+    Product,
+    ProductChemical,
+    ProductSalesRegion,
+    ProductLegallyProhibited,
+
+    /*
+    ProductPackType,
+    ProductPack,
+    Price,
+    */
+
+    ProductX,
+    ProductPackX,
+    PriceX,
+
+    ProductCategory,
+    ProductCategoryLanguage,
+    ProductProductCategory,
+
+    Warehouse,
+    SalesRegionWarehouse,
+
+    Promotion,
+    PromotionSalesRegion,
+    PromotionLanguage,
+    PromotionPack,
+
+    Customer,
+    Organization,
+    OrganizationCustomer,
+    CustomerContact,
+    CustomerContacts,
+    // 'CustomerInvoiceContact': CustomerInvoiceContact,
+    Contact,
+]
+
+export default usqIns;

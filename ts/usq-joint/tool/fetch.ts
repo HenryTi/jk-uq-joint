@@ -13,7 +13,7 @@ export abstract class Fetch {
                 for (let k of keys) {
                     let v = params[k];
                     if (v === undefined) continue;
-                    url += c + k + '=' + params[k];
+                    url += c + k + '=' + encodeURIComponent(params[k]);
                     c = '&';
                 }
             }
@@ -35,7 +35,7 @@ export abstract class Fetch {
         headers.append('Content-Type', 'application/json'); // This one sends body
         this.appendHeaders(headers);
         let res = await fetch(
-            encodeURI(this.baseUrl + url), 
+            this.baseUrl + url, 
             {
                 headers: headers, /*{
                     "Content-Type": 'application/json',

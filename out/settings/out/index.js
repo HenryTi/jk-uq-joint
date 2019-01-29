@@ -1,8 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const order_1 = require("./order");
+/*
+import {order} from './order';
+
 const _out = {
-    'order': order_1.order,
-};
-exports.default = _out;
+    'order': order,
+}
+
+export default _out;
+*/ 
 //# sourceMappingURL=index.js.map

@@ -22,9 +22,9 @@ const maxRows = 20;
             if (ret === undefined || count > maxRows) break;
             let { lastId, data } = ret;
             maxId = lastId;
-            if (typeof usqIn === 'string') {
+            if (typeof usqIn === 'object') {
                 try {
-                    await joint.pushToUsq(usqIn, data);
+                    await joint.usqIn(usqIn, data);
                 } catch (error) {
                     console.error(error);
                 }

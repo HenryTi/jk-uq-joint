@@ -1,35 +1,50 @@
 import { Router } from "express";
-import { Settings, UsqIn, UsqOut, DataPush, UsqInConverter, UsqInTuid, UsqInMap, UsqInAction, UsqInTuidArr } from "./defines";
+import { Settings, UsqIn, UsqOut, DataPush, UsqInTuid, UsqInMap, UsqInTuidArr } from "./defines";
 import { tableFromProc, execProc, execSql } from "./db/mysql/tool";
-import { getOpenApi } from "./tool/openApi";
+import { getOpenApi, BusMessage } from "./tool/openApi";
 import { MapFromUsq, MapToUsq } from "./tool/mapData";
-import { map } from "./tool/map";import { createRouter } from './router';
+import { map } from "./tool/map"; import { createRouter } from './router';
 import { databaseName } from "./db/mysql/database";
 import { createMapTable } from "./tool/createMapTable";
+import { faceSchemas } from "./tool/faceSchemas";
+import { Mapper } from "./tool/mapper";
 
-const interval = 60*1000;
+const interval = 60 * 1000;
+const $unitx = '$$$/$unitx';
 
 export class Joint {
     protected settings: Settings;
+    protected usqInDict: { [tuid: string]: UsqIn } = {};
+    protected unit: number;
 
     constructor(settings: Settings) {
         this.settings = settings;
+        let { unit, usqIns } = settings;
+        this.unit = unit;
+        if (usqIns === undefined) return;
+        for (let usqIn of usqIns) {
+            let { entity, type } = usqIn;
+            if (this.usqInDict[entity] !== undefined) throw 'can not have multiple ' + entity;
+            this.usqInDict[entity] = usqIn;
+        }
     }
 
-    createRouter():Router {
+    createRouter(): Router {
         return createRouter(this.settings);
     }
 
     startTimer() {
-        setTimeout(this.tick, 3*1000);
+        setTimeout(this.tick, 3 * 1000);
     }
 
     private tick = async () => {
         try {
             console.log('tick ' + new Date().toLocaleString());
-            await this.scanPull();
+            //await this.scanPull();
             await this.scanIn();
             await this.scanOut();
+
+            await this.scanBus();
         }
         catch (err) {
             console.error('error in timer tick');
@@ -40,9 +55,7 @@ export class Joint {
         }
     }
 
-    /**
-     * 从内部读取数据直接发送到usq中，指针保存在joint中
-     */
+    /*
     private async scanPull() {
         for (let i in this.settings.pull) {
             console.log('scan pull ', i);
@@ -62,22 +75,23 @@ export class Joint {
             }
         }
     }
+    */
 
-    /**
-     * 从joint的queue_in中读取数据发送到joint中
-     */
     private async scanIn() {
-        for (let i in this.settings.in) {
-            console.log('scan in ', i);
-            let usqIn = this.settings.in[i];
-            for (;;) {
-                let retp = await tableFromProc('read_queue_in', [i]);
+        let { usqIns } = this.settings;
+        if (usqIns === undefined) return;
+        for (let usqIn of usqIns) {
+            let { usq, entity } = usqIn;
+            let queueName = usq + ':' + entity;
+            console.log('scan in ' + queueName);
+            for (; ;) {
+                let retp = await tableFromProc('read_queue_in', [queueName]);
                 if (!retp || retp.length === 0) break;
-                let {id, body, date} = retp[0];
+                let { id, body, date } = retp[0];
                 let data = JSON.parse(body);
                 await this.usqIn(usqIn, data);
                 console.log(`process in ${id} ${(date as Date).toLocaleString()}: `, body);
-                await execProc('write_queue_in_p', [i, id]);
+                await execProc('write_queue_in_p', [queueName, id]);
             }
         }
     }
@@ -87,6 +101,7 @@ export class Joint {
         return openApi;
     }
 
+    /*
     async pushToUsq(usqInName:string, data:any) {
         let usqIn = this.settings.in[usqInName];
         if (usqIn === undefined) {
@@ -94,45 +109,40 @@ export class Joint {
             return;
         }
         await this.usqIn(usqIn, data);
-        let s = null;
-        let t = null;
     }
+    */
 
-    /**
-     * 将数据导入到usqIn配置中的joint的entity中
-     * @param usqIn setting.in中的配置信息
-     * @param data 要导入到joint的数据
-     */
-    private async usqIn(usqIn:UsqIn|UsqInConverter, data:any) {
+    async usqIn(usqIn: UsqIn, data: any) {
+        /*
         if (typeof usqIn === 'function')
             await usqIn(this.settings, data);
         else {
-            switch (usqIn.type) {
-                case 'tuid': await this.usqInTuid(usqIn as UsqInTuid, data); break;
-                case 'tuid-arr': await this.usqInTuidArr(usqIn as UsqInTuidArr, data); break;
-                case 'map': await this.usqInMap(usqIn as UsqInMap, data); break;
-                case 'action': await this.usqInAction(usqIn as UsqInAction, data); break;
-            }
+        */
+        switch (usqIn.type) {
+            case 'tuid': await this.usqInTuid(usqIn as UsqInTuid, data); break;
+            case 'tuid-arr': await this.usqInTuidArr(usqIn as UsqInTuidArr, data); break;
+            case 'map': await this.usqInMap(usqIn as UsqInMap, data); break;
         }
+        //}
     }
 
-    protected async usqInTuid(usqIn:UsqInTuid, data:any):Promise<number> {
-        let {key, mapper, usq, entity:tuid} = usqIn;
+    protected async usqInTuid(usqIn: UsqInTuid, data: any): Promise<number> {
+        let { key, mapper, usq, entity: tuid } = usqIn;
         if (key === undefined) throw 'key is not defined';
         if (usq === undefined) throw 'tuid ' + tuid + ' not defined';
         let keyVal = data[key];
-        let mapToUsq = new MapToUsq(this.settings);
+        let mapToUsq = new MapToUsq(this.usqInDict, this.unit);
         let body = await mapToUsq.map(data, mapper);
         let openApi = await this.getOpenApi(usq);
         let ret = await openApi.saveTuid(tuid, body);
-        let {id, inId} = ret;
+        let { id, inId } = ret;
         if (id < 0) id = -id;
         await map(tuid, id, keyVal);
         return id;
     }
 
-    protected async usqInTuidArr(usqIn:UsqInTuidArr, data:any):Promise<number> {
-        let {key, owner, mapper, usq, entity} = usqIn;
+    protected async usqInTuidArr(usqIn: UsqInTuidArr, data: any): Promise<number> {
+        let { key, owner, mapper, usq, entity } = usqIn;
         if (key === undefined) throw 'key is not defined';
         if (usq === undefined) throw 'usq ' + usq + ' not defined';
         if (entity === undefined) throw 'tuid ' + entity + ' not defined';
@@ -143,24 +153,24 @@ export class Joint {
         let keyVal = data[key];
         if (owner === undefined) throw 'owner is not defined';
         let ownerVal = data[owner];
-        let mapToUsq = new MapToUsq(this.settings);
+        let mapToUsq = new MapToUsq(this.usqInDict, this.unit);
         //let ownerId = await mapToUsq.mapOwner(entity, ownerVal);
         let ownerId = await this.mapOwner(usqIn, tuid, ownerVal);
         if (ownerId === undefined) throw 'owner value is undefined';
         let body = await mapToUsq.map(data, mapper);
         let openApi = await this.getOpenApi(usq);
         let ret = await openApi.saveTuidArr(tuid, tuidArr, ownerId, body);
-        let {id, inId} = ret;
+        let { id, inId } = ret;
         if (id === undefined) id = inId;
         else if (id < 0) id = -id;
         await map(entity, id, keyVal);
         return id;
     }
 
-    private async mapOwner(usqIn:UsqInTuidArr, ownerEntity: string, ownerVal:any) {
-        let {usq} = usqIn;
+    private async mapOwner(usqIn: UsqInTuidArr, ownerEntity: string, ownerVal: any) {
+        let { usq } = usqIn;
         let sql = `select id from \`${databaseName}\`.\`map_${ownerEntity}\` where no='${ownerVal}'`;
-        let ret:any[];
+        let ret: any[];
         try {
             ret = await execSql(sql);
         }
@@ -183,81 +193,109 @@ export class Joint {
         return ret[0]['id'];
     }
 
-    protected async usqInMap(usqIn:UsqInMap, data:any):Promise<void> {
-        let {mapper, usq, entity} = usqIn;
-        let mapToUsq = new MapToUsq(this.settings);
+    protected async usqInMap(usqIn: UsqInMap, data: any): Promise<void> {
+        let { mapper, usq, entity } = usqIn;
+        let mapToUsq = new MapToUsq(this.usqInDict, this.unit);
         let body = await mapToUsq.map(data, mapper);
         let openApi = await this.getOpenApi(usq);
-        let {$} = data;
+        let { $ } = data;
         if ($ === '-')
             await openApi.delMap(entity, body);
         else
             await openApi.setMap(entity, body);
     }
 
-    protected async usqInAction(usqIn:UsqInAction, data:any):Promise<void> {
-        let {mapper, usq, entity} = usqIn;
-        let mapToUsq = new MapToUsq(this.settings);
-        let body = await mapToUsq.map(data, mapper);
-        let openApi = await this.getOpenApi(usq);
-        await openApi.action(entity, body);
-    }
-
     private async scanOut() {
-        for (let i in this.settings.out) {
-            console.log('scan out ', i);
-            let usqOut = this.settings.out[i];
-            for (;;) {
-                let queue:number;
-                let retp = await tableFromProc('read_queue_out_p', [i]);
+        let { usqOuts } = this.settings;
+        if (usqOuts === undefined) return;
+        for (let usqOut of usqOuts) {
+            let { usq, entity } = usqOut;
+            let queueName = usq + ':' + entity;
+            console.log('scan out ' + queueName);
+            for (; ;) {
+                let queue: number;
+                let retp = await tableFromProc('read_queue_out_p', [queueName]);
                 if (retp.length === 0) queue = 0;
                 else queue = retp[0].queue;
-                let ret:{queue:number, data:any};
-                let push: DataPush;
+                let ret: { queue: number, data: any };
+                //let push: DataPush;
+                /*
                 if (typeof usqOut === 'function')
                     ret = await usqOut(this.settings, queue);
                 else {
-                    push = usqOut.push;
-                    ret = await this.usqOutDefault(usqOut, queue);
-                }
+                */
+                //push = usqOut.push;
+                ret = await this.usqOut(usqOut, queue);
+                //}
                 if (ret === undefined) break;
-                let {queue:newQueue, data} = ret;
-                if (push === undefined) {
-                    await execProc('write_queue_out', [i, newQueue, JSON.stringify(data)]);
-                }
-                else {
-                    await push(this, data);
-                    await execProc('write_queue_out_p', [i, newQueue]);
-                }
+                let { queue: newQueue, data } = ret;
+                //if (push === undefined) {
+                //    await execProc('write_queue_out', [i, newQueue, JSON.stringify(data)]);
+                //}
+                //else {
+                //    await push(this, data);
+                await execProc('write_queue_out_p', [queueName, newQueue]);
+                //}
             }
         }
     }
 
-    /**
-     *
-     * @param usqOut
-     * @param queue
-     */
-    async usqOutDefault(usqOut:UsqOut, queue:number):Promise<{queue:number, data:any}> {
-        let ret:{queue:number, data:any};
-        let {type} = usqOut;
+    async usqOut(usqOut: UsqOut, queue: number): Promise<{ queue: number, data: any }> {
+        let ret: { queue: number, data: any };
+        let { type } = usqOut;
         switch (type) {
-            case 'sheet': ret = await this.usqOutSheet(usqOut, queue); break;
+            //case 'bus': ret = await this.usqOutBus(usqOut as UsqOutBus, queue); break;
         }
         return ret;
     }
 
-    protected async usqOutSheet(usqOut:UsqOut, queue:number):Promise<{queue:number, data:any}>{
-        let {usq, entity, key, mapper} = usqOut;
-        let openApi = await this.getOpenApi(usq);
-        let sheet = await openApi.scanSheet(entity, queue);
-        if (sheet === undefined) return;
-        let {id} = sheet;
-        let mapFromUsq = new MapFromUsq(this.settings);
-        let body = await mapFromUsq.map(sheet, mapper);
-        let keyVal = 'usq-' + id;
-        body[key] = keyVal;
-        await map(entity, id, keyVal);
-        return {queue: id, data: body};
+    protected async scanBus() {
+        let { name: joinName, bus } = this.settings;
+        if (bus === undefined) return;
+        let monikerPrefix = '$bus/';
+        let openApi = await this.getOpenApi($unitx);
+
+        for (let usqBus of bus) {
+            let { face, mapper, push, pull } = usqBus;
+            // bus out
+            let moniker = monikerPrefix + face;
+            for (; ;) {
+                if (push === undefined) break;
+                let queue: number;
+                let retp = await tableFromProc('read_queue_out_p', [moniker]);
+                if (retp.length > 0) {
+                    queue = retp[0].queue;
+                }
+                let message = await openApi.readBus(face, queue);
+                if (message === undefined) break;
+                let { id: newQueue, from, body } = message;
+                //await this.busOut(face, newQueue, message, mapper, push);
+                let json = await faceSchemas.unpackBusData(face, body);
+                let mapFromUsq = new MapFromUsq(this.usqInDict, this.unit);
+                let outBody = await mapFromUsq.map(json, mapper);
+                if (await push(face, queue, outBody) === false) break;
+                await execProc('write_queue_out_p', [moniker, newQueue]);
+            }
+
+            // bus in
+            for (; ;) {
+                if (pull === undefined) break;
+                let queue: number;
+                let retp = await tableFromProc('read_queue_in_p', [moniker]);
+                if (retp.length > 0) {
+                    queue = retp[0].queue;
+                }
+                let message = await pull(face, queue);
+                if (message === undefined) break;
+                let { queue: newQueue, data } = message;
+                //let newQueue = await this.busIn(queue);
+                //if (newQueue === undefined) break;
+                let mapToUsq = new MapToUsq(this.usqInDict, this.unit);
+                let inBody = await mapToUsq.map(data, mapper);
+                let packed = await faceSchemas.packBusData(face, inBody);
+                await openApi.writeBus(face, joinName, newQueue, packed);
+                await execProc('write_queue_in_p', [moniker, newQueue]);
+            }
+        }
     }
 }
