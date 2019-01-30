@@ -1,18 +1,16 @@
-import config from 'config';
+//import config from 'config';
 import {Fetch} from './fetch';
 
+/*
 const centerHost = config.get<string>('centerhost');
 const centerUrl = urlSetCenterHost(config.get<string>('center'));
 
 export function urlSetCenterHost(url:string):string {
     return url.replace('://centerhost/', '://'+centerHost+'/');
 }
+*/
 
 class CenterApi extends Fetch {
-    constructor() {
-        super(centerUrl);
-    }
-
     async busSchema(owner:string, bus:string):Promise<string> {
         let ret = await this.get('open/bus', {owner: owner, bus: bus});
         return ret.schema;

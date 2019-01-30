@@ -36,14 +36,9 @@ class Joint {
             return;
         for (let usqIn of usqIns) {
             let { entity, type } = usqIn;
-            switch (type) {
-                case 'tuid':
-                case 'tuid-arr':
-                    if (this.usqInDict[entity] !== undefined)
-                        throw 'can not have multiple ' + entity;
-                    this.usqInDict[entity] = usqIn;
-                    break;
-            }
+            if (this.usqInDict[entity] !== undefined)
+                throw 'can not have multiple ' + entity;
+            this.usqInDict[entity] = usqIn;
         }
     }
     createRouter() {
@@ -107,12 +102,6 @@ class Joint {
         await this.usqIn(usqIn, data);
     }
     */
-    async toUsqIn(usqInName, data) {
-        let usqIn = this.usqInDict[usqInName];
-        if (usqIn === undefined)
-            throw usqInName + ' not defined';
-        await this.usqIn(usqIn, data);
-    }
     async usqIn(usqIn, data) {
         /*
         if (typeof usqIn === 'function')
@@ -271,10 +260,9 @@ class Joint {
         let monikerPrefix = '$bus/';
         let openApi = await this.getOpenApi($unitx);
         for (let usqBus of bus) {
-            let { face } = usqBus;
+            let { face, mapper, push, pull } = usqBus;
             // bus out
             let moniker = monikerPrefix + face;
-            let { mapper, push, pull } = usqBus;
             for (;;) {
                 if (push === undefined)
                     break;
@@ -283,11 +271,6 @@ class Joint {
                 if (retp.length > 0) {
                     queue = retp[0].queue;
                 }
-                if (queue === undefined) {
-                    let hour = Math.floor(Date.now() / (3600 * 1000));
-                    queue = hour * 1000000000;
-                }
-                queue = 0; // for debug
                 let message = await openApi.readBus(face, queue);
                 if (message === undefined)
                     break;
@@ -296,7 +279,8 @@ class Joint {
                 let json = await faceSchemas_1.faceSchemas.unpackBusData(face, body);
                 let mapFromUsq = new mapData_1.MapFromUsq(this.usqInDict, this.unit);
                 let outBody = await mapFromUsq.map(json, mapper);
-                await push(face, queue, outBody);
+                if (await push(face, queue, outBody) === false)
+                    break;
                 await tool_1.execProc('write_queue_out_p', [moniker, newQueue]);
             }
             // bus in
@@ -308,11 +292,6 @@ class Joint {
                 if (retp.length > 0) {
                     queue = retp[0].queue;
                 }
-                else {
-                    let hour = Math.floor(Date.now() / (3600 * 1000));
-                    queue = hour * 1000000000;
-                }
-                queue = 0; // for debug
                 let message = await pull(face, queue);
                 if (message === undefined)
                     break;
@@ -326,34 +305,6 @@ class Joint {
                 await tool_1.execProc('write_queue_in_p', [moniker, newQueue]);
             }
         }
-    }
-    async busOut(face, queue, message, mapper, push) {
-        /*
-        let {from, body} = message;
-        let json = await faceSchemas.unpackBusData(face, body);
-        let mapFromUsq = new MapFromUsq(this.settings);
-        let outBody = await mapFromUsq.map(json, mapper);
-        await push(face, queue, outBody);
-        */
-        /*
-        let {usq, bus, mapper} = usqOut;
-        let openApi = await this.getOpenApi(usq);
-        let sheet = await openApi.scanSheet(bus, queue);
-        if (sheet === undefined) return;
-        let {id} = sheet;
-        let mapFromUsq = new MapFromUsq(this.settings);
-        let body = await mapFromUsq.map(sheet, mapper);
-        */
-    }
-    async busIn(message) {
-        /*
-        let {mapper, bus} = usqIn;
-        let mapToUsq = new MapToUsq(this.settings);
-        let body = await mapToUsq.map(data, mapper);
-        let openApi = await this.getOpenApi($unitx);
-        await openApi.bus(bus, body);
-        return 0;
-        */
     }
 }
 exports.Joint = Joint;

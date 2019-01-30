@@ -12,6 +12,9 @@ class Fetch {
     constructor(baseUrl) {
         this.baseUrl = baseUrl;
     }
+    initBaseUrl(baseUrl) {
+        this.baseUrl = baseUrl;
+    }
     async get(url, params = undefined) {
         if (params) {
             let keys = Object.keys(params);

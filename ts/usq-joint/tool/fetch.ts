@@ -2,7 +2,10 @@ import fetch, {Headers} from 'node-fetch';
 
 export abstract class Fetch {
     private baseUrl:string;
-    constructor(baseUrl:string) {
+    constructor(baseUrl?:string) {
+        this.baseUrl = baseUrl;
+    }
+    initBaseUrl(baseUrl:string) {
         this.baseUrl = baseUrl;
     }
     protected async get(url: string, params: any = undefined): Promise<any> {

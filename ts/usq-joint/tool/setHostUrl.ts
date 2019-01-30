@@ -1,3 +1,4 @@
+/*
 import config from 'config';
 
 const usqHost = config.get<string>('usqhost');
@@ -11,3 +12,4 @@ export function urlSetUnitxHost(url:string):string {
     return url.replace('://unitxhost/', '://'+unitxHost+'/');
 }
 
+*/

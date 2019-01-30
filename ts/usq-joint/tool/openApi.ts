@@ -1,9 +1,8 @@
 import fetch, { Headers } from "node-fetch";
 import { Fetch } from "./fetch";
 import { centerApi } from "./centerApi";
-import { urlSetUsqHost, urlSetUnitxHost } from "./setHostUrl";
-import { format } from "url";
-import { IncomingMessage } from "http";
+//import { urlSetUsqHost, urlSetUnitxHost } from "./setHostUrl";
+import { host } from './host';
 
 export interface BusMessage {
     id: number;
@@ -107,6 +106,8 @@ export async function getOpenApi(usqFullName:string, unit:number):Promise<OpenAp
     let usqUrl = await centerApi.urlFromUsq(unit, usqFullName);
     if (usqUrl === undefined) return openApis[unit] = null;
     let {url, urlDebug} = usqUrl;
+    url = await host.getUrlOrDebug(url, urlDebug);
+    /*
     if (urlDebug !== undefined) {
         try {
             urlDebug = urlSetUsqHost(urlDebug);
@@ -119,5 +120,6 @@ export async function getOpenApi(usqFullName:string, unit:number):Promise<OpenAp
         catch (err) {
         }
     }
+    */
     return openApis[unit] = new OpenApi(url, unit);
 }

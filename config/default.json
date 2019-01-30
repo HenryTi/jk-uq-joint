@@ -8,9 +8,5 @@
         "password": "pwd",
         "multipleStatements": true
     },
-    "centerhost": "localhost:3000",
-    "center": "http://centerhost/tv/",
-    "unitxhost": "localhost:3015",
-    "usqhost": "localhost:3015",
-    "option": 1
+    "center": "http://centerhost/tv/"
 }

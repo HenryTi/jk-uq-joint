@@ -1,12 +1,9 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const node_fetch_1 = __importDefault(require("node-fetch"));
 const fetch_1 = require("./fetch");
 const centerApi_1 = require("./centerApi");
-const setHostUrl_1 = require("./setHostUrl");
+//import { urlSetUsqHost, urlSetUnitxHost } from "./setHostUrl";
+const host_1 = require("./host");
 class OpenApi extends fetch_1.Fetch {
     constructor(baseUrl, unit) {
         super(baseUrl);
@@ -101,19 +98,21 @@ async function getOpenApi(usqFullName, unit) {
     if (usqUrl === undefined)
         return openApis[unit] = null;
     let { url, urlDebug } = usqUrl;
+    url = await host_1.host.getUrlOrDebug(url, urlDebug);
+    /*
     if (urlDebug !== undefined) {
         try {
-            urlDebug = setHostUrl_1.urlSetUsqHost(urlDebug);
-            urlDebug = setHostUrl_1.urlSetUnitxHost(urlDebug);
-            let ret = await node_fetch_1.default(urlDebug + 'hello');
-            if (ret.status !== 200)
-                throw 'not ok';
+            urlDebug = urlSetUsqHost(urlDebug);
+            urlDebug = urlSetUnitxHost(urlDebug);
+            let ret = await fetch(urlDebug + 'hello');
+            if (ret.status !== 200) throw 'not ok';
             let text = await ret.text();
             url = urlDebug;
         }
         catch (err) {
         }
     }
+    */
     return openApis[unit] = new OpenApi(url, unit);
 }
 exports.getOpenApi = getOpenApi;

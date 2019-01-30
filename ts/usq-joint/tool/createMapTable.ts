@@ -4,8 +4,8 @@ import { execSql } from "../db/mysql/tool";
 export async function createMapTable(moniker:string):Promise<void> {
     let sql = `
     create table if not exists \`${databaseName}\`.\`map_${moniker}\` (
-        id bigint not null, 
-        no varchar(32) not null,
+        id bigint not null,
+        no varchar(50) not null,
         primary key(id),
         unique index no_idx(no)
     );

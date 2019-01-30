@@ -16,8 +16,12 @@ const cors_1 = __importDefault(require("cors"));
 const config_1 = __importDefault(require("config"));
 const usq_joint_1 = require("./usq-joint");
 const settings_1 = require("./settings");
+const host_1 = require("./usq-joint/tool/host");
+const centerApi_1 = require("./usq-joint/tool/centerApi");
 (async function () {
     console.log(process.env.NODE_ENV);
+    await host_1.host.start();
+    centerApi_1.centerApi.initBaseUrl(host_1.host.centerUrl);
     let connection = config_1.default.get("mysqlConn");
     if (connection === undefined || connection.host === '0.0.0.0') {
         console.log("mysql connection must defined in config/default.json or config/production.json");

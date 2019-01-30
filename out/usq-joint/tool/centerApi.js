@@ -1,20 +1,16 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const config_1 = __importDefault(require("config"));
+//import config from 'config';
 const fetch_1 = require("./fetch");
-const centerHost = config_1.default.get('centerhost');
-const centerUrl = urlSetCenterHost(config_1.default.get('center'));
-function urlSetCenterHost(url) {
-    return url.replace('://centerhost/', '://' + centerHost + '/');
+/*
+const centerHost = config.get<string>('centerhost');
+const centerUrl = urlSetCenterHost(config.get<string>('center'));
+
+export function urlSetCenterHost(url:string):string {
+    return url.replace('://centerhost/', '://'+centerHost+'/');
 }
-exports.urlSetCenterHost = urlSetCenterHost;
+*/
 class CenterApi extends fetch_1.Fetch {
-    constructor() {
-        super(centerUrl);
-    }
     async busSchema(owner, bus) {
         let ret = await this.get('open/bus', { owner: owner, bus: bus });
         return ret.schema;

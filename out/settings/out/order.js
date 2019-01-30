@@ -1,8 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-//import { UsqOutSheet } from "../../usq-joint";
 /*
-export const order: UsqOutSheet = {
+export const order: UsqOut = {
     usq: usqs.jkOrder,
     type: 'sheet',
     entity: 'order',
