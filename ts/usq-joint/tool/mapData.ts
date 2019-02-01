@@ -174,8 +174,13 @@ export class MapToUsq extends MapData {
 }
 
 export class MapFromUsq extends MapData {
-    protected async tuidId(tuid: string, value: any): Promise<string | number> {
-        let sql = `select no from \`${databaseName}\`.\`map_${tuid}\` where no='${value}'`;
+    async tuidId(tuid: string, value: any): Promise<string | number> {
+        let usqIn = this.usqInDict[tuid];
+        if (typeof usqIn !== 'object') {
+            throw `tuid ${tuid} is not defined in settings.in`;
+        }
+        let { entity } = usqIn as UsqIn;
+        let sql = `select no from \`${databaseName}\`.\`map_${entity}\` where id='${value}'`;
         let ret: any[] = await execSql(sql);
         if (ret.length === 0) return 'n/a';
         return ret[0].no;

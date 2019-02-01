@@ -9,8 +9,5 @@
         "multipleStatements": true
     },
     "centerhost": "101.200.46.56",
-    "center": "http://centerhost/tv/",
-    "unitxhost": "47.92.87.6",
-    "usqhost": "47.92.87.6",
-    "option": 1
+    "debug-unitxhost": "211.5.7.48:3015"
 }

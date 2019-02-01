@@ -4,9 +4,14 @@ import cors from 'cors';
 import config from 'config';
 import { Joint } from './usq-joint';
 import { settings } from './settings';
+import { host } from './usq-joint/tool/host';
+import { centerApi } from './usq-joint/tool/centerApi';
 
 (async function () {
     console.log(process.env.NODE_ENV);
+    await host.start();
+    centerApi.initBaseUrl(host.centerUrl);
+    
     let connection = config.get<any>("mysqlConn");
     if (connection === undefined || connection.host === '0.0.0.0') {
         console.log("mysql connection must defined in config/default.json or config/production.json");

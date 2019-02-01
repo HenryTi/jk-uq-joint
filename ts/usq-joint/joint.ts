@@ -265,6 +265,8 @@ export class Joint {
                 let retp = await tableFromProc('read_queue_out_p', [moniker]);
                 if (retp.length > 0) {
                     queue = retp[0].queue;
+                }else{
+                    queue = 430000000000000;
                 }
                 let message = await openApi.readBus(face, queue);
                 if (message === undefined) break;
@@ -273,7 +275,7 @@ export class Joint {
                 let json = await faceSchemas.unpackBusData(face, body);
                 let mapFromUsq = new MapFromUsq(this.usqInDict, this.unit);
                 let outBody = await mapFromUsq.map(json, mapper);
-                if (await push(face, queue, outBody) === false) break;
+                if (await push(this, face, queue, outBody) === false) break;
                 await execProc('write_queue_out_p', [moniker, newQueue]);
             }
 
@@ -285,7 +287,7 @@ export class Joint {
                 if (retp.length > 0) {
                     queue = retp[0].queue;
                 }
-                let message = await pull(face, queue);
+                let message = await pull(this, face, queue);
                 if (message === undefined) break;
                 let { queue: newQueue, data } = message;
                 //let newQueue = await this.busIn(queue);
@@ -297,5 +299,18 @@ export class Joint {
                 await execProc('write_queue_in_p', [moniker, newQueue]);
             }
         }
+    }
+
+    async loadTuid(usq: string, tuid: string, id: number): Promise<any> {
+        let openApi = await this.getOpenApi(usq);
+        let ret = await openApi.tuid(this.unit, id, tuid, undefined);
+        if (ret[tuid] && ret[tuid].length === 1)
+            return ret[tuid][0];
+    }
+
+    async tuidMapFromUsq(tuid: string, value: any): Promise<string | number> {
+
+        let mapFromUsq = new MapFromUsq(this.usqInDict, this.unit);
+        return await mapFromUsq.tuidId(tuid, value);
     }
 }
