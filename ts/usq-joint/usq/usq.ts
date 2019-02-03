@@ -74,11 +74,12 @@ export class Usq {
                 ret[i] = v;
                 continue;
             }
-            let {usq:usqFullName, tuid:tuidName} = prop;
+            let {usq:usqFullName, tuid:tuidName, tuidOwnerProp} = prop;
             let tuid:Tuid = await this.getTuidFromUsq(usqFullName, tuidName);
             if (tuid === undefined) continue;
             names.push(i);
-            promises.push(this.buildTuidValue(v, tuid, prop));
+            let ownerId = data[tuidOwnerProp];
+            promises.push(this.buildTuidValue(tuid, prop, v, ownerId));
         }
         let len = names.length;
         if (len > 0) {
@@ -90,17 +91,17 @@ export class Usq {
         return ret;
     }
 
-    private async buildTuidValue(id:number, tuid:Tuid, prop:Prop):Promise<any> {
+    private async buildTuidValue(tuid:Tuid, prop:Prop, id:number, ownerId:number):Promise<any> {
         let all:boolean;
         if (prop === undefined) all = false;
         else all = prop.all;
-        let ret = await tuid.loadValue(id, all);
+        let ret = await tuid.loadValue(id, ownerId, all);
         let props = prop.props;
         if (props !== undefined) {
             let names:string[] = [];
             let promises: Promise<any>[] = [];
             for (let f of tuid.fields) {
-                let {_tuid} = f;
+                let {_tuid, _ownerField} = f;
                 if (_tuid === undefined) continue;
                 let {name} = f;
                 let prp = props[name];
@@ -109,9 +110,9 @@ export class Usq {
                 if (typeof prp === 'boolean') p = undefined;
                 else p = prp as Prop;
                 names.push(name);
-                let v = f[name];
-                let tuid:Tuid;
-                promises.push(this.buildTuidValue(v, _tuid, p));
+                let v = ret[name];
+                let ownerId = ret[_ownerField.name];
+                promises.push(this.buildTuidValue(_tuid, p, v, ownerId));
             }
             let len = names.length;
             if (len > 0) {
@@ -304,6 +305,7 @@ interface Prop {
 interface UsqProp extends Prop {
     usq?: string;
     tuid: string;
+    tuidOwnerProp?: string;
 }
 
 interface BusMessage {
@@ -383,8 +385,9 @@ export class OpenApi extends Fetch {
         let ret = await this.get(url);
         return ret;
     }
-    async loadTuidValue(tuidName:string, divName:string, id:number, allProps:boolean) {
-        let ret = await this.post(`open/tuid/`, {id:id, all:allProps});
+    async loadTuidValue(tuidName:string, divName:string, id:number, ownerId:number, allProps:boolean) {
+        let ret = await this.post(`open/tuid-value/${tuidName}/${divName}`, 
+            {unit:this.unit, id:id, ownerId:ownerId, all:allProps});
         return ret;
     }
     async scanSheet(sheet:string, scanStartId:number):Promise<any> {
@@ -402,10 +405,10 @@ export class OpenApi extends Fetch {
     }
 
     async loadEntities() {
-        return await this.get('joint/entities');
+        return await this.get('open/entities/' + this.unit);
     }
 
     async schema(entityName: string) {
-        return await this.get('joint/entity/' + entityName);
+        return await this.get('open/entity/' + entityName);
     }
 }
