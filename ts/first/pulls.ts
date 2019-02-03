@@ -1,9 +1,10 @@
-import { readCountry, readProvince, readCity, readCounty, readPackType, readCurrency, readSalesRegion, readPackTypeStandard, readLanguage } from "./converter/commonConverter";
+import { sqls } from './converter/sqls';
+//import { readCountry, readProvince, readCity, readCounty, readPackType, readCurrency, readSalesRegion, readPackTypeStandard, readLanguage } from "./converter/commonConverter";
 import { readBrand, readProduct, readPack, readPrice, readProductSalesRegion, readProductLegallyProhibited, readBrandSalesRegion, readBrandDeliveryTime } from "./converter/productConverter";
 import { productPullWrite } from "./converter/productPullWrite";
 import { Joint, UsqIn } from "../usq-joint";
 import { readWarehouse, readSalesRegionWarehouse } from "./converter/warehouseConverter";
-import { readChemical } from "./converter/chemicalConverter";
+//import { readChemical } from "./converter/sqls";
 import { PackTypePullWrite } from "./converter/commonPullWrite";
 import { readPromotion, readPromotionLanguage, readPromotionPack, promotionPullWrite } from "./converter/promotionConveter";
 import { readCustomer, readOrganization, readCustomerConsigneeContact, readCustomerInvoiceContact } from "./converter/customerConveter";
@@ -28,21 +29,22 @@ export type UsqOutConverter = (maxId: string) => Promise<{ lastId: string, data:
 export type PullWrite = (join: Joint, data: any) => Promise<void>;
 
 /** */
-export const pulls: { read: UsqOutConverter, usqIn: UsqIn | PullWrite }[] = [
+export const pulls: { read: UsqOutConverter | string, usqIn: UsqIn | PullWrite }[] = [
     /*
-    { read: readLanguage, usqIn: Language },
-    { read: readCountry, usqIn: Country },
-    { read: readProvince, usqIn: Province },
-    { read: readCity, usqIn: City },
+    { read: sqls.readLanguage, usqIn: Language },
+    { read: sqls.readCountry, usqIn: Country },
+    { read: sqls.readProvince, usqIn: Province },
+    { read: sqls.readCity, usqIn: City },
     */
-    { read: readCounty, usqIn: County },
+    { read: sqls.readCounty, usqIn: County },
     /*
-    { read: readPackTypeStandard, usqIn: PackTypeStandard },
-    { read: readPackType, usqIn: PackTypePullWrite },
-    { read: readCurrency, usqIn: Currency },
-    { read: readSalesRegion, usqIn: SalesRegion },
-    { read: readChemical, usqIn: Chemical },
+    { read: sqls.readPackTypeStandard, usqIn: PackTypeStandard },
+    { read: sqls.readPackType, usqIn: PackTypePullWrite },
+    { read: sqls.readCurrency, usqIn: Currency },
+    { read: sqls.readSalesRegion, usqIn: SalesRegion },
     */
+    { read: sqls.readChemical, usqIn: Chemical },
+    
 
     /*
     // 产品相关的数据表

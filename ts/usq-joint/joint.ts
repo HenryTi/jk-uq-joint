@@ -1,18 +1,17 @@
 import { Router } from "express";
 import { Settings, UsqIn, UsqOut, DataPush, UsqInTuid, UsqInMap, UsqInTuidArr } from "./defines";
 import { tableFromProc, execProc, execSql } from "./db/mysql/tool";
-import { getOpenApi, BusMessage } from "./tool/openApi";
 import { MapFromUsq, MapToUsq } from "./tool/mapData";
 import { map } from "./tool/map"; import { createRouter } from './router';
 import { databaseName } from "./db/mysql/database";
 import { createMapTable } from "./tool/createMapTable";
 import { faceSchemas } from "./tool/faceSchemas";
-import { Mapper } from "./tool/mapper";
+import { Usqs } from "./usq/usq";
 
 const interval = 60 * 1000;
-const $unitx = '$$$/$unitx';
 
 export class Joint {
+    protected usqs: Usqs;
     protected settings: Settings;
     protected usqInDict: { [tuid: string]: UsqIn } = {};
     protected unit: number;
@@ -22,6 +21,7 @@ export class Joint {
         let { unit, usqIns } = settings;
         this.unit = unit;
         if (usqIns === undefined) return;
+        this.usqs = new Usqs(unit);
         for (let usqIn of usqIns) {
             let { entity, type } = usqIn;
             if (this.usqInDict[entity] !== undefined) throw 'can not have multiple ' + entity;
@@ -33,7 +33,8 @@ export class Joint {
         return createRouter(this.settings);
     }
 
-    startTimer() {
+    async start() {
+        await this.usqs.init();
         setTimeout(this.tick, 3 * 1000);
     }
 
@@ -96,10 +97,12 @@ export class Joint {
         }
     }
 
+    /*
     protected async getOpenApi(usq: string) {
         let openApi = await getOpenApi(usq, this.settings.unit);
         return openApi;
     }
+    */
 
     /*
     async pushToUsq(usqInName:string, data:any) {
@@ -127,14 +130,15 @@ export class Joint {
     }
 
     protected async usqInTuid(usqIn: UsqInTuid, data: any): Promise<number> {
-        let { key, mapper, usq, entity: tuid } = usqIn;
+        let { key, mapper, usq:usqFullName, entity: tuid } = usqIn;
         if (key === undefined) throw 'key is not defined';
-        if (usq === undefined) throw 'tuid ' + tuid + ' not defined';
+        if (usqFullName === undefined) throw 'tuid ' + tuid + ' not defined';
         let keyVal = data[key];
         let mapToUsq = new MapToUsq(this.usqInDict, this.unit);
         let body = await mapToUsq.map(data, mapper);
-        let openApi = await this.getOpenApi(usq);
-        let ret = await openApi.saveTuid(tuid, body);
+        //let openApi = await this.getOpenApi(usq);
+        let usq = await this.usqs.getUsq(usqFullName);
+        let ret = await usq.saveTuid(tuid, body);
         let { id, inId } = ret;
         if (id < 0) id = -id;
         await map(tuid, id, keyVal);
@@ -142,9 +146,9 @@ export class Joint {
     }
 
     protected async usqInTuidArr(usqIn: UsqInTuidArr, data: any): Promise<number> {
-        let { key, owner, mapper, usq, entity } = usqIn;
+        let { key, owner, mapper, usq:usqFullName, entity } = usqIn;
         if (key === undefined) throw 'key is not defined';
-        if (usq === undefined) throw 'usq ' + usq + ' not defined';
+        if (usqFullName === undefined) throw 'usq ' + usqFullName + ' not defined';
         if (entity === undefined) throw 'tuid ' + entity + ' not defined';
         let parts = entity.split('.');
         let tuid = parts[0];
@@ -158,8 +162,10 @@ export class Joint {
         let ownerId = await this.mapOwner(usqIn, tuid, ownerVal);
         if (ownerId === undefined) throw 'owner value is undefined';
         let body = await mapToUsq.map(data, mapper);
-        let openApi = await this.getOpenApi(usq);
-        let ret = await openApi.saveTuidArr(tuid, tuidArr, ownerId, body);
+        //let openApi = await this.getOpenApi(usq);
+        //let ret = await openApi.saveTuidArr(tuid, tuidArr, ownerId, body);
+        let usq = await this.usqs.getUsq(usqFullName);
+        let ret = await usq.saveTuidArr(tuid, tuidArr, ownerId, body);
         let { id, inId } = ret;
         if (id === undefined) id = inId;
         else if (id < 0) id = -id;
@@ -168,7 +174,7 @@ export class Joint {
     }
 
     private async mapOwner(usqIn: UsqInTuidArr, ownerEntity: string, ownerVal: any) {
-        let { usq } = usqIn;
+        let { usq:usqFullName } = usqIn;
         let sql = `select id from \`${databaseName}\`.\`map_${ownerEntity}\` where no='${ownerVal}'`;
         let ret: any[];
         try {
@@ -185,8 +191,10 @@ export class Joint {
                 throw `tuid ${tuid} is not defined in settings.in`;
             }
             */
-            let openApi = await getOpenApi(usq, this.settings.unit);
-            let vId = await openApi.getTuidVId(ownerEntity);
+            //let openApi = await getOpenApi(usq, this.settings.unit);
+            //let vId = await openApi.getTuidVId(ownerEntity);
+            let usq = await this.usqs.getUsq(usqFullName);
+            let vId = await usq.getTuidVId(ownerEntity);
             await map(ownerEntity, vId, ownerVal);
             return vId;
         }
@@ -194,15 +202,18 @@ export class Joint {
     }
 
     protected async usqInMap(usqIn: UsqInMap, data: any): Promise<void> {
-        let { mapper, usq, entity } = usqIn;
+        let { mapper, usq:usqFullName, entity } = usqIn;
         let mapToUsq = new MapToUsq(this.usqInDict, this.unit);
         let body = await mapToUsq.map(data, mapper);
-        let openApi = await this.getOpenApi(usq);
+        let usq = await this.usqs.getUsq(usqFullName);
+        //let openApi = await this.getOpenApi(usq);
         let { $ } = data;
         if ($ === '-')
-            await openApi.delMap(entity, body);
+            //await openApi.delMap(entity, body);
+            await usq.delMap(entity, body);
         else
-            await openApi.setMap(entity, body);
+            //await openApi.setMap(entity, body);
+            await usq.setMap(entity, body);
     }
 
     private async scanOut() {
@@ -253,7 +264,7 @@ export class Joint {
         let { name: joinName, bus } = this.settings;
         if (bus === undefined) return;
         let monikerPrefix = '$bus/';
-        let openApi = await this.getOpenApi($unitx);
+        //let openApi = await this.getOpenApi($unitx);
 
         for (let usqBus of bus) {
             let { face, mapper, push, pull } = usqBus;
@@ -266,14 +277,14 @@ export class Joint {
                 if (retp.length > 0) {
                     queue = retp[0].queue;
                 }
-                let message = await openApi.readBus(face, queue);
+                let message = await this.usqs.readBus(face, queue);
                 if (message === undefined) break;
                 let { id: newQueue, from, body } = message;
                 //await this.busOut(face, newQueue, message, mapper, push);
                 let json = await faceSchemas.unpackBusData(face, body);
                 let mapFromUsq = new MapFromUsq(this.usqInDict, this.unit);
                 let outBody = await mapFromUsq.map(json, mapper);
-                if (await push(face, queue, outBody) === false) break;
+                if (await push(this, face, queue, outBody) === false) break;
                 await execProc('write_queue_out_p', [moniker, newQueue]);
             }
 
@@ -285,7 +296,7 @@ export class Joint {
                 if (retp.length > 0) {
                     queue = retp[0].queue;
                 }
-                let message = await pull(face, queue);
+                let message = await pull(this, face, queue);
                 if (message === undefined) break;
                 let { queue: newQueue, data } = message;
                 //let newQueue = await this.busIn(queue);
@@ -293,9 +304,17 @@ export class Joint {
                 let mapToUsq = new MapToUsq(this.usqInDict, this.unit);
                 let inBody = await mapToUsq.map(data, mapper);
                 let packed = await faceSchemas.packBusData(face, inBody);
-                await openApi.writeBus(face, joinName, newQueue, packed);
+                await this.usqs.writeBus(face, joinName, newQueue, packed);
                 await execProc('write_queue_in_p', [moniker, newQueue]);
             }
         }
     }
+
+    /*
+    async loadTuid(usq:string, tuid:string, id:number):Promise<any> {
+        let openApi = await this.getOpenApi(usq);
+        let ret = await openApi.tuid(this.unit, id, tuid, undefined);
+        return ret;
+    }
+    */
 }

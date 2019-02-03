@@ -1,5 +1,5 @@
 import { UsqOutConverter } from "../pulls";
-import { read } from ".";
+import { read } from './usqOutRead'
 
 export const readWarehouse: UsqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 

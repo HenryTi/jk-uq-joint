@@ -7,24 +7,24 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const _1 = require(".");
+const usqOutRead_1 = require("./usqOutRead");
 const _ = __importStar(require("lodash"));
 const promotion_1 = require("../../settings/in/promotion");
 exports.readPromotion = async (maxId) => {
     let sqlstring = `select top 1 MarketingID as ID, Name
         , mType as Type, mstatus as Status, PStartTime as StartDate, PendTime as EndDate, market_code as SalesRegionID, inputtime as CreateTime
         from dbs.dbo.Marketing where MarketingID > '${maxId}' order by MarketingID`;
-    return await _1.read(sqlstring);
+    return await usqOutRead_1.read(sqlstring);
 };
 exports.readPromotionLanguage = async (maxId) => {
     let sqlstring = `select top 1 ExcID as ID, MarketingID as PromotionID, LanguageID, messageText as Description, Url
         from dbs.dbo.MarketingMessageLanguages where ExcID > '${maxId}' order by ExcID`;
-    return await _1.read(sqlstring);
+    return await usqOutRead_1.read(sqlstring);
 };
 exports.readPromotionPack = async (maxId) => {
     let sqlstring = `select top 1 ExcID as ID, MarketingID as PromotionID, jkid as ProductID, jkcat as PackageID, activeDiscount as Discount, isStock as WhenHasStorage
         from zcl_mess.dbo.ProductsMarketing where ExcID > '${maxId}' order by ExcID`;
-    return await _1.read(sqlstring);
+    return await usqOutRead_1.read(sqlstring);
 };
 async function promotionPullWrite(joint, data) {
     try {

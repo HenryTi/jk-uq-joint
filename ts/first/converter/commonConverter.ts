@@ -1,5 +1,6 @@
+/*
 import { UsqOutConverter } from "../pulls";
-import { read } from ".";
+import { read } from './usqOutRead'
 
 export const readPackTypeStandard: UsqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
@@ -58,3 +59,4 @@ export const readCounty: UsqOutConverter = async (maxId: string): Promise<{ last
     let sqlstring = `select top 1 code as ID, Countries, ChineseName, parentCode from dbs.dbo.CountryCode1 where code > '${maxId}' and level = 4 order by code`;
     return await read(sqlstring);
 };
+*/

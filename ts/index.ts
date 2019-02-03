@@ -57,7 +57,7 @@ import { centerApi } from './usq-joint/tool/centerApi';
             process.env.NODE_ENV,
             host,
             user);
-        joint.startTimer();
+        joint.start();
         //await startTimer();
     });
 })();

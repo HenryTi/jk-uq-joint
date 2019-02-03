@@ -62,7 +62,7 @@ const centerApi_1 = require("./usq-joint/tool/centerApi");
         console.log('USQL-API listening on port ' + port);
         let { host, user } = connection;
         console.log('process.env.NODE_ENV: %s\nDB host: %s, user: %s', process.env.NODE_ENV, host, user);
-        joint.startTimer();
+        joint.start();
         //await startTimer();
     });
 })();

@@ -1,15 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const tool_1 = require("./db/mysql/tool");
-const openApi_1 = require("./tool/openApi");
 const mapData_1 = require("./tool/mapData");
 const map_1 = require("./tool/map");
 const router_1 = require("./router");
 const database_1 = require("./db/mysql/database");
 const createMapTable_1 = require("./tool/createMapTable");
 const faceSchemas_1 = require("./tool/faceSchemas");
+const usq_1 = require("./usq/usq");
 const interval = 60 * 1000;
-const $unitx = '$$$/$unitx';
 class Joint {
     constructor(settings) {
         this.usqInDict = {};
@@ -34,6 +33,7 @@ class Joint {
         this.unit = unit;
         if (usqIns === undefined)
             return;
+        this.usqs = new usq_1.Usqs(unit);
         for (let usqIn of usqIns) {
             let { entity, type } = usqIn;
             if (this.usqInDict[entity] !== undefined)
@@ -44,7 +44,8 @@ class Joint {
     createRouter() {
         return router_1.createRouter(this.settings);
     }
-    startTimer() {
+    async start() {
+        await this.usqs.init();
         setTimeout(this.tick, 3 * 1000);
     }
     /*
@@ -88,10 +89,12 @@ class Joint {
             }
         }
     }
-    async getOpenApi(usq) {
-        let openApi = await openApi_1.getOpenApi(usq, this.settings.unit);
+    /*
+    protected async getOpenApi(usq: string) {
+        let openApi = await getOpenApi(usq, this.settings.unit);
         return openApi;
     }
+    */
     /*
     async pushToUsq(usqInName:string, data:any) {
         let usqIn = this.settings.in[usqInName];
@@ -122,16 +125,17 @@ class Joint {
         //}
     }
     async usqInTuid(usqIn, data) {
-        let { key, mapper, usq, entity: tuid } = usqIn;
+        let { key, mapper, usq: usqFullName, entity: tuid } = usqIn;
         if (key === undefined)
             throw 'key is not defined';
-        if (usq === undefined)
+        if (usqFullName === undefined)
             throw 'tuid ' + tuid + ' not defined';
         let keyVal = data[key];
         let mapToUsq = new mapData_1.MapToUsq(this.usqInDict, this.unit);
         let body = await mapToUsq.map(data, mapper);
-        let openApi = await this.getOpenApi(usq);
-        let ret = await openApi.saveTuid(tuid, body);
+        //let openApi = await this.getOpenApi(usq);
+        let usq = await this.usqs.getUsq(usqFullName);
+        let ret = await usq.saveTuid(tuid, body);
         let { id, inId } = ret;
         if (id < 0)
             id = -id;
@@ -139,11 +143,11 @@ class Joint {
         return id;
     }
     async usqInTuidArr(usqIn, data) {
-        let { key, owner, mapper, usq, entity } = usqIn;
+        let { key, owner, mapper, usq: usqFullName, entity } = usqIn;
         if (key === undefined)
             throw 'key is not defined';
-        if (usq === undefined)
-            throw 'usq ' + usq + ' not defined';
+        if (usqFullName === undefined)
+            throw 'usq ' + usqFullName + ' not defined';
         if (entity === undefined)
             throw 'tuid ' + entity + ' not defined';
         let parts = entity.split('.');
@@ -161,8 +165,10 @@ class Joint {
         if (ownerId === undefined)
             throw 'owner value is undefined';
         let body = await mapToUsq.map(data, mapper);
-        let openApi = await this.getOpenApi(usq);
-        let ret = await openApi.saveTuidArr(tuid, tuidArr, ownerId, body);
+        //let openApi = await this.getOpenApi(usq);
+        //let ret = await openApi.saveTuidArr(tuid, tuidArr, ownerId, body);
+        let usq = await this.usqs.getUsq(usqFullName);
+        let ret = await usq.saveTuidArr(tuid, tuidArr, ownerId, body);
         let { id, inId } = ret;
         if (id === undefined)
             id = inId;
@@ -172,7 +178,7 @@ class Joint {
         return id;
     }
     async mapOwner(usqIn, ownerEntity, ownerVal) {
-        let { usq } = usqIn;
+        let { usq: usqFullName } = usqIn;
         let sql = `select id from \`${database_1.databaseName}\`.\`map_${ownerEntity}\` where no='${ownerVal}'`;
         let ret;
         try {
@@ -189,23 +195,28 @@ class Joint {
                 throw `tuid ${tuid} is not defined in settings.in`;
             }
             */
-            let openApi = await openApi_1.getOpenApi(usq, this.settings.unit);
-            let vId = await openApi.getTuidVId(ownerEntity);
+            //let openApi = await getOpenApi(usq, this.settings.unit);
+            //let vId = await openApi.getTuidVId(ownerEntity);
+            let usq = await this.usqs.getUsq(usqFullName);
+            let vId = await usq.getTuidVId(ownerEntity);
             await map_1.map(ownerEntity, vId, ownerVal);
             return vId;
         }
         return ret[0]['id'];
     }
     async usqInMap(usqIn, data) {
-        let { mapper, usq, entity } = usqIn;
+        let { mapper, usq: usqFullName, entity } = usqIn;
         let mapToUsq = new mapData_1.MapToUsq(this.usqInDict, this.unit);
         let body = await mapToUsq.map(data, mapper);
-        let openApi = await this.getOpenApi(usq);
+        let usq = await this.usqs.getUsq(usqFullName);
+        //let openApi = await this.getOpenApi(usq);
         let { $ } = data;
         if ($ === '-')
-            await openApi.delMap(entity, body);
+            //await openApi.delMap(entity, body);
+            await usq.delMap(entity, body);
         else
-            await openApi.setMap(entity, body);
+            //await openApi.setMap(entity, body);
+            await usq.setMap(entity, body);
     }
     async scanOut() {
         let { usqOuts } = this.settings;
@@ -258,7 +269,7 @@ class Joint {
         if (bus === undefined)
             return;
         let monikerPrefix = '$bus/';
-        let openApi = await this.getOpenApi($unitx);
+        //let openApi = await this.getOpenApi($unitx);
         for (let usqBus of bus) {
             let { face, mapper, push, pull } = usqBus;
             // bus out
@@ -271,7 +282,7 @@ class Joint {
                 if (retp.length > 0) {
                     queue = retp[0].queue;
                 }
-                let message = await openApi.readBus(face, queue);
+                let message = await this.usqs.readBus(face, queue);
                 if (message === undefined)
                     break;
                 let { id: newQueue, from, body } = message;
@@ -279,7 +290,7 @@ class Joint {
                 let json = await faceSchemas_1.faceSchemas.unpackBusData(face, body);
                 let mapFromUsq = new mapData_1.MapFromUsq(this.usqInDict, this.unit);
                 let outBody = await mapFromUsq.map(json, mapper);
-                if (await push(face, queue, outBody) === false)
+                if (await push(this, face, queue, outBody) === false)
                     break;
                 await tool_1.execProc('write_queue_out_p', [moniker, newQueue]);
             }
@@ -292,7 +303,7 @@ class Joint {
                 if (retp.length > 0) {
                     queue = retp[0].queue;
                 }
-                let message = await pull(face, queue);
+                let message = await pull(this, face, queue);
                 if (message === undefined)
                     break;
                 let { queue: newQueue, data } = message;
@@ -301,7 +312,7 @@ class Joint {
                 let mapToUsq = new mapData_1.MapToUsq(this.usqInDict, this.unit);
                 let inBody = await mapToUsq.map(data, mapper);
                 let packed = await faceSchemas_1.faceSchemas.packBusData(face, inBody);
-                await openApi.writeBus(face, joinName, newQueue, packed);
+                await this.usqs.writeBus(face, joinName, newQueue, packed);
                 await tool_1.execProc('write_queue_in_p', [moniker, newQueue]);
             }
         }

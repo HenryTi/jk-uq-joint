@@ -1,9 +1,9 @@
-import { UsqBus, DataPush } from "../../usq-joint";
+import { UsqBus, DataPush, Joint } from "../../usq-joint";
 
 // export type DataPull = (face:string, queue:number)=>Promise<{queue:number, data:any}>;
 // export type DataPush = (face:string, queue:number, data:any)=>Promise<boolean>;
 
-const facePointPush: DataPush = async (face: string, queue: number, data: any): Promise<boolean> => {
+const facePointPush: DataPush = async (joint:Joint, face: string, queue: number, data: any): Promise<boolean> => {
     debugger;
     return false;
 }

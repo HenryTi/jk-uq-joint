@@ -1,5 +1,5 @@
 import { UsqOutConverter } from "../pulls";
-import { read } from ".";
+import { read } from './usqOutRead'
 import { Joint } from "../../usq-joint";
 import * as _ from 'lodash';
 import { Promotion, PromotionSalesRegion } from "../../settings/in/promotion";

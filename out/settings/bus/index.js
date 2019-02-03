@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 // export type DataPull = (face:string, queue:number)=>Promise<{queue:number, data:any}>;
 // export type DataPush = (face:string, queue:number, data:any)=>Promise<boolean>;
-const facePointPush = async (face, queue, data) => {
+const facePointPush = async (joint, face, queue, data) => {
     debugger;
     return false;
 };

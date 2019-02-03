@@ -1,6 +1,7 @@
 import { settings } from "../settings";
 import { Joint } from '../usq-joint';
-import { pulls } from "./pulls";
+import { pulls, UsqOutConverter } from "./pulls";
+import { usqOutRead } from "./converter/usqOutRead";
 
 const maxRows = 20;
 
@@ -9,13 +10,23 @@ const maxRows = 20;
     console.log('start');
     for (var i = 0; i < pulls.length; i++) {
         let { read, usqIn } = pulls[i];
+        let readFunc:UsqOutConverter;
+        if (typeof(read) === 'string') {
+            readFunc = async function(maxId:string):Promise<{ lastId: string, data: any }> {
+                return await usqOutRead(read as string, maxId);
+            }
+        }
+        else {
+            readFunc = read as UsqOutConverter;
+        }
+
         let maxId = '', count = 0;
         console.log(count);
         for (; ;) {
             count++;
             let ret: { lastId: string, data: any };
             try {
-                ret = await read(maxId);
+                ret = await readFunc(maxId);
             } catch (error) {
                 break;
             }
