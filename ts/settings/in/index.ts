@@ -63,7 +63,7 @@ const _in = {
 export default _in;
 */
 
-const usqIns = [
+const uqIns = [
     Language,
     Country,
     Province,
@@ -118,4 +118,4 @@ const usqIns = [
     Contact,
 ]
 
-export default usqIns;
+export default uqIns;

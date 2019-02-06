@@ -1,5 +1,5 @@
 /*
-import { Joint } from "../../usq-joint";
+import { Joint } from "../../uq-joint";
 
 export async function pullTest(joint:Joint, queue:number): Promise<number> {
     switch (queue) {

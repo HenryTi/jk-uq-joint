@@ -1,8 +1,8 @@
 /*
-import { UsqOutConverter } from "../pulls";
-import { read } from './usqOutRead'
+import { UqOutConverter } from "../pulls";
+import { read } from './uqOutRead'
 
-export const readPackTypeStandard: UsqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
+export const readPackTypeStandard: UqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
     let iMaxId = maxId === "" ? 0 : Number(maxId);
     let sqlstring = `select top 1 a.ID, a.Unit, b.Name from opdata.dbo.JNKStandardUnit a
@@ -10,7 +10,7 @@ export const readPackTypeStandard: UsqOutConverter = async (maxId: string): Prom
     return await read(sqlstring);
 };
 
-export const readPackType: UsqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
+export const readPackType: UqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
     let iMaxId = maxId === "" ? 0 : Number(maxId);
     let sqlstring = `select top 1 a.ID, a.UnitE, a.UnitC, a.StandardUnitID from opdata.dbo.SupplierPackingUnit a
@@ -18,43 +18,43 @@ export const readPackType: UsqOutConverter = async (maxId: string): Promise<{ la
     return await read(sqlstring);
 };
 
-export const readCurrency: UsqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
+export const readCurrency: UqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
     let sqlstring = `select top 1 currency as ID from zcl_mess.dbo.vw_currency_now where currency > '${maxId}' order by currency`;
     return await read(sqlstring);
 };
 
-export const readSalesRegion: UsqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
+export const readSalesRegion: UqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
     let sqlstring = `select top 1 market_code as ID, Market_name, Currency from zcl_mess.dbo.market where market_code > '${maxId}' order by market_code`;
     return await read(sqlstring);
 };
 
-export const readLanguage: UsqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
+export const readLanguage: UqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
     let sqlstring = `select top 1 LanguageID as ID, LanguageStr from dbs.dbo.Languages where LanguageId > '${maxId}' order by LanguageID`;
     return await read(sqlstring);
 };
 
-export const readCountry: UsqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
+export const readCountry: UqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
     let sqlstring = `select top 1 code as ID, Countries, ChineseName from dbs.dbo.CountryCode1 where code > '${maxId}' and level = 1 order by code`;
     return await read(sqlstring);
 };
 
-export const readProvince: UsqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
+export const readProvince: UqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
     let sqlstring = `select top 1 code as ID, Countries, ChineseName, parentCode from dbs.dbo.CountryCode1 where code > '${maxId}' and level = 2 order by code`;
     return await read(sqlstring);
 };
 
-export const readCity: UsqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
+export const readCity: UqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
     let sqlstring = `select top 1 code as ID, Countries, ChineseName, parentCode from dbs.dbo.CountryCode1 where code > '${maxId}' and level = 3 order by code`;
     return await read(sqlstring);
 };
 
-export const readCounty: UsqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
+export const readCounty: UqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
     let sqlstring = `select top 1 code as ID, Countries, ChineseName, parentCode from dbs.dbo.CountryCode1 where code > '${maxId}' and level = 4 order by code`;
     return await read(sqlstring);

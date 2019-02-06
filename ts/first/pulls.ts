@@ -2,7 +2,7 @@ import { sqls } from './converter/sqls';
 //import { readCountry, readProvince, readCity, readCounty, readPackType, readCurrency, readSalesRegion, readPackTypeStandard, readLanguage } from "./converter/commonConverter";
 import { readBrand, readProduct, readPack, readPrice, readProductSalesRegion, readProductLegallyProhibited, readBrandSalesRegion, readBrandDeliveryTime } from "./converter/productConverter";
 import { productPullWrite } from "./converter/productPullWrite";
-import { Joint, UsqIn } from "../usq-joint";
+import { Joint, UqIn } from "../uq-joint";
 import { readWarehouse, readSalesRegionWarehouse } from "./converter/warehouseConverter";
 //import { readChemical } from "./converter/sqls";
 import { PackTypePullWrite } from "./converter/commonPullWrite";
@@ -22,64 +22,64 @@ import { Organization } from "../settings/in/customer";
 /**
  * joint的思路是：joint一致在运行，每隔一段时间执行一次数据交换，数据交换分为3种，
  * 从远处数据源发送到Tonva中的，称为in，其步骤是：
- *  1.通过配置UsqOutConvert，从数据源中获取要交换的数据，通过配置UsqIn，表示源数据要进行的格式转换以及目的地
+ *  1.通过配置UqOutConvert，从数据源中获取要交换的数据，通过配置uqIn，表示源数据要进行的格式转换以及目的地
  */
 
-export type UsqOutConverter = (maxId: string) => Promise<{ lastId: string, data: any }>;
+export type UqOutConverter = (maxId: string) => Promise<{ lastId: string, data: any }>;
 export type PullWrite = (join: Joint, data: any) => Promise<void>;
 
 /** */
-export const pulls: { read: UsqOutConverter | string, usqIn: UsqIn | PullWrite }[] = [
+export const pulls: { read: UqOutConverter | string, uqIn: UqIn | PullWrite }[] = [
     /*
-    { read: sqls.readLanguage, usqIn: Language },
-    { read: sqls.readCountry, usqIn: Country },
-    { read: sqls.readProvince, usqIn: Province },
-    { read: sqls.readCity, usqIn: City },
+    { read: sqls.readLanguage, uqIn: Language },
+    { read: sqls.readCountry, uqIn: Country },
+    { read: sqls.readProvince, uqIn: Province },
+    { read: sqls.readCity, uqIn: City },
     */
-    { read: sqls.readCounty, usqIn: County },
+    { read: sqls.readCounty, uqIn: County },
     /*
-    { read: sqls.readPackTypeStandard, usqIn: PackTypeStandard },
-    { read: sqls.readPackType, usqIn: PackTypePullWrite },
-    { read: sqls.readCurrency, usqIn: Currency },
-    { read: sqls.readSalesRegion, usqIn: SalesRegion },
+    { read: sqls.readPackTypeStandard, uqIn: PackTypeStandard },
+    { read: sqls.readPackType, uqIn: PackTypePullWrite },
+    { read: sqls.readCurrency, uqIn: Currency },
+    { read: sqls.readSalesRegion, uqIn: SalesRegion },
     */
-    { read: sqls.readChemical, usqIn: Chemical },
+    { read: sqls.readChemical, uqIn: Chemical },
     
 
     /*
     // 产品相关的数据表
-    { read: readBrand, usqIn: Brand },
-    { read: readBrandSalesRegion, usqIn: BrandSalesRegion },
-    { read: readBrandDeliveryTime, usqIn: BrandDeliveryTime },
-    { read: readProduct, usqIn: productPullWrite },
-    // { read: readPack, usqIn: 'ProductPack' },
-    // { read: readPrice, usqIn: 'Price' },
-    { read: readPack, usqIn: ProductPackX },
-    { read: readPrice, usqIn: PriceX },
-    { read: readProductSalesRegion, usqIn: ProductSalesRegion },
-    { read: readProductLegallyProhibited, usqIn: ProductLegallyProhibited },
+    { read: readBrand, uqIn: Brand },
+    { read: readBrandSalesRegion, uqIn: BrandSalesRegion },
+    { read: readBrandDeliveryTime, uqIn: BrandDeliveryTime },
+    { read: readProduct, uqIn: productPullWrite },
+    // { read: readPack, uqIn: 'ProductPack' },
+    // { read: readPrice, uqIn: 'Price' },
+    { read: readPack, uqIn: ProductPackX },
+    { read: readPrice, uqIn: PriceX },
+    { read: readProductSalesRegion, uqIn: ProductSalesRegion },
+    { read: readProductLegallyProhibited, uqIn: ProductLegallyProhibited },
     // 目录树
-    { read: readProductCategory, usqIn: ProductCategory },
-    { read: readProductCategoryLanguage, usqIn: ProductCategoryLanguage },
-    { read: readProductProductCategory, usqIn: ProductProductCategory },
+    { read: readProductCategory, uqIn: ProductCategory },
+    { read: readProductCategoryLanguage, uqIn: ProductCategoryLanguage },
+    { read: readProductProductCategory, uqIn: ProductProductCategory },
     */
     /*
     // 库存
-    { read: readWarehouse, usqIn: Warehouse },
-    { read: readSalesRegionWarehouse, usqIn: SalesRegionWarehouse },
+    { read: readWarehouse, uqIn: Warehouse },
+    { read: readSalesRegionWarehouse, uqIn: SalesRegionWarehouse },
 
-    // { read: readPromotion, usqIn: promotionPullWrite },
-    // { read: readPromotionLanguage, usqIn: 'PromotionLanguage' },
-    // { read: readPromotionPack, usqIn: 'PromotionPack' },
+    // { read: readPromotion, uqIn: promotionPullWrite },
+    // { read: readPromotionLanguage, uqIn: 'PromotionLanguage' },
+    // { read: readPromotionPack, uqIn: 'PromotionPack' },
 
     // 客户和客户单位基本信息
-    { read: readOrganization, usqIn: Organization },
-    { read: readCustomer, usqIn: customerPullWrite },
+    { read: readOrganization, uqIn: Organization },
+    { read: readCustomer, uqIn: customerPullWrite },
     // 使用subTuid的导数据代码
-    // { read: readCustomerConsigneeContact, usqIn: 'CustomerConsigneeContact' },
-    // { read: readCustomerInvoiceContact, usqIn: 'CustomerInvoiceContact' },
+    // { read: readCustomerConsigneeContact, uqIn: 'CustomerConsigneeContact' },
+    // { read: readCustomerInvoiceContact, uqIn: 'CustomerInvoiceContact' },
     // 使用map方式的导数据代码
-    { read: readCustomerConsigneeContact, usqIn: consigneeContactPullWrite },
-    { read: readCustomerInvoiceContact, usqIn: consigneeContactPullWrite },
+    { read: readCustomerConsigneeContact, uqIn: consigneeContactPullWrite },
+    { read: readCustomerInvoiceContact, uqIn: consigneeContactPullWrite },
     */
 ]

@@ -1,8 +1,8 @@
-import { UsqInTuid } from "../../usq-joint";
-import { usqs } from "../usqs";
+import { UqInTuid } from "../../uq-joint";
+import { us } from "../uqs";
 
-export const Country: UsqInTuid = {
-    usq: usqs.jkCommon,
+export const Country: UqInTuid = {
+    uq: us.jkCommon,
     type: 'tuid',
     entity: 'Country',
     key: 'ID',
@@ -16,8 +16,8 @@ export const Country: UsqInTuid = {
 };
 
 
-export const Province: UsqInTuid = {
-    usq: usqs.jkCommon,
+export const Province: UqInTuid = {
+    uq: us.jkCommon,
     type: 'tuid',
     entity: 'Province',
     key: 'ID',
@@ -31,8 +31,8 @@ export const Province: UsqInTuid = {
 };
 
 
-export const City: UsqInTuid = {
-    usq: usqs.jkCommon,
+export const City: UqInTuid = {
+    uq: us.jkCommon,
     type: 'tuid',
     entity: 'City',
     key: 'ID',
@@ -45,8 +45,8 @@ export const City: UsqInTuid = {
     }
 };
 
-export const County: UsqInTuid = {
-    usq: usqs.jkCommon,
+export const County: UqInTuid = {
+    uq: us.jkCommon,
     type: 'tuid',
     entity: 'County',
     key: 'ID',
@@ -59,8 +59,8 @@ export const County: UsqInTuid = {
     }
 };
 
-export const Address: UsqInTuid = {
-    usq: usqs.jkCommon,
+export const Address: UqInTuid = {
+    uq: us.jkCommon,
     type: 'tuid',
     entity: 'Address',
     key: 'ID',

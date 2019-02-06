@@ -1,8 +1,8 @@
-import { UsqInTuid, UsqInMap, UsqInTuidArr } from "../../usq-joint";
-import { usqs } from "../usqs";
+import { UqInTuid, UqInMap, UqInTuidArr } from "../../uq-joint";
+import { us } from "../uqs";
 
-export const Customer: UsqInTuid = {
-    usq: usqs.jkCustomer,
+export const Customer: UqInTuid = {
+    uq: us.jkCustomer,
     type: 'tuid',
     entity: 'Customer',
     key: 'ID',
@@ -19,8 +19,8 @@ export const Customer: UsqInTuid = {
     }
 };
 
-export const Organization: UsqInTuid = {
-    usq: usqs.jkCustomer,
+export const Organization: UqInTuid = {
+    uq: us.jkCustomer,
     type: 'tuid',
     entity: 'Organization',
     key: 'ID',
@@ -32,8 +32,8 @@ export const Organization: UsqInTuid = {
     }
 };
 
-export const OrganizationCustomer: UsqInMap = {
-    usq: usqs.jkCustomer,
+export const OrganizationCustomer: UqInMap = {
+    uq: us.jkCustomer,
     type: 'map',
     entity: 'OrganizationCustomer',
     mapper: {
@@ -44,8 +44,8 @@ export const OrganizationCustomer: UsqInMap = {
     }
 };
 
-export const CustomerContact: UsqInTuidArr = {
-    usq: usqs.jkCustomer,
+export const CustomerContact: UqInTuidArr = {
+    uq: us.jkCustomer,
     type: 'tuid-arr',
     entity: 'Customer.Contact',
     owner: 'CustomerID',
@@ -58,8 +58,8 @@ export const CustomerContact: UsqInTuidArr = {
 };
 
 /*
-export const CustomerConsigneeContact: UsqInMap = {
-    usq: usqs.jkCustomer,
+export const CustomerConsigneeContact: UqInMap = {
+    uq: uqs.jkCustomer,
     type: 'map',
     entity: 'CustomerConsigneeContact',
     mapper: {
@@ -75,8 +75,8 @@ export const CustomerConsigneeContact: UsqInMap = {
     }
 };
 
-export const CustomerInvoiceContact: UsqInMap = {
-    usq: usqs.jkCustomer,
+export const CustomerInvoiceContact: UqInMap = {
+    uq: uqs.jkCustomer,
     type: 'map',
     entity: 'CustomerInvoiceContact',
     mapper: {
@@ -93,8 +93,8 @@ export const CustomerInvoiceContact: UsqInMap = {
 };
 */
 
-export const CustomerContacts: UsqInMap = {
-    usq: usqs.jkCustomer,
+export const CustomerContacts: UqInMap = {
+    uq: us.jkCustomer,
     type: 'map',
     entity: 'CustomerContacts',
     mapper: {
@@ -106,8 +106,8 @@ export const CustomerContacts: UsqInMap = {
 };
 
 /*
-export const CustomerInvoiceContact: UsqInMap = {
-    usq: usqs.jkCustomer,
+export const CustomerInvoiceContact: UqInMap = {
+    uq: uqs.jkCustomer,
     type: 'map',
     entity: 'CustomerInvoiceContact',
     mapper: {
@@ -119,8 +119,8 @@ export const CustomerInvoiceContact: UsqInMap = {
 };
 */
 
-export const Contact: UsqInTuid = {
-    usq: usqs.jkCustomer,
+export const Contact: UqInTuid = {
+    uq: us.jkCustomer,
     type: 'tuid',
     entity: 'Contact',
     key: 'ID',

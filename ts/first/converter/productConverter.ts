@@ -1,20 +1,20 @@
-import { UsqOutConverter } from "../pulls";
-import { read } from './usqOutRead'
+import { UqOutConverter } from "../pulls";
+import { read } from './uqOutRead'
 
-export const readBrand: UsqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
+export const readBrand: UqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
     let sqlstring = `select top 1 code as ID, name as BrandName from zcl_mess.dbo.manufactory where code > '${maxId}' order by code`;
     return await read(sqlstring);
 };
 
-export const readBrandSalesRegion: UsqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
+export const readBrandSalesRegion: UqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
     let sqlstring = `select top 1 ExcID as ID, code as BrandID, market_code as SalesRegionID, yesorno as Level
         from zcl_mess.dbo.manufactoryMarket where ExcID > '${maxId}' order by ExcID`;
     return await read(sqlstring);
 };
 
-export const readBrandDeliveryTime: UsqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
+export const readBrandDeliveryTime: UqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
     let iMaxId = maxId === "" ? 0 : Number(maxId);
     let sqlstring = `select top 1 ID, BrandCode as BrandID, SaleRegionID as SalesRegionID, MinValue, MaxValue, Unit
@@ -23,7 +23,7 @@ export const readBrandDeliveryTime: UsqOutConverter = async (maxId: string): Pro
     return await read(sqlstring);
 };
 
-export const readProduct: UsqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
+export const readProduct: UqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
     let sqlstring = `select top 1 p.jkid as ID, p.manufactory as BrandID, p.originalId as ProductNumber
         , isnull(p.Description, 'N/A') as Description, p.DescriptionC
@@ -33,7 +33,7 @@ export const readProduct: UsqOutConverter = async (maxId: string): Promise<{ las
     return await read(sqlstring);
 };
 
-export const readPack: UsqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
+export const readPack: UqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
     let sqlstring = `select top 1 jkcat as ID, j.jkid as ProductID, j.PackNr, j.Quantity, j.Unit as Name
         from zcl_mess.dbo.jkcat j inner join zcl_mess.dbo.products p on j.jkid = p.jkid
@@ -42,7 +42,7 @@ export const readPack: UsqOutConverter = async (maxId: string): Promise<{ lastId
     return await read(sqlstring);
 };
 
-export const readPrice: UsqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
+export const readPrice: UqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
     let sqlstring = `select top 1 jp.ExCID as ID, jp.jkcat as PackingID, j.jkid as ProductID
         , jp.market_code as SalesRegionID, jp.Price, jp.Currency, jp.Expire_Date, JP.Discontinued
@@ -51,14 +51,14 @@ export const readPrice: UsqOutConverter = async (maxId: string): Promise<{ lastI
     return await read(sqlstring);
 };
 
-export const readProductSalesRegion: UsqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
+export const readProductSalesRegion: UqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
     let sqlstring = `select top 1 ExCID as ID, jkid as ProductID, market_code as SalesRegionID, IsValid
         from zcl_mess.dbo.ProductsLocation where ExCID > '${maxId}' order by ExCID`;
     return await read(sqlstring);
 };
 
-export const readProductLegallyProhibited: UsqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
+export const readProductLegallyProhibited: UqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
     let sqlstring = `select top 1 jkid + market_code as ID, jkid as ProductID, market_code as SalesRegionID, left(description, 20) as Reason
         from zcl_mess.dbo.sc_safe_ProdCache where jkid + market_code > '${maxId}' order by jkid + market_code`;

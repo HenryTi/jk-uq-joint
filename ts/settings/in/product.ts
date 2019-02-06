@@ -1,8 +1,8 @@
-import { UsqInTuid, UsqInMap, UsqInTuidArr, UsqIn } from "../../usq-joint";
-import { usqs } from "../usqs";
+import { UqInTuid, UqInMap, UqInTuidArr, UqIn } from "../../uq-joint";
+import { us } from "../uqs";
 
-export const Brand: UsqInTuid = {
-    usq: usqs.jkProduct,
+export const Brand: UqInTuid = {
+    uq: us.jkProduct,
     type: 'tuid',
     entity: 'Brand',
     key: 'ID',
@@ -13,8 +13,8 @@ export const Brand: UsqInTuid = {
     }
 };
 
-export const BrandSalesRegion: UsqInMap = {
-    usq: usqs.jkProduct,
+export const BrandSalesRegion: UqInMap = {
+    uq: us.jkProduct,
     type: 'map',
     entity: 'BrandSalesRegion',
     mapper: {
@@ -26,8 +26,8 @@ export const BrandSalesRegion: UsqInMap = {
     }
 };
 
-export const BrandDeliveryTime: UsqInMap = {
-    usq: usqs.jkProduct,
+export const BrandDeliveryTime: UqInMap = {
+    uq: us.jkProduct,
     type: 'map',
     entity: 'BrandDeliveryTime',
     mapper: {
@@ -43,8 +43,8 @@ export const BrandDeliveryTime: UsqInMap = {
     }
 };
 
-export const Product: UsqInTuid = {
-    usq: usqs.jkProduct,
+export const Product: UqInTuid = {
+    uq: us.jkProduct,
     type: 'tuid',
     entity: 'Product',
     key: 'ID',
@@ -58,8 +58,8 @@ export const Product: UsqInTuid = {
     }
 };
 
-export const ProductChemical: UsqInMap = {
-    usq: usqs.jkProduct,
+export const ProductChemical: UqInMap = {
+    uq: us.jkProduct,
     type: 'map',
     entity: 'ProductChemical',
     mapper: {
@@ -74,8 +74,8 @@ export const ProductChemical: UsqInMap = {
     }
 };
 
-export const ProductSalesRegion: UsqInMap = {
-    usq: usqs.jkProduct,
+export const ProductSalesRegion: UqInMap = {
+    uq: us.jkProduct,
     type: 'map',
     entity: 'ProductSalesRegion',
     mapper: {
@@ -87,8 +87,8 @@ export const ProductSalesRegion: UsqInMap = {
     }
 };
 
-export const ProductLegallyProhibited: UsqInMap = {
-    usq: usqs.jkProduct,
+export const ProductLegallyProhibited: UqInMap = {
+    uq: us.jkProduct,
     type: 'map',
     entity: 'ProductLegallyProhibited',
     mapper: {
@@ -100,8 +100,8 @@ export const ProductLegallyProhibited: UsqInMap = {
     }
 };
 /*
-export const ProductPackType: UsqInTuid = {
-    usq: usqs.jkProduct,
+export const ProductPackType: UqInTuid = {
+    uq: uqs.jkProduct,
     type: 'tuid',
     entity: 'ProductPackType',
     key: 'ID',
@@ -111,8 +111,8 @@ export const ProductPackType: UsqInTuid = {
     }
 };
 
-export const ProductPack: UsqInTuidArr = {
-    usq: usqs.jkProduct,
+export const ProductPack: UqInTuidArr = {
+    uq: uqs.jkProduct,
     type: 'tuid-arr',
     entity: 'ProductPackType.Pack',
     key: "ID",
@@ -125,8 +125,8 @@ export const ProductPack: UsqInTuidArr = {
     }
 };
 
-export const Price: UsqInMap = {
-    usq: usqs.jkProduct,
+export const Price: UqInMap = {
+    uq: uqs.jkProduct,
     type: 'map',
     entity: 'Price',
     mapper: {
@@ -142,8 +142,8 @@ export const Price: UsqInMap = {
 };
 */
 
-export const ProductX: UsqInTuid = {
-    usq: usqs.jkProduct,
+export const ProductX: UqInTuid = {
+    uq: us.jkProduct,
     type: 'tuid',
     entity: 'ProductX',
     key: 'ID',
@@ -157,8 +157,8 @@ export const ProductX: UsqInTuid = {
     }
 };
 
-export const ProductPackX: UsqInTuidArr = {
-    usq: usqs.jkProduct,
+export const ProductPackX: UqInTuidArr = {
+    uq: us.jkProduct,
     type: 'tuid-arr',
     entity: 'ProductX.PackX',
     key: "ID",
@@ -173,8 +173,8 @@ export const ProductPackX: UsqInTuidArr = {
     }
 };
 
-export const PriceX: UsqInMap = {
-    usq: usqs.jkProduct,
+export const PriceX: UqInMap = {
+    uq: us.jkProduct,
     type: 'map',
     entity: 'PriceX',
     mapper: {

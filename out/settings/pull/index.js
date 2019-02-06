@@ -8,8 +8,8 @@ const pull = {
 export default pull;
 import { pullCountry, pullProvince, pullCity, pullCounty, pullPackTypeStandard, pullPackType, pullCurrency, pullSalesRegion } from "./common";
 import { pullChemical } from "./Chemical";
-import { Joint } from "../../usq-joint";
-import { execSql } from "../../usq-joint/db/mysql/tool";
+import { Joint } from "../../uq-joint";
+import { execSql } from "../../uq-joint/db/mysql/tool";
 
 const pull = {
 

@@ -14,10 +14,10 @@ const express_1 = __importDefault(require("express"));
 const bodyParser = __importStar(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
 const config_1 = __importDefault(require("config"));
-const usq_joint_1 = require("./usq-joint");
+const usq_joint_1 = require("./uq-joint");
 const settings_1 = require("./settings");
-const host_1 = require("./usq-joint/tool/host");
-const centerApi_1 = require("./usq-joint/tool/centerApi");
+const host_1 = require("./uq-joint/tool/host");
+const centerApi_1 = require("./uq-joint/tool/centerApi");
 (async function () {
     console.log(process.env.NODE_ENV);
     await host_1.host.start();

@@ -2,10 +2,10 @@ import express, { Request, Response, NextFunction } from 'express';
 import * as bodyParser from 'body-parser';
 import cors from 'cors';
 import config from 'config';
-import { Joint } from './usq-joint';
+import { Joint } from './uq-joint';
 import { settings } from './settings';
-import { host } from './usq-joint/tool/host';
-import { centerApi } from './usq-joint/tool/centerApi';
+import { host } from './uq-joint/tool/host';
+import { centerApi } from './uq-joint/tool/centerApi';
 
 (async function () {
     console.log(process.env.NODE_ENV);
@@ -47,11 +47,11 @@ import { centerApi } from './usq-joint/tool/centerApi';
     });
 
     let joint = new Joint(settings);
-    app.use('/joint-usq-jk', joint.createRouter());
+    app.use('/joint-uq-jk', joint.createRouter());
 
     let port = config.get<number>('port');
     app.listen(port, async ()=>{
-        console.log('USQL-API listening on port ' + port);
+        console.log('UQ-API listening on port ' + port);
         let {host, user} = connection;
         console.log('process.env.NODE_ENV: %s\nDB host: %s, user: %s',
             process.env.NODE_ENV,

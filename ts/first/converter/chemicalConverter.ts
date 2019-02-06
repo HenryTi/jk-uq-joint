@@ -1,8 +1,8 @@
-import { UsqOutConverter } from "../pulls";
-import { usqOutRead } from "./usqOutRead";
+import { UqOutConverter } from "../pulls";
+import { uqOutRead } from "./uqOutRead";
 
 /*
-export const readChemical: UsqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
+export const readChemical: UqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
     let iMaxId = maxId === "" ? 0 : Number(maxId);
     let sqlstring = `select top 1 chemID as ID, cas, Description, DescriptionC, molWeight, molFomula, mdlNumber

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-//import { UsqOutSheet } from "../../usq-joint";
+//import { UsqOutSheet } from "../../uq-joint";
 /*
 export const order: UsqOutSheet = {
     usq: usqs.jkOrder,

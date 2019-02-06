@@ -1,8 +1,8 @@
-import { UsqOut } from "../../usq-joint";
-import { usqs } from '../usqs';
+import { UqOut } from "../../uq-joint";
+import { us } from '../uqs';
 /*
-export const order: UsqOut = {
-    usq: usqs.jkOrder,
+export const order: UqOut = {
+    uq: uqs.jkOrder,
     type: 'sheet',
     entity: 'order',
     key: 'no',

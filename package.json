@@ -1,7 +1,7 @@
 {
-  "name": "usq-joint",
+  "name": "uq-joint",
   "version": "1.0.0",
-  "description": "joint for usq and other db",
+  "description": "joint for uq and other db",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

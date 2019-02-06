@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const settings_1 = require("../settings");
-const usq_joint_1 = require("../usq-joint");
+const usq_joint_1 = require("../uq-joint");
 const pulls_1 = require("./pulls");
 const maxRows = 20;
 (async function () {
