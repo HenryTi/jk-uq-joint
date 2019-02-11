@@ -55,8 +55,6 @@ const faceOrderPush: DataPush = async (joint: Joint, face: string, queue: number
     }
     // 调用7.253的web api
     let httpClient = new WebApiClient();
-    // let ret = await httpClient.test({});
-    order.Id = "eiiigwooige";
     let ret = await httpClient.newOrder(order);
     return ret;
 }
@@ -105,12 +103,12 @@ async function setInvoiceReceiver(order: any, invoiceContact: any, invoiceContac
 export const faceOrder: UsqBus = {
     face: '百灵威系统工程部/point/order',
     mapper: {
+        id: true,
         Id: "no",
-        // Customer: "customer@Customer",
-        Customer: 1,
+        Customer: "customer@Customer",
         Organization: true,
-        shippingContact: 1999,
-        invoiceContact: 1999,
+        shippingContact: true,
+        invoiceContact: true,
         /*saleEmployeeId: true,
         TransportMethodId: "Y",
         PaymentRule: 1,
