@@ -14,7 +14,7 @@ const express_1 = __importDefault(require("express"));
 const bodyParser = __importStar(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
 const config_1 = __importDefault(require("config"));
-const usq_joint_1 = require("./uq-joint");
+const uq_joint_1 = require("./uq-joint");
 const settings_1 = require("./settings");
 const host_1 = require("./uq-joint/tool/host");
 const centerApi_1 = require("./uq-joint/tool/centerApi");
@@ -55,11 +55,11 @@ const centerApi_1 = require("./uq-joint/tool/centerApi");
             console.error(e);
         }
     });
-    let joint = new usq_joint_1.Joint(settings_1.settings);
-    app.use('/joint-usq-jk', joint.createRouter());
+    let joint = new uq_joint_1.Joint(settings_1.settings);
+    app.use('/joint-uq-jk', joint.createRouter());
     let port = config_1.default.get('port');
     app.listen(port, async () => {
-        console.log('USQL-API listening on port ' + port);
+        console.log('UQ-API listening on port ' + port);
         let { host, user } = connection;
         console.log('process.env.NODE_ENV: %s\nDB host: %s, user: %s', process.env.NODE_ENV, host, user);
         joint.start();

@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const usqs_1 = require("../usqs");
+const uqs_1 = require("../uqs");
 exports.Warehouse = {
-    usq: usqs_1.usqs.jkWarehouse,
+    uq: uqs_1.us.jkWarehouse,
     type: 'tuid',
     entity: 'Warehouse',
     key: 'ID',
@@ -13,7 +13,7 @@ exports.Warehouse = {
     }
 };
 exports.SalesRegionWarehouse = {
-    usq: usqs_1.usqs.jkWarehouse,
+    uq: uqs_1.us.jkWarehouse,
     type: 'map',
     entity: 'SalesRegionWarehouse',
     mapper: {

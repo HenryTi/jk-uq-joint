@@ -1,7 +1,7 @@
 {
-    "name": "joint-usq-jk",
+    "name": "joint-uq-jk",
     "port": 3017,
-    "database": "joint-usq-jk",
+    "database": "joint-uq-jk",
     "mysqlConn": {
         "host": "0.0.0.0",
         "user": "usr",

@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const usqs_1 = require("../usqs");
+const uqs_1 = require("../uqs");
 exports.Brand = {
-    usq: usqs_1.usqs.jkProduct,
+    uq: uqs_1.us.jkProduct,
     type: 'tuid',
     entity: 'Brand',
     key: 'ID',
@@ -13,7 +13,7 @@ exports.Brand = {
     }
 };
 exports.BrandSalesRegion = {
-    usq: usqs_1.usqs.jkProduct,
+    uq: uqs_1.us.jkProduct,
     type: 'map',
     entity: 'BrandSalesRegion',
     mapper: {
@@ -25,7 +25,7 @@ exports.BrandSalesRegion = {
     }
 };
 exports.BrandDeliveryTime = {
-    usq: usqs_1.usqs.jkProduct,
+    uq: uqs_1.us.jkProduct,
     type: 'map',
     entity: 'BrandDeliveryTime',
     mapper: {
@@ -41,7 +41,7 @@ exports.BrandDeliveryTime = {
     }
 };
 exports.Product = {
-    usq: usqs_1.usqs.jkProduct,
+    uq: uqs_1.us.jkProduct,
     type: 'tuid',
     entity: 'Product',
     key: 'ID',
@@ -55,7 +55,7 @@ exports.Product = {
     }
 };
 exports.ProductChemical = {
-    usq: usqs_1.usqs.jkProduct,
+    uq: uqs_1.us.jkProduct,
     type: 'map',
     entity: 'ProductChemical',
     mapper: {
@@ -70,7 +70,7 @@ exports.ProductChemical = {
     }
 };
 exports.ProductSalesRegion = {
-    usq: usqs_1.usqs.jkProduct,
+    uq: uqs_1.us.jkProduct,
     type: 'map',
     entity: 'ProductSalesRegion',
     mapper: {
@@ -82,7 +82,7 @@ exports.ProductSalesRegion = {
     }
 };
 exports.ProductLegallyProhibited = {
-    usq: usqs_1.usqs.jkProduct,
+    uq: uqs_1.us.jkProduct,
     type: 'map',
     entity: 'ProductLegallyProhibited',
     mapper: {
@@ -94,8 +94,8 @@ exports.ProductLegallyProhibited = {
     }
 };
 /*
-export const ProductPackType: UsqInTuid = {
-    usq: usqs.jkProduct,
+export const ProductPackType: UqInTuid = {
+    uq: uqs.jkProduct,
     type: 'tuid',
     entity: 'ProductPackType',
     key: 'ID',
@@ -105,8 +105,8 @@ export const ProductPackType: UsqInTuid = {
     }
 };
 
-export const ProductPack: UsqInTuidArr = {
-    usq: usqs.jkProduct,
+export const ProductPack: UqInTuidArr = {
+    uq: uqs.jkProduct,
     type: 'tuid-arr',
     entity: 'ProductPackType.Pack',
     key: "ID",
@@ -119,8 +119,8 @@ export const ProductPack: UsqInTuidArr = {
     }
 };
 
-export const Price: UsqInMap = {
-    usq: usqs.jkProduct,
+export const Price: UqInMap = {
+    uq: uqs.jkProduct,
     type: 'map',
     entity: 'Price',
     mapper: {
@@ -136,7 +136,7 @@ export const Price: UsqInMap = {
 };
 */
 exports.ProductX = {
-    usq: usqs_1.usqs.jkProduct,
+    uq: uqs_1.us.jkProduct,
     type: 'tuid',
     entity: 'ProductX',
     key: 'ID',
@@ -150,7 +150,7 @@ exports.ProductX = {
     }
 };
 exports.ProductPackX = {
-    usq: usqs_1.usqs.jkProduct,
+    uq: uqs_1.us.jkProduct,
     type: 'tuid-arr',
     entity: 'ProductX.PackX',
     key: "ID",
@@ -165,7 +165,7 @@ exports.ProductPackX = {
     }
 };
 exports.PriceX = {
-    usq: usqs_1.usqs.jkProduct,
+    uq: uqs_1.us.jkProduct,
     type: 'map',
     entity: 'PriceX',
     mapper: {

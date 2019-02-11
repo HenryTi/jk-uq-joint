@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const usqs_1 = require("../usqs");
+const uqs_1 = require("../uqs");
 exports.SalesRegion = {
-    usq: usqs_1.usqs.jkCommon,
+    uq: uqs_1.us.jkCommon,
     type: 'tuid',
     entity: 'SalesRegion',
     key: 'ID',
@@ -14,7 +14,7 @@ exports.SalesRegion = {
     }
 };
 exports.Currency = {
-    usq: usqs_1.usqs.jkCommon,
+    uq: uqs_1.us.jkCommon,
     type: 'tuid',
     entity: 'Currency',
     key: 'ID',
@@ -24,7 +24,7 @@ exports.Currency = {
     }
 };
 exports.PackType = {
-    usq: usqs_1.usqs.jkCommon,
+    uq: uqs_1.us.jkCommon,
     type: 'tuid',
     entity: 'PackType',
     key: 'ID',
@@ -36,7 +36,7 @@ exports.PackType = {
     }
 };
 exports.PackTypeMapToStandard = {
-    usq: usqs_1.usqs.jkCommon,
+    uq: uqs_1.us.jkCommon,
     type: 'map',
     entity: "PackTypeMapToStandard",
     mapper: {
@@ -47,7 +47,7 @@ exports.PackTypeMapToStandard = {
     }
 };
 exports.PackTypeStandard = {
-    usq: usqs_1.usqs.jkCommon,
+    uq: uqs_1.us.jkCommon,
     type: 'tuid',
     entity: 'PackTypeStandard',
     key: 'ID',
@@ -59,7 +59,7 @@ exports.PackTypeStandard = {
     }
 };
 exports.Language = {
-    usq: usqs_1.usqs.jkCommon,
+    uq: uqs_1.us.jkCommon,
     type: 'tuid',
     entity: 'Language',
     key: 'ID',

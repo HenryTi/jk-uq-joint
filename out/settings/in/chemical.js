@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const usqs_1 = require("../usqs");
+const uqs_1 = require("../uqs");
 exports.Chemical = {
-    usq: usqs_1.usqs.jkChemical,
+    uq: uqs_1.us.jkChemical,
     type: 'tuid',
     entity: 'Chemical',
     key: 'ID',

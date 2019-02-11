@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const usqs_1 = require("../usqs");
+const uqs_1 = require("../uqs");
 exports.Promotion = {
-    usq: usqs_1.usqs.jkPromotion,
+    uq: uqs_1.us.jkPromotion,
     type: 'tuid',
     entity: 'Promotion',
     key: 'ID',
@@ -18,7 +18,7 @@ exports.Promotion = {
     }
 };
 exports.PromotionSalesRegion = {
-    usq: usqs_1.usqs.jkPromotion,
+    uq: uqs_1.us.jkPromotion,
     type: 'map',
     entity: 'PromotionSalesRegion',
     mapper: {
@@ -29,7 +29,7 @@ exports.PromotionSalesRegion = {
     }
 };
 exports.PromotionLanguage = {
-    usq: usqs_1.usqs.jkPromotion,
+    uq: uqs_1.us.jkPromotion,
     type: 'map',
     entity: 'PromotionLanguage',
     mapper: {
@@ -42,7 +42,7 @@ exports.PromotionLanguage = {
     }
 };
 exports.PromotionPack = {
-    usq: usqs_1.usqs.jkPromotion,
+    uq: uqs_1.us.jkPromotion,
     type: 'map',
     entity: 'PromotionPack',
     mapper: {

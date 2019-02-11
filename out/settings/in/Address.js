@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const usqs_1 = require("../usqs");
+const uqs_1 = require("../uqs");
 exports.Country = {
-    usq: usqs_1.usqs.jkCommon,
+    uq: uqs_1.us.jkCommon,
     type: 'tuid',
     entity: 'Country',
     key: 'ID',
@@ -15,7 +15,7 @@ exports.Country = {
     }
 };
 exports.Province = {
-    usq: usqs_1.usqs.jkCommon,
+    uq: uqs_1.us.jkCommon,
     type: 'tuid',
     entity: 'Province',
     key: 'ID',
@@ -28,7 +28,7 @@ exports.Province = {
     }
 };
 exports.City = {
-    usq: usqs_1.usqs.jkCommon,
+    uq: uqs_1.us.jkCommon,
     type: 'tuid',
     entity: 'City',
     key: 'ID',
@@ -41,7 +41,7 @@ exports.City = {
     }
 };
 exports.County = {
-    usq: usqs_1.usqs.jkCommon,
+    uq: uqs_1.us.jkCommon,
     type: 'tuid',
     entity: 'County',
     key: 'ID',
@@ -54,7 +54,7 @@ exports.County = {
     }
 };
 exports.Address = {
-    usq: usqs_1.usqs.jkCommon,
+    uq: uqs_1.us.jkCommon,
     type: 'tuid',
     entity: 'Address',
     key: 'ID',

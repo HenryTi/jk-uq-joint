@@ -11,9 +11,9 @@ const _ = __importStar(require("lodash"));
 const product_1 = require("../../settings/in/product");
 async function productPullWrite(joint, data) {
     try {
-        await joint.usqIn(product_1.Product, _.pick(data, ["ID", "BrandID", "ProductNumber", "Description", "DescriptionC"]));
-        await joint.usqIn(product_1.ProductX, _.pick(data, ["ID", "BrandID", "ProductNumber", "Description", "DescriptionC"]));
-        await joint.usqIn(product_1.ProductChemical, _.pick(data, ["ID", "ChemicalID", "Purity", "CAS", "MolecularFomula", "MolecularWeight"]));
+        await joint.uqIn(product_1.Product, _.pick(data, ["ID", "BrandID", "ProductNumber", "Description", "DescriptionC"]));
+        await joint.uqIn(product_1.ProductX, _.pick(data, ["ID", "BrandID", "ProductNumber", "Description", "DescriptionC"]));
+        await joint.uqIn(product_1.ProductChemical, _.pick(data, ["ID", "ChemicalID", "Purity", "CAS", "MolecularFomula", "MolecularWeight"]));
     }
     catch (error) {
         console.error(error);

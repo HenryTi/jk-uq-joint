@@ -11,8 +11,8 @@ const _ = __importStar(require("lodash"));
 const salesRegion_1 = require("../../settings/in/salesRegion");
 async function PackTypePullWrite(joint, data) {
     try {
-        await joint.usqIn(salesRegion_1.PackType, _.pick(data, ["ID", "UnitE", "UnitC"]));
-        await joint.usqIn(salesRegion_1.PackTypeMapToStandard, _.pick(data, ["ID", "StandardUnitID"]));
+        await joint.uqIn(salesRegion_1.PackType, _.pick(data, ["ID", "UnitE", "UnitC"]));
+        await joint.uqIn(salesRegion_1.PackTypeMapToStandard, _.pick(data, ["ID", "StandardUnitID"]));
     }
     catch (error) {
         console.error(error);

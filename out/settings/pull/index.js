@@ -31,7 +31,7 @@ const pull = {
 export async function pullEntity(joint: Joint, entityName: string, sqlstring: string, queue: number): Promise<number> {
 
     let data = await execSql(sqlstring);
-    await joint.usqIn(entityName, data);
+    await joint.uqIn(entityName, data);
     return queue + 1;
 }
 

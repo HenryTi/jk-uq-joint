@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const usqs_1 = require("../usqs");
+const uqs_1 = require("../uqs");
 exports.Customer = {
-    usq: usqs_1.usqs.jkCustomer,
+    uq: uqs_1.us.jkCustomer,
     type: 'tuid',
     entity: 'Customer',
     key: 'ID',
@@ -18,7 +18,7 @@ exports.Customer = {
     }
 };
 exports.Organization = {
-    usq: usqs_1.usqs.jkCustomer,
+    uq: uqs_1.us.jkCustomer,
     type: 'tuid',
     entity: 'Organization',
     key: 'ID',
@@ -30,7 +30,7 @@ exports.Organization = {
     }
 };
 exports.OrganizationCustomer = {
-    usq: usqs_1.usqs.jkCustomer,
+    uq: uqs_1.us.jkCustomer,
     type: 'map',
     entity: 'OrganizationCustomer',
     mapper: {
@@ -41,7 +41,7 @@ exports.OrganizationCustomer = {
     }
 };
 exports.CustomerContact = {
-    usq: usqs_1.usqs.jkCustomer,
+    uq: uqs_1.us.jkCustomer,
     type: 'tuid-arr',
     entity: 'Customer.Contact',
     owner: 'CustomerID',
@@ -53,8 +53,8 @@ exports.CustomerContact = {
     }
 };
 /*
-export const CustomerConsigneeContact: UsqInMap = {
-    usq: usqs.jkCustomer,
+export const CustomerConsigneeContact: UqInMap = {
+    uq: uqs.jkCustomer,
     type: 'map',
     entity: 'CustomerConsigneeContact',
     mapper: {
@@ -70,8 +70,8 @@ export const CustomerConsigneeContact: UsqInMap = {
     }
 };
 
-export const CustomerInvoiceContact: UsqInMap = {
-    usq: usqs.jkCustomer,
+export const CustomerInvoiceContact: UqInMap = {
+    uq: uqs.jkCustomer,
     type: 'map',
     entity: 'CustomerInvoiceContact',
     mapper: {
@@ -88,7 +88,7 @@ export const CustomerInvoiceContact: UsqInMap = {
 };
 */
 exports.CustomerContacts = {
-    usq: usqs_1.usqs.jkCustomer,
+    uq: uqs_1.us.jkCustomer,
     type: 'map',
     entity: 'CustomerContacts',
     mapper: {
@@ -99,8 +99,8 @@ exports.CustomerContacts = {
     }
 };
 /*
-export const CustomerInvoiceContact: UsqInMap = {
-    usq: usqs.jkCustomer,
+export const CustomerInvoiceContact: UqInMap = {
+    uq: uqs.jkCustomer,
     type: 'map',
     entity: 'CustomerInvoiceContact',
     mapper: {
@@ -112,7 +112,7 @@ export const CustomerInvoiceContact: UsqInMap = {
 };
 */
 exports.Contact = {
-    usq: usqs_1.usqs.jkCustomer,
+    uq: uqs_1.us.jkCustomer,
     type: 'tuid',
     entity: 'Contact',
     key: 'ID',

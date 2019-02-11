@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const usqs_1 = require("../usqs");
+const uqs_1 = require("../uqs");
 exports.ProductCategory = {
-    usq: usqs_1.usqs.jkProduct,
+    uq: uqs_1.us.jkProduct,
     type: 'tuid',
     entity: 'ProductCategory',
     key: 'ID',
@@ -15,7 +15,7 @@ exports.ProductCategory = {
     }
 };
 exports.ProductCategoryLanguage = {
-    usq: usqs_1.usqs.jkProduct,
+    uq: uqs_1.us.jkProduct,
     type: 'tuid-arr',
     entity: 'ProductCategory.ProductCategoryLanguage',
     key: "ID",
@@ -28,7 +28,7 @@ exports.ProductCategoryLanguage = {
     }
 };
 exports.ProductProductCategory = {
-    usq: usqs_1.usqs.jkProduct,
+    uq: uqs_1.us.jkProduct,
     type: 'map',
     entity: 'ProductProductCategory',
     mapper: {
