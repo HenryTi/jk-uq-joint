@@ -1,10 +1,10 @@
 import {product, productPack} from './product';
 import {packType} from './packType';
-import { usqs } from '../usqs';
-import { UsqIn, UsqInMap } from '../../usq-joint';
+import { us } from '../uqs';
+import { UqIn, UqInMap } from '../../uq-joint';
 
-const price: UsqInMap = {
-    usq: usqs.jkProduct,
+const price: UqInMap = {
+    uq: us.jkProduct,
     type: 'map',
     entity: 'price',
     mapper: {
@@ -17,8 +17,8 @@ const price: UsqInMap = {
 }
 
 /*
-const price2: UsqInMap = {
-    usq: usqs.jkProduct,
+const price2: UqInMap = {
+    uq: uqs.jkProduct,
     type: 'map',
     entity: 'price',
     mapper: {
@@ -31,7 +31,7 @@ const price2: UsqInMap = {
 }
 */
 
-const _in: UsqIn[] = [
+const _in: UqIn[] = [
     product,
     productPack,
     packType,

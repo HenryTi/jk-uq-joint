@@ -1,5 +1,5 @@
 /*
-import { Joint } from "../../usq-joint";
+import { Joint } from "../../uq-joint";
 import { pullEntity } from ".";
 
 export async function pullBrand(joint: Joint, queue: number): Promise<number> {

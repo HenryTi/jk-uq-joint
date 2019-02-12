@@ -1,8 +1,8 @@
-import { UsqBus, DataPush, Joint } from "../../usq-joint";
+import { UqBus, DataPush, Joint } from "../../uq-joint";
 import { WebApiClient } from "../../tools/webApiClient";
-import { usqs } from "../usqs";
-import { databaseName } from "../../usq-joint/db/mysql/database";
-import { MapFromUsq } from "../../usq-joint/tool/mapData";
+import { us } from "../uqs";
+import { databaseName } from "../../uq-joint/db/mysql/database";
+import { MapFromUq } from "../../uq-joint/tool/mapData";
 
 const faceOrderPush: DataPush = async (joint: Joint, face: string, queue: number, order: any): Promise<boolean> => {
     console.log(order);
@@ -27,13 +27,14 @@ const faceOrderPush: DataPush = async (joint: Joint, face: string, queue: number
     }
     */
 
+    /*
     let shippingContact = undefined;
     if (order.shippingContact > 0) {
-        shippingContact = await joint.loadTuid(usqs.jkCustomer, 'contact', order.shippingContact);
+        shippingContact = await joint.loadTuid(us.jkCustomer, 'contact', order.shippingContact);
         if (shippingContact !== undefined) {
             let shippingContactAddress;
             if (shippingContact.address > 0)
-                shippingContactAddress = await joint.loadTuid(usqs.jkCommon, 'address', shippingContact.address);
+                shippingContactAddress = await joint.loadTuid(us.jkCommon, 'address', shippingContact.address);
             await setConsignee(joint, order, shippingContact, shippingContactAddress);
         }
     }
@@ -43,16 +44,17 @@ const faceOrderPush: DataPush = async (joint: Joint, face: string, queue: number
         if (order.invoiceContact == order.shippingContact)
             invoiceContact = shippingContact;
         else {
-            invoiceContact = await joint.loadTuid(usqs.jkCustomer, 'contact', order.invoiceContact);
+            invoiceContact = await joint.loadTuid(us.jkCustomer, 'contact', order.invoiceContact);
             if (invoiceContact !== undefined) {
                 let invoiceContactAddress;
                 if (invoiceContact.address > 0) {
-                    invoiceContactAddress = await joint.loadTuid(usqs.jkCommon, 'address', invoiceContact.address);
+                    invoiceContactAddress = await joint.loadTuid(us.jkCommon, 'address', invoiceContact.address);
                 }
                 setInvoiceReceiver(order, invoiceContact, invoiceContactAddress);
             }
         }
     }
+    */
     // 调用7.253的web api
     let httpClient = new WebApiClient();
     let ret = await httpClient.newOrder(order);
@@ -75,7 +77,7 @@ async function setConsignee(joint: Joint, order: any, shippingContact: any, ship
         if (shippingContactAddress !== undefined) {
             let { city, zipcode } = shippingContactAddress;
             if (city !== undefined) {
-                order.Consignee.ConsigneeAddress.city = joint.tuidMapFromUsq("city", city);
+                //order.Consignee.ConsigneeAddress.city = joint.tuidMapFromUsq("city", city);
             }
             order.Consignee.ConsigneeAddress.zipcode = zipcode;
         }
@@ -100,7 +102,7 @@ async function setInvoiceReceiver(order: any, invoiceContact: any, invoiceContac
     }
 }
 
-export const faceOrder: UsqBus = {
+export const faceOrder: UqBus = {
     face: '百灵威系统工程部/point/order',
     mapper: {
         id: true,

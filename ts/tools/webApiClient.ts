@@ -1,4 +1,4 @@
-import { Fetch } from "../usq-joint/tool/fetch";
+import { Fetch } from "../uq-joint/tool/fetch";
 
 // const webApiBaseUrl = "http://211.5.7.253/mvc/api/";
 const webApiBaseUrl = "http://localhost:38311/api/";

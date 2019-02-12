@@ -1,9 +1,9 @@
-import { UsqOutConverter } from "../pulls";
-import { read } from ".";
-import { Joint } from "../../usq-joint";
+import { UqOutConverter } from "../pulls";
+import { read } from './uqOutRead'
+import { Joint } from "../../uq-joint";
 import * as _ from 'lodash';
 
-export const readCustomer: UsqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
+export const readCustomer: UqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
     let sqlstring = `select top 1 CID as ID, UnitID as OrganizationID, Name, FirstName, LastName, Sex as Gender
         , convert(nvarchar(30), BirthDate, 121) as BirthDate
@@ -13,14 +13,14 @@ export const readCustomer: UsqOutConverter = async (maxId: string): Promise<{ la
     return await read(sqlstring);
 };
 
-export const readOrganization: UsqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
+export const readOrganization: UqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
     let sqlstring = `select top 1 UnitID as ID, unitName as Name, convert(nvarchar(30), creaDate, 121) as CreateTime
         from dbs.dbo.CustUnits where UnitID > '${maxId}' order by UnitID`;
     return await read(sqlstring);
 };
 
-export const readCustomerConsigneeContact: UsqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
+export const readCustomerConsigneeContact: UqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
     let sqlstring = `select top 1 ID, CID as CustomerID, userName as Name, userUnit as OrganizationName, isnull(userMobile, '') as Mobile
         , email as Email, userZipCode as Zip, userAdd as Addr, isDefault
@@ -28,7 +28,7 @@ export const readCustomerConsigneeContact: UsqOutConverter = async (maxId: strin
     return await read(sqlstring);
 };
 
-export const readCustomerInvoiceContact: UsqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
+export const readCustomerInvoiceContact: UqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
     let sqlstring = `select top 1 ID, CID as CustomerID, Name, Unit as OrganizationName, isnull(Mobile, '') as Mobile, Tel as Telephone
         , Email, Zip, Addr, isDefault

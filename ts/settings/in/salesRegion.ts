@@ -1,8 +1,8 @@
-import { UsqInTuid, UsqInMap } from "../../usq-joint";
-import { usqs } from "../usqs";
+import { UqInTuid, UqInMap } from "../../uq-joint";
+import { us } from "../uqs";
 
-export const SalesRegion: UsqInTuid = {
-    usq: usqs.jkCommon,
+export const SalesRegion: UqInTuid = {
+    uq: us.jkCommon,
     type: 'tuid',
     entity: 'SalesRegion',
     key: 'ID',
@@ -14,8 +14,8 @@ export const SalesRegion: UsqInTuid = {
     }
 };
 
-export const Currency: UsqInTuid = {
-    usq: usqs.jkCommon,
+export const Currency: UqInTuid = {
+    uq: us.jkCommon,
     type: 'tuid',
     entity: 'Currency',
     key: 'ID',
@@ -25,8 +25,8 @@ export const Currency: UsqInTuid = {
     }
 };
 
-export const PackType: UsqInTuid = {
-    usq: usqs.jkCommon,
+export const PackType: UqInTuid = {
+    uq: us.jkCommon,
     type: 'tuid',
     entity: 'PackType',
     key: 'ID',
@@ -38,8 +38,8 @@ export const PackType: UsqInTuid = {
     }
 };
 
-export const PackTypeMapToStandard: UsqInMap = {
-    usq: usqs.jkCommon,
+export const PackTypeMapToStandard: UqInMap = {
+    uq: us.jkCommon,
     type: 'map',
     entity: "PackTypeMapToStandard",
     mapper: {
@@ -50,8 +50,8 @@ export const PackTypeMapToStandard: UsqInMap = {
     }
 };
 
-export const PackTypeStandard: UsqInTuid = {
-    usq: usqs.jkCommon,
+export const PackTypeStandard: UqInTuid = {
+    uq: us.jkCommon,
     type: 'tuid',
     entity: 'PackTypeStandard',
     key: 'ID',
@@ -63,8 +63,8 @@ export const PackTypeStandard: UsqInTuid = {
     }
 };
 
-export const Language: UsqInTuid = {
-    usq: usqs.jkCommon,
+export const Language: UqInTuid = {
+    uq: us.jkCommon,
     type: 'tuid',
     entity: 'Language',
     key: 'ID',

@@ -1,13 +1,12 @@
 {
-    "name": "joint-usq-jk",
+    "name": "joint-uq-jk",
     "port": 3017,
-    "database": "joint-usq-jk",
+    "database": "joint-uq-jk",
     "mysqlConn": {
         "host": "47.92.87.6",
         "user": "henry",
         "password": "jk@20180402!@#",
         "multipleStatements": true
     },
-    "centerhost": "101.200.46.56",
-    "debug-unitxhost": "211.5.7.48:3015"
+    "centerhost": "101.200.46.56"
 }

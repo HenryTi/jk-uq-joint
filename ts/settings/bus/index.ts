@@ -1,4 +1,4 @@
-import { UsqBus, DataPush, Joint, DataPull } from "../../usq-joint";
+import { UqBus, DataPush, Joint, DataPull } from "../../uq-joint";
 import { faceOrder } from "./orderUsqBus";
 import { WebApiClient } from "../../tools/webApiClient";
 
@@ -17,26 +17,17 @@ const facePointPull: DataPull = async (joint: Joint, face: string, queue: number
     return { queue: 10, data: { member: 5, point: 10 } };
 }
 
-const facePoint: UsqBus = {
+const facePoint: UqBus = {
     face: '百灵威系统工程部/point/point',
     mapper: {
         member: true,
         point: true,
     },
-    push: facePointPush
+    push: facePointPush,
+    pull: facePointPull
 };
 
-const facePointIn: UsqBus = {
-    face: '百灵威系统工程部/point/point',
-    mapper: {
-        member: true,
-        point: true,
-    },
-    pull: facePointPull
-}
-
-export const bus: UsqBus[] = [
+export const bus: UqBus[] = [
     facePoint,
     faceOrder,
-    facePointIn,
 ];
