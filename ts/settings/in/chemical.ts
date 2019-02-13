@@ -1,8 +1,8 @@
 import { UqInTuid } from "../../uq-joint";
-import { us } from "../uqs";
+import { uqs } from "../uqs";
 
 export const Chemical: UqInTuid = {
-    uq: us.jkChemical,
+    uq: uqs.jkChemical,
     type: 'tuid',
     entity: 'Chemical',
     key: 'ID',

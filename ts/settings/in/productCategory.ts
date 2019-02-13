@@ -1,8 +1,8 @@
 import { UqInTuid, UqInMap, UqInTuidArr, UqIn } from "../../uq-joint";
-import { us } from "../uqs";
+import { uqs } from "../uqs";
 
 export const ProductCategory: UqInTuid = {
-    uq: us.jkProduct,
+    uq: uqs.jkProduct,
     type: 'tuid',
     entity: 'ProductCategory',
     key: 'ID',
@@ -16,7 +16,7 @@ export const ProductCategory: UqInTuid = {
 };
 
 export const ProductCategoryLanguage: UqInTuidArr = {
-    uq: us.jkProduct,
+    uq: uqs.jkProduct,
     type: 'tuid-arr',
     entity: 'ProductCategory.ProductCategoryLanguage',
     key: "ID",
@@ -30,7 +30,7 @@ export const ProductCategoryLanguage: UqInTuidArr = {
 };
 
 export const ProductProductCategory: UqInMap = {
-    uq: us.jkProduct,
+    uq: uqs.jkProduct,
     type: 'map',
     entity: 'ProductProductCategory',
     mapper: {

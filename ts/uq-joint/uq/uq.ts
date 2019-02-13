@@ -4,7 +4,6 @@ import { centerApi } from "../tool/centerApi";
 import { host } from "../tool/host";
 import { TuidMain, Tuid } from "./tuid";
 import { Field, ArrFields } from "./field";
-import { isDate } from "util";
 
 const $unitx = '$$$/$unitx';
 
@@ -66,6 +65,7 @@ export class Uq {
         let promises: Promise<any>[] = [];
         for (let i in data) {
             let v = data[i];
+            if (v === undefined) continue;
             let prop = props[i];
             if (prop === undefined) {
                 ret[i] = v;
@@ -75,7 +75,7 @@ export class Uq {
             let tuid:Tuid = await this.getTuidFromUq(uqFullName, tuidName);
             if (tuid === undefined) continue;
             names.push(i);
-            let ownerId = data[tuidOwnerProp];
+            let ownerId = tuidOwnerProp && data[tuidOwnerProp];
             promises.push(this.buildTuidValue(tuid, prop, v, ownerId));
         }
         let len = names.length;
@@ -101,6 +101,7 @@ export class Uq {
                 let {_tuid, _ownerField} = f;
                 if (_tuid === undefined) continue;
                 let {name} = f;
+                //if (name === 'address') debugger;
                 let prp = props[name];
                 if (prp === undefined) continue;
                 let p:Prop;
@@ -108,7 +109,8 @@ export class Uq {
                 else p = prp as Prop;
                 names.push(name);
                 let v = ret[name];
-                let ownerId = ret[_ownerField.name];
+                if (v === undefined) continue;
+                let ownerId = _ownerField && ret[_ownerField.name];
                 promises.push(this.buildTuidValue(_tuid, p, v, ownerId));
             }
             let len = names.length;
@@ -122,11 +124,24 @@ export class Uq {
         return ret;
     }
     
+    async getFromUq(uqFullName:string): Promise<Uq> {
+        let uq = await this.uqs.getUq(uqFullName);
+        return uq;
+    }
+
     async getTuidFromUq(uqFullName:string, tuidName:string):Promise<Tuid> {
+        tuidName = tuidName.toLowerCase();
         if (uqFullName === undefined) return this.getTuidFromName(tuidName);
         let uq = await this.uqs.getUq(uqFullName);
         if (uq === undefined) return;
-        return uq.getTuidFromName(tuidName);
+        let tuid =  uq.getTuidFromName(tuidName);
+        if (tuid.from !== undefined) {
+            let {owner, uq:uqName} = tuid.from;
+            let fromUq = await this.uqs.getUq(owner+'/'+uqName);
+            if (fromUq === undefined) return;
+            tuid = fromUq.getTuidFromName(tuidName);
+        }
+        return tuid;
     }
 
     getTuidFromName(tuidName:string) {
@@ -227,9 +242,6 @@ export class Uq {
     }
 
     private buildEntities(entities:any) {
-        if (entities === undefined) {
-            debugger;
-        }
         let {access, tuids} = entities;
         this.buildTuids(tuids);
         this.buildAccess(access);
@@ -294,12 +306,12 @@ class UqUnitx extends Uq {
     }
 }
 
-interface Prop {
+export interface Prop {
     all?: boolean;      // 获取tuid的时候，all=true则取全部属性，all=false or undeinfed则取主要属性
     props?: {[name:string]: Prop|boolean}
 }
 
-interface UqProp extends Prop {
+export interface UqProp extends Prop {
     uq?: string;
     tuid: string;
     tuidOwnerProp?: string;
@@ -382,8 +394,13 @@ export class OpenApi extends Fetch {
         let ret = await this.get(url);
         return ret;
     }
-    async loadTuidValue(tuidName:string, divName:string, id:number, ownerId:number, allProps:boolean) {
-        let ret = await this.post(`open/tuid-value/${tuidName}/${divName}`, 
+    async loadTuidMainValue(tuidName:string, id:number, allProps:boolean) {
+        let ret = await this.post(`open/tuid-main/${tuidName}`, 
+            {unit:this.unit, id:id, all:allProps});
+        return ret;
+    }
+    async loadTuidDivValue(tuidName:string, divName:string, id:number, ownerId:number, allProps:boolean) {
+        let ret = await this.post(`open/tuid-div/${tuidName}/${divName}`, 
             {unit:this.unit, id:id, ownerId:ownerId, all:allProps});
         return ret;
     }

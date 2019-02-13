@@ -10,11 +10,16 @@ const facePointPush: DataPush = async (joint: Joint, face: string, queue: number
     // 调用7.253的web api
     let httpClient = new WebApiClient();
     // let ret = await httpClient.test({});
-    return false;
+    return true;
 }
 
+let pulled = false;
 const facePointPull: DataPull = async (joint: Joint, face: string, queue: number): Promise<{ queue: number, data: any }> => {
-    return { queue: 10, data: { member: 5, point: 10 } };
+    if (pulled === false) {
+        pulled = true;
+        return { queue: 10, data: { member: 5, point: 10 } };
+    }
+    return undefined;
 }
 
 const facePoint: UqBus = {

@@ -9,14 +9,14 @@ const bus_1 = require("./bus");
 const in_1 = __importDefault(require("./in"));
 //import push from "./push";
 exports.settings = {
-    name: 'j&k_usq_joint',
+    name: 'j&k_uq_joint',
     unit: 24,
     allowedIP: [
         '218.249.142.140',
         '211.5.7.60'
     ],
-    usqIns: in_1.default,
-    usqOuts: undefined,
+    uqIns: in_1.default,
+    uqOuts: undefined,
     //out: _out,
     //pull: pull,
     //push: push,

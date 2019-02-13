@@ -1,5 +1,5 @@
 import { UqOut } from "../../uq-joint";
-import { us } from '../uqs';
+import { uqs } from '../uqs';
 /*
 export const order: UqOut = {
     uq: uqs.jkOrder,

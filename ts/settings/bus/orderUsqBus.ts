@@ -1,6 +1,6 @@
 import { UqBus, DataPush, Joint } from "../../uq-joint";
 import { WebApiClient } from "../../tools/webApiClient";
-import { us } from "../uqs";
+import { uqs } from "../uqs";
 import { databaseName } from "../../uq-joint/db/mysql/database";
 import { MapFromUq } from "../../uq-joint/tool/mapData";
 
@@ -58,7 +58,7 @@ const faceOrderPush: DataPush = async (joint: Joint, face: string, queue: number
     // 调用7.253的web api
     let httpClient = new WebApiClient();
     let ret = await httpClient.newOrder(order);
-    return ret;
+    return true;
 }
 
 async function setConsignee(joint: Joint, order: any, shippingContact: any, shippingContactAddress: any): Promise<void> {
@@ -136,4 +136,20 @@ export const faceOrder: UqBus = {
         }
     },
     push: faceOrderPush,
+    uqIdProps: {
+        shippingContact: {
+            uq: uqs.jkCustomer,
+            tuid: 'Contact',
+            props: {
+                name: true,
+                address: {
+                    props: {
+                        province: true,
+                        country: true,
+                        city: true,
+                    }
+                }
+            }
+        }
+    }
 };

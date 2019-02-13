@@ -1,8 +1,8 @@
 import { UqInTuid, UqInMap, UqInTuidArr, UqIn } from "../../uq-joint";
-import { us } from "../uqs";
+import { uqs } from "../uqs";
 
 export const Brand: UqInTuid = {
-    uq: us.jkProduct,
+    uq: uqs.jkProduct,
     type: 'tuid',
     entity: 'Brand',
     key: 'ID',
@@ -14,7 +14,7 @@ export const Brand: UqInTuid = {
 };
 
 export const BrandSalesRegion: UqInMap = {
-    uq: us.jkProduct,
+    uq: uqs.jkProduct,
     type: 'map',
     entity: 'BrandSalesRegion',
     mapper: {
@@ -27,7 +27,7 @@ export const BrandSalesRegion: UqInMap = {
 };
 
 export const BrandDeliveryTime: UqInMap = {
-    uq: us.jkProduct,
+    uq: uqs.jkProduct,
     type: 'map',
     entity: 'BrandDeliveryTime',
     mapper: {
@@ -44,7 +44,7 @@ export const BrandDeliveryTime: UqInMap = {
 };
 
 export const Product: UqInTuid = {
-    uq: us.jkProduct,
+    uq: uqs.jkProduct,
     type: 'tuid',
     entity: 'Product',
     key: 'ID',
@@ -59,7 +59,7 @@ export const Product: UqInTuid = {
 };
 
 export const ProductChemical: UqInMap = {
-    uq: us.jkProduct,
+    uq: uqs.jkProduct,
     type: 'map',
     entity: 'ProductChemical',
     mapper: {
@@ -75,7 +75,7 @@ export const ProductChemical: UqInMap = {
 };
 
 export const ProductSalesRegion: UqInMap = {
-    uq: us.jkProduct,
+    uq: uqs.jkProduct,
     type: 'map',
     entity: 'ProductSalesRegion',
     mapper: {
@@ -88,7 +88,7 @@ export const ProductSalesRegion: UqInMap = {
 };
 
 export const ProductLegallyProhibited: UqInMap = {
-    uq: us.jkProduct,
+    uq: uqs.jkProduct,
     type: 'map',
     entity: 'ProductLegallyProhibited',
     mapper: {
@@ -143,7 +143,7 @@ export const Price: UqInMap = {
 */
 
 export const ProductX: UqInTuid = {
-    uq: us.jkProduct,
+    uq: uqs.jkProduct,
     type: 'tuid',
     entity: 'ProductX',
     key: 'ID',
@@ -158,7 +158,7 @@ export const ProductX: UqInTuid = {
 };
 
 export const ProductPackX: UqInTuidArr = {
-    uq: us.jkProduct,
+    uq: uqs.jkProduct,
     type: 'tuid-arr',
     entity: 'ProductX.PackX',
     key: "ID",
@@ -174,7 +174,7 @@ export const ProductPackX: UqInTuidArr = {
 };
 
 export const PriceX: UqInMap = {
-    uq: us.jkProduct,
+    uq: uqs.jkProduct,
     type: 'map',
     entity: 'PriceX',
     mapper: {
