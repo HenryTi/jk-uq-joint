@@ -82,17 +82,30 @@ export class Joint {
         let { uqIns } = this.settings;
         if (uqIns === undefined) return;
         for (let uqIn of uqIns) {
-            let { uq, entity } = uqIn;
+            let { uq, entity, pull } = uqIn;
             let queueName = uq + ':' + entity;
             console.log('scan in ' + queueName);
             for (; ;) {
-                let retp = await tableFromProc('read_queue_in', [queueName]);
-                if (!retp || retp.length === 0) break;
-                let { id, body, date } = retp[0];
-                let data = JSON.parse(body);
-                await this.uqIn(uqIn, data);
-                console.log(`process in ${id} ${(date as Date).toLocaleString()}: `, body);
-                await execProc('write_queue_in_p', [queueName, id]);
+                let message:any;                
+                let queue: number;
+                if (pull !== undefined) {
+                    let retp = await tableFromProc('read_queue_in_p', [queueName]);
+                    if (retp.length > 0) {
+                        queue = retp[0].queue;
+                    }
+                    message = await pull(this, uqIn, queue);
+                    if (message === undefined) break;
+                }
+                else {
+                    let retp = await tableFromProc('read_queue_in', [queueName]);
+                    if (!retp || retp.length === 0) break;
+                    let { id, body, date } = retp[0];
+                    queue = id;
+                    message = JSON.parse(body);
+                }
+                await this.uqIn(uqIn, message);
+                console.log(`process in ${queue}: `, message);
+                await execProc('write_queue_in_p', [queueName, queue]);
             }
         }
     }
@@ -248,7 +261,7 @@ export class Joint {
 
                 let mapFromUq = new MapFromUq(this.uqInDict, this.unit);
                 let outBody = await mapFromUq.map(json, mapper);
-                if (await push(this, face, queue, outBody) === false) break;
+                if (await push(this, uqBus, queue, outBody) === false) break;
                 await execProc('write_queue_out_p', [moniker, newQueue]);
             }
 
@@ -260,7 +273,7 @@ export class Joint {
                 if (retp.length > 0) {
                     queue = retp[0].queue;
                 }
-                let message = await pull(this, face, queue);
+                let message = await pull(this, uqBus, queue);
                 if (message === undefined) break;
                 let { queue: newQueue, data } = message;
                 //let newQueue = await this.busIn(queue);

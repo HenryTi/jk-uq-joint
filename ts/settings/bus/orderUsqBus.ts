@@ -4,7 +4,7 @@ import { uqs } from "../uqs";
 import { databaseName } from "../../uq-joint/db/mysql/database";
 import { MapFromUq } from "../../uq-joint/tool/mapData";
 
-const faceOrderPush: DataPush = async (joint: Joint, face: string, queue: number, order: any): Promise<boolean> => {
+const faceOrderPush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus, queue: number, order: any): Promise<boolean> => {
     console.log(order);
 
     /*
