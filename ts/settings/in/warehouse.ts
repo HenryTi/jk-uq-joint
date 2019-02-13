@@ -1,8 +1,8 @@
 import { UqInTuid, UqInMap } from "../../uq-joint";
-import { us } from "../uqs";
+import { uqs } from "../uqs";
 
 export const Warehouse: UqInTuid = {
-    uq: us.jkWarehouse,
+    uq: uqs.jkWarehouse,
     type: 'tuid',
     entity: 'Warehouse',
     key: 'ID',
@@ -14,7 +14,7 @@ export const Warehouse: UqInTuid = {
 };
 
 export const SalesRegionWarehouse: UqInMap = {
-    uq: us.jkWarehouse,
+    uq: uqs.jkWarehouse,
     type: 'map',
     entity: 'SalesRegionWarehouse',
     mapper: {

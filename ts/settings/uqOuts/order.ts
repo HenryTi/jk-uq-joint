@@ -1,4 +1,4 @@
-import { us } from '../uqs';
+import { uqs } from '../uqs';
 //import { UqOutSheet } from "../../uq-joint";
 
 /*

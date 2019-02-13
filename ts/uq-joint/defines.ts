@@ -1,5 +1,6 @@
 import { Mapper } from "./tool/mapper";
 import { Joint } from "./joint";
+import { UqProp } from "./uq/uq";
 
 export type DataPull = (joint:Joint, face:string, queue:number)=>Promise<{queue:number, data:any}>;
 export type DataPush = (joint:Joint, face:string, queue:number, data:any)=>Promise<boolean>;
@@ -39,6 +40,7 @@ export interface UqBus {
     mapper: Mapper;
     pull?: DataPull;
     push?: DataPush;
+    uqIdProps?: {[name:string]: UqProp}; //{contact: {tuid: 'contact'}}
 }
 
 export interface Settings {

@@ -1,8 +1,8 @@
 import { UqIn, UqInTuid } from "../../uq-joint";
-import { us } from '../uqs';
+import { uqs } from '../uqs';
 
 export const packType: UqInTuid = {
-    uq: us.jkProduct,
+    uq: uqs.jkProduct,
     type: 'tuid',
     entity: 'packType',
     key: 'no',

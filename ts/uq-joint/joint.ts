@@ -214,7 +214,7 @@ export class Joint {
         let monikerPrefix = '$bus/';
 
         for (let uqBus of bus) {
-            let { face, mapper, push, pull } = uqBus;
+            let { face, mapper, push, pull, uqIdProps } = uqBus;
             // bus out
             let moniker = monikerPrefix + face;
             for (; ;) {
@@ -231,6 +231,21 @@ export class Joint {
                 let { id: newQueue, from, body } = message;
                 //await this.busOut(face, newQueue, message, mapper, push);
                 let json = await faceSchemas.unpackBusData(face, body);
+                /*
+                if (json.shippingcontact !== undefined 
+                    || json.ShippingContact !== undefined
+                    || json.shippingContact !== undefined) {
+                    debugger;
+                }
+                */
+                if (uqIdProps !== undefined && from !== undefined) {
+                    let uq = await this.uqs.getUq(from);
+                    if (uq !== undefined) {
+                        let newJson = await uq.buildData(json, uqIdProps);
+                        json = newJson;
+                    }
+                }
+
                 let mapFromUq = new MapFromUq(this.uqInDict, this.unit);
                 let outBody = await mapFromUq.map(json, mapper);
                 if (await push(this, face, queue, outBody) === false) break;

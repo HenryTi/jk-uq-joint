@@ -1,8 +1,8 @@
 import { UqInTuid } from "../../uq-joint";
-import { us } from "../uqs";
+import { uqs } from "../uqs";
 
 export const Country: UqInTuid = {
-    uq: us.jkCommon,
+    uq: uqs.jkCommon,
     type: 'tuid',
     entity: 'Country',
     key: 'ID',
@@ -17,7 +17,7 @@ export const Country: UqInTuid = {
 
 
 export const Province: UqInTuid = {
-    uq: us.jkCommon,
+    uq: uqs.jkCommon,
     type: 'tuid',
     entity: 'Province',
     key: 'ID',
@@ -32,7 +32,7 @@ export const Province: UqInTuid = {
 
 
 export const City: UqInTuid = {
-    uq: us.jkCommon,
+    uq: uqs.jkCommon,
     type: 'tuid',
     entity: 'City',
     key: 'ID',
@@ -46,7 +46,7 @@ export const City: UqInTuid = {
 };
 
 export const County: UqInTuid = {
-    uq: us.jkCommon,
+    uq: uqs.jkCommon,
     type: 'tuid',
     entity: 'County',
     key: 'ID',
@@ -60,7 +60,7 @@ export const County: UqInTuid = {
 };
 
 export const Address: UqInTuid = {
-    uq: us.jkCommon,
+    uq: uqs.jkCommon,
     type: 'tuid',
     entity: 'Address',
     key: 'ID',

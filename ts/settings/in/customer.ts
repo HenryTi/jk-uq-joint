@@ -1,8 +1,8 @@
 import { UqInTuid, UqInMap, UqInTuidArr } from "../../uq-joint";
-import { us } from "../uqs";
+import { uqs } from "../uqs";
 
 export const Customer: UqInTuid = {
-    uq: us.jkCustomer,
+    uq: uqs.jkCustomer,
     type: 'tuid',
     entity: 'Customer',
     key: 'ID',
@@ -20,7 +20,7 @@ export const Customer: UqInTuid = {
 };
 
 export const Organization: UqInTuid = {
-    uq: us.jkCustomer,
+    uq: uqs.jkCustomer,
     type: 'tuid',
     entity: 'Organization',
     key: 'ID',
@@ -33,7 +33,7 @@ export const Organization: UqInTuid = {
 };
 
 export const OrganizationCustomer: UqInMap = {
-    uq: us.jkCustomer,
+    uq: uqs.jkCustomer,
     type: 'map',
     entity: 'OrganizationCustomer',
     mapper: {
@@ -45,7 +45,7 @@ export const OrganizationCustomer: UqInMap = {
 };
 
 export const CustomerContact: UqInTuidArr = {
-    uq: us.jkCustomer,
+    uq: uqs.jkCustomer,
     type: 'tuid-arr',
     entity: 'Customer.Contact',
     owner: 'CustomerID',
@@ -94,7 +94,7 @@ export const CustomerInvoiceContact: UqInMap = {
 */
 
 export const CustomerContacts: UqInMap = {
-    uq: us.jkCustomer,
+    uq: uqs.jkCustomer,
     type: 'map',
     entity: 'CustomerContacts',
     mapper: {
@@ -120,7 +120,7 @@ export const CustomerInvoiceContact: UqInMap = {
 */
 
 export const Contact: UqInTuid = {
-    uq: us.jkCustomer,
+    uq: uqs.jkCustomer,
     type: 'tuid',
     entity: 'Contact',
     key: 'ID',

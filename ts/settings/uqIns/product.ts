@@ -1,8 +1,8 @@
 import { UqIn, UqInTuid, UqInTuidArr } from "../../uq-joint";
-import { us } from '../uqs';
+import { uqs } from '../uqs';
 
 export const product: UqInTuid = {
-    uq: us.jkProduct,
+    uq: uqs.jkProduct,
     type: 'tuid',
     entity: 'product',
     key: 'no',
@@ -16,7 +16,7 @@ export const product: UqInTuid = {
 };
 
 export const productPack: UqInTuidArr = {
-    uq: us.jkProduct,
+    uq: uqs.jkProduct,
     type: 'tuid-arr',
     entity: 'product.pack',
     key: 'no',

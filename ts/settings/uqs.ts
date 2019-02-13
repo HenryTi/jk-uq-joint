@@ -1,6 +1,6 @@
 const JKDev = '百灵威系统工程部';
 
-export const us = {
+export const uqs = {
     jkCommon: JKDev + '/common',
     jkChemical: JKDev + '/chemical',
     jkProduct: JKDev + '/product',

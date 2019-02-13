@@ -1,8 +1,8 @@
 import { UqInTuid, UqInMap } from "../../uq-joint";
-import { us } from "../uqs";
+import { uqs } from "../uqs";
 
 export const Promotion: UqInTuid = {
-    uq: us.jkPromotion,
+    uq: uqs.jkPromotion,
     type: 'tuid',
     entity: 'Promotion',
     key: 'ID',
@@ -19,7 +19,7 @@ export const Promotion: UqInTuid = {
 };
 
 export const PromotionSalesRegion: UqInMap = {
-    uq: us.jkPromotion,
+    uq: uqs.jkPromotion,
     type: 'map',
     entity: 'PromotionSalesRegion',
     mapper: {
@@ -31,7 +31,7 @@ export const PromotionSalesRegion: UqInMap = {
 };
 
 export const PromotionLanguage: UqInMap = {
-    uq: us.jkPromotion,
+    uq: uqs.jkPromotion,
     type: 'map',
     entity: 'PromotionLanguage',
     mapper: {
@@ -45,7 +45,7 @@ export const PromotionLanguage: UqInMap = {
 };
 
 export const PromotionPack: UqInMap = {
-    uq: us.jkPromotion,
+    uq: uqs.jkPromotion,
     type: 'map',
     entity: 'PromotionPack',
     mapper: {

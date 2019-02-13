@@ -1,5 +1,5 @@
 import { Entity } from "./entity";
-import { OpenApi } from "./uq";
+import { OpenApi, Uq } from "./uq";
 
 const maxCacheSize = 1000;
 class Cache {
@@ -39,8 +39,22 @@ export abstract class Tuid extends Entity {
     private cacheAllProps:Cache = new Cache;
 
     owner: TuidMain;                    // 用这个值来区分是不是TuidArr
+    from: {owner:string, uq:string};
+    fromUq: Uq;
     get typeName(): string { return 'tuid';}
     getIdFromObj(obj:any) {return obj.id}
+    async getApiFrom() {
+        if (this.from === undefined) return this.uq.openApi;
+        if (this.fromUq === undefined) {
+            let {owner, uq:uqName} = this.from;
+            this.fromUq = await this.uq.getFromUq(owner+'/'+uqName);
+        }
+        return this.fromUq.openApi;
+    }
+    public setSchema(schema:any) {
+        super.setSchema(schema);
+        this.from = schema.from;
+    }
     async loadValue(id:number, ownerId:number, allProps:boolean):Promise<any> {
         let ret:any;
         if (allProps === true) {
@@ -51,7 +65,11 @@ export abstract class Tuid extends Entity {
         }
         if (ret !== undefined) return ret;
         let openApi = await this.getApiFrom();
-        ret = await this.internalLoadTuidValue(openApi, id, ownerId, allProps);
+        let tuidValue = await this.internalLoadTuidValue(openApi, id, ownerId, allProps);
+        if (tuidValue.length > 0)
+            ret = tuidValue[0];
+        else
+            ret = undefined;
         if (allProps === true)
             this.cacheAllProps.setValue(id, ret);
         else
@@ -82,7 +100,7 @@ export class TuidMain extends Tuid {
         }
     }
     protected async internalLoadTuidValue(openApi:OpenApi, id:number, ownerId:number, allProps:boolean):Promise<any> {
-        return openApi.loadTuidValue(this.name, undefined, id, undefined, allProps);
+        return openApi.loadTuidMainValue(this.name, id, allProps);
     }
 }
 
@@ -94,6 +112,6 @@ export class TuidDiv extends Tuid {
     }
 
     protected async internalLoadTuidValue(openApi:OpenApi, id:number, ownerId:number, allProps:boolean):Promise<any> {
-        return openApi.loadTuidValue(this.owner.name, this.name, id, ownerId, allProps);
+        return openApi.loadTuidDivValue(this.owner.name, this.name, id, ownerId, allProps);
     }
 }

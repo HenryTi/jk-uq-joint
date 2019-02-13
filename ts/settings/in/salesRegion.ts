@@ -1,8 +1,8 @@
 import { UqInTuid, UqInMap } from "../../uq-joint";
-import { us } from "../uqs";
+import { uqs } from "../uqs";
 
 export const SalesRegion: UqInTuid = {
-    uq: us.jkCommon,
+    uq: uqs.jkCommon,
     type: 'tuid',
     entity: 'SalesRegion',
     key: 'ID',
@@ -15,7 +15,7 @@ export const SalesRegion: UqInTuid = {
 };
 
 export const Currency: UqInTuid = {
-    uq: us.jkCommon,
+    uq: uqs.jkCommon,
     type: 'tuid',
     entity: 'Currency',
     key: 'ID',
@@ -26,7 +26,7 @@ export const Currency: UqInTuid = {
 };
 
 export const PackType: UqInTuid = {
-    uq: us.jkCommon,
+    uq: uqs.jkCommon,
     type: 'tuid',
     entity: 'PackType',
     key: 'ID',
@@ -39,7 +39,7 @@ export const PackType: UqInTuid = {
 };
 
 export const PackTypeMapToStandard: UqInMap = {
-    uq: us.jkCommon,
+    uq: uqs.jkCommon,
     type: 'map',
     entity: "PackTypeMapToStandard",
     mapper: {
@@ -51,7 +51,7 @@ export const PackTypeMapToStandard: UqInMap = {
 };
 
 export const PackTypeStandard: UqInTuid = {
-    uq: us.jkCommon,
+    uq: uqs.jkCommon,
     type: 'tuid',
     entity: 'PackTypeStandard',
     key: 'ID',
@@ -64,7 +64,7 @@ export const PackTypeStandard: UqInTuid = {
 };
 
 export const Language: UqInTuid = {
-    uq: us.jkCommon,
+    uq: uqs.jkCommon,
     type: 'tuid',
     entity: 'Language',
     key: 'ID',

@@ -64,7 +64,7 @@ const _in = {
 
 export default _in;
 */
-const usqIns = [
+const uqIns = [
     salesRegion_1.Language,
     Address_1.Country,
     Address_1.Province,
@@ -109,5 +109,5 @@ const usqIns = [
     // 'CustomerInvoiceContact': CustomerInvoiceContact,
     customer_1.Contact,
 ];
-exports.default = usqIns;
+exports.default = uqIns;
 //# sourceMappingURL=index.js.map
