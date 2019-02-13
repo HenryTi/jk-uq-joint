@@ -89,36 +89,44 @@ export class Uq {
     }
 
     private async buildTuidValue(tuid:Tuid, prop:Prop, id:number, ownerId:number):Promise<any> {
+        let tuidFrom:Tuid = await tuid.getTuidFrom();
         let all:boolean;
-        if (prop === undefined) all = false;
-        else all = prop.all;
-        let ret = await tuid.loadValue(id, ownerId, all);
-        let props = prop.props;
-        if (props !== undefined) {
-            let names:string[] = [];
-            let promises: Promise<any>[] = [];
-            for (let f of tuid.fields) {
-                let {_tuid, _ownerField} = f;
-                if (_tuid === undefined) continue;
-                let {name} = f;
-                //if (name === 'address') debugger;
-                let prp = props[name];
-                if (prp === undefined) continue;
-                let p:Prop;
-                if (typeof prp === 'boolean') p = undefined;
-                else p = prp as Prop;
-                names.push(name);
-                let v = ret[name];
-                if (v === undefined) continue;
-                let ownerId = _ownerField && ret[_ownerField.name];
-                promises.push(this.buildTuidValue(_tuid, p, v, ownerId));
-            }
-            let len = names.length;
-            if (len > 0) {
-                let values = await Promise.all(promises);
-                for (let i=0; i<len; i++) {
-                    ret[names[i]] = values[i];
-                }
+        let props:{[name:string]: Prop|boolean};
+        if (prop === undefined) {
+            all = false;
+        }
+        else {
+            all = prop.all;
+            props = prop.props;
+        }
+        let ret = await tuidFrom.loadValue(id, ownerId, all);
+        if (props === undefined) return ret;
+
+        let names:string[] = [];
+        let promises: Promise<any>[] = [];
+        for (let f of tuidFrom.fields) {
+            let {_tuid, _ownerField} = f;
+            if (_tuid === undefined) continue;
+            let {name} = f;
+            //if (name === 'address') debugger;
+            let prp = props[name];
+            if (prp === undefined) continue;
+            let v = ret[name];
+            if (v === undefined) continue;
+            let vType = typeof v;
+            if (vType === 'object') continue;
+            let p:Prop;
+            if (typeof prp === 'boolean') p = undefined;
+            else p = prp as Prop;
+            names.push(name);
+            let ownerId = _ownerField && ret[_ownerField.name];
+            promises.push(this.buildTuidValue(_tuid, p, v, ownerId));
+        }
+        let len = names.length;
+        if (len > 0) {
+            let values = await Promise.all(promises);
+            for (let i=0; i<len; i++) {
+                ret[names[i]] = values[i];
             }
         }
         return ret;

@@ -189,6 +189,7 @@ class FaceSchemas {
         function to(v:string, type:string):any {
             switch (type) {
                 default: return v;
+                case 'id':
                 case 'number':
                 case 'tinyint':
                 case 'smallint':
