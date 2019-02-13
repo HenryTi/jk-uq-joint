@@ -1,3 +1,4 @@
+/*
 import { UqOutConverter } from "../pulls";
 import { read } from './uqOutRead'
 import { Joint } from "../../uq-joint";
@@ -35,3 +36,4 @@ export const readCustomerInvoiceContact: UqOutConverter = async (maxId: string):
         from dbs.dbo.order_InvoiceInfo_txt where ID > '${maxId}' order by ID`;
     return await read(sqlstring);
 };
+*/
