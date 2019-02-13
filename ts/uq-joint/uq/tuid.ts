@@ -37,7 +37,7 @@ class Cache {
 export abstract class Tuid extends Entity {
     private cache:Cache = new Cache;
     private cacheAllProps:Cache = new Cache;
-    private fromUq: Uq;
+    protected fromUq: Uq;
 
     owner: TuidMain;                    // 用这个值来区分是不是TuidArr
     from: {owner:string, uq:string};
@@ -117,6 +117,18 @@ export class TuidMain extends Tuid {
 export class TuidDiv extends Tuid {
     get Main() {return this.owner}
 
+    async getTuidFrom():Promise<Tuid> {
+        let ownerFrom = await this.owner.getTuidFrom() as TuidMain;
+        if (ownerFrom === this.owner) return this;
+        return ownerFrom.divs[this.name];
+/*        
+        if (this.fromUq === undefined) {
+            let {owner, uq:uqName} = this.from;
+            this.fromUq = await this.uq.getFromUq(owner+'/'+uqName);
+        }
+        return this.fromUq.getTuidFromName(this.name);
+*/
+    }
     /*
     async getApiFrom() {
         return await this.owner.getApiFrom();
