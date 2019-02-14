@@ -23,7 +23,7 @@ export const ProductCategoryLanguage: UqInTuidArr = {
     owner: "ProductCategoryID",
     mapper: {
         // owner: "ProductCategoryID@ProductCategory",
-        $id: "ID@ProductCategoryLanguage",
+        $id: "ID@ProductCategory.ProductCategoryLanguage",
         language: "LanguageID@Language",
         name: "ProductCategoryName",
     }

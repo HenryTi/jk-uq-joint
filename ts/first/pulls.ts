@@ -2,9 +2,7 @@ import { sqls } from './converter/sqls';
 import { Joint, UqIn } from "../uq-joint";
 
 import { productPullWrite } from "./converter/productPullWrite";
-import { readChemical } from './converter/chemicalConverter';
-import { readPackTypeStandard, readPackType } from './converter/commonConverter';
-import { PackTypePullWrite } from "./converter/commonPullWrite";
+import { PackTypePullWrite } from './converter/commonPullWrite';
 import { customerPullWrite, consigneeContactPullWrite } from "./converter/customerPullWrite";
 
 import { ProductCategory, ProductCategoryLanguage, ProductProductCategory } from "../settings/in/productCategory";
@@ -31,11 +29,11 @@ export const pulls: { read: UqOutConverter | string, uqIn: UqIn | PullWrite }[] 
     { read: sqls.readProvince, uqIn: Province },
     { read: sqls.readCity, uqIn: City },
     { read: sqls.readCounty, uqIn: County },
-    { read: readPackTypeStandard, uqIn: PackTypeStandard },
-    { read: readPackType, uqIn: PackTypePullWrite },
+    { read: sqls.readPackTypeStandard, uqIn: PackTypeStandard },
+    { read: sqls.readPackType, uqIn: PackTypePullWrite },
     { read: sqls.readCurrency, uqIn: Currency },
     { read: sqls.readSalesRegion, uqIn: SalesRegion },
-    { read: readChemical, uqIn: Chemical },
+    { read: sqls.readChemical, uqIn: Chemical },
 
     // 产品相关的数据表
     { read: sqls.readBrand, uqIn: Brand },
@@ -48,6 +46,7 @@ export const pulls: { read: UqOutConverter | string, uqIn: UqIn | PullWrite }[] 
     { read: sqls.readPrice, uqIn: PriceX },
     { read: sqls.readProductSalesRegion, uqIn: ProductSalesRegion },
     { read: sqls.readProductLegallyProhibited, uqIn: ProductLegallyProhibited },
+
     // 目录树
     { read: sqls.readProductCategory, uqIn: ProductCategory },
     { read: sqls.readProductCategoryLanguage, uqIn: ProductCategoryLanguage },
@@ -57,9 +56,10 @@ export const pulls: { read: UqOutConverter | string, uqIn: UqIn | PullWrite }[] 
     { read: sqls.readWarehouse, uqIn: Warehouse },
     { read: sqls.readSalesRegionWarehouse, uqIn: SalesRegionWarehouse },
 
-    // { read: readPromotion, uqIn: promotionPullWrite },
-    // { read: readPromotionLanguage, uqIn: 'PromotionLanguage' },
-    // { read: readPromotionPack, uqIn: 'PromotionPack' },
+    // 市场活动
+    // { read: sql.readPromotion, uqIn: promotionPullWrite },
+    // { read: sql.readPromotionLanguage, uqIn: 'PromotionLanguage' },
+    // { read: sql.readPromotionPack, uqIn: 'PromotionPack' },
 
     // 客户和客户单位基本信息
     { read: sqls.readOrganization, uqIn: Organization },

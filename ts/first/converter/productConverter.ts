@@ -1,3 +1,4 @@
+/*
 import { UqOutConverter } from "../pulls";
 import { read } from './uqOutRead'
 
@@ -64,3 +65,4 @@ export const readProductLegallyProhibited: UqOutConverter = async (maxId: string
         from zcl_mess.dbo.sc_safe_ProdCache where jkid + market_code > '${maxId}' order by jkid + market_code`;
     return await read(sqlstring);
 };
+*/

@@ -1,3 +1,4 @@
+/*
 import { UqOutConverter } from "../pulls";
 import { read } from './uqOutRead'
 
@@ -17,7 +18,6 @@ export const readPackType: UqOutConverter = async (maxId: string): Promise<{ las
     return await read(sqlstring);
 };
 
-/*
 export const readCurrency: UqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
     let sqlstring = `select top 1 currency as ID from zcl_mess.dbo.vw_currency_now where currency > '${maxId}' order by currency`;

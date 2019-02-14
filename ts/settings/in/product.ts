@@ -165,7 +165,7 @@ export const ProductPackX: UqInTuidArr = {
     owner: "ProductID",
     mapper: {
         //owner: "ProductID",
-        $id: "ID@ProductPackX",
+        $id: "ID@ProductX.PackX",
         jkcat: 'ID',
         radiox: "PackNr",
         radioy: "Quantity",
@@ -179,7 +179,7 @@ export const PriceX: UqInMap = {
     entity: 'PriceX',
     mapper: {
         product: "ProductID@ProductX",
-        pack: "PackingID@ProductPackX",
+        pack: "PackingID@ProductX.PackX",
         arr1: {
             salesRegion: "^SalesRegionID@SalesRegion",
             expireDate: "Expire_Date",

@@ -2,10 +2,16 @@ import { settings } from "../settings";
 import { Joint } from '../uq-joint';
 import { pulls, UqOutConverter } from "./pulls";
 import { uqOutRead } from "./converter/uqOutRead";
+import { host } from "../uq-joint/tool/host";
+import { centerApi } from "../uq-joint/tool/centerApi";
 
-const maxRows = 20;
+const maxRows = 2;
 
 (async function () {
+    console.log(process.env.NODE_ENV);
+    await host.start();
+    centerApi.initBaseUrl(host.centerUrl);
+
     let joint = new Joint(settings);
     console.log('start');
     for (var i = 0; i < pulls.length; i++) {
@@ -32,7 +38,6 @@ const maxRows = 20;
             }
             if (ret === undefined || count > maxRows) break;
             let { lastId, data } = ret;
-            maxId = lastId;
             if (typeof uqIn === 'object') {
                 try {
                     await joint.uqIn(uqIn, data);
@@ -43,6 +48,7 @@ const maxRows = 20;
             else {
                 await uqIn(joint, data);
             }
+            maxId = lastId;
         }
     };
     process.exit();

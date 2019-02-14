@@ -1,9 +1,8 @@
-import { UqOutConverter } from "../pulls";
-import { read } from './uqOutRead'
 import { Joint } from "../../uq-joint";
 import * as _ from 'lodash';
 import { Promotion, PromotionSalesRegion } from "../../settings/in/promotion";
 
+/*
 export const readPromotion: UqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
     let sqlstring = `select top 1 MarketingID as ID, Name
@@ -25,6 +24,7 @@ export const readPromotionPack: UqOutConverter = async (maxId: string): Promise<
         from zcl_mess.dbo.ProductsMarketing where ExcID > '${maxId}' order by ExcID`;
     return await read(sqlstring);
 };
+*/
 
 export async function promotionPullWrite(joint: Joint, data: any) {
 

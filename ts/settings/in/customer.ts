@@ -51,7 +51,7 @@ export const CustomerContact: UqInTuidArr = {
     owner: 'CustomerID',
     key: 'ID',
     mapper: {
-        $id: 'ID@CustomerContact',
+        $id: 'ID@Customer.Contact',
         type: 'TypeID',
         content: 'Content',
     }
