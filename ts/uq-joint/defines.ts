@@ -3,6 +3,7 @@ import { Joint } from "./joint";
 import { UqProp } from "./uq/uq";
 
 export type DataPull<T> = (joint:Joint, uqIn:T, queue:number)=>Promise<{queue:number, data:any}>;
+export type PullWrite = (joint:Joint, data:any) => Promise<void>;
 export type DataPush<T> = (joint:Joint, uqIn:T, queue:number, data:any)=>Promise<boolean>;
 
 export interface UqIn {
@@ -10,7 +11,8 @@ export interface UqIn {
     entity: string;
     type: 'tuid' | 'tuid-arr' | 'map';
     mapper: Mapper;
-    pull?: DataPull<UqIn>;
+    pull?: DataPull<UqIn> | string;
+    pullWrite?: PullWrite;
     push?: DataPush<UqIn>;
 }
 

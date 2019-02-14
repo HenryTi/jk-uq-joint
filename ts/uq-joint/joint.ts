@@ -82,7 +82,7 @@ export class Joint {
         let { uqIns } = this.settings;
         if (uqIns === undefined) return;
         for (let uqIn of uqIns) {
-            let { uq, entity, pull } = uqIn;
+            let { uq, entity, pull, pullWrite } = uqIn;
             let queueName = uq + ':' + entity;
             console.log('scan in ' + queueName);
             for (; ;) {
@@ -93,7 +93,14 @@ export class Joint {
                     if (retp.length > 0) {
                         queue = retp[0].queue;
                     }
-                    message = await pull(this, uqIn, queue);
+                    switch (typeof pull) {
+                        case 'function':
+                            message = await pull(this, uqIn, queue);
+                            break;
+                        case 'string':
+                            message = await uqpullread(pull as string, queue);
+                            break;
+                    }                    
                     if (message === undefined) break;
                 }
                 else {
@@ -103,7 +110,12 @@ export class Joint {
                     queue = id;
                     message = JSON.parse(body);
                 }
-                await this.uqIn(uqIn, message);
+                if (pullWrite !== undefined) {
+                    await pullWrite(this, message);
+                }
+                else {
+                    await this.uqIn(uqIn, message);
+                }
                 console.log(`process in ${queue}: `, message);
                 await execProc('write_queue_in_p', [queueName, queue]);
             }
