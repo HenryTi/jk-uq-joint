@@ -98,7 +98,7 @@ select top 1 ID, CID as CustomerID, Name, Unit as OrganizationName, isnull(Mobil
 //=========================== Product ===========================
 //==============================================================
 readBrand: `
-select top 1 code as ID, name as BrandName from zcl_mess.dbo.manufactory where code > @iMaxId order by code`,
+select top 1 code as ID, Code as BrandID, name as BrandName from zcl_mess.dbo.manufactory where code > @iMaxId order by code`,
 
 readBrandSalesRegion: `
 select top 1 ExcID as ID, code as BrandID, market_code as SalesRegionID, yesorno as Level
@@ -110,14 +110,14 @@ select top 1 ID, BrandCode as BrandID, SaleRegionID as SalesRegionID, MinValue, 
         from zcl_mess.dbo.BrandDeliverTime where id > @iMaxId and isValid = 1 order by id`,
 
 readProduct: `
-select top 1 p.jkid as ID, p.manufactory as BrandID, p.originalId as ProductNumber
+select top 1 p.jkid as ID, p.jkid as ProductID, p.manufactory as BrandID, p.originalId as ProductNumber
         , isnull(p.Description, 'N/A') as Description, p.DescriptionC
         , pc.chemid as ChemicalID, zcl_mess.dbo.fc_recas(p.CAS) as CAS, p.MF as MolecularFomula, p.MW as molecularWeight, p.Purity
         from zcl_mess.dbo.products p inner join zcl_mess.dbo.productschem pc on pc.jkid = p.jkid
         where p.jkid > @iMaxId order by p.jkid`,
 
 readPack: `
-select top 1 jkcat as ID, j.jkid as ProductID, j.PackNr, j.Quantity, j.Unit as Name
+select top 1 jkcat as ID, jkcat as PackagingID, j.jkid as ProductID, j.PackNr, j.Quantity, j.Unit as Name
         from zcl_mess.dbo.jkcat j inner join zcl_mess.dbo.products p on j.jkid = p.jkid
         where j.jkcat > @iMaxId and j.unit in ( select unitE from opdata.dbo.supplierPackingUnit )
         order by j.jkcat`,

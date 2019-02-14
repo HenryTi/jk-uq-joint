@@ -5,6 +5,11 @@ export async function uqOutRead(sql: string, maxId: string): Promise<{ lastId: s
     return await read(sql, [{ name: 'iMaxId', value: maxId }]);
 }
 
+export async function uqPullRead(sql: string, queue: number): Promise<{ queue: number, data: any }> {
+    let ret = await read(sql, [{ name: 'iMaxId', value: queue }]);
+    return { queue: Number(ret.lastId), data: ret.data };
+}
+
 export const read = async (sqlstring: string, params?: { name: string, value: any }[]): Promise<{ lastId: string, data: any }> => {
 
     let result = await execSql(sqlstring, params);

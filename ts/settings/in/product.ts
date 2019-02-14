@@ -1,15 +1,21 @@
-import { UqInTuid, UqInMap, UqInTuidArr, UqIn } from "../../uq-joint";
+import { UqInTuid, UqInMap, UqInTuidArr, UqIn, Joint } from "../../uq-joint";
 import { uqs } from "../uqs";
+import { uqPullRead } from "../../first/converter/uqOutRead";
 
 export const Brand: UqInTuid = {
     uq: uqs.jkProduct,
     type: 'tuid',
     entity: 'Brand',
-    key: 'ID',
+    key: 'BrandID',
     mapper: {
-        $id: 'ID@Brand',
-        no: "ID",
+        $id: 'BrandID@Brand',
+        no: "BrandID",
         name: "BrandName",
+    },
+    pull: async (joint: Joint, lanugageIn: UqIn, queue: number): Promise<{ queue: number, data: any }> => {
+        let sql = `select top 1 ID, BrandID, BrandName
+        from ProdData.dbo.Export_Brand where ID > @iMaxId order by ID`;
+        return await uqPullRead(sql, queue);
     }
 };
 
@@ -47,10 +53,10 @@ export const Product: UqInTuid = {
     uq: uqs.jkProduct,
     type: 'tuid',
     entity: 'Product',
-    key: 'ID',
+    key: 'ProductID',
     mapper: {
-        $id: 'ID@Product',
-        no: "ID",
+        $id: 'ProductID@Product',
+        no: "ProductID",
         brand: "BrandID@Brand",
         origin: "ProductNumber",
         description: 'Description',
@@ -146,30 +152,41 @@ export const ProductX: UqInTuid = {
     uq: uqs.jkProduct,
     type: 'tuid',
     entity: 'ProductX',
-    key: 'ID',
+    key: 'ProductID',
     mapper: {
-        $id: 'ID@ProductX',
-        no: 'ID',
+        $id: 'ProductID@ProductX',
+        no: 'ProductID',
         brand: 'BrandID@Brand',
         origin: 'ProductNumber',
         description: 'Description',
         descriptionC: 'DescriptionC',
-    }
+    },
+    pull: async (joint: Joint, lanugageIn: UqIn, queue: number): Promise<{ queue: number, data: any }> => {
+        let sql = `select top 1 ID, ProductID, BrandID, ProductNumber, Description, DescriptionC, CasNumber as CAS, ChemicalID
+        , MolecularFormula, MolecularWeight, Purity, Grade, MdlNumber, Restrict
+        from ProdData.dbo.Export_Product where ID > @iMaxId order by ID`;
+        return await uqPullRead(sql, queue);
+    },
 };
 
 export const ProductPackX: UqInTuidArr = {
     uq: uqs.jkProduct,
     type: 'tuid-arr',
     entity: 'ProductX.PackX',
-    key: "ID",
+    key: "PackingID",
     owner: "ProductID",
     mapper: {
         //owner: "ProductID",
-        $id: "ID@ProductX.PackX",
-        jkcat: 'ID',
+        $id: "PackingID@ProductX.PackX",
+        jkcat: 'PackingID',
         radiox: "PackNr",
         radioy: "Quantity",
         unit: "Name",
+    },
+    pull: async (joint: Joint, lanugageIn: UqIn, queue: number): Promise<{ queue: number, data: any }> => {
+        let sql = `select top 1 ID, PackagingID as PackingID, ProductID, PackagingQuantity as PackNr, PackagingVolumn as Quantity, PackagingUnit as Name
+        from ProdData.dbo.Export_Packaging where ID > @iMaxId order by ID`;
+        return await uqPullRead(sql, queue);
     }
 };
 
@@ -186,5 +203,12 @@ export const PriceX: UqInMap = {
             discountinued: "^Discontinued",
             retail: "^Price",
         }
+    },
+    pull: async (joint: Joint, lanugageIn: UqIn, queue: number): Promise<{ queue: number, data: any }> => {
+        let sql = `select top 1 jp.ID, jp.PackagingID as PackingID, j.jkid as ProductID, jp.SalesRegionID, j.Price
+        , j.Currency, j.ExpireDate as Expire_Date, j.Discontinued
+        from ProdData.dbo.Export_PackagingSalesRegion jp inner join zcl_mess.dbo.jkcat j on jp.PackagingID = j.jkcat
+        where jp.ID > @iMaxId order by jp.ID`;
+        return await uqPullRead(sql, queue);
     }
 };

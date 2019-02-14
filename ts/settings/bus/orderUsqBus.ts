@@ -3,7 +3,7 @@ import { WebApiClient } from "../../tools/webApiClient";
 import { uqs } from "../uqs";
 import _ from 'lodash';
 
-const faceOrderPush: DataPush = async (joint: Joint, face: string, queue: number, orderIn: any): Promise<boolean> => {
+const faceOrderPush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus, queue: number, orderIn: any): Promise<boolean> => {
     console.log(orderIn);
 
     let orderOut: any = _.pick(orderIn, ['id', 'Id', 'SaleOrderItems']);
