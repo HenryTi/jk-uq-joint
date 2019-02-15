@@ -19,7 +19,7 @@ export interface UqIn {
 export interface UqInTuid extends UqIn {
     type: 'tuid';
     key: string;
-    pull?: DataPull<UqInTuid>;
+    pull?: DataPull<UqInTuid> | string;
     push?: DataPush<UqInTuid>;
 }
 
@@ -27,13 +27,13 @@ export interface UqInTuidArr extends UqIn {
     type: 'tuid-arr';
     key: string;
     owner: string;
-    pull?: DataPull<UqInTuidArr>;
+    pull?: DataPull<UqInTuidArr> | string;
     push?: DataPush<UqInTuidArr>;
 }
 
 export interface UqInMap extends UqIn {
     type: 'map';
-    pull?: DataPull<UqInMap>;
+    pull?: DataPull<UqInMap> | string;
     push?: DataPush<UqInMap>;
 }
 

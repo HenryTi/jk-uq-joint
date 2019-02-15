@@ -1,5 +1,5 @@
 import { sqls } from './converter/sqls';
-import { Joint, UqIn } from "../uq-joint";
+import { Joint, UqIn, PullWrite } from "../uq-joint";
 
 import { productPullWrite } from "./converter/productPullWrite";
 import { PackTypePullWrite } from './converter/commonPullWrite';
@@ -20,7 +20,6 @@ import { Organization } from "../settings/in/customer";
  */
 
 export type UqOutConverter = (maxId: string) => Promise<{ lastId: string, data: any }>;
-export type PullWrite = (join: Joint, data: any) => Promise<void>;
 
 /** */
 export const pulls: { read: UqOutConverter | string, uqIn: UqIn | PullWrite }[] = [

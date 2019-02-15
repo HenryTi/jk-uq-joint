@@ -1,6 +1,6 @@
 import { UqInTuid, UqInMap, UqInTuidArr, UqIn, Joint } from "../../uq-joint";
 import { uqs } from "../uqs";
-import { uqPullRead } from "../../first/converter/uqOutRead";
+import { productPullWrite } from "../../first/converter/productPullWrite";
 
 export const Brand: UqInTuid = {
     uq: uqs.jkProduct,
@@ -12,11 +12,8 @@ export const Brand: UqInTuid = {
         no: "BrandID",
         name: "BrandName",
     },
-    pull: async (joint: Joint, lanugageIn: UqIn, queue: number): Promise<{ queue: number, data: any }> => {
-        let sql = `select top 1 ID, BrandID, BrandName
-        from ProdData.dbo.Export_Brand where ID > @iMaxId order by ID`;
-        return await uqPullRead(sql, queue);
-    }
+    pull: `select top 1 ID, BrandID, BrandName
+        from ProdData.dbo.Export_Brand where ID > @iMaxId order by ID`,
 };
 
 export const BrandSalesRegion: UqInMap = {
@@ -29,7 +26,9 @@ export const BrandSalesRegion: UqInMap = {
             salesRegion: "^SalesRegionID@SalesRegion",
             level: "^Level",
         }
-    }
+    },
+    pull: `select top 1 ID, BrandID, SalesRegionID, BrandLevel as Level
+        from ProdData.dbo.Export_BrandSalesRegion where ID > @iMaxId order by ID`,
 };
 
 export const BrandDeliveryTime: UqInMap = {
@@ -46,7 +45,10 @@ export const BrandDeliveryTime: UqInMap = {
             // deliveryTimeDescription: "^DeliveryTimeDescription",
             isRestrict: '^Restrict',
         }
-    }
+    },
+    pull: `select top 1 ID, BrandCode as BrandID, SaleRegionID as SalesRegionID, MinValue, MaxValue, Unit
+        , case [Restrict] when 'NoRestrict' then 0 else 1 end as [Restrict]
+        from ProdData.dbo.Export_BrandDeliverTime where id > @iMaxId and isValid = 1 order by id`,
 };
 
 export const Product: UqInTuid = {
@@ -90,7 +92,9 @@ export const ProductSalesRegion: UqInMap = {
             salesRegion: '^SalesRegionID@SalesRegion',
             isValid: '^IsValid',
         }
-    }
+    },
+    pull: `select top 1 ID, ProductID, SalesRegionID, IsValid
+        from ProdData.dbo.Export_ProductSalesRegion where ID > @iMaxId order by ID`,
 };
 
 export const ProductLegallyProhibited: UqInMap = {
@@ -161,12 +165,10 @@ export const ProductX: UqInTuid = {
         description: 'Description',
         descriptionC: 'DescriptionC',
     },
-    pull: async (joint: Joint, lanugageIn: UqIn, queue: number): Promise<{ queue: number, data: any }> => {
-        let sql = `select top 1 ID, ProductID, BrandID, ProductNumber, Description, DescriptionC, CasNumber as CAS, ChemicalID
-        , MolecularFormula, MolecularWeight, Purity, Grade, MdlNumber, Restrict
-        from ProdData.dbo.Export_Product where ID > @iMaxId order by ID`;
-        return await uqPullRead(sql, queue);
-    },
+    pull: `select top 1 ID, ProductID, BrandID, ProductNumber, Description, DescriptionC, CasNumber as CAS, ChemicalID
+        , MolecularFormula, MolecularWeight, Purity, Grade, MdlNumber, [Restrict]
+        from ProdData.dbo.Export_Product where ID > @iMaxId order by ID`,
+    pullWrite: productPullWrite,
 };
 
 export const ProductPackX: UqInTuidArr = {
@@ -183,11 +185,8 @@ export const ProductPackX: UqInTuidArr = {
         radioy: "Quantity",
         unit: "Name",
     },
-    pull: async (joint: Joint, lanugageIn: UqIn, queue: number): Promise<{ queue: number, data: any }> => {
-        let sql = `select top 1 ID, PackagingID as PackingID, ProductID, PackagingQuantity as PackNr, PackagingVolumn as Quantity, PackagingUnit as Name
-        from ProdData.dbo.Export_Packaging where ID > @iMaxId order by ID`;
-        return await uqPullRead(sql, queue);
-    }
+    pull: `select top 1 ID, PackagingID as PackingID, ProductID, PackagingQuantity as PackNr, PackagingVolumn as Quantity, PackagingUnit as Name
+        from ProdData.dbo.Export_Packaging where ID > @iMaxId order by ID`,
 };
 
 export const PriceX: UqInMap = {
@@ -204,11 +203,8 @@ export const PriceX: UqInMap = {
             retail: "^Price",
         }
     },
-    pull: async (joint: Joint, lanugageIn: UqIn, queue: number): Promise<{ queue: number, data: any }> => {
-        let sql = `select top 1 jp.ID, jp.PackagingID as PackingID, j.jkid as ProductID, jp.SalesRegionID, j.Price
+    pull: `select top 1 jp.ID, jp.PackagingID as PackingID, j.jkid as ProductID, jp.SalesRegionID, j.Price
         , j.Currency, j.ExpireDate as Expire_Date, j.Discontinued
         from ProdData.dbo.Export_PackagingSalesRegion jp inner join zcl_mess.dbo.jkcat j on jp.PackagingID = j.jkcat
-        where jp.ID > @iMaxId order by jp.ID`;
-        return await uqPullRead(sql, queue);
-    }
+        where jp.ID > @iMaxId order by jp.ID`,
 };

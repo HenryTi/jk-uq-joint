@@ -7,6 +7,7 @@ import { databaseName } from "./db/mysql/database";
 import { createMapTable } from "./tool/createMapTable";
 import { faceSchemas } from "./tool/faceSchemas";
 import { Uqs } from "./uq/uq";
+import { uqPullRead } from "../first/converter/uqOutRead";
 
 const interval = 60 * 1000;
 
@@ -86,22 +87,27 @@ export class Joint {
             let queueName = uq + ':' + entity;
             console.log('scan in ' + queueName);
             for (; ;) {
-                let message:any;                
+                let message: any;
                 let queue: number;
                 if (pull !== undefined) {
                     let retp = await tableFromProc('read_queue_in_p', [queueName]);
                     if (retp.length > 0) {
                         queue = retp[0].queue;
+                    } else {
+                        queue = 0;
                     }
+                    let ret = undefined;
                     switch (typeof pull) {
                         case 'function':
-                            message = await pull(this, uqIn, queue);
+                            ret = await pull(this, uqIn, queue);
                             break;
                         case 'string':
-                            message = await uqpullread(pull as string, queue);
+                            ret = await uqPullRead(pull as string, queue);
                             break;
-                    }                    
-                    if (message === undefined) break;
+                    }
+                    if (ret === undefined) break;
+                    queue = ret.queue;
+                    message = ret.data;
                 }
                 else {
                     let retp = await tableFromProc('read_queue_in', [queueName]);
@@ -132,7 +138,7 @@ export class Joint {
     }
 
     protected async uqInTuid(uqIn: UqInTuid, data: any): Promise<number> {
-        let { key, mapper, uq:uqFullName, entity: tuid } = uqIn;
+        let { key, mapper, uq: uqFullName, entity: tuid } = uqIn;
         if (key === undefined) throw 'key is not defined';
         if (uqFullName === undefined) throw 'tuid ' + tuid + ' not defined';
         let keyVal = data[key];
@@ -147,7 +153,7 @@ export class Joint {
     }
 
     protected async uqInTuidArr(uqIn: UqInTuidArr, data: any): Promise<number> {
-        let { key, owner, mapper, uq:uqFullName, entity } = uqIn;
+        let { key, owner, mapper, uq: uqFullName, entity } = uqIn;
         if (key === undefined) throw 'key is not defined';
         if (uqFullName === undefined) throw 'uq ' + uqFullName + ' not defined';
         if (entity === undefined) throw 'tuid ' + entity + ' not defined';
@@ -172,7 +178,7 @@ export class Joint {
     }
 
     private async mapOwner(uqIn: UqInTuidArr, ownerEntity: string, ownerVal: any) {
-        let { uq:uqFullName } = uqIn;
+        let { uq: uqFullName } = uqIn;
         let sql = `select id from \`${databaseName}\`.\`map_${ownerEntity}\` where no='${ownerVal}'`;
         let ret: any[];
         try {
@@ -192,7 +198,7 @@ export class Joint {
     }
 
     protected async uqInMap(uqIn: UqInMap, data: any): Promise<void> {
-        let { mapper, uq:uqFullName, entity } = uqIn;
+        let { mapper, uq: uqFullName, entity } = uqIn;
         let mapToUq = new MapToUq(this.uqInDict, this.unit);
         let body = await mapToUq.map(data, mapper);
         let uq = await this.uqs.getUq(uqFullName);
@@ -248,7 +254,7 @@ export class Joint {
                 let retp = await tableFromProc('read_queue_out_p', [moniker]);
                 if (retp.length > 0) {
                     queue = retp[0].queue;
-                }else{
+                } else {
                     queue = 430000000000000;
                 }
                 let message = await this.uqs.readBus(face, queue);
@@ -257,7 +263,7 @@ export class Joint {
                 //await this.busOut(face, newQueue, message, mapper, push);
                 let json = await faceSchemas.unpackBusData(face, body);
                 /*
-                if (json.shippingcontact !== undefined 
+                if (json.shippingcontact !== undefined
                     || json.ShippingContact !== undefined
                     || json.shippingContact !== undefined) {
                     debugger;
