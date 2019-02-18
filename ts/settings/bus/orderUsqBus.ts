@@ -12,13 +12,27 @@ const faceOrderPush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus, queue:
         orderOut.Consignee = getConsignee(orderIn.shippingContact);
     }
     if (orderIn.invoiceContact !== undefined) {
-        orderOut.InvoiceReciever = getInvoiceReceiver(orderIn.invoiceContact);
+        orderOut.InvoiceReceiver = getInvoiceReceiver(orderIn.invoiceContact);
     }
+
+    orderOut.PaymentRule = { Id: '1' };
+    orderOut.InvoiceService = { id: '正常开票' };
+    orderOut.TransportMethodId = 'Y';
+
+    orderOut.SaleOrderItems.forEach((element, index) => {
+        element.Id = orderOut.Id + (index + 1).toString().padStart(5, '0');
+        element.TransportMethod = { Id: 'Y' };
+        element.SalePrice = { Value: element.Price, Currency: element.Currency };
+    });
     console.log(orderOut);
     // 调用7.253的web api
     let httpClient = new WebApiClient();
-    let ret = await httpClient.newOrder(orderOut);
-    return true;
+    try {
+        let ret = await httpClient.newOrder(orderOut);
+        return true;
+    } catch (error) {
+        return false;
+    }
 }
 
 function getConsignee(shippingContact: any): any {
@@ -36,10 +50,10 @@ function getConsignee(shippingContact: any): any {
     if (shippingContact.address !== undefined) {
         let { country, province, city, county, description, zipcode } = shippingContact.address;
         Consignee.ConsigneeAddress = {
-            Country: country && country.chineseName,
-            Province: province && province.chineseName,
+            // Country: country && country.chineseName,
+            // Province: province && province.chineseName,
             City: city && city.chineseName,
-            County: county && county.chineseName,
+            // County: county && county.chineseName,
             ConsigneeAddressDetail: description,
             zipcode: zipcode,
         }
@@ -59,7 +73,7 @@ function getInvoiceReceiver(invoiceContact: any): any {
         if (invoiceContact.address !== undefined) {
             let { country, province, city, county, description, zipcode } = invoiceContact.address;
             InvoiceReceiver.InvoiceReceiverProvince = province && province.chineseName;
-            InvoiceReceiver.InvoiceReceiverCity = city && city.chineseName;
+            // InvoiceReceiver.InvoiceReceiverCity = city && city.chineseName;
             InvoiceReceiver.InvoiceReceiverZipCode = zipcode;
             InvoiceReceiver.InvoiceAddrssDetail = description;
         }
@@ -85,11 +99,11 @@ export const faceOrder: UqBus = {
         CreateDate: 'createDate',
         SaleOrderItems: {
             $name: "orderItems",
-            Id: 1,
+            Row: "$Row",
             PackageId: "pack@ProductX.PackX",
             Qty: "quantity",
-            SalePrice: "price",
-            SalePriceCurrency: "^currency@Currency"
+            Price: "price",
+            Currency: "^currency@Currency"
             /*
             DeliveryTimeMin: true,
             DeliveryTimeMax:
