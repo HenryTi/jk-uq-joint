@@ -117,7 +117,7 @@ select top 1 p.jkid as ID, p.jkid as ProductID, p.manufactory as BrandID, p.orig
         where p.jkid > @iMaxId order by p.jkid`,
 
 readPack: `
-select top 1 jkcat as ID, jkcat as PackagingID, j.jkid as ProductID, j.PackNr, j.Quantity, j.Unit as Name
+select top 1 j.jkcat as ID, j.jkcat as PackingID, j.jkid as ProductID, j.PackNr, j.Quantity, j.Unit as Name
         from zcl_mess.dbo.jkcat j inner join zcl_mess.dbo.products p on j.jkid = p.jkid
         where j.jkcat > @iMaxId and j.unit in ( select unitE from opdata.dbo.supplierPackingUnit )
         order by j.jkcat`,
@@ -140,16 +140,16 @@ select top 1 jkid + market_code as ID, jkid as ProductID, market_code as SalesRe
 //=========================== ProductCategory ===========================
 //==============================================================
 readProductCategory: `
-select top 1 pc.ProductCategoryID as ID, pc.ParentProductCategoryID, pc.OrderWithinParentCatetory as OrderWithinParentCategory,
+select top 1 pc.ProductCategoryID as ID, pc.ProductCategoryID, pc.ParentProductCategoryID, pc.OrderWithinParentCatetory as OrderWithinParentCategory,
         pc.IsLeaf, pc.IsValid, pc.IsShow from opdata.dbo.ProductCategory pc
         where pc.ProductCategoryID > @iMaxId order by pc.ProductCategoryID`,
 
 readProductCategoryLanguage: `
-select top 1 ID, ProductCategoryID, LanguageID, ProductCategoryName
+select top 1 ID, ID as ProductCategoryLanguageID, ProductCategoryID, LanguageID, ProductCategoryName
         from opdata.dbo.ProductCategoryLanguage where ID > @iMaxId order by ID`,
 
 readProductProductCategory: `
-select top 1 ID, SaleProductID, ProductCategoryID, IsValid
+select top 1 ID, ID as SaleProductProductCategoryID, SaleProductID, ProductCategoryID, IsValid
         from opdata.dbo.SaleProductProductCategory where ID > @iMaxId order by ID`,
 
 //==============================================================

@@ -2,8 +2,7 @@ import { Joint } from "../../uq-joint";
 import _ from 'lodash';
 import { Customer, OrganizationCustomer, CustomerContact, Contact, CustomerContacts } from "../../settings/in/customer";
 
-export async function customerPullWrite(joint: Joint, customerData: any)
-{
+export async function customerPullWrite(joint: Joint, customerData: any) {
     try {
         await joint.uqIn(Customer, _.pick(customerData, ["ID", "Name", "FirstName", "LastName", "Gender", "BirthDate", 'CreateTime']));
         await joint.uqIn(OrganizationCustomer, _.pick(customerData, ["ID", "OrganizationID"]));
@@ -30,29 +29,28 @@ export async function customerPullWrite(joint: Joint, customerData: any)
             await joint.uqIn(CustomerContact, { 'ID': customerData['ID'] + '-Fax2', 'CustomerID': customerData['ID'], 'TypeID': 'fax', 'Content': customerData['Fax2'] });
         }
         */
-        let props:{name:string, type:string}[] = [
-            {name: 'Tel1', type: 'tel'},
-            {name: 'Tel2', type: 'tel'},
-            {name: 'Mobile', type: 'mobile'},
-            {name: 'Email1', type: 'email'},
-            {name: 'Email2', type: 'email'},
-            {name: 'Fax1', type: 'fax'},
-            {name: 'Fax2', type: 'fax'},
+        let props: { name: string, type: string }[] = [
+            { name: 'Tel1', type: 'tel' },
+            { name: 'Tel2', type: 'tel' },
+            { name: 'Mobile', type: 'mobile' },
+            { name: 'Email1', type: 'email' },
+            { name: 'Email2', type: 'email' },
+            { name: 'Fax1', type: 'fax' },
+            { name: 'Fax2', type: 'fax' },
         ];
         for (let prop of props) {
-            let {name, type} = prop;
+            let { name, type } = prop;
             let v = customerData[name];
-            if (v === undefined) continue;
-            let {ID} = customerData;
-            await joint.uqIn(CustomerContact, { 'ID': ID + '-Email2', 'CustomerID': ID, 'TypeID': type, 'Content': v });
+            if (!v) continue;
+            let { ID } = customerData;
+            await joint.uqIn(CustomerContact, { 'ID': ID + '-' + v, 'CustomerID': ID, 'TypeID': type, 'Content': v });
         }
     } catch (error) {
         console.error(error);
     }
 }
 
-export async function consigneeContactPullWrite(joint: Joint, contactData: any)
-{
+export async function consigneeContactPullWrite(joint: Joint, contactData: any) {
     try {
         await joint.uqIn(Contact, contactData);
         await joint.uqIn(CustomerContacts, _.pick(contactData, ["ID", "CustomerID"]));

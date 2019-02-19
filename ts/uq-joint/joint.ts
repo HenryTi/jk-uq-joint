@@ -290,6 +290,8 @@ export class Joint {
                 let retp = await tableFromProc('read_queue_in_p', [moniker]);
                 if (retp.length > 0) {
                     queue = retp[0].queue;
+                } else {
+                    queue = 0;
                 }
                 let message = await pull(this, uqBus, queue);
                 if (message === undefined) break;
