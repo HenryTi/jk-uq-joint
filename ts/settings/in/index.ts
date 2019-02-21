@@ -6,6 +6,7 @@ import { Chemical } from "./chemical";
 import { Promotion, PromotionSalesRegion, PromotionLanguage, PromotionPack } from "./promotion";
 import { Customer, Organization, OrganizationCustomer, CustomerContact, CustomerContacts, Contact } from "./customer";
 import { ProductCategory, ProductCategoryLanguage, ProductProductCategory } from "./productCategory";
+import { Agreement, CustomerDiscount, OrganizationDiscount } from "./customerDiscount";
 /*
 const _in = {
     'Language': Lanugage,
@@ -87,12 +88,6 @@ const uqIns = [
     ProductSalesRegion,
     ProductLegallyProhibited,
 
-    /*
-    ProductPackType,
-    ProductPack,
-    Price,
-    */
-
     ProductX,
     ProductPackX,
     PriceX,
@@ -114,8 +109,11 @@ const uqIns = [
     OrganizationCustomer,
     CustomerContact,
     CustomerContacts,
-    // 'CustomerInvoiceContact': CustomerInvoiceContact,
     Contact,
+
+    Agreement,
+    CustomerDiscount,
+    OrganizationDiscount,
 ]
 
 export default uqIns;

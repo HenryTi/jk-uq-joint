@@ -8,7 +8,9 @@ export async function productPullWrite(joint: Joint, data: any) {
         await joint.uqIn(Product, _.pick(data, ["ID", "BrandID", "ProductNumber", "Description", "DescriptionC"]));
         await joint.uqIn(ProductX, _.pick(data, ["ID", "BrandID", "ProductNumber", "Description", "DescriptionC"]));
         await joint.uqIn(ProductChemical, _.pick(data, ["ID", "ChemicalID", "Purity", "CAS", "MolecularFomula", "MolecularWeight"]));
+        return true;
     } catch (error) {
         console.error(error);
+        return false;
     }
 }

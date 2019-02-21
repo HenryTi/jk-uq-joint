@@ -3,7 +3,7 @@ import { Joint } from "./joint";
 import { UqProp } from "./uq/uq";
 
 export type DataPull<T> = (joint:Joint, uqIn:T, queue:number)=>Promise<{queue:number, data:any}>;
-export type PullWrite = (joint:Joint, data:any) => Promise<void>;
+export type PullWrite = (joint:Joint, data:any) => Promise<boolean>;
 export type DataPush<T> = (joint:Joint, uqIn:T, queue:number, data:any)=>Promise<boolean>;
 
 export interface UqIn {

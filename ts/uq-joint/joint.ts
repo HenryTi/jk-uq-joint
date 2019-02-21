@@ -116,14 +116,19 @@ export class Joint {
                     queue = id;
                     message = JSON.parse(body);
                 }
-                if (pullWrite !== undefined) {
-                    await pullWrite(this, message);
+
+                try {
+                    if (pullWrite !== undefined) {
+                        await pullWrite(this, message);
+                    }
+                    else {
+                        await this.uqIn(uqIn, message);
+                    }
+                    console.log(`process in ${queue}: `, message);
+                    await execProc('write_queue_in_p', [queueName, queue]);
+                } catch (error) {
+                    console.log(error);
                 }
-                else {
-                    await this.uqIn(uqIn, message);
-                }
-                console.log(`process in ${queue}: `, message);
-                await execProc('write_queue_in_p', [queueName, queue]);
             }
         }
     }
@@ -260,15 +265,7 @@ export class Joint {
                 let message = await this.uqs.readBus(face, queue);
                 if (message === undefined) break;
                 let { id: newQueue, from, body } = message;
-                //await this.busOut(face, newQueue, message, mapper, push);
                 let json = await faceSchemas.unpackBusData(face, body);
-                /*
-                if (json.shippingcontact !== undefined
-                    || json.ShippingContact !== undefined
-                    || json.shippingContact !== undefined) {
-                    debugger;
-                }
-                */
                 if (uqIdProps !== undefined && from !== undefined) {
                     let uq = await this.uqs.getUq(from);
                     if (uq !== undefined) {
