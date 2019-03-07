@@ -1,17 +1,15 @@
 import { sqls } from './converter/sqls';
-import { Joint, UqIn, PullWrite } from "../uq-joint";
-
-import { productPullWrite } from "./converter/productPullWrite";
-import { PackTypePullWrite } from './converter/commonPullWrite';
-import { customerPullWrite, consigneeContactPullWrite } from "./converter/customerPullWrite";
+import { UqIn } from "../uq-joint";
 
 import { ProductCategory, ProductCategoryLanguage, ProductProductCategory } from "../settings/in/productCategory";
 import { Country, Province, City, County } from "../settings/in/Address";
-import { Language, PackTypeStandard, Currency, SalesRegion } from "../settings/in/salesRegion";
+import { Language, PackTypeStandard, Currency, SalesRegion, PackType } from "../settings/in/salesRegion";
 import { Chemical } from "../settings/in/chemical";
-import { Brand, BrandSalesRegion, BrandDeliveryTime, ProductPackX, PriceX, ProductSalesRegion, ProductLegallyProhibited } from "../settings/in/product";
+import { Brand, BrandSalesRegion, BrandDeliveryTime, ProductPackX, PriceX, ProductSalesRegion, ProductLegallyProhibited, ProductX } from "../settings/in/product";
 import { Warehouse, SalesRegionWarehouse } from "../settings/in/warehouse";
-import { Organization } from "../settings/in/customer";
+import { Organization, Customer, Contact } from "../settings/in/customer";
+import { Promotion, PromotionLanguage, PromotionPack } from '../settings/in/promotion';
+import { Agreement } from '../settings/in/customerDiscount';
 
 /**
  * joint的思路是：joint一直在运行，每隔一段时间执行一次数据交换，数据交换分为3种，
@@ -22,51 +20,56 @@ import { Organization } from "../settings/in/customer";
 export type UqOutConverter = (maxId: string) => Promise<{ lastId: string, data: any }>;
 
 /** */
-export const pulls: { read: UqOutConverter | string, uqIn: UqIn | PullWrite }[] = [
+export const pulls: { read: UqOutConverter | string, uqIn: UqIn }[] = [
+    /*
     { read: sqls.readLanguage, uqIn: Language },
     { read: sqls.readCountry, uqIn: Country },
     { read: sqls.readProvince, uqIn: Province },
     { read: sqls.readCity, uqIn: City },
     { read: sqls.readCounty, uqIn: County },
     { read: sqls.readPackTypeStandard, uqIn: PackTypeStandard },
-    { read: sqls.readPackType, uqIn: PackTypePullWrite },
+    { read: sqls.readPackType, uqIn: PackType},
     { read: sqls.readCurrency, uqIn: Currency },
     { read: sqls.readSalesRegion, uqIn: SalesRegion },
-    { read: sqls.readChemical, uqIn: Chemical },
-
-    // 产品相关的数据表
-    { read: sqls.readBrand, uqIn: Brand },
-    { read: sqls.readBrandSalesRegion, uqIn: BrandSalesRegion },
-    { read: sqls.readBrandDeliveryTime, uqIn: BrandDeliveryTime },
-    { read: sqls.readProduct, uqIn: productPullWrite },
-    // { read: readPack, uqIn: 'ProductPack' },
-    // { read: readPrice, uqIn: 'Price' },
-    { read: sqls.readPack, uqIn: ProductPackX },
-    { read: sqls.readPrice, uqIn: PriceX },
-    { read: sqls.readProductSalesRegion, uqIn: ProductSalesRegion },
-    { read: sqls.readProductLegallyProhibited, uqIn: ProductLegallyProhibited },
-
-    // 目录树
-    { read: sqls.readProductCategory, uqIn: ProductCategory },
-    { read: sqls.readProductCategoryLanguage, uqIn: ProductCategoryLanguage },
-    { read: sqls.readProductProductCategory, uqIn: ProductProductCategory },
 
     // 库存
     { read: sqls.readWarehouse, uqIn: Warehouse },
     { read: sqls.readSalesRegionWarehouse, uqIn: SalesRegionWarehouse },
 
-    // 市场活动
-    // { read: sql.readPromotion, uqIn: promotionPullWrite },
-    // { read: sql.readPromotionLanguage, uqIn: 'PromotionLanguage' },
-    // { read: sql.readPromotionPack, uqIn: 'PromotionPack' },
+    // 产品相关的数据表
+    { read: sqls.readBrand, uqIn: Brand },
+    { read: sqls.readBrandSalesRegion, uqIn: BrandSalesRegion },
+    { read: sqls.readBrandDeliveryTime, uqIn: BrandDeliveryTime },
+
+    // 目录树
+    { read: sqls.readProductCategory, uqIn: ProductCategory },
+    { read: sqls.readProductCategoryLanguage, uqIn: ProductCategoryLanguage },
+
+    { read: sqls.readChemical, uqIn: Chemical },
+    */
+    { read: sqls.readProduct, uqIn: ProductX },
+    /*
+    // { read: sqls.readPack, uqIn: ProductPackX },
+    // { read: sqls.readPrice, uqIn: PriceX },
+    // { read: sqls.readProductSalesRegion, uqIn: ProductSalesRegion },
+    // { read: sqls.readProductLegallyProhibited, uqIn: ProductLegallyProhibited },
+
+    { read: sqls.readProductProductCategory, uqIn: ProductProductCategory },
 
     // 客户和客户单位基本信息
     { read: sqls.readOrganization, uqIn: Organization },
-    { read: sqls.readCustomer, uqIn: customerPullWrite },
-    // 使用subTuid的导数据代码
-    // { read: readCustomerConsigneeContact, uqIn: 'CustomerConsigneeContact' },
-    // { read: readCustomerInvoiceContact, uqIn: 'CustomerInvoiceContact' },
+    { read: sqls.readCustomer, uqIn: Customer },
     // 使用map方式的导数据代码
-    { read: sqls.readCustomerConsigneeContact, uqIn: consigneeContactPullWrite },
-    { read: sqls.readCustomerInvoiceContact, uqIn: consigneeContactPullWrite },
+    { read: sqls.readCustomerConsigneeContact, uqIn: Contact },
+    { read: sqls.readCustomerInvoiceContact, uqIn: Contact },
+
+    { read: sqls.readAgreement, uqIn: Agreement },
+    */
+
+    /*
+    // 市场活动
+    { read: sqls.readPromotion, uqIn: Promotion },
+    { read: sqls.readPromotionLanguage, uqIn: PromotionLanguage },
+    { read: sqls.readPromotionPack, uqIn: PromotionPack },
+    */
 ]

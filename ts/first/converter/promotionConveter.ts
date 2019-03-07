@@ -24,7 +24,6 @@ export const readPromotionPack: UqOutConverter = async (maxId: string): Promise<
         from zcl_mess.dbo.ProductsMarketing where ExcID > '${maxId}' order by ExcID`;
     return await read(sqlstring);
 };
-*/
 
 export async function promotionPullWrite(joint: Joint, data: any) {
 
@@ -35,3 +34,4 @@ export async function promotionPullWrite(joint: Joint, data: any) {
         console.error(error);
     }
 }
+*/

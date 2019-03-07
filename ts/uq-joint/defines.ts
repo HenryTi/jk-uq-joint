@@ -13,6 +13,7 @@ export interface UqIn {
     mapper: Mapper;
     pull?: DataPull<UqIn> | string;
     pullWrite?: PullWrite;
+    firstPullWrite?: PullWrite;
     push?: DataPush<UqIn>;
 }
 

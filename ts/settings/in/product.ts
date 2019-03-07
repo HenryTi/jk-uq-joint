@@ -1,6 +1,6 @@
 import { UqInTuid, UqInMap, UqInTuidArr, UqIn, Joint } from "../../uq-joint";
 import { uqs } from "../uqs";
-import { productPullWrite } from "../../first/converter/productPullWrite";
+import { productPullWrite, productFirstPullWrite, packFirstPullWrite } from "../../first/converter/productPullWrite";
 
 export const Brand: UqInTuid = {
     uq: uqs.jkProduct,
@@ -51,6 +51,7 @@ export const BrandDeliveryTime: UqInMap = {
         from ProdData.dbo.Export_BrandDeliverTime where id > @iMaxId and isValid = 1 order by id`,
 };
 
+/*
 export const Product: UqInTuid = {
     uq: uqs.jkProduct,
     type: 'tuid',
@@ -63,6 +64,94 @@ export const Product: UqInTuid = {
         origin: "ProductNumber",
         description: 'Description',
         descriptionC: 'DescriptionC',
+    }
+};
+*/
+
+export const ProductX: UqInTuid = {
+    uq: uqs.jkProduct,
+    type: 'tuid',
+    entity: 'ProductX',
+    key: 'ProductID',
+    mapper: {
+        $id: 'ProductID@ProductX',
+        no: 'ProductID',
+        brand: 'BrandID@Brand',
+        origin: 'ProductNumber',
+        description: 'Description',
+        descriptionC: 'DescriptionC',
+        isValid: 'IsValid',
+    },
+    pull: `select top 1 ID, ProductID, BrandID, ProductNumber, Description, DescriptionC, CasNumber as CAS, ChemicalID
+        , MolecularFormula, MolecularWeight, Purity, Grade, MdlNumber, [Restrict], 1 as IsValid
+        from ProdData.dbo.Export_Product where ID > @iMaxId order by ID`,
+    pullWrite: productPullWrite,
+    firstPullWrite: productFirstPullWrite,
+};
+
+export const InvalidProduct: UqInTuid = {
+    uq: uqs.jkProduct,
+    type: 'tuid',
+    entity: 'InvalidProduct',
+    key: 'ProductID',
+    mapper: {
+
+    },
+    pull: `select top 1 pv.ID, pv.ProductID, p.manufactory as BrandID, p.originalId as ProductNumber, p.Description, p.DescriptionC
+        , zcl_mess.dbo.fc_recas(p.CAS) as CAS, pc.ChemID as ChemicalID
+        , p.mf as MolecularFormula, p.mw as MolecularWeight, p.Purity, p.LotNumber as MdlNumber, p.[Restrict], 0 as IsValid
+        from ProdData.dbo.Export_Invalid_Product pv inner join zcl_mess.dbo.Product p on pv.ProductID = p.jkid
+        inner join zcl_mess.dbo.ProductChem pc on pc.jkid = p.jkid
+        where pv.ID > @iMaxId order by pv.ID`,
+    pullWrite: productPullWrite,
+};
+
+export const ProductPackX: UqInTuidArr = {
+    uq: uqs.jkProduct,
+    type: 'tuid-arr',
+    entity: 'ProductX.PackX',
+    key: "PackingID",
+    owner: "ProductID",
+    mapper: {
+        //owner: "ProductID",
+        $id: "PackingID@ProductX.PackX",
+        jkcat: 'PackingID',
+        radiox: "PackNr",
+        radioy: "Quantity",
+        unit: "Name",
+    },
+    pull: `select top 1 ID, PackagingID as PackingID, ProductID, PackagingQuantity as PackNr, PackagingVolumn as Quantity, PackagingUnit as Name
+        from ProdData.dbo.Export_Packaging where ID > @iMaxId order by ID`,
+    firstPullWrite: packFirstPullWrite,
+};
+
+export const PriceX: UqInMap = {
+    uq: uqs.jkProduct,
+    type: 'map',
+    entity: 'PriceX',
+    mapper: {
+        product: "ProductID@ProductX",
+        pack: "PackingID@ProductX.PackX",
+        arr1: {
+            salesRegion: "^SalesRegionID@SalesRegion",
+            expireDate: "^Expire_Date",
+            discountinued: "^Discontinued",
+            retail: "^Price",
+        }
+    },
+    pull: `select top 1 jp.ID, jp.PackagingID as PackingID, j.jkid as ProductID, jp.SalesRegionID, j.Price
+        , j.Currency, j.ExpireDate as Expire_Date, j.Discontinued
+        from ProdData.dbo.Export_PackagingSalesRegion jp inner join zcl_mess.dbo.jkcat j on jp.PackagingID = j.jkcat
+        where jp.ID > @iMaxId order by jp.ID`,
+    pullWrite: async(joint: Joint, data: any) => {
+        try {
+            data["Expire_Date"] = data["Expire_Date"].getTime();
+            await joint.uqIn(PriceX, data);
+            return true;
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
     }
 };
 
@@ -151,60 +240,3 @@ export const Price: UqInMap = {
     }
 };
 */
-
-export const ProductX: UqInTuid = {
-    uq: uqs.jkProduct,
-    type: 'tuid',
-    entity: 'ProductX',
-    key: 'ProductID',
-    mapper: {
-        $id: 'ProductID@ProductX',
-        no: 'ProductID',
-        brand: 'BrandID@Brand',
-        origin: 'ProductNumber',
-        description: 'Description',
-        descriptionC: 'DescriptionC',
-    },
-    pull: `select top 1 ID, ProductID, BrandID, ProductNumber, Description, DescriptionC, CasNumber as CAS, ChemicalID
-        , MolecularFormula, MolecularWeight, Purity, Grade, MdlNumber, [Restrict]
-        from ProdData.dbo.Export_Product where ID > @iMaxId order by ID`,
-    pullWrite: productPullWrite,
-};
-
-export const ProductPackX: UqInTuidArr = {
-    uq: uqs.jkProduct,
-    type: 'tuid-arr',
-    entity: 'ProductX.PackX',
-    key: "PackingID",
-    owner: "ProductID",
-    mapper: {
-        //owner: "ProductID",
-        $id: "PackingID@ProductX.PackX",
-        jkcat: 'PackingID',
-        radiox: "PackNr",
-        radioy: "Quantity",
-        unit: "Name",
-    },
-    pull: `select top 1 ID, PackagingID as PackingID, ProductID, PackagingQuantity as PackNr, PackagingVolumn as Quantity, PackagingUnit as Name
-        from ProdData.dbo.Export_Packaging where ID > @iMaxId order by ID`,
-};
-
-export const PriceX: UqInMap = {
-    uq: uqs.jkProduct,
-    type: 'map',
-    entity: 'PriceX',
-    mapper: {
-        product: "ProductID@ProductX",
-        pack: "PackingID@ProductX.PackX",
-        arr1: {
-            salesRegion: "^SalesRegionID@SalesRegion",
-            expireDate: "Expire_Date",
-            discountinued: "^Discontinued",
-            retail: "^Price",
-        }
-    },
-    pull: `select top 1 jp.ID, jp.PackagingID as PackingID, j.jkid as ProductID, jp.SalesRegionID, j.Price
-        , j.Currency, j.ExpireDate as Expire_Date, j.Discontinued
-        from ProdData.dbo.Export_PackagingSalesRegion jp inner join zcl_mess.dbo.jkcat j on jp.PackagingID = j.jkcat
-        where jp.ID > @iMaxId order by jp.ID`,
-};

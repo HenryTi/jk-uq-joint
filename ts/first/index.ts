@@ -5,7 +5,7 @@ import { uqOutRead } from "./converter/uqOutRead";
 import { host } from "../uq-joint/tool/host";
 import { centerApi } from "../uq-joint/tool/centerApi";
 
-const maxRows = 2;
+const maxRows = 600;
 
 (async function () {
     console.log(process.env.NODE_ENV);
@@ -16,6 +16,7 @@ const maxRows = 2;
     console.log('start');
     for (var i = 0; i < pulls.length; i++) {
         let { read, uqIn } = pulls[i];
+        let { entity, pullWrite, firstPullWrite } = uqIn;
         let readFunc: UqOutConverter;
         if (typeof (read) === 'string') {
             readFunc = async function (maxId: string): Promise<{ lastId: string, data: any }> {
@@ -27,7 +28,7 @@ const maxRows = 2;
         }
 
         let maxId = '', count = 0;
-        console.log(count);
+        console.log(entity + ":" + count);
         for (; ;) {
             count++;
             let ret: { lastId: string, data: any };
@@ -38,17 +39,19 @@ const maxRows = 2;
             }
             if (ret === undefined || count > maxRows) break;
             let { lastId, data } = ret;
-            if (typeof uqIn === 'object') {
-                try {
+
+            try {
+                if (firstPullWrite !== undefined) {
+                    await firstPullWrite(joint, data);
+                } else if (pullWrite !== undefined) {
+                    await pullWrite(joint, data);
+                } else {
                     await joint.uqIn(uqIn, data);
-                } catch (error) {
-                    console.error(error);
                 }
+                maxId = lastId;
+            } catch (error) {
+                console.log(error);
             }
-            else {
-                await uqIn(joint, data);
-            }
-            maxId = lastId;
         }
     };
     process.exit();

@@ -66,7 +66,7 @@ readChemical: `
 select top 1
     chemID as ID, cas, Description, DescriptionC, molWeight, molFomula, mdlNumber
     from opdata.dbo.sc_chemical
-    where reliability = 0 and chemID > @iMaxId order by chemID
+    where reliability = 0 and chemID > @iMaxId and chemID > 111014  order by chemID
 `,
 
 //==============================================================
@@ -113,8 +113,10 @@ readProduct: `
 select top 1 p.jkid as ID, p.jkid as ProductID, p.manufactory as BrandID, p.originalId as ProductNumber
         , isnull(p.Description, 'N/A') as Description, p.DescriptionC
         , pc.chemid as ChemicalID, zcl_mess.dbo.fc_recas(p.CAS) as CAS, p.MF as MolecularFomula, p.MW as molecularWeight, p.Purity
+        , p.[Restrict], p.LotNumber as MdlNumber, case when (select count(pv.jkid) from zcl_mess.dbo.Invalid_Products pv where pv.jkid = p.jkid) > 0 then 0 else 1 end as IsValid
         from zcl_mess.dbo.products p inner join zcl_mess.dbo.productschem pc on pc.jkid = p.jkid
-        where p.jkid > @iMaxId order by p.jkid`,
+        left join zcl_mess.dbo.Invalid_products pv on pv.jkid = p.jkid
+        where p.jkid > @iMaxId and p.jkid > 'A01100769' order by p.jkid`,
 
 readPack: `
 select top 1 j.jkcat as ID, j.jkcat as PackingID, j.jkid as ProductID, j.PackNr, j.Quantity, j.Unit as Name
@@ -178,4 +180,11 @@ readPromotionLanguage:
 readPromotionPack:
 `select top 1 ExcID as ID, MarketingID as PromotionID, jkid as ProductID, jkcat as PackageID, activeDiscount as Discount, isStock as WhenHasStorage
         from zcl_mess.dbo.ProductsMarketing where ExcID > @iMaxId order by ExcID`,
+
+//==============================================================
+//=========================== Agreement ===========================
+//==============================================================
+readAgreement:
+`select top 1 AgreementId as ID, AgreementID, ObjType
+        from dbs.dbo.Agreement where AgreementID > @iMaxId and objType in ('C', 'U')  order by AgreementId`,
 }
