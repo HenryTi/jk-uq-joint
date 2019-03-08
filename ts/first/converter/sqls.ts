@@ -116,7 +116,7 @@ select top 1 p.jkid as ID, p.jkid as ProductID, p.manufactory as BrandID, p.orig
         , p.[Restrict], p.LotNumber as MdlNumber, case when (select count(pv.jkid) from zcl_mess.dbo.Invalid_Products pv where pv.jkid = p.jkid) > 0 then 0 else 1 end as IsValid
         from zcl_mess.dbo.products p inner join zcl_mess.dbo.productschem pc on pc.jkid = p.jkid
         left join zcl_mess.dbo.Invalid_products pv on pv.jkid = p.jkid
-        where p.jkid > @iMaxId and p.jkid > 'A01100769' order by p.jkid`,
+        where p.jkid > @iMaxId and p.jkid > 'A011162334' order by p.jkid`,
 
 readPack: `
 select top 1 j.jkcat as ID, j.jkcat as PackingID, j.jkid as ProductID, j.PackNr, j.Quantity, j.Unit as Name

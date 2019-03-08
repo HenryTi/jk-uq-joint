@@ -49,13 +49,6 @@ export const pulls: { read: UqOutConverter | string, uqIn: UqIn }[] = [
     */
     { read: sqls.readProduct, uqIn: ProductX },
     /*
-    // { read: sqls.readPack, uqIn: ProductPackX },
-    // { read: sqls.readPrice, uqIn: PriceX },
-    // { read: sqls.readProductSalesRegion, uqIn: ProductSalesRegion },
-    // { read: sqls.readProductLegallyProhibited, uqIn: ProductLegallyProhibited },
-
-    { read: sqls.readProductProductCategory, uqIn: ProductProductCategory },
-
     // 客户和客户单位基本信息
     { read: sqls.readOrganization, uqIn: Organization },
     { read: sqls.readCustomer, uqIn: Customer },

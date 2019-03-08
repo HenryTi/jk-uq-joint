@@ -22,7 +22,9 @@ export const Customer: UqInTuid = {
         try {
             // data["CreateTime"] = data["CreateTime"] && data["CreateTime"].getTime();
             await joint.uqIn(Customer, _.pick(data, ["ID", "Name", "FirstName", "LastName", "Gender", "BirthDate", 'CreateTime']));
-            await joint.uqIn(OrganizationCustomer, _.pick(data, ["ID", "OrganizationID"]));
+            let promises: PromiseLike<void>[] = [];
+            promises.push(joint.uqIn(OrganizationCustomer, _.pick(data, ["ID", "OrganizationID"])));
+            let customerId = data["ID"];
             let props: { name: string, type: string }[] = [
                 { name: 'Tel1', type: 'tel' },
                 { name: 'Tel2', type: 'tel' },
@@ -36,9 +38,9 @@ export const Customer: UqInTuid = {
                 let { name, type } = prop;
                 let v = data[name];
                 if (!v) continue;
-                let { ID } = data;
-                await joint.uqIn(CustomerContact, { 'ID': ID + '-' + v, 'CustomerID': ID, 'TypeID': type, 'Content': v });
+                promises.push(joint.uqIn(CustomerContact, { 'ID': customerId + '-' + v, 'CustomerID': customerId, 'TypeID': type, 'Content': v }));
             }
+            await Promise.all(promises);
             return true;
         } catch (error) {
             console.error(error);

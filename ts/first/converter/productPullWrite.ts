@@ -2,6 +2,7 @@ import { Joint, UqIn } from "../../uq-joint";
 import * as _ from 'lodash';
 import { ProductX, ProductChemical, ProductPackX, PriceX, ProductSalesRegion, ProductLegallyProhibited } from "../../settings/in/product";
 import { execSql } from "../../mssql/tools";
+import { ProductProductCategory } from "../../settings/in/productCategory";
 
 export async function productPullWrite(joint: Joint, data: any) {
 
@@ -19,30 +20,41 @@ export async function productPullWrite(joint: Joint, data: any) {
 export async function productFirstPullWrite(joint: Joint, data: any) {
 
     try {
-        // await joint.uqIn(Product, _.pick(data, ["ID", "BrandID", "ProductNumber", "Description", "DescriptionC"]));
         await joint.uqIn(ProductX, _.pick(data, ["ID", "ProductID", "BrandID", "ProductNumber", "Description", "DescriptionC", "IsValid"]));
-        await joint.uqIn(ProductChemical, _.pick(data, ["ID", "ChemicalID", "Purity", "CAS", "MolecularFomula", "MolecularWeight"]));
+
+        let promises: PromiseLike<any>[] = [];
+        promises.push(joint.uqIn(ProductChemical, _.pick(data, ["ID", "ChemicalID", "Purity", "CAS", "MolecularFomula", "MolecularWeight"])));
         let productId = data["ProductID"];
 
+        let promisesSql: PromiseLike<any>[] = [];
         let packsql = `
             select  j.jkcat as ID, j.jkcat as PackingID, j.jkid as ProductID, j.PackNr, j.Quantity, j.Unit as Name
                     from zcl_mess.dbo.jkcat j
                     where j.jkid = @ProductID and j.unit in ( select unitE from opdata.dbo.supplierPackingUnit )
                     order by j.jkcat`;
-        let packResult = await execSql(packsql, [{ 'name': 'ProductID', 'value': productId }]);
-        await pushRecordset(joint, packResult, ProductPackX);
+        promisesSql.push(execSql(packsql, [{ 'name': 'ProductID', 'value': productId }]));
 
         let readProductSalesRegion = `
             select ExCID as ID, jkid as ProductID, market_code as SalesRegionID, IsValid
                 from zcl_mess.dbo.ProductsLocation where jkid = @ProductID order by ExCID`;
-        let productSalesRegionResult = await execSql(readProductSalesRegion, [{ 'name': 'ProductID', 'value': productId }]);
-        await pushRecordset(joint, productSalesRegionResult, ProductSalesRegion);
+        promisesSql.push(execSql(readProductSalesRegion, [{ 'name': 'ProductID', 'value': productId }]));
 
         let readProductLegallyProhibited = `
             select jkid + market_code as ID, jkid as ProductID, market_code as SalesRegionID, left(description, 20) as Reason
                 from zcl_mess.dbo.sc_safe_ProdCache where jkid = @ProductID`;
-        let productLegallyResult = await execSql(readProductLegallyProhibited, [{ 'name': 'ProductID', 'value': productId }]);
-        await pushRecordset(joint, productLegallyResult, ProductLegallyProhibited);
+        promisesSql.push(execSql(readProductLegallyProhibited, [{ 'name': 'ProductID', 'value': productId }]));
+
+        let readProductProductCategory = `
+            select ID, ID as SaleProductProductCategoryID, SaleProductID, ProductCategoryID, IsValid
+                    from opdata.dbo.SaleProductProductCategory where SaleProductID = @ProductID order by ID`;
+        promisesSql.push(execSql(readProductProductCategory, [{ 'name': 'ProductID', 'value': productId }]));
+
+        let sqlResult = await Promise.all(promisesSql);
+        promises.push(pushRecordset(joint, sqlResult[0], ProductPackX));
+        promises.push(pushRecordset(joint, sqlResult[1], ProductSalesRegion));
+        promises.push(pushRecordset(joint, sqlResult[2], ProductLegallyProhibited));
+        promises.push(pushRecordset(joint, sqlResult[3], ProductProductCategory));
+        await Promise.all(promises);
         return true;
     } catch (error) {
         console.error(error);
@@ -70,19 +82,24 @@ export async function packFirstPullWrite(joint: Joint, data: any) {
     }
 }
 
-async function pushRecordset(joint: Joint, result: any, uqIn: UqIn) {
+function pushRecordset(joint: Joint, result: any, uqIn: UqIn) {
     if (result !== undefined) {
         let { recordset } = result;
         let { firstPullWrite, pullWrite } = uqIn;
+        let promises: PromiseLike<any>[] = [];
         for (var i = 0; i < recordset.length; i++) {
             let row = recordset[i];
             if (firstPullWrite) {
-                await firstPullWrite(joint, row);
+                promises.push(firstPullWrite(joint, row));
+                // await firstPullWrite(joint, row);
             } else if (pullWrite) {
-                await pullWrite(joint, row);
+                promises.push(pullWrite(joint, row));
+                // await pullWrite(joint, row);
             } else {
-                await joint.uqIn(uqIn, row);
+                promises.push(joint.uqIn(uqIn, row));
+                // await joint.uqIn(uqIn, row);
             }
         }
+        return Promise.all(promises);
     }
 }
