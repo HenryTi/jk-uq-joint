@@ -11,5 +11,13 @@
     "centerhost": "101.200.46.56",
     "firstMaxRows": 100000000,
     "promiseSize": 60,
-    "lastjkid": "A011315565"
+    "lastjkid": "A011315565",
+    "mssqlJkConn": {
+        "user": "ERP_LOGIN",
+        "password": "BlW_M34wdx_)(*20",
+        "server": "211.5.7.250",
+        "database": "ProdData",
+        "port": 1433,
+        "parseJSON": true
+    }
 }
