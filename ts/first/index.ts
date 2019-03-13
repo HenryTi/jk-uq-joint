@@ -4,10 +4,10 @@ import { pulls, UqOutConverter } from "./pulls";
 import { uqOutRead } from "./converter/uqOutRead";
 import { host } from "../uq-joint/tool/host";
 import { centerApi } from "../uq-joint/tool/centerApi";
-import { getOpenApi } from "../uq-joint/tool/openApi";
-import { uqs } from "../settings/uqs";
 
-const maxRows = 1000;
+const maxRows = 10000;
+const promiseSize = 60;
+
 (async function () {
     console.log(process.env.NODE_ENV);
     await host.start();
@@ -15,6 +15,8 @@ const maxRows = 1000;
 
     let joint = new Joint(settings);
     console.log('start');
+    let start = new Date();
+    let priorEnd = start;
     for (var i = 0; i < pulls.length; i++) {
         let { read, uqIn } = pulls[i];
         let { entity, pullWrite, firstPullWrite } = uqIn;
@@ -29,7 +31,7 @@ const maxRows = 1000;
             readFunc = read as UqOutConverter;
         }
 
-        let maxId = '', count = 0, primiseCount = 0;
+        let maxId = '', count = 0;
         let promises: PromiseLike<any>[] = [];
         for (; ;) {
             count++;
@@ -44,45 +46,30 @@ const maxRows = 1000;
 
             try {
                 if (firstPullWrite !== undefined) {
-                    // promises.push(firstPullWrite(joint, data));
-                    await firstPullWrite(joint, data);
+                    promises.push(firstPullWrite(joint, data));
                 } else if (pullWrite !== undefined) {
-                    // promises.push(pullWrite(joint, data));
-                    await pullWrite(joint, data);
+                    promises.push(pullWrite(joint, data));
                 } else {
-                    // promises.push(joint.uqIn(uqIn, data));
-                    await joint.uqIn(uqIn, data);
+                    promises.push(joint.uqIn(uqIn, data));
                 }
                 maxId = lastId;
             } catch (error) {
                 console.log(error);
             }
-            /*
-            if (promises.length >= 10){
+
+            if (promises.length >= promiseSize) {
                 await Promise.all(promises);
                 promises.splice(0);
+                let t = new Date().getTime();
+                let sum = Math.round((t - start.getTime()) / 1000);
+                let each = Math.round((t - priorEnd.getTime()) / 1000);
+                console.log('count = ' + count + ' each: ' + each + '; sum: ' + sum);
+                priorEnd = new Date();
             }
-            */
         }
-        // await Promise.all(promises);
-        // promises.splice(0);
+        await Promise.all(promises);
+        promises.splice(0);
         console.log(entity + " end   at " + Date.now().toString());
     };
     process.exit();
 })();
-/*
-(async function () {
-
-    console.log(process.env.NODE_ENV);
-    await host.start();
-    centerApi.initBaseUrl(host.centerUrl);
-
-    let openApi = await getOpenApi(uqs.jkProduct, 24);
-    let promises: PromiseLike<number>[] = [];
-    for (let i = 0; i < 100; i++) {
-        promises.push(openApi.getTuidVId("ProductX"));
-    }
-    let result = await Promise.all(promises);
-    debugger;
-})();
-*/

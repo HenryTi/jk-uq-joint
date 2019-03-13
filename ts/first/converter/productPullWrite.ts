@@ -82,7 +82,7 @@ export async function packFirstPullWrite(joint: Joint, data: any) {
     }
 }
 
-function pushRecordset(joint: Joint, result: any, uqIn: UqIn) {
+export function pushRecordset(joint: Joint, result: any, uqIn: UqIn) {
     if (result !== undefined) {
         let { recordset } = result;
         let { firstPullWrite, pullWrite } = uqIn;

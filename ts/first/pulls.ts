@@ -37,16 +37,14 @@ export const pulls: { read: UqOutConverter | string, uqIn: UqIn }[] = [
     { read: sqls.readSalesRegionWarehouse, uqIn: SalesRegionWarehouse },
 
     // 产品相关的数据表
+    // 品牌
     { read: sqls.readBrand, uqIn: Brand },
-    { read: sqls.readBrandSalesRegion, uqIn: BrandSalesRegion },
-    { read: sqls.readBrandDeliveryTime, uqIn: BrandDeliveryTime },
-
     // 目录树
     { read: sqls.readProductCategory, uqIn: ProductCategory },
     { read: sqls.readProductCategoryLanguage, uqIn: ProductCategoryLanguage },
-
     { read: sqls.readChemical, uqIn: Chemical },
     */
+    // 产品
     { read: sqls.readProduct, uqIn: ProductX },
     /*
     // 客户和客户单位基本信息

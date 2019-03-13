@@ -9,7 +9,7 @@ import { faceSchemas } from "./tool/faceSchemas";
 import { Uqs } from "./uq/uq";
 import { uqPullRead } from "../first/converter/uqOutRead";
 
-const interval = 60 * 1000;
+const interval = 3 * 1000;
 
 export class Joint {
     protected uqs: Uqs;
@@ -36,7 +36,7 @@ export class Joint {
 
     async start() {
         await this.uqs.init();
-        setTimeout(this.tick, 3 * 1000);
+        setTimeout(this.tick, interval);
     }
 
     private tick = async () => {
@@ -303,19 +303,4 @@ export class Joint {
             }
         }
     }
-
-    /*
-    async loadTuid(usq: string, tuid: string, id: number): Promise<any> {
-        let openApi = await this.getOpenApi(usq);
-        let ret = await openApi.tuid(this.unit, id, tuid, undefined);
-        if (ret[tuid] && ret[tuid].length === 1)
-            return ret[tuid][0];
-    }
-
-    async tuidMapFromUsq(tuid: string, value: any): Promise<string | number> {
-
-        let mapFromUsq = new MapFromUsq(this.usqInDict, this.unit);
-        return await mapFromUsq.tuidId(tuid, value);
-    }
-    */
 }

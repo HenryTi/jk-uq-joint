@@ -8,62 +8,7 @@ const chemical_1 = require("./chemical");
 const promotion_1 = require("./promotion");
 const customer_1 = require("./customer");
 const productCategory_1 = require("./productCategory");
-/*
-const _in = {
-    'Language': Lanugage,
-    'Country': Country,
-    'Province': Province,
-    'City': City,
-    'County': County,
-    'Address': Address,
-    'Currency': Currency,
-    'SalesRegion': SalesRegion,
-    'PackType': PackType,
-    'PackTypeMapToStandard': PackTypeMapToStandard,
-    'PackTypeStandard': PackTypeStandard,
-
-    'Chemical': Chemical,
-
-    'Brand': Brand,
-    'BrandSalesRegion': BrandSalesRegion,
-    'BrandDeliveryTime': BrandDeliveryTime,
-
-    'Product': Product,
-    'ProductChemical': ProductChemical,
-    'ProductSalesRegion': ProductSalesRegion,
-    'ProductLegallyProhibited': ProductLegallyProhibited,
-
-    'ProductPackType': ProductPackType,
-    'ProductPack': ProductPack,
-    'Price': Price,
-
-    'ProductX': ProductX,
-    'ProductPackX': ProductPackX,
-    'PriceX': PriceX,
-
-    'ProductCategory': ProductCategory,
-    'ProductCategoryLanguage': ProductCategoryLanguage,
-    'ProductProductCategory': ProductProductCategory,
-
-    'Warehouse': Warehouse,
-    'SalesRegionWarehouse': SalesRegionWarehouse,
-
-    'Promotion': Promotion,
-    'PromotionSalesRegion': PromotionSalesRegion,
-    'PromotionLanguage': PromotionLanguage,
-    'PromotionPack': PromotionPack,
-
-    'Customer': Customer,
-    'Organization': Organization,
-    'OrganizationCustomer': OrganizationCustomer,
-    'CustomerContact': CustomerContact,
-    'CustomerContacts': CustomerContacts,
-    // 'CustomerInvoiceContact': CustomerInvoiceContact,
-    'Contact': Contact,
-}
-
-export default _in;
-*/
+const customerDiscount_1 = require("./customerDiscount");
 const uqIns = [
     salesRegion_1.Language,
     Address_1.Country,
@@ -80,18 +25,13 @@ const uqIns = [
     product_1.Brand,
     product_1.BrandSalesRegion,
     product_1.BrandDeliveryTime,
-    product_1.Product,
-    product_1.ProductChemical,
-    product_1.ProductSalesRegion,
-    product_1.ProductLegallyProhibited,
-    /*
-    ProductPackType,
-    ProductPack,
-    Price,
-    */
     product_1.ProductX,
+    product_1.InvalidProduct,
+    product_1.ProductChemical,
     product_1.ProductPackX,
     product_1.PriceX,
+    product_1.ProductSalesRegion,
+    product_1.ProductLegallyProhibited,
     productCategory_1.ProductCategory,
     productCategory_1.ProductCategoryLanguage,
     productCategory_1.ProductProductCategory,
@@ -106,8 +46,10 @@ const uqIns = [
     customer_1.OrganizationCustomer,
     customer_1.CustomerContact,
     customer_1.CustomerContacts,
-    // 'CustomerInvoiceContact': CustomerInvoiceContact,
     customer_1.Contact,
+    customerDiscount_1.Agreement,
+    customerDiscount_1.CustomerDiscount,
+    customerDiscount_1.OrganizationDiscount,
 ];
 exports.default = uqIns;
 //# sourceMappingURL=index.js.map
