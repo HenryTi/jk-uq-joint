@@ -8,5 +8,8 @@
         "password": "jk@20180402!@#",
         "multipleStatements": true
     },
-    "centerhost": "101.200.46.56"
+    "centerhost": "101.200.46.56",
+    "firstMaxRows": 100000000,
+    "promiseSize": 60,
+    "lastjkid": "A011315565"
 }

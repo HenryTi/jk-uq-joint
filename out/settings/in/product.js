@@ -27,7 +27,7 @@ exports.Brand = {
             let readBrandDeliveryTime = `
                 select ID, BrandCode as BrandID, SaleRegionID as SalesRegionID, MinValue, MaxValue, Unit
                         , case [Restrict] when 'NoRestrict' then 0 else 1 end as [Restrict]
-                        from zcl_mess.dbo.BrandDeliverTime where BrandCode = @BrandID and isValid = 1 order by id`;
+                        from zcl_mess.dbo.BrandDeliverTime where BrandCode = @BrandID and isValid = 1`;
             promisesSql.push(tools_1.execSql(readBrandDeliveryTime, [{ 'name': 'BrandID', 'value': brandId }]));
             let sqlResult = await Promise.all(promisesSql);
             let promises = [];

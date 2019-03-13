@@ -1,3 +1,4 @@
+import config from 'config';
 import { settings } from "../settings";
 import { Joint } from '../uq-joint';
 import { pulls, UqOutConverter } from "./pulls";
@@ -5,8 +6,8 @@ import { uqOutRead } from "./converter/uqOutRead";
 import { host } from "../uq-joint/tool/host";
 import { centerApi } from "../uq-joint/tool/centerApi";
 
-const maxRows = 10000;
-const promiseSize = 60;
+const maxRows = config.get<number>("firstMaxRows");
+const promiseSize = config.get<number>("promiseSize");
 
 (async function () {
     console.log(process.env.NODE_ENV);

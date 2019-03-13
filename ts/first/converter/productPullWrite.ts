@@ -36,7 +36,7 @@ export async function productFirstPullWrite(joint: Joint, data: any) {
 
         let readProductSalesRegion = `
             select ExCID as ID, jkid as ProductID, market_code as SalesRegionID, IsValid
-                from zcl_mess.dbo.ProductsLocation where jkid = @ProductID order by ExCID`;
+                from zcl_mess.dbo.ProductsLocation where jkid = @ProductID`;
         promisesSql.push(execSql(readProductSalesRegion, [{ 'name': 'ProductID', 'value': productId }]));
 
         let readProductLegallyProhibited = `
@@ -72,7 +72,7 @@ export async function packFirstPullWrite(joint: Joint, data: any) {
             select jp.ExCID as ID, jp.jkcat as PackingID, j.jkid as ProductID
                     , jp.market_code as SalesRegionID, jp.Price, jp.Currency, jp.Expire_Date, JP.Discontinued
                     from zcl_mess.dbo.jkcat_price jp inner join zcl_mess.dbo.jkcat j on jp.jkcat = j.jkcat
-                    where jp.jkcat = @PackingID order by jp.jkcat`;
+                    where jp.jkcat = @PackingID`;
         let priceResult = await execSql(pricesql, [{ 'name': 'PackingID', 'value': packId }]);
         await pushRecordset(joint, priceResult, PriceX);
         return true;
