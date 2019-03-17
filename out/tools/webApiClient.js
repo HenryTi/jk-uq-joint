@@ -1,8 +1,11 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const config_1 = __importDefault(require("config"));
 const fetch_1 = require("../uq-joint/tool/fetch");
-// const webApiBaseUrl = "http://211.5.7.253/mvc/api/";
-const webApiBaseUrl = "http://localhost:38311/api/";
+const webApiBaseUrl = config_1.default.get("busOutUrl");
 class WebApiClient extends fetch_1.Fetch {
     constructor() {
         super(webApiBaseUrl);

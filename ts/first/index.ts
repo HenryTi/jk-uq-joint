@@ -16,12 +16,12 @@ const promiseSize = config.get<number>("promiseSize");
 
     let joint = new Joint(settings);
     console.log('start');
-    let start = new Date();
+    let start = Date.now();
     let priorEnd = start;
     for (var i = 0; i < pulls.length; i++) {
         let { read, uqIn } = pulls[i];
         let { entity, pullWrite, firstPullWrite } = uqIn;
-        console.log(entity + " start at " + Date.now());
+        console.log(entity + " start at " + new Date());
         let readFunc: UqOutConverter;
         if (typeof (read) === 'string') {
             readFunc = async function (maxId: string): Promise<{ lastId: string, data: any }> {
@@ -40,7 +40,8 @@ const promiseSize = config.get<number>("promiseSize");
             try {
                 ret = await readFunc(maxId);
             } catch (error) {
-                break;
+                console.error(error);
+                continue;
             }
             if (ret === undefined || count > maxRows) break;
             let { lastId, data } = ret;
@@ -61,16 +62,16 @@ const promiseSize = config.get<number>("promiseSize");
             if (promises.length >= promiseSize) {
                 await Promise.all(promises);
                 promises.splice(0);
-                let t = new Date().getTime();
-                let sum = Math.round((t - start.getTime()) / 1000);
-                let each = Math.round((t - priorEnd.getTime()) / 1000);
+                let t = Date.now();
+                let sum = Math.round((t - start) / 1000);
+                let each = Math.round((t - priorEnd) / 1000);
                 console.log('count = ' + count + ' each: ' + each + '; sum: ' + sum);
-                priorEnd = new Date();
+                priorEnd = t;
             }
         }
         await Promise.all(promises);
         promises.splice(0);
-        console.log(entity + " end   at " + Date.now().toString());
+        console.log(entity + " end   at " + new Date());
     };
     process.exit();
 })();

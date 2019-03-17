@@ -1,7 +1,7 @@
+import config from 'config';
 import { Fetch } from "../uq-joint/tool/fetch";
 
-// const webApiBaseUrl = "http://211.5.7.253/mvc/api/";
-const webApiBaseUrl = "http://localhost:38311/api/";
+const webApiBaseUrl = config.get<string>("busOutUrl");
 
 export class WebApiClient extends Fetch {
 
