@@ -11,14 +11,15 @@
     "centerhost": "101.200.46.56",
     "firstMaxRows": 3000000,
     "promiseSize": 60,
-    "lastjkid": "J60E925650",
+    "lastjkid": "K16W33278",
     "mssqlJkConn": {
         "user": "ERP_LOGIN",
         "password": "BlW_M34wdx_)(*20",
         "server": "211.5.7.250",
         "database": "ProdData",
         "port": 1433,
-        "parseJSON": true
+        "parseJSON": true,
+        "pool.max": 10
     },
     "busOutUrl": "http://localhost:38311/api/"
 }

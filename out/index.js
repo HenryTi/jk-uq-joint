@@ -18,6 +18,7 @@ const uq_joint_1 = require("./uq-joint");
 const settings_1 = require("./settings");
 const host_1 = require("./uq-joint/tool/host");
 const centerApi_1 = require("./uq-joint/tool/centerApi");
+const tools_1 = require("./mssql/tools");
 (async function () {
     console.log(process.env.NODE_ENV);
     await host_1.host.start();
@@ -27,6 +28,7 @@ const centerApi_1 = require("./uq-joint/tool/centerApi");
         console.log("mysql connection must defined in config/default.json or config/production.json");
         return;
     }
+    await tools_1.initMssqlPool();
     let app = express_1.default();
     app.use((err, req, res, next) => {
         res.status(err.status || 500);

@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const config_1 = __importDefault(require("config"));
 const lastjkid = config_1.default.get("lastjkid");
+const promiseSize = config_1.default.get("promiseSize");
 exports.sqls = {
     //==============================================================
     //=========================== Common ===========================
@@ -97,7 +98,7 @@ select top 1 ID, BrandCode as BrandID, SaleRegionID as SalesRegionID, MinValue, 
         , case [Restrict] when 'NoRestrict' then 0 else 1 end as [Restrict]
         from zcl_mess.dbo.BrandDeliverTime where id > @iMaxId and isValid = 1 order by id`,
     readProduct: `
-select top 1 p.jkid as ID, p.jkid as ProductID, p.manufactory as BrandID, p.originalId as ProductNumber
+select top ${promiseSize} p.jkid as ID, p.jkid as ProductID, p.manufactory as BrandID, p.originalId as ProductNumber
         , isnull(p.Description, 'N/A') as Description, p.DescriptionC
         , pc.chemid as ChemicalID, zcl_mess.dbo.fc_recas(p.CAS) as CAS, p.MF as MolecularFomula, p.MW as molecularWeight, p.Purity
         , p.[Restrict], p.LotNumber as MdlNumber, case when (select count(pv.jkid) from zcl_mess.dbo.Invalid_Products pv where pv.jkid = p.jkid) > 0 then 0 else 1 end as IsValid

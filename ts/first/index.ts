@@ -5,6 +5,7 @@ import { pulls, UqOutConverter } from "./pulls";
 import { uqOutRead } from "./converter/uqOutRead";
 import { host } from "../uq-joint/tool/host";
 import { centerApi } from "../uq-joint/tool/centerApi";
+import { initMssqlPool } from '../mssql/tools';
 
 const maxRows = config.get<number>("firstMaxRows");
 const promiseSize = config.get<number>("promiseSize");
@@ -13,6 +14,8 @@ const promiseSize = config.get<number>("promiseSize");
     console.log(process.env.NODE_ENV);
     await host.start();
     centerApi.initBaseUrl(host.centerUrl);
+
+    await initMssqlPool();
 
     let joint = new Joint(settings);
     console.log('start');
@@ -44,29 +47,33 @@ const promiseSize = config.get<number>("promiseSize");
                 continue;
             }
             if (ret === undefined || count > maxRows) break;
-            let { lastId, data } = ret;
+            let { lastId, data: rows } = ret;
 
-            try {
-                if (firstPullWrite !== undefined) {
-                    promises.push(firstPullWrite(joint, data));
-                } else if (pullWrite !== undefined) {
-                    promises.push(pullWrite(joint, data));
-                } else {
-                    promises.push(joint.uqIn(uqIn, data));
+            rows.forEach(e => {
+                try {
+                    if (firstPullWrite !== undefined) {
+                        promises.push(firstPullWrite(joint, e));
+                    } else if (pullWrite !== undefined) {
+                        promises.push(pullWrite(joint, e));
+                    } else {
+                        promises.push(joint.uqIn(uqIn, e));
+                    }
+                    maxId = lastId;
+                } catch (error) {
+                    console.log(error);
                 }
-                maxId = lastId;
-            } catch (error) {
-                console.log(error);
-            }
+            });
 
             if (promises.length >= promiseSize) {
+                let before = Date.now();
                 await Promise.all(promises);
                 promises.splice(0);
-                let t = Date.now();
-                let sum = Math.round((t - start) / 1000);
-                let each = Math.round((t - priorEnd) / 1000);
-                console.log('count = ' + count + ' each: ' + each + '; sum: ' + sum);
-                priorEnd = t;
+                let after = Date.now();
+                let sum = Math.round((after - start) / 1000);
+                let each = Math.round(after - priorEnd);
+                let eachSubmit = Math.round(after - before);
+                console.log('count = ' + count + ' each: ' + each + ' sum: ' + sum + ' eachSubmit: ' + eachSubmit + 'ms');
+                priorEnd = after;
             }
         }
         await Promise.all(promises);

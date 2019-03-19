@@ -6,6 +6,7 @@ import { Joint } from './uq-joint';
 import { settings } from './settings';
 import { host } from './uq-joint/tool/host';
 import { centerApi } from './uq-joint/tool/centerApi';
+import { initMssqlPool } from './mssql/tools';
 
 (async function () {
     console.log(process.env.NODE_ENV);
@@ -17,6 +18,7 @@ import { centerApi } from './uq-joint/tool/centerApi';
         console.log("mysql connection must defined in config/default.json or config/production.json");
         return;
     }
+    await initMssqlPool();
     let app = express();
 
     app.use((err:any, req:Request, res:Response, next:NextFunction) => {

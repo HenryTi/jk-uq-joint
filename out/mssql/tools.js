@@ -10,27 +10,29 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mssql = __importStar(require("mssql"));
 const connection_1 = require("./connection");
 let __pool;
+async function initMssqlPool() {
+    __pool = await new mssql.ConnectionPool(connection_1.conn).connect();
+}
+exports.initMssqlPool = initMssqlPool;
+/*
 async function getPool() {
     if (__pool === undefined) {
-        return __pool = await new mssql.ConnectionPool(connection_1.conn).connect();
+        return __pool = await new mssql.ConnectionPool(conn).connect();
     }
     else {
         return __pool;
     }
+
 }
+*/
 async function execSql(sql, params) {
     try {
-        let pool = await getPool();
-        const request = pool.request();
+        const request = __pool.request();
         if (params !== undefined) {
             for (let p of params) {
                 let { name, value } = p;
                 request.input(name, value);
             }
-            /*
-            params.forEach(element => {
-                request.input(element.name, element.value);
-            });*/
         }
         const result = await request.query(sql);
         return result;
