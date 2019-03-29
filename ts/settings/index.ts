@@ -3,6 +3,7 @@ import { Settings } from "../uq-joint";
 //import pull from "./pull";
 import { bus } from "./bus";
 import uqIns from "./in";
+import { uqPullRead } from "../first/converter/uqOutRead";
 //import push from "./push";
 
 export const settings: Settings = {
@@ -18,4 +19,5 @@ export const settings: Settings = {
     //pull: pull,
     //push: push,
     bus: bus,
+    pullReadFromSql: uqPullRead
 }

@@ -61,4 +61,5 @@ export interface Settings {
     uqIns: UqIn[];
     uqOuts: UqOut[];
     bus?: UqBus[];
+    pullReadFromSql?: (sql: string, queue: number) => Promise<{ queue: number, data: any }>;
 }
