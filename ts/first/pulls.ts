@@ -42,10 +42,10 @@ export const pulls: { read: UqOutConverter | string, uqIn: UqIn }[] = [
     // 目录树
     { read: sqls.readProductCategory, uqIn: ProductCategory },
     { read: sqls.readProductCategoryLanguage, uqIn: ProductCategoryLanguage },
-    { read: sqls.readChemical, uqIn: Chemical },
     */
+    { read: sqls.readChemical, uqIn: Chemical },
     // 产品
-    { read: sqls.readProduct, uqIn: ProductX },
+    // { read: sqls.readProduct, uqIn: ProductX },
     /*
     // 客户和客户单位基本信息
     { read: sqls.readOrganization, uqIn: Organization },

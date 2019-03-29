@@ -38,7 +38,6 @@ const promiseSize = config.get<number>("promiseSize");
         let maxId = '', count = 0;
         let promises: PromiseLike<any>[] = [];
         for (; ;) {
-            count++;
             let ret: { lastId: string, data: any };
             try {
                 ret = await readFunc(maxId);
@@ -58,15 +57,20 @@ const promiseSize = config.get<number>("promiseSize");
                     } else {
                         promises.push(joint.uqIn(uqIn, e));
                     }
-                    maxId = lastId;
+                    count++;
                 } catch (error) {
                     console.log(error);
                 }
             });
+            maxId = lastId;
 
             if (promises.length >= promiseSize) {
                 let before = Date.now();
-                await Promise.all(promises);
+                try {
+                    await Promise.all(promises);
+                } catch (error) {
+                    debugger;
+                }
                 promises.splice(0);
                 let after = Date.now();
                 let sum = Math.round((after - start) / 1000);

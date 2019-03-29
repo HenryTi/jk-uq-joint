@@ -12,6 +12,7 @@
     "firstMaxRows": 3000000,
     "promiseSize": 60,
     "lastjkid": "K16W33278",
+    "lastchemid": 208571,
     "mssqlJkConn": {
         "user": "ERP_LOGIN",
         "password": "BlW_M34wdx_)(*20",

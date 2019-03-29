@@ -8,7 +8,6 @@ const database_1 = require("./db/mysql/database");
 const createMapTable_1 = require("./tool/createMapTable");
 const faceSchemas_1 = require("./tool/faceSchemas");
 const uq_1 = require("./uq/uq");
-const uqOutRead_1 = require("../first/converter/uqOutRead");
 const interval = 3 * 1000;
 class Joint {
     constructor(settings) {
@@ -71,9 +70,9 @@ class Joint {
     }
     */
     async scanIn() {
-        let { uqIns } = this.settings;
+        let { uqIns, pullReadFromSql } = this.settings;
         if (uqIns === undefined)
-            return;
+            return; //
         for (let uqIn of uqIns) {
             let { uq, entity, pull, pullWrite } = uqIn;
             let queueName = uq + ':' + entity;
@@ -95,7 +94,12 @@ class Joint {
                             ret = await pull(this, uqIn, queue);
                             break;
                         case 'string':
-                            ret = await uqOutRead_1.uqPullRead(pull, queue);
+                            if (pullReadFromSql === undefined) {
+                                let err = 'pullReadFromSql should be defined in settings!';
+                                console.error(err);
+                                throw err;
+                            }
+                            ret = await pullReadFromSql(pull, queue);
                             break;
                     }
                     if (ret === undefined)

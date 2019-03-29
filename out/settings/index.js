@@ -7,6 +7,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 //import pull from "./pull";
 const bus_1 = require("./bus");
 const in_1 = __importDefault(require("./in"));
+const uqOutRead_1 = require("../first/converter/uqOutRead");
 //import push from "./push";
 exports.settings = {
     name: 'j&k_uq_joint',
@@ -21,5 +22,6 @@ exports.settings = {
     //pull: pull,
     //push: push,
     bus: bus_1.bus,
+    pullReadFromSql: uqOutRead_1.uqPullRead
 };
 //# sourceMappingURL=index.js.map

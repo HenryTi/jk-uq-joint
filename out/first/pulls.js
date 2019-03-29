@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const sqls_1 = require("./converter/sqls");
-const product_1 = require("../settings/in/product");
+const chemical_1 = require("../settings/in/chemical");
 /** */
 exports.pulls = [
     /*
@@ -25,9 +25,7 @@ exports.pulls = [
     // 目录树
     { read: sqls.readProductCategory, uqIn: ProductCategory },
     { read: sqls.readProductCategoryLanguage, uqIn: ProductCategoryLanguage },
-    { read: sqls.readChemical, uqIn: Chemical },
     */
-    // 产品
-    { read: sqls_1.sqls.readProduct, uqIn: product_1.ProductX },
+    { read: sqls_1.sqls.readChemical, uqIn: chemical_1.Chemical },
 ];
 //# sourceMappingURL=pulls.js.map

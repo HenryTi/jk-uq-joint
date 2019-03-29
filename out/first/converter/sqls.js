@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const config_1 = __importDefault(require("config"));
 const lastjkid = config_1.default.get("lastjkid");
+const lastchemid = config_1.default.get("lastchemid");
 const promiseSize = config_1.default.get("promiseSize");
 exports.sqls = {
     //==============================================================
@@ -60,10 +61,10 @@ select top 1 code as ID, Countries, ChineseName, parentCode
     //=========================== chemical ===========================
     //==============================================================
     readChemical: `
-select top 1
+select top ${promiseSize}
     chemID as ID, cas, Description, DescriptionC, molWeight, molFomula, mdlNumber
     from opdata.dbo.sc_chemical
-    where reliability = 0 and chemID > @iMaxId and chemID > 111014  order by chemID
+    where reliability = 0 and chemID > @iMaxId and chemID > ${lastchemid}  order by chemID
 `,
     //==============================================================
     //=========================== customer ===========================

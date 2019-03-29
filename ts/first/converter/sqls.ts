@@ -1,6 +1,7 @@
 import config from 'config';
 
 const lastjkid = config.get<string>("lastjkid");
+const lastchemid = config.get<string>("lastchemid");
 const promiseSize = config.get<number>("promiseSize");
 
 export const sqls = {
@@ -67,10 +68,10 @@ select top 1 code as ID, Countries, ChineseName, parentCode
 //=========================== chemical ===========================
 //==============================================================
 readChemical: `
-select top 1
+select top ${promiseSize}
     chemID as ID, cas, Description, DescriptionC, molWeight, molFomula, mdlNumber
     from opdata.dbo.sc_chemical
-    where reliability = 0 and chemID > @iMaxId and chemID > 111014  order by chemID
+    where reliability = 0 and chemID > @iMaxId and chemID > ${lastchemid}  order by chemID
 `,
 
 //==============================================================
