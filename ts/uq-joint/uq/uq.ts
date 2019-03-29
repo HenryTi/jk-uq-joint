@@ -1,9 +1,10 @@
-import { Headers } from "node-fetch";
-import { Fetch } from "../tool/fetch";
+//import { Headers } from "node-fetch";
+//import { Fetch } from "../tool/fetch";
 import { centerApi } from "../tool/centerApi";
 import { host } from "../tool/host";
 import { TuidMain, Tuid } from "./tuid";
 import { Field, ArrFields } from "./field";
+import { OpenApi } from "../tool/openApi";
 
 const $unitx = '$$$/$unitx';
 
@@ -165,8 +166,8 @@ export class Uq {
         return await this.openApi.saveTuidArr(tuid, tuidArr, ownerId, body);
     }
 
-    async getTuidVId(ownerEntity:string):Promise<number> {
-        return await this.openApi.getTuidVId(ownerEntity);
+    async getTuidVId(ownerEntity:string, uniqueValue:any):Promise<number> {
+        return await this.openApi.getTuidVId(ownerEntity, uniqueValue);
     }
 
     async setMap(map:string, body:any) {
@@ -325,6 +326,7 @@ export interface UqProp extends Prop {
     tuidOwnerProp?: string;
 }
 
+/*
 interface BusMessage {
     id: number;
     face: string;
@@ -392,14 +394,14 @@ export class OpenApi extends Fetch {
         let ret = await this.post(`joint/tuid-arr/${tuid}/${owner}/${arr}`, data);
         return ret;
     }
-    async getTuidVId(tuid:string):Promise<number> {
+    async getTuidVId(tuid:string, uniqueValue:any):Promise<number> {
         let parts = tuid.split('.');
         let url:string;
         if (parts.length === 1)
             url = `joint/tuid-vid/${tuid}`;
         else
             url = `joint/tuid-arr-vid/${parts[0]}/${parts[1]}`;
-        let ret = await this.get(url);
+        let ret = await this.get(url, {u:uniqueValue});
         return ret;
     }
     async loadTuidMainValue(tuidName:string, id:number, allProps:boolean) {
@@ -434,3 +436,4 @@ export class OpenApi extends Fetch {
         return await this.get('open/entity/' + entityName);
     }
 }
+*/

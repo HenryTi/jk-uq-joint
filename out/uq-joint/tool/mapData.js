@@ -152,7 +152,7 @@ class MapToUq extends MapData {
         }
         if (ret.length === 0) {
             let openApi = await openApi_1.getOpenApi(uq, this.unit);
-            let vId = await openApi.getTuidVId(entity);
+            let vId = await openApi.getTuidVId(entity, value);
             await map_1.map(entity, vId, value);
             return vId;
         }

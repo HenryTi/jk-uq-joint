@@ -70,14 +70,24 @@ export class OpenApi extends Fetch {
         let ret = await this.post(`joint/tuid-arr/${tuid}/${owner}/${arr}`, data);
         return ret;
     }
-    async getTuidVId(tuid:string):Promise<number> {
+    async getTuidVId(tuid:string, uniqueValue:any):Promise<number> {
         let parts = tuid.split('.');
         let url:string;
         if (parts.length === 1)
             url = `joint/tuid-vid/${tuid}`;
         else
             url = `joint/tuid-arr-vid/${parts[0]}/${parts[1]}`;
-        let ret = await this.get(url);
+        let ret = await this.get(url, {u: uniqueValue});
+        return ret;
+    }
+    async loadTuidMainValue(tuidName:string, id:number, allProps:boolean) {
+        let ret = await this.post(`open/tuid-main/${tuidName}`, 
+            {unit:this.unit, id:id, all:allProps});
+        return ret;
+    }
+    async loadTuidDivValue(tuidName:string, divName:string, id:number, ownerId:number, allProps:boolean) {
+        let ret = await this.post(`open/tuid-div/${tuidName}/${divName}`, 
+            {unit:this.unit, id:id, ownerId:ownerId, all:allProps});
         return ret;
     }
     async scanSheet(sheet:string, scanStartId:number):Promise<any> {
@@ -92,6 +102,12 @@ export class OpenApi extends Fetch {
     }
     async delMap(map:string, data:any):Promise<void> {
         await this.post('joint/action-json/' + map + '$del$', data);
+    }
+    async loadEntities() {
+        return await this.get('open/entities/' + this.unit);
+    }
+    async schema(entityName: string) {
+        return await this.get('open/entity/' + entityName);
     }
 }
 

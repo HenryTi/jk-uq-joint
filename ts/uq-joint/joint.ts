@@ -199,7 +199,7 @@ export class Joint {
         }
         if (ret.length === 0) {
             let uq = await this.uqs.getUq(uqFullName);
-            let vId = await uq.getTuidVId(ownerEntity);
+            let vId = await uq.getTuidVId(ownerEntity, ownerVal);
             await map(ownerEntity, vId, ownerVal);
             return vId;
         }

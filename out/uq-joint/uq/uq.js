@@ -1,9 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const fetch_1 = require("../tool/fetch");
+//import { Headers } from "node-fetch";
+//import { Fetch } from "../tool/fetch";
 const centerApi_1 = require("../tool/centerApi");
 const host_1 = require("../tool/host");
 const tuid_1 = require("./tuid");
+const openApi_1 = require("../tool/openApi");
 const $unitx = '$$$/$unitx';
 class Uqs {
     constructor(unit) {
@@ -154,8 +156,8 @@ class Uq {
     async saveTuidArr(tuid, tuidArr, ownerId, body) {
         return await this.openApi.saveTuidArr(tuid, tuidArr, ownerId, body);
     }
-    async getTuidVId(ownerEntity) {
-        return await this.openApi.getTuidVId(ownerEntity);
+    async getTuidVId(ownerEntity, uniqueValue) {
+        return await this.openApi.getTuidVId(ownerEntity, uniqueValue);
     }
     async setMap(map, body) {
         await this.openApi.setMap(map, body);
@@ -173,7 +175,7 @@ class Uq {
             return;
         let { url, urlDebug } = uqUrl;
         url = await host_1.host.getUrlOrDebug(url, urlDebug);
-        this.openApi = new OpenApi(url, this.unit);
+        this.openApi = new openApi_1.OpenApi(url, this.unit);
     }
     buildTuids(tuids) {
         for (let i in tuids) {
@@ -305,29 +307,40 @@ class UqUnitx extends Uq {
         await this.openApi.writeBus(face, source, newQueue, body);
     }
 }
-class OpenApi extends fetch_1.Fetch {
-    constructor(baseUrl, unit) {
+/*
+interface BusMessage {
+    id: number;
+    face: string;
+    from: string;
+    body: string;
+}
+
+export class OpenApi extends Fetch {
+    protected unit:number;
+    constructor(baseUrl:string, unit:number) {
         super(baseUrl);
         this.unit = unit;
     }
-    appendHeaders(headers) {
+
+    protected appendHeaders(headers:Headers) {
         headers.append('unit', String(this.unit));
     }
-    async fresh(unit, stamps) {
+
+    async fresh(unit:number, stamps:any):Promise<any> {
         let ret = await this.post('open/fresh', {
             unit: unit,
             stamps: stamps
         });
         return ret;
     }
-    async bus(faces, faceUnitMessages) {
+    async bus(faces:string, faceUnitMessages:string) {
         let ret = await this.post('open/bus', {
             faces: faces,
             faceUnitMessages: faceUnitMessages,
         });
         return ret;
     }
-    async readBus(face, queue) {
+    async readBus(face:string, queue:number):Promise<BusMessage> {
         let ret = await this.post('open/joint-read-bus', {
             unit: this.unit,
             face: face,
@@ -335,7 +348,7 @@ class OpenApi extends fetch_1.Fetch {
         });
         return ret;
     }
-    async writeBus(face, from, queue, body) {
+    async writeBus(face:string, from:string, queue:number, body:string):Promise<BusMessage> {
         let ret = await this.post('open/joint-write-bus', {
             unit: this.unit,
             face: face,
@@ -345,7 +358,7 @@ class OpenApi extends fetch_1.Fetch {
         });
         return ret;
     }
-    async tuid(id, tuid, maps) {
+    async tuid(id: number, tuid:string, maps: string[]):Promise<any> {
         let ret = await this.post('open/tuid', {
             unit: this.unit,
             id: id,
@@ -354,51 +367,55 @@ class OpenApi extends fetch_1.Fetch {
         });
         return ret;
     }
-    async saveTuid(tuid, data) {
+    async saveTuid(tuid:string, data:any):Promise<any> {
         let ret = await this.post('joint/tuid/' + tuid, data);
         return ret;
     }
-    async saveTuidArr(tuid, arr, owner, data) {
+    async saveTuidArr(tuid:string, arr:string, owner:number, data:any):Promise<any> {
         let ret = await this.post(`joint/tuid-arr/${tuid}/${owner}/${arr}`, data);
         return ret;
     }
-    async getTuidVId(tuid) {
+    async getTuidVId(tuid:string, uniqueValue:any):Promise<number> {
         let parts = tuid.split('.');
-        let url;
+        let url:string;
         if (parts.length === 1)
             url = `joint/tuid-vid/${tuid}`;
         else
             url = `joint/tuid-arr-vid/${parts[0]}/${parts[1]}`;
-        let ret = await this.get(url);
+        let ret = await this.get(url, {u:uniqueValue});
         return ret;
     }
-    async loadTuidMainValue(tuidName, id, allProps) {
-        let ret = await this.post(`open/tuid-main/${tuidName}`, { unit: this.unit, id: id, all: allProps });
+    async loadTuidMainValue(tuidName:string, id:number, allProps:boolean) {
+        let ret = await this.post(`open/tuid-main/${tuidName}`,
+            {unit:this.unit, id:id, all:allProps});
         return ret;
     }
-    async loadTuidDivValue(tuidName, divName, id, ownerId, allProps) {
-        let ret = await this.post(`open/tuid-div/${tuidName}/${divName}`, { unit: this.unit, id: id, ownerId: ownerId, all: allProps });
+    async loadTuidDivValue(tuidName:string, divName:string, id:number, ownerId:number, allProps:boolean) {
+        let ret = await this.post(`open/tuid-div/${tuidName}/${divName}`,
+            {unit:this.unit, id:id, ownerId:ownerId, all:allProps});
         return ret;
     }
-    async scanSheet(sheet, scanStartId) {
+    async scanSheet(sheet:string, scanStartId:number):Promise<any> {
         let ret = await this.get('joint/sheet-scan/' + sheet + '/' + scanStartId);
         return ret;
     }
-    async action(action, data) {
+    async action(action:string, data:any):Promise<void> {
         await this.post('joint/action-json/' + action, data);
     }
-    async setMap(map, data) {
+    async setMap(map:string, data:any):Promise<void> {
         await this.post('joint/action-json/' + map + '$add$', data);
     }
-    async delMap(map, data) {
+    async delMap(map:string, data:any):Promise<void> {
         await this.post('joint/action-json/' + map + '$del$', data);
     }
+
     async loadEntities() {
         return await this.get('open/entities/' + this.unit);
     }
-    async schema(entityName) {
+
+    async schema(entityName: string) {
         return await this.get('open/entity/' + entityName);
     }
 }
-exports.OpenApi = OpenApi;
+*/ 
 //# sourceMappingURL=uq.js.map
