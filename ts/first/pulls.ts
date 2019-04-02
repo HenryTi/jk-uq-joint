@@ -5,7 +5,7 @@ import { ProductCategory, ProductCategoryLanguage, ProductProductCategory } from
 import { Country, Province, City, County } from "../settings/in/Address";
 import { Language, PackTypeStandard, Currency, SalesRegion, PackType } from "../settings/in/salesRegion";
 import { Chemical } from "../settings/in/chemical";
-import { Brand, BrandSalesRegion, BrandDeliveryTime, ProductPackX, PriceX, ProductSalesRegion, ProductLegallyProhibited, ProductX } from "../settings/in/product";
+import { Brand, BrandSalesRegion, BrandDeliveryTime, ProductPackX, PriceX, ProductSalesRegion, ProductLegallyProhibited, ProductX, ProductChemical } from "../settings/in/product";
 import { Warehouse, SalesRegionWarehouse } from "../settings/in/warehouse";
 import { Organization, Customer, Contact } from "../settings/in/customer";
 import { Promotion, PromotionLanguage, PromotionPack } from '../settings/in/promotion';
@@ -43,9 +43,10 @@ export const pulls: { read: UqOutConverter | string, uqIn: UqIn }[] = [
     { read: sqls.readProductCategory, uqIn: ProductCategory },
     { read: sqls.readProductCategoryLanguage, uqIn: ProductCategoryLanguage },
     */
-    { read: sqls.readChemical, uqIn: Chemical },
+    // { read: sqls.readChemical, uqIn: Chemical },
     // 产品
     // { read: sqls.readProduct, uqIn: ProductX },
+    { read: sqls.readProduct, uqIn: ProductChemical },
     /*
     // 客户和客户单位基本信息
     { read: sqls.readOrganization, uqIn: Organization },

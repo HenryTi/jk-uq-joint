@@ -181,7 +181,7 @@ exports.ProductChemical = {
             chemical: "^ChemicalID@Chemical",
             CAS: "^CAS",
             purity: "^Purity",
-            molecularFomula: "^MolecularFomular",
+            molecularFomula: "^MolecularFomula",
             molecularWeight: "^MolecularWeight",
         }
     }

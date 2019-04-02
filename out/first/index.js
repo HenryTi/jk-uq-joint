@@ -73,14 +73,15 @@ const promiseSize = config_1.default.get("promiseSize");
                     await Promise.all(promises);
                 }
                 catch (error) {
-                    debugger;
+                    // debugger;
+                    console.log(error);
                 }
                 promises.splice(0);
                 let after = Date.now();
                 let sum = Math.round((after - start) / 1000);
                 let each = Math.round(after - priorEnd);
                 let eachSubmit = Math.round(after - before);
-                console.log('count = ' + count + ' each: ' + each + ' sum: ' + sum + ' eachSubmit: ' + eachSubmit + 'ms');
+                console.log('count = ' + count + ' each: ' + each + ' sum: ' + sum + ' eachSubmit: ' + eachSubmit + 'ms; lastId: ' + lastId);
                 priorEnd = after;
             }
         }
