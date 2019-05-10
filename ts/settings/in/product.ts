@@ -136,12 +136,12 @@ export const InvalidProduct: UqInTuid = {
 export const ProductPackX: UqInTuidArr = {
     uq: uqs.jkProduct,
     type: 'tuid-arr',
-    entity: 'ProductX.PackX',
+    entity: 'ProductX_PackX',
     key: "PackingID",
     owner: "ProductID",
     mapper: {
         //owner: "ProductID",
-        $id: "PackingID@ProductX.PackX",
+        $id: "PackingID@ProductX_PackX",
         jkcat: 'PackingID',
         radiox: "PackNr",
         radioy: "Quantity",
@@ -158,7 +158,7 @@ export const PriceX: UqInMap = {
     entity: 'PriceX',
     mapper: {
         product: "ProductID@ProductX",
-        pack: "PackingID@ProductX.PackX",
+        pack: "PackingID@ProductX_PackX",
         arr1: {
             salesRegion: "^SalesRegionID@SalesRegion",
             expireDate: "^Expire_Date",
@@ -225,45 +225,3 @@ export const ProductLegallyProhibited: UqInMap = {
         }
     }
 };
-/*
-export const ProductPackType: UqInTuid = {
-    uq: uqs.jkProduct,
-    type: 'tuid',
-    entity: 'ProductPackType',
-    key: 'ID',
-    mapper: {
-        article: 'ProductID@Product',
-        packType: 'PackType@PackType',
-    }
-};
-
-export const ProductPack: UqInTuidArr = {
-    uq: uqs.jkProduct,
-    type: 'tuid-arr',
-    entity: 'ProductPackType.Pack',
-    key: "ID",
-    owner: "ProductID",
-    mapper: {
-        owner: "ProductID",
-        radiox: "PackNr",
-        radioy: "Quantity",
-        name: "Name",
-    }
-};
-
-export const Price: UqInMap = {
-    uq: uqs.jkProduct,
-    type: 'map',
-    entity: 'Price',
-    mapper: {
-        productPackType: "ProductID@ProductPackType",
-        pack: "PackingID@ProductPack",
-        arr1: {
-            salesRegion: "^SalesRegionID@SalesRegion",
-            // expireDate: "Expire_Date",
-            discountinued: "^Discontinued",
-            retail: "^Price",
-        }
-    }
-};
-*/

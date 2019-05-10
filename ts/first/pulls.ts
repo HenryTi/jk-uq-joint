@@ -3,13 +3,14 @@ import { UqIn } from "../uq-joint";
 
 import { ProductCategory, ProductCategoryLanguage, ProductProductCategory } from "../settings/in/productCategory";
 import { Country, Province, City, County } from "../settings/in/Address";
-import { Language, PackTypeStandard, Currency, SalesRegion, PackType } from "../settings/in/salesRegion";
+import { Language, PackTypeStandard, Currency, SalesRegion, PackType, InvoiceType } from "../settings/in/salesRegion";
 import { Chemical } from "../settings/in/chemical";
 import { Brand, BrandSalesRegion, BrandDeliveryTime, ProductPackX, PriceX, ProductSalesRegion, ProductLegallyProhibited, ProductX, ProductChemical } from "../settings/in/product";
 import { Warehouse, SalesRegionWarehouse } from "../settings/in/warehouse";
 import { Organization, Customer, Contact } from "../settings/in/customer";
-import { Promotion, PromotionLanguage, PromotionPack } from '../settings/in/promotion';
+import { Promotion, PromotionLanguage, PromotionPackDiscount, PromotionType, PromotionStatus } from '../settings/in/promotion';
 import { Agreement } from '../settings/in/customerDiscount';
+import { Employee } from '../settings/in/hr';
 
 /**
  * joint的思路是：joint一直在运行，每隔一段时间执行一次数据交换，数据交换分为3种，
@@ -20,48 +21,61 @@ import { Agreement } from '../settings/in/customerDiscount';
 export type UqOutConverter = (maxId: string) => Promise<{ lastId: string, data: any }>;
 
 /** */
-export const pulls: { read: UqOutConverter | string, uqIn: UqIn }[] = [
-    /*
-    { read: sqls.readLanguage, uqIn: Language },
-    { read: sqls.readCountry, uqIn: Country },
-    { read: sqls.readProvince, uqIn: Province },
-    { read: sqls.readCity, uqIn: City },
-    { read: sqls.readCounty, uqIn: County },
-    { read: sqls.readPackTypeStandard, uqIn: PackTypeStandard },
-    { read: sqls.readPackType, uqIn: PackType},
-    { read: sqls.readCurrency, uqIn: Currency },
-    { read: sqls.readSalesRegion, uqIn: SalesRegion },
+export const pulls: {
+    /**
+     * 用于从获取数据源表中的数据，如果是string，则为获取数据的Sql语句；
+     */
+    read: UqOutConverter | string,
+    /**
+     * 包含将源数据转换为目的数据、发送源数据到目的数据等的相关设置
+     */
+    uqIn: UqIn
+}[] = [
+        /*
+        { read: sqls.readLanguage, uqIn: Language },
+        { read: sqls.readCountry, uqIn: Country },
+        { read: sqls.readProvince, uqIn: Province },
+        { read: sqls.readCity, uqIn: City },
+        { read: sqls.readCounty, uqIn: County },
+        { read: sqls.readPackTypeStandard, uqIn: PackTypeStandard },
+        { read: sqls.readPackType, uqIn: PackType},
+        { read: sqls.readCurrency, uqIn: Currency },
+        { read: sqls.readSalesRegion, uqIn: SalesRegion },
+        { read: sqls.readInvoiceType, uqIn: InvoiceType },
+        { read: sqls.readEmployee, uqIn: Employee },
+        */
 
-    // 库存
-    { read: sqls.readWarehouse, uqIn: Warehouse },
-    { read: sqls.readSalesRegionWarehouse, uqIn: SalesRegionWarehouse },
+        /*
+        // 库存
+        { read: sqls.readWarehouse, uqIn: Warehouse },
+        { read: sqls.readSalesRegionWarehouse, uqIn: SalesRegionWarehouse },
 
-    // 产品相关的数据表
-    // 品牌
-    { read: sqls.readBrand, uqIn: Brand },
-    // 目录树
-    { read: sqls.readProductCategory, uqIn: ProductCategory },
-    { read: sqls.readProductCategoryLanguage, uqIn: ProductCategoryLanguage },
-    */
-    // { read: sqls.readChemical, uqIn: Chemical },
-    // 产品
-    // { read: sqls.readProduct, uqIn: ProductX },
-    { read: sqls.readProduct, uqIn: ProductChemical },
-    /*
-    // 客户和客户单位基本信息
-    { read: sqls.readOrganization, uqIn: Organization },
-    { read: sqls.readCustomer, uqIn: Customer },
-    // 使用map方式的导数据代码
-    { read: sqls.readCustomerConsigneeContact, uqIn: Contact },
-    { read: sqls.readCustomerInvoiceContact, uqIn: Contact },
+        // 产品相关的数据表
+        // 品牌
+        { read: sqls.readBrand, uqIn: Brand },
+        // 目录树
+        { read: sqls.readProductCategory, uqIn: ProductCategory },
+        { read: sqls.readProductCategoryLanguage, uqIn: ProductCategoryLanguage },
+        */
+        // { read: sqls.readChemical, uqIn: Chemical },
+        // 产品
+        // { read: sqls.readProduct, uqIn: ProductX },
+        // { read: sqls.readProduct, uqIn: ProductChemical },
 
-    { read: sqls.readAgreement, uqIn: Agreement },
-    */
+        // 客户和客户单位基本信息
+        // { read: sqls.readOrganization, uqIn: Organization },
+        // { read: sqls.readCustomer, uqIn: Customer },
 
-    /*
-    // 市场活动
-    { read: sqls.readPromotion, uqIn: Promotion },
-    { read: sqls.readPromotionLanguage, uqIn: PromotionLanguage },
-    { read: sqls.readPromotionPack, uqIn: PromotionPack },
-    */
-]
+        /*
+        // 使用map方式的导数据代码
+        { read: sqls.readCustomerConsigneeContact, uqIn: Contact },
+        { read: sqls.readCustomerInvoiceContact, uqIn: Contact },
+        */
+
+        // { read: sqls.readAgreement, uqIn: Agreement },
+
+        // 市场活动
+        // { read: sqls.readPromotionType, uqIn: PromotionType },
+        // { read: sqls.readPromotionStatus, uqIn: PromotionStatus },
+        // { read: sqls.readPromotion, uqIn: Promotion },
+    ]

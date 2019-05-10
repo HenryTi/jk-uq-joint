@@ -31,6 +31,7 @@ const faceOrderPush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus, queue:
         let ret = await httpClient.newOrder(orderOut);
         return true;
     } catch (error) {
+        console.error(error);
         return false;
     }
 }
@@ -100,7 +101,7 @@ export const faceOrder: UqBus = {
         SaleOrderItems: {
             $name: "orderItems",
             Row: "$Row",
-            PackageId: "pack@ProductX.PackX",
+            PackageId: "pack@ProductX_PackX",
             Qty: "quantity",
             Price: "price",
             Currency: "^currency@Currency"

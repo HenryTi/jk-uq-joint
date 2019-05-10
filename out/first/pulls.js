@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const sqls_1 = require("./converter/sqls");
-const product_1 = require("../settings/in/product");
+const hr_1 = require("../settings/in/hr");
 /** */
 exports.pulls = [
     /*
@@ -14,21 +14,8 @@ exports.pulls = [
     { read: sqls.readPackType, uqIn: PackType},
     { read: sqls.readCurrency, uqIn: Currency },
     { read: sqls.readSalesRegion, uqIn: SalesRegion },
-
-    // 库存
-    { read: sqls.readWarehouse, uqIn: Warehouse },
-    { read: sqls.readSalesRegionWarehouse, uqIn: SalesRegionWarehouse },
-
-    // 产品相关的数据表
-    // 品牌
-    { read: sqls.readBrand, uqIn: Brand },
-    // 目录树
-    { read: sqls.readProductCategory, uqIn: ProductCategory },
-    { read: sqls.readProductCategoryLanguage, uqIn: ProductCategoryLanguage },
+    { read: sqls.readInvoiceType, uqIn: InvoiceType },
     */
-    // { read: sqls.readChemical, uqIn: Chemical },
-    // 产品
-    // { read: sqls.readProduct, uqIn: ProductX },
-    { read: sqls_1.sqls.readProduct, uqIn: product_1.ProductChemical },
+    { read: sqls_1.sqls.readEmployee, uqIn: hr_1.Employee },
 ];
 //# sourceMappingURL=pulls.js.map

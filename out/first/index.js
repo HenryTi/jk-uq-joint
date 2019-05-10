@@ -63,7 +63,7 @@ const promiseSize = config_1.default.get("promiseSize");
                     count++;
                 }
                 catch (error) {
-                    console.log(error);
+                    console.error(error);
                 }
             });
             maxId = lastId;
@@ -74,7 +74,7 @@ const promiseSize = config_1.default.get("promiseSize");
                 }
                 catch (error) {
                     // debugger;
-                    console.log(error);
+                    console.error(error);
                 }
                 promises.splice(0);
                 let after = Date.now();

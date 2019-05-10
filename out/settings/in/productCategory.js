@@ -20,12 +20,12 @@ exports.ProductCategory = {
 exports.ProductCategoryLanguage = {
     uq: uqs_1.uqs.jkProduct,
     type: 'tuid-arr',
-    entity: 'ProductCategory.ProductCategoryLanguage',
+    entity: 'ProductCategory_ProductCategoryLanguage',
     key: "ProductCategoryLanguageID",
     owner: "ProductCategoryID",
     mapper: {
         // owner: "ProductCategoryID@ProductCategory",
-        $id: "ProductCategoryLanguageID@ProductCategory.ProductCategoryLanguage",
+        $id: "ProductCategoryLanguageID@ProductCategory_ProductCategoryLanguage",
         language: "LanguageID@Language",
         name: "ProductCategoryName",
     },

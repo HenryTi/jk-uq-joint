@@ -1,14 +1,7 @@
 "use strict";
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const _ = __importStar(require("lodash"));
 const uqs_1 = require("../uqs");
+const customerPullWrite_1 = require("../../first/converter/customerPullWrite");
 exports.Customer = {
     uq: uqs_1.uqs.jkCustomer,
     type: 'tuid',
@@ -24,38 +17,10 @@ exports.Customer = {
         salutation: 'Salutation',
         birthDay: 'BirthDate',
         createTime: 'CreateTime',
+        isValid: 'IsValid',
     },
-    pullWrite: async (joint, data) => {
-        try {
-            // data["CreateTime"] = data["CreateTime"] && data["CreateTime"].getTime();
-            await joint.uqIn(exports.Customer, _.pick(data, ["ID", "Name", "FirstName", "LastName", "Gender", "BirthDate", 'CreateTime']));
-            let promises = [];
-            promises.push(joint.uqIn(exports.OrganizationCustomer, _.pick(data, ["ID", "OrganizationID"])));
-            let customerId = data["ID"];
-            let props = [
-                { name: 'Tel1', type: 'tel' },
-                { name: 'Tel2', type: 'tel' },
-                { name: 'Mobile', type: 'mobile' },
-                { name: 'Email1', type: 'email' },
-                { name: 'Email2', type: 'email' },
-                { name: 'Fax1', type: 'fax' },
-                { name: 'Fax2', type: 'fax' },
-            ];
-            for (let prop of props) {
-                let { name, type } = prop;
-                let v = data[name];
-                if (!v)
-                    continue;
-                promises.push(joint.uqIn(exports.CustomerContact, { 'ID': customerId + '-' + v, 'CustomerID': customerId, 'TypeID': type, 'Content': v }));
-            }
-            await Promise.all(promises);
-            return true;
-        }
-        catch (error) {
-            console.error(error);
-            return false;
-        }
-    }
+    pullWrite: customerPullWrite_1.customerPullWrite,
+    firstPullWrite: customerPullWrite_1.customerFirstPullWrite,
 };
 exports.Organization = {
     uq: uqs_1.uqs.jkCustomer,
@@ -70,7 +35,6 @@ exports.Organization = {
     },
     pullWrite: async (joint, data) => {
         try {
-            // data["CreateTime"] = data["CreateTime"] && data["CreateTime"].getTime();
             await joint.uqIn(exports.Organization, data);
             return true;
         }
@@ -94,50 +58,15 @@ exports.OrganizationCustomer = {
 exports.CustomerContact = {
     uq: uqs_1.uqs.jkCustomer,
     type: 'tuid-arr',
-    entity: 'Customer.Contact',
+    entity: 'Customer_Contact',
     owner: 'CustomerID',
     key: 'ID',
     mapper: {
-        $id: 'ID@Customer.Contact',
+        $id: 'ID@Customer_Contact',
         type: 'TypeID',
         content: 'Content',
     }
 };
-/*
-export const CustomerConsigneeContact: UqInMap = {
-    uq: uqs.jkCustomer,
-    type: 'map',
-    entity: 'CustomerConsigneeContact',
-    mapper: {
-        customer: 'CustomerID@Customer',
-        name: 'Name',
-        organizationName: 'OrganizationName',
-        mobile: 'Mobile',
-        telephone: 'Telephone',
-        email: 'Email',
-        addressString: 'Addr',
-        address: "AddressID@Address",
-        isDefault: 'isDefault',
-    }
-};
-
-export const CustomerInvoiceContact: UqInMap = {
-    uq: uqs.jkCustomer,
-    type: 'map',
-    entity: 'CustomerInvoiceContact',
-    mapper: {
-        customer: 'CustomerID@Customer',
-        name: 'Name',
-        organizationName: 'OrganizationName',
-        mobile: 'Mobile',
-        telephone: 'Telephone',
-        email: 'Email',
-        addressString: 'Addr',
-        address: "AddressID@Address",
-        isDefault: 'isDefault',
-    }
-};
-*/
 exports.CustomerContacts = {
     uq: uqs_1.uqs.jkCustomer,
     type: 'map',
@@ -149,19 +78,6 @@ exports.CustomerContacts = {
         }
     }
 };
-/*
-export const CustomerInvoiceContact: UqInMap = {
-    uq: uqs.jkCustomer,
-    type: 'map',
-    entity: 'CustomerInvoiceContact',
-    mapper: {
-        customer: 'CustomerID@Customer',
-        arr1: {
-            contact: '^ID@Contact',
-        }
-    }
-};
-*/
 exports.Contact = {
     uq: uqs_1.uqs.jkCustomer,
     type: 'tuid',
@@ -177,15 +93,46 @@ exports.Contact = {
         addressString: 'Addr',
         address: "AddressID@Address",
     },
-    pullWrite: async (joint, data) => {
-        try {
-            await joint.uqIn(exports.Contact, data);
-            await joint.uqIn(exports.CustomerContacts, _.pick(data, ["ID", "CustomerID"]));
-            return true;
+    pullWrite: customerPullWrite_1.consigneeContactPullWrite,
+};
+exports.InvoiceInfo = {
+    uq: uqs_1.uqs.jkCustomer,
+    type: 'tuid',
+    entity: 'InvoiceInfo',
+    key: 'ID',
+    mapper: {
+        $id: 'ID@InvoiceInfo',
+        title: 'InvoiceTitle',
+        taxNo: 'TaxNo',
+        address: 'RegisteredAddress',
+        telephone: 'RegisteredTelephone',
+        bank: 'BankName',
+        accountNo: 'BankAccountNumber',
+    },
+};
+exports.CustomerSetting = {
+    uq: uqs_1.uqs.jkCustomer,
+    type: 'map',
+    entity: 'CustomerSetting',
+    mapper: {
+        customer: 'CustomerID@Customer',
+        arr1: {
+            shippingContact: '^ShippingContactID@Contact',
+            invoiceContact: '^InvoiceContactID@Contact',
+            invoiceType: '^InvoiceTypeID@InvoiceType',
+            invoiceInfo: '^InvoiceInfoID@InvoiceInfo',
         }
-        catch (error) {
-            console.log(error);
-            return false;
+    }
+};
+exports.CustomerHandler = {
+    uq: uqs_1.uqs.jkCustomer,
+    type: 'map',
+    entity: 'CustomerHandler',
+    mapper: {
+        customer: 'CustomerID@Customer',
+        salesman: 'SalesmanID@Employee',
+        arr1: {
+            customerServiceStuff: '^CustomerServiceStuffID@Employee',
         }
     }
 };

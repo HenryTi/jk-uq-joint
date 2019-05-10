@@ -1,6 +1,32 @@
 import * as _ from 'lodash';
 import { UqInTuid, UqInMap, Joint } from "../../uq-joint";
 import { uqs } from "../uqs";
+import { promotionFirstPullWrite } from '../../first/converter/promotionPullWrite';
+
+export const PromotionType: UqInTuid = {
+    uq: uqs.jkPromotion,
+    type: 'tuid',
+    entity: 'PromotionType',
+    key: 'ID',
+    mapper: {
+        $id: 'ID@PromotionType',
+        no: "ID",
+        description: 'Description',
+    }
+};
+
+export const PromotionStatus: UqInTuid = {
+    uq: uqs.jkPromotion,
+    type: 'tuid',
+    entity: 'PromotionStatus',
+    key: 'ID',
+    mapper: {
+        $id: 'ID@PromotionStatus',
+        no: "ID",
+        description: 'Description',
+    }
+};
+
 
 export const Promotion: UqInTuid = {
     uq: uqs.jkPromotion,
@@ -11,8 +37,8 @@ export const Promotion: UqInTuid = {
         $id: 'ID@Promotion',
         no: "ID",
         name: 'Name',
-        type: 'Type',
-        status: 'Status',
+        type: 'Type@PromotionType',
+        status: 'Status@PromotionStatus',
         startDate: 'StartDate',
         endDate: 'EndDate',
         createTime: 'CreateTime',
@@ -21,7 +47,7 @@ export const Promotion: UqInTuid = {
 
         try {
             data["StartDate"] = data["StartDate"] && data["StartDate"].getTime();
-            data["EndDate"] = data["StartDate"] && data["EndDate"].getTime();
+            data["EndDate"] = data["EndDate"] && data["EndDate"].getTime();
             data["CreateTime"] = data["CreateTime"] && data["CreateTime"].getTime();
             await joint.uqIn(Promotion, _.pick(data, ["ID", "Name", "Type", "Status", "StartDate", 'EndDate', 'CreateTime']));
             await joint.uqIn(PromotionSalesRegion, _.pick(data, ["ID", "SalesRegionID"]));
@@ -30,7 +56,8 @@ export const Promotion: UqInTuid = {
             console.error(error);
             return false;
         }
-    }
+    },
+    firstPullWrite: promotionFirstPullWrite,
 };
 
 export const PromotionSalesRegion: UqInMap = {
@@ -59,17 +86,17 @@ export const PromotionLanguage: UqInMap = {
     }
 };
 
-export const PromotionPack: UqInMap = {
+export const PromotionPackDiscount: UqInMap = {
     uq: uqs.jkPromotion,
     type: 'map',
-    entity: 'PromotionPack',
+    entity: 'PromotionPackDiscount',
     mapper: {
         promotion: 'PromotionID@Promotion',
+        product: 'ProductID@ProductX',
         arr1: {
-            productx: '^ProductID@ProductX',
-            packx: '^PackageID@ProductPackX',
+            pack: '^PackageID@ProductX_PackX',
             discount: '^Discount',
-            whenHasStorage: '^WhenHasStorage',
+            MustHasStorage: '^WhenHasStorage',
         }
     }
 };

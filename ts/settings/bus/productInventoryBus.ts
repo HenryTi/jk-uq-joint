@@ -13,7 +13,7 @@ export const faceProductInventory: UqBus = {
     mapper: {
         warehouse: 'WarehouseID@Warehouse',
         product: 'ProductID@ProductX',
-        pack: 'PackingID@ProductX.PackX',
+        pack: 'PackingID@ProductX_PackX',
         quantity: 'Inventory',
     },
     pull: productInventoryPull,

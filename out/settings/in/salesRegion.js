@@ -69,4 +69,14 @@ exports.Language = {
         description: 'LanguageStr',
     }
 };
+exports.InvoiceType = {
+    uq: uqs_1.uqs.jkCommon,
+    type: 'tuid',
+    entity: 'InvoiceType',
+    key: 'ID',
+    mapper: {
+        $id: 'ID@InvoiceType',
+        description: 'Description',
+    }
+};
 //# sourceMappingURL=salesRegion.js.map

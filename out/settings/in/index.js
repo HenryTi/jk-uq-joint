@@ -9,6 +9,7 @@ const promotion_1 = require("./promotion");
 const customer_1 = require("./customer");
 const productCategory_1 = require("./productCategory");
 const customerDiscount_1 = require("./customerDiscount");
+const hr_1 = require("./hr");
 const uqIns = [
     salesRegion_1.Language,
     Address_1.Country,
@@ -21,6 +22,8 @@ const uqIns = [
     salesRegion_1.PackType,
     salesRegion_1.PackTypeMapToStandard,
     salesRegion_1.PackTypeStandard,
+    salesRegion_1.InvoiceType,
+    hr_1.Employee,
     chemical_1.Chemical,
     product_1.Brand,
     product_1.BrandSalesRegion,
@@ -37,16 +40,20 @@ const uqIns = [
     productCategory_1.ProductProductCategory,
     warehouse_1.Warehouse,
     warehouse_1.SalesRegionWarehouse,
+    promotion_1.PromotionType,
+    promotion_1.PromotionStatus,
     promotion_1.Promotion,
     promotion_1.PromotionSalesRegion,
     promotion_1.PromotionLanguage,
-    promotion_1.PromotionPack,
+    promotion_1.PromotionPackDiscount,
     customer_1.Customer,
     customer_1.Organization,
     customer_1.OrganizationCustomer,
     customer_1.CustomerContact,
     customer_1.CustomerContacts,
+    customer_1.CustomerHandler,
     customer_1.Contact,
+    customer_1.InvoiceInfo,
     customerDiscount_1.Agreement,
     customerDiscount_1.CustomerDiscount,
     customerDiscount_1.OrganizationDiscount,

@@ -1,12 +1,13 @@
 import { Country, Province, City, County, Address } from "./Address";
-import { SalesRegion, Currency, PackType, PackTypeStandard, PackTypeMapToStandard, Language } from "./salesRegion";
+import { SalesRegion, Currency, PackType, PackTypeStandard, PackTypeMapToStandard, Language, InvoiceType } from "./salesRegion";
 import { Brand, ProductSalesRegion, ProductLegallyProhibited, ProductX, ProductPackX, PriceX, BrandSalesRegion, BrandDeliveryTime, ProductChemical, InvalidProduct } from "./product";
 import { Warehouse, SalesRegionWarehouse } from "./warehouse";
 import { Chemical } from "./chemical";
-import { Promotion, PromotionSalesRegion, PromotionLanguage, PromotionPack } from "./promotion";
-import { Customer, Organization, OrganizationCustomer, CustomerContact, CustomerContacts, Contact } from "./customer";
+import { Promotion, PromotionSalesRegion, PromotionLanguage, PromotionPackDiscount, PromotionStatus, PromotionType } from "./promotion";
+import { Customer, Organization, OrganizationCustomer, CustomerContact, CustomerContacts, Contact, InvoiceInfo, CustomerHandler } from "./customer";
 import { ProductCategory, ProductCategoryLanguage, ProductProductCategory } from "./productCategory";
 import { Agreement, CustomerDiscount, OrganizationDiscount } from "./customerDiscount";
+import { Employee } from "./hr";
 
 const uqIns = [
     Language,
@@ -20,6 +21,9 @@ const uqIns = [
     PackType,
     PackTypeMapToStandard,
     PackTypeStandard,
+    InvoiceType,
+
+    Employee,
 
     Chemical,
 
@@ -42,17 +46,21 @@ const uqIns = [
     Warehouse,
     SalesRegionWarehouse,
 
+    PromotionType,
+    PromotionStatus,
     Promotion,
     PromotionSalesRegion,
     PromotionLanguage,
-    PromotionPack,
+    PromotionPackDiscount,
 
     Customer,
     Organization,
     OrganizationCustomer,
     CustomerContact,
     CustomerContacts,
+    CustomerHandler,
     Contact,
+    InvoiceInfo,
 
     Agreement,
     CustomerDiscount,

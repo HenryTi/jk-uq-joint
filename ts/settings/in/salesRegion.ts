@@ -74,3 +74,14 @@ export const Language: UqInTuid = {
         description: 'LanguageStr',
     }
 };
+
+export const InvoiceType: UqInTuid = {
+    uq: uqs.jkCommon,
+    type: 'tuid',
+    entity: 'InvoiceType',
+    key: 'ID',
+    mapper: {
+        $id: 'ID@InvoiceType',
+        description: 'Description',
+    }
+};

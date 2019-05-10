@@ -32,6 +32,7 @@ const faceOrderPush = async (joint, uqBus, queue, orderIn) => {
         return true;
     }
     catch (error) {
+        console.error(error);
         return false;
     }
 };
@@ -98,7 +99,7 @@ exports.faceOrder = {
         SaleOrderItems: {
             $name: "orderItems",
             Row: "$Row",
-            PackageId: "pack@ProductX.PackX",
+            PackageId: "pack@ProductX_PackX",
             Qty: "quantity",
             Price: "price",
             Currency: "^currency@Currency"

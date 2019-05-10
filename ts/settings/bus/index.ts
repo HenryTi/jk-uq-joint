@@ -4,9 +4,9 @@ import { faceProductInventory } from "./productInventoryBus";
 import { facePoint } from "./pointBus";
 
 export const bus: UqBus[] = [
+    faceOrder,
     /*
     facePoint,
-    faceOrder,
     faceProductInventory,
     */
 ];

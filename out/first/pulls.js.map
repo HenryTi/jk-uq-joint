@@ -1,1 +1,1 @@
-{"version":3,"file":"pulls.js","sourceRoot":"","sources":["../../ts/first/pulls.ts"],"names":[],"mappings":";;AAAA,2CAAwC;AAOxC,oDAAmL;AAcnL,MAAM;AACO,QAAA,KAAK,GAAoD;IAClE;;;;;;;;;;;;;;;;;;;;;MAqBE;IACF,+CAA+C;IAC/C,KAAK;IACL,8CAA8C;IAC9C,EAAE,IAAI,EAAE,WAAI,CAAC,WAAW,EAAE,IAAI,EAAE,yBAAe,EAAE;CAkBpD,CAAA"}
+{"version":3,"file":"pulls.js","sourceRoot":"","sources":["../../ts/first/pulls.ts"],"names":[],"mappings":";;AAAA,2CAAwC;AAYxC,0CAA6C;AAU7C,MAAM;AACO,QAAA,KAAK,GASZ;IACE;;;;;;;;;;;MAWE;IACF,EAAE,IAAI,EAAE,WAAI,CAAC,YAAY,EAAE,IAAI,EAAE,aAAQ,EAAE;CAmC9C,CAAA"}
