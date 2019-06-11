@@ -88,7 +88,7 @@ export async function consigneeContactPullWrite(joint: Joint, contactData: any):
         await joint.uqIn(CustomerContacts, _.pick(contactData, ["ID", "CustomerID"]));
         return true;
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return false;
     }
 }

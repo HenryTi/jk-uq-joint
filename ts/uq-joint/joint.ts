@@ -45,7 +45,8 @@ export class Joint {
             await this.scanIn();
             await this.scanOut();
 
-            await this.scanBus();
+            // bus还没有弄好，暂时屏蔽
+            // await this.scanBus();
         }
         catch (err) {
             console.error('error in timer tick');
@@ -78,6 +79,9 @@ export class Joint {
     }
     */
 
+    /**
+     *
+     */
     private async scanIn() {
         let { uqIns, pullReadFromSql } = this.settings;
         if (uqIns === undefined) return;//
@@ -131,7 +135,7 @@ export class Joint {
                     console.log(`process in ${queue}: `, message);
                     await execProc('write_queue_in_p', [queueName, queue]);
                 } catch (error) {
-                    console.log(error);
+                    console.error(error);
                 }
             }
         }
@@ -218,6 +222,9 @@ export class Joint {
             await uq.setMap(entity, body);
     }
 
+    /**
+     *
+     */
     private async scanOut() {
         let { uqOuts } = this.settings;
         if (uqOuts === undefined) return;
@@ -248,6 +255,9 @@ export class Joint {
         return ret;
     }
 
+    /**
+     *
+     */
     protected async scanBus() {
         let { name: joinName, bus } = this.settings;
         if (bus === undefined) return;
@@ -255,7 +265,7 @@ export class Joint {
 
         for (let uqBus of bus) {
             let { face, mapper, push, pull, uqIdProps } = uqBus;
-            // bus out
+            // bus out(从bus中读取消息，发送到外部系统)
             let moniker = monikerPrefix + face;
             for (; ;) {
                 if (push === undefined) break;
@@ -284,7 +294,7 @@ export class Joint {
                 await execProc('write_queue_out_p', [moniker, newQueue]);
             }
 
-            // bus in
+            // bus in(从外部系统读入数据，写入bus)
             for (; ;) {
                 if (pull === undefined) break;
                 let queue: number;

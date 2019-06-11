@@ -63,9 +63,21 @@ export interface UqOut {
 }
 
 export interface UqBus {
+    /**
+     * face的名称
+     */
     face: string;
+    /**
+     *
+     */
     mapper: Mapper;
+    /**
+     * 该函数用户从外部系统读取将要写入bus的数据
+     */
     pull?: DataPull<UqBus>;
+    /**
+     * 该函数用户将bus中的数据写入外部系统
+     */
     push?: DataPush<UqBus>;
     uqIdProps?: { [name: string]: UqProp }; //{contact: {tuid: 'contact'}}
 }

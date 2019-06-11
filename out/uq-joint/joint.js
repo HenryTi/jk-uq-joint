@@ -18,7 +18,8 @@ class Joint {
                 //await this.scanPull();
                 await this.scanIn();
                 await this.scanOut();
-                await this.scanBus();
+                // bus还没有弄好，暂时屏蔽
+                // await this.scanBus();
             }
             catch (err) {
                 console.error('error in timer tick');
@@ -69,6 +70,9 @@ class Joint {
         }
     }
     */
+    /**
+     *
+     */
     async scanIn() {
         let { uqIns, pullReadFromSql } = this.settings;
         if (uqIns === undefined)
@@ -126,7 +130,7 @@ class Joint {
                     await tool_1.execProc('write_queue_in_p', [queueName, queue]);
                 }
                 catch (error) {
-                    console.log(error);
+                    console.error(error);
                 }
             }
         }
@@ -224,6 +228,9 @@ class Joint {
         else
             await uq.setMap(entity, body);
     }
+    /**
+     *
+     */
     async scanOut() {
         let { uqOuts } = this.settings;
         if (uqOuts === undefined)
@@ -256,6 +263,9 @@ class Joint {
         }
         return ret;
     }
+    /**
+     *
+     */
     async scanBus() {
         let { name: joinName, bus } = this.settings;
         if (bus === undefined)
@@ -263,7 +273,7 @@ class Joint {
         let monikerPrefix = '$bus/';
         for (let uqBus of bus) {
             let { face, mapper, push, pull, uqIdProps } = uqBus;
-            // bus out
+            // bus out(从bus中读取消息，发送到外部系统)
             let moniker = monikerPrefix + face;
             for (;;) {
                 if (push === undefined)
@@ -294,7 +304,7 @@ class Joint {
                     break;
                 await tool_1.execProc('write_queue_out_p', [moniker, newQueue]);
             }
-            // bus in
+            // bus in(从外部系统读入数据，写入bus)
             for (;;) {
                 if (pull === undefined)
                     break;

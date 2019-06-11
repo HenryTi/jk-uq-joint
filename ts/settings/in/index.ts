@@ -31,6 +31,7 @@ const uqIns = [
     BrandSalesRegion,
     BrandDeliveryTime,
 
+    /*
     ProductX,
     InvalidProduct,
     ProductChemical,
@@ -65,6 +66,7 @@ const uqIns = [
     Agreement,
     CustomerDiscount,
     OrganizationDiscount,
+    */
 ]
 
 export default uqIns;

@@ -21,7 +21,7 @@ exports.Brand = {
             let brandId = data['BrandID'];
             let promisesSql = [];
             let brandSalesRegionSql = `
-                select top 1 ExcID as ID, code as BrandID, market_code as SalesRegionID, yesorno as Level
+                select ExcID as ID, code as BrandID, market_code as SalesRegionID, yesorno as Level
                         from zcl_mess.dbo.manufactoryMarket where code = @BrandID`;
             promisesSql.push(tools_1.execSql(brandSalesRegionSql, [{ 'name': 'BrandID', 'value': brandId }]));
             let readBrandDeliveryTime = `
@@ -37,6 +37,8 @@ exports.Brand = {
             return true;
         }
         catch (error) {
+            console.error(error);
+            return false;
         }
     }
 };
@@ -166,7 +168,7 @@ exports.PriceX = {
             return true;
         }
         catch (error) {
-            console.log(error);
+            console.error(error);
             return false;
         }
     }

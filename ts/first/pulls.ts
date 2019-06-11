@@ -51,26 +51,19 @@ export const pulls: {
         { read: sqls.readSalesRegionWarehouse, uqIn: SalesRegionWarehouse },
 
         // 产品相关的数据表
-        // 品牌
-        { read: sqls.readBrand, uqIn: Brand },
         // 目录树
         { read: sqls.readProductCategory, uqIn: ProductCategory },
         { read: sqls.readProductCategoryLanguage, uqIn: ProductCategoryLanguage },
+        // 品牌
+        { read: sqls.readBrand, uqIn: Brand },
         */
         // { read: sqls.readChemical, uqIn: Chemical },
         // 产品
         // { read: sqls.readProduct, uqIn: ProductX },
-        // { read: sqls.readProduct, uqIn: ProductChemical },
 
         // 客户和客户单位基本信息
         // { read: sqls.readOrganization, uqIn: Organization },
         // { read: sqls.readCustomer, uqIn: Customer },
-
-        /*
-        // 使用map方式的导数据代码
-        { read: sqls.readCustomerConsigneeContact, uqIn: Contact },
-        { read: sqls.readCustomerInvoiceContact, uqIn: Contact },
-        */
 
         // { read: sqls.readAgreement, uqIn: Agreement },
 

@@ -21,7 +21,7 @@ export const Brand: UqInTuid = {
             let brandId = data['BrandID'];
             let promisesSql: PromiseLike<any>[] = [];
             let brandSalesRegionSql = `
-                select top 1 ExcID as ID, code as BrandID, market_code as SalesRegionID, yesorno as Level
+                select ExcID as ID, code as BrandID, market_code as SalesRegionID, yesorno as Level
                         from zcl_mess.dbo.manufactoryMarket where code = @BrandID`;
             promisesSql.push(execSql(brandSalesRegionSql, [{ 'name': 'BrandID', 'value': brandId }]));
 
@@ -38,7 +38,8 @@ export const Brand: UqInTuid = {
             await Promise.all(promises);
             return true;
         } catch (error) {
-
+            console.error(error);
+            return false;
         }
     }
 };
@@ -176,7 +177,7 @@ export const PriceX: UqInMap = {
             await joint.uqIn(PriceX, data);
             return true;
         } catch (error) {
-            console.log(error);
+            console.error(error);
             return false;
         }
     }

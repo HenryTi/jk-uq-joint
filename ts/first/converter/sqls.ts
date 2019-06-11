@@ -102,119 +102,67 @@ export const sqls = {
                 from dbs.dbo.Customers where CID > @iMaxId order by CID`,
 
         readOrganization: `
-select top ${ promiseSize} UnitID as ID, unitName as Name, convert(nvarchar(30), creaDate, 121) as CreateTime
-from dbs.dbo.CustUnits where UnitID > @iMaxId order by UnitID`,
-
-        readCustomerConsigneeContact: `
-select top 1 ID, CID as CustomerID, userName as Name, userUnit as OrganizationName, isnull(userMobile, '') as Mobile
-        , email as Email, userZipCode as Zip, userAdd as Addr, isDefault
-from dbs.dbo.net_OrderBase_txt where ID > @iMaxId order by ID`,
-
-        readCustomerInvoiceContact: `
-select top 1 ID, CID as CustomerID, Name, Unit as OrganizationName, isnull(Mobile, '') as Mobile, Tel as Telephone
-        , Email, Zip, Addr, isDefault
-from dbs.dbo.order_InvoiceInfo_txt where ID > @iMaxId order by ID`,
-
+                select top ${ promiseSize} UnitID as ID, unitName as Name, convert(nvarchar(30), creaDate, 121) as CreateTime
+                from dbs.dbo.CustUnits where UnitID > @iMaxId order by UnitID`,
 
         //==============================================================
         //=========================== Product ===========================
         //==============================================================
         readBrand: `
-select top 1 code as ID, Code as BrandID, name as BrandName from zcl_mess.dbo.manufactory where code > @iMaxId order by code`,
-
-        readBrandSalesRegion: `
-select top 1 ExcID as ID, code as BrandID, market_code as SalesRegionID, yesorno as Level
-from zcl_mess.dbo.manufactoryMarket where ExcID > @iMaxId order by ExcID`,
-
-        readBrandDeliveryTime: `
-select top 1 ID, BrandCode as BrandID, SaleRegionID as SalesRegionID, MinValue, MaxValue, Unit
-        , case [Restrict] when 'NoRestrict' then 0 else 1 end as [Restrict]
-from zcl_mess.dbo.BrandDeliverTime where id > @iMaxId and isValid = 1 order by id`,
+                select top 1 code as ID, Code as BrandID, name as BrandName from zcl_mess.dbo.manufactory where code > @iMaxId order by code`,
 
         readProduct: `
-select top ${ promiseSize} p.jkid as ID, p.jkid as ProductID, p.manufactory as BrandID, p.originalId as ProductNumber
-        , isnull(p.Description, 'N/A') as Description, p.DescriptionC
-        , pc.chemid as ChemicalID, zcl_mess.dbo.fc_recas(p.CAS) as CAS, p.MF as MolecularFomula, p.MW as MolecularWeight, p.Purity
-        , p.[Restrict], p.LotNumber as MdlNumber, case when(select count(pv.jkid) from zcl_mess.dbo.Invalid_Products pv where pv.jkid = p.jkid) > 0 then 0 else 1 end as IsValid
-from zcl_mess.dbo.products p inner join zcl_mess.dbo.productschem pc on pc.jkid = p.jkid
-left join zcl_mess.dbo.Invalid_products pv on pv.jkid = p.jkid
-where p.jkid > @iMaxId and p.jkid > '${lastjkid}' order by p.jkid`,
-
-        readPack: `
-select top 1 j.jkcat as ID, j.jkcat as PackingID, j.jkid as ProductID, j.PackNr, j.Quantity, j.Unit as Name
-from zcl_mess.dbo.jkcat j inner join zcl_mess.dbo.products p on j.jkid = p.jkid
-where j.jkcat > @iMaxId and j.unit in (select unitE from opdata.dbo.supplierPackingUnit )
-order by j.jkcat`,
-
-        readPrice: `
-select top 1 jp.ExCID as ID, jp.jkcat as PackingID, j.jkid as ProductID
-        , jp.market_code as SalesRegionID, jp.Price, jp.Currency, jp.Expire_Date, JP.Discontinued
-from zcl_mess.dbo.jkcat_price jp inner join zcl_mess.dbo.jkcat j on jp.jkcat = j.jkcat
-where jp.ExCID > @iMaxId order by jp.ExCID`,
-
-        readProductSalesRegion: `
-select top 1 ExCID as ID, jkid as ProductID, market_code as SalesRegionID, IsValid
-from zcl_mess.dbo.ProductsLocation where ExCID > @iMaxId order by ExCID`,
-
-        readProductLegallyProhibited: `
-select top 1 jkid + market_code as ID, jkid as ProductID, market_code as SalesRegionID, left(description, 20) as Reason
-from zcl_mess.dbo.sc_safe_ProdCache where jkid + market_code > @iMaxId order by jkid + market_code`,
+                select top ${ promiseSize} p.jkid as ID, p.jkid as ProductID, p.manufactory as BrandID, p.originalId as ProductNumber
+                        , isnull(p.Description, 'N/A') as Description, p.DescriptionC
+                        , pc.chemid as ChemicalID, zcl_mess.dbo.fc_recas(p.CAS) as CAS, p.MF as MolecularFomula, p.MW as MolecularWeight, p.Purity
+                        , p.[Restrict], p.LotNumber as MdlNumber, case when(select count(pv.jkid) from zcl_mess.dbo.Invalid_Products pv where pv.jkid = p.jkid) > 0 then 0 else 1 end as IsValid
+                from zcl_mess.dbo.products p inner join zcl_mess.dbo.productschem pc on pc.jkid = p.jkid
+                left join zcl_mess.dbo.Invalid_products pv on pv.jkid = p.jkid
+                where p.jkid > @iMaxId and p.jkid > '${lastjkid}' order by p.jkid`,
 
         //==============================================================
         //=========================== ProductCategory ===========================
         //==============================================================
         readProductCategory: `
-select top 1 pc.ProductCategoryID as ID, pc.ProductCategoryID, pc.ParentProductCategoryID, pc.OrderWithinParentCatetory as OrderWithinParentCategory,
-        pc.IsLeaf, pc.IsValid, pc.IsShow from opdata.dbo.ProductCategory pc
-where pc.ProductCategoryID > @iMaxId order by pc.ProductCategoryID`,
+                select top 1 pc.ProductCategoryID as ID, pc.ProductCategoryID, pc.ParentProductCategoryID, pc.OrderWithinParentCatetory as OrderWithinParentCategory,
+                        pc.IsLeaf, pc.IsValid, pc.IsShow from opdata.dbo.ProductCategory pc
+                where pc.ProductCategoryID > @iMaxId order by pc.ProductCategoryID`,
 
         readProductCategoryLanguage: `
-select top 1 ID, ID as ProductCategoryLanguageID, ProductCategoryID, LanguageID, ProductCategoryName
-from opdata.dbo.ProductCategoryLanguage where ID > @iMaxId order by ID`,
-
-        readProductProductCategory: `
-select top 1 ID, ID as SaleProductProductCategoryID, SaleProductID, ProductCategoryID, IsValid
-from opdata.dbo.SaleProductProductCategory where ID > @iMaxId order by ID`,
+                select top 1 ID, ID as ProductCategoryLanguageID, ProductCategoryID, LanguageID, ProductCategoryName
+                from opdata.dbo.ProductCategoryLanguage where ID > @iMaxId order by ID`,
 
         //==============================================================
         //=========================== Warehouse ===========================
         //==============================================================
         readWarehouse: `
-select top 1 CompanyID as ID, companyName as WarehouseName, companyAddr
-from dbs.dbo.Scompany where CompanyID > @iMaxId order by CompanyId`,
+                select top 1 CompanyID as ID, companyName as WarehouseName, companyAddr
+                from dbs.dbo.Scompany where CompanyID > @iMaxId order by CompanyId`,
 
         readSalesRegionWarehouse: `
-select top 1 ID, CompanyID as WarehouseID, Location as SalesRegionID, minDeliverTime, maxDeliverTime
-from dbs.dbo.CompanyLocation where ID > @iMaxId order by Id`,
+                select top 1 ID, CompanyID as WarehouseID, Location as SalesRegionID, minDeliverTime, maxDeliverTime
+                from dbs.dbo.CompanyLocation where ID > @iMaxId order by Id`,
 
         //==============================================================
         //=========================== Promotion ===========================
         //==============================================================
         readPromotionType:
                 `select top ${promiseSize} MType as ID, MTypeName as Description
-from dbs.dbo.MarketingType where MType > @iMaxId order by MType`,
+                from dbs.dbo.MarketingType where MType > @iMaxId order by MType`,
 
         readPromotionStatus:
                 `select top ${promiseSize} MStatus as ID, MStatusName as Description
-from dbs.dbo.MarketingStatus where MStatus > @iMaxId order by MStatus`,
+                from dbs.dbo.MarketingStatus where MStatus > @iMaxId order by MStatus`,
 
         readPromotion:
                 `select top ${promiseSize} MarketingID as ID, Name
-        , mType as Type, mstatus as Status, PStartTime as StartDate, PendTime as EndDate, market_code as SalesRegionID, inputtime as CreateTime
-from dbs.dbo.Marketing where MarketingID > @iMaxId and PStartTime is not null and isnull(PEndTime, '2029-12-01') > getdate() order by MarketingID`,
-
-        readPromotionLanguage:
-                `select top 1 ExcID as ID, MarketingID as PromotionID, LanguageID, messageText as Description, Url
-from dbs.dbo.MarketingMessageLanguages where ExcID > @iMaxId order by ExcID`,
-
-        readPromotionPack:
-                `select top 1 ExcID as ID, MarketingID as PromotionID, jkid as ProductID, jkcat as PackageID, activeDiscount as Discount, isnull(isStock, 0) as WhenHasStorage
-from zcl_mess.dbo.ProductsMarketing where ExcID > @iMaxId order by ExcID`,
+                        , mType as Type, mstatus as Status, PStartTime as StartDate, PendTime as EndDate, market_code as SalesRegionID, inputtime as CreateTime
+                from dbs.dbo.Marketing where MarketingID > @iMaxId and PStartTime is not null and isnull(PEndTime, '2029-12-01') > getdate() order by MarketingID`,
 
         //==============================================================
         //=========================== Agreement ===========================
         //==============================================================
         readAgreement:
                 `select top 1 AgreementId as ID, AgreementID, ObjType
-from dbs.dbo.Agreement where AgreementID > @iMaxId and objType in ('C', 'U')  order by AgreementId`,
+                from dbs.dbo.Agreement where AgreementID > @iMaxId and objType in ('C', 'U')  order by AgreementId`,
 }
