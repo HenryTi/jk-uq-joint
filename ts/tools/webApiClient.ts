@@ -15,6 +15,7 @@ export class WebApiClient extends Fetch {
             await this.post("SaleOrder/CreateNewSaleOrder", order);
             return true;
         } catch (error) {
+            console.log(error);
             return false;
         }
     }
@@ -24,3 +25,5 @@ export class WebApiClient extends Fetch {
         return ret;
     }
 }
+
+export const httpClient = new WebApiClient();

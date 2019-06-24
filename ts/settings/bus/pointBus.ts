@@ -1,12 +1,12 @@
 import { UqBus, DataPush, Joint, DataPull } from "../../uq-joint";
-import { WebApiClient } from "../../tools/webApiClient";
+import { WebApiClient, httpClient } from "../../tools/webApiClient";
 import { uqPullRead } from "../../first/converter/uqOutRead";
 
 const facePointPush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus, queue: number, data: any): Promise<boolean> => {
     console.log(data);
     // 调用7.253的web api
-    let httpClient = new WebApiClient();
-    // let ret = await httpClient.test({});
+    // let httpClient = new WebApiClient();
+    let ret = await httpClient.test({});
     return true;
 }
 
@@ -23,6 +23,6 @@ export const facePoint: UqBus = {
         point: "AllScore",
         pointUsed: "ScoreUsed",
     },
-    // push: facePointPush,
+    push: facePointPush,
     pull: facePointPull
 };

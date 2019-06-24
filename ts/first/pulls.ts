@@ -63,9 +63,9 @@ export const pulls: {
 
         // 客户和客户单位基本信息
         // { read: sqls.readOrganization, uqIn: Organization },
-        // { read: sqls.readCustomer, uqIn: Customer },
+        { read: sqls.readCustomer, uqIn: Customer },
 
-        // { read: sqls.readAgreement, uqIn: Agreement },
+        { read: sqls.readAgreement, uqIn: Agreement },
 
         // 市场活动
         // { read: sqls.readPromotionType, uqIn: PromotionType },

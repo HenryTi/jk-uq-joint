@@ -160,9 +160,13 @@ export class MapToUq extends MapData {
         }
         if (ret.length === 0) {
             let openApi = await getOpenApi(uq, this.unit);
-            let vId = await openApi.getTuidVId(entity);
-            await map(entity, vId, value);
-            return vId;
+            try {
+                let vId = await openApi.getTuidVId(entity);
+                await map(entity, vId, value);
+                return vId;
+            } catch (error) {
+                console.error(error);
+            }
         }
         return ret[0]['id'];
     }

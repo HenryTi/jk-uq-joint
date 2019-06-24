@@ -31,21 +31,20 @@ const uqIns = [
     BrandSalesRegion,
     BrandDeliveryTime,
 
-    /*
     ProductX,
     InvalidProduct,
     ProductChemical,
     ProductPackX,
     PriceX,
     ProductSalesRegion,
-    ProductLegallyProhibited,
+    ProductLegallyProhibited,    // 还没有日常的数据交换
 
     ProductCategory,
     ProductCategoryLanguage,
     ProductProductCategory,
 
-    Warehouse,
-    SalesRegionWarehouse,
+    Warehouse,                  // 还没有日常的数据交换，变化较小，不必有？
+    SalesRegionWarehouse,       // 还没有日常的数据交换，变化较小，不必有？
 
     PromotionType,
     PromotionStatus,
@@ -66,7 +65,6 @@ const uqIns = [
     Agreement,
     CustomerDiscount,
     OrganizationDiscount,
-    */
 ]
 
 export default uqIns;

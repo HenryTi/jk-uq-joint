@@ -66,7 +66,7 @@ exports.Agreement = {
         startDate: 'StartDate',
         endDate: 'EndDate',
     },
-    pull: `select top 1 ID, AgreementID, CID, ObjType, StartDate, EndDate from ProdData.dbo.Export_Agreement where ID > @iMaxId order by ID`,
+    pull: `select top 1 ID, AgreementID, CID, ObjType, StartDate, EndDate from ProdData.dbo.Export_Agreement where ID > @iMaxId and objType in ( 'C', 'U' ) order by ID`,
     pullWrite: async (joint, data) => {
         try {
             let sql = `select a.CID, md.Manu as BrandID, md.DiscountValue as Discount, a.StartDate, a.EndDate

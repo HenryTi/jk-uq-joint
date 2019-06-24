@@ -17,6 +17,7 @@ class WebApiClient extends fetch_1.Fetch {
             return true;
         }
         catch (error) {
+            console.log(error);
             return false;
         }
     }
@@ -26,4 +27,5 @@ class WebApiClient extends fetch_1.Fetch {
     }
 }
 exports.WebApiClient = WebApiClient;
+exports.httpClient = new WebApiClient();
 //# sourceMappingURL=webApiClient.js.map

@@ -5,8 +5,8 @@ const uqOutRead_1 = require("../../first/converter/uqOutRead");
 const facePointPush = async (joint, uqBus, queue, data) => {
     console.log(data);
     // 调用7.253的web api
-    let httpClient = new webApiClient_1.WebApiClient();
-    // let ret = await httpClient.test({});
+    // let httpClient = new WebApiClient();
+    let ret = await webApiClient_1.httpClient.test({});
     return true;
 };
 const facePointPull = async (joint, uqBus, queue) => {
@@ -21,7 +21,7 @@ exports.facePoint = {
         point: "AllScore",
         pointUsed: "ScoreUsed",
     },
-    // push: facePointPush,
+    push: facePointPush,
     pull: facePointPull
 };
 //# sourceMappingURL=pointBus.js.map

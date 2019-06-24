@@ -1,5 +1,5 @@
 import { UqBus, DataPush, Joint } from "../../uq-joint";
-import { WebApiClient } from "../../tools/webApiClient";
+import { WebApiClient, httpClient } from "../../tools/webApiClient";
 import { uqs } from "../uqs";
 import _ from 'lodash';
 
@@ -26,10 +26,9 @@ const faceOrderPush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus, queue:
     });
     console.log(orderOut);
     // 调用7.253的web api
-    let httpClient = new WebApiClient();
     try {
-        let ret = await httpClient.newOrder(orderOut);
-        return true;
+        let success = await httpClient.newOrder(orderOut);
+        return success;
     } catch (error) {
         console.error(error);
         return false;
@@ -37,28 +36,26 @@ const faceOrderPush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus, queue:
 }
 
 function getConsignee(shippingContact: any): any {
+    let { name, organizationName, telephone, mobile, email, address, addressString } = shippingContact;
     let Consignee: any = {
-        ConsigneeName: shippingContact.name,
-        ConsigneeUnitName: shippingContact.organizationName,
-        ConsigneeTelephone: shippingContact.telephone,
-        ConsigneeMobile: shippingContact.mobile,
+        ConsigneeName: name,
+        ConsigneeUnitName: organizationName,
+        ConsigneeTelephone: telephone,
+        ConsigneeMobile: mobile,
         ConsigneeFax: "",
-        ConsigneeEmal: shippingContact.email,
-        ConsigneeAddress: {
-            ConsigneeAddressDetail: shippingContact.addressString,
-        }
+        ConsigneeEmail: email,
     };
-    if (shippingContact.address !== undefined) {
-        let { country, province, city, county, description, zipcode } = shippingContact.address;
+    if (address !== undefined) {
+        let { country, province, city, county, zipcode } = address;
         Consignee.ConsigneeAddress = {
-            // Country: country && country.chineseName,
-            // Province: province && province.chineseName,
+            Country: country && country.chineseName,
+            Province: province && province.chineseName,
             City: city && city.chineseName,
-            // County: county && county.chineseName,
-            ConsigneeAddressDetail: description,
+            County: county && county.chineseName,
             zipcode: zipcode,
         }
     }
+    Consignee.ConsigneeAddress.ConsigneeAddressDetail = addressString;
     return Consignee;
 }
 
@@ -69,14 +66,14 @@ function getInvoiceReceiver(invoiceContact: any): any {
             InvoiceReceiverUnitName: invoiceContact.organizationName,
             InvoiceReceiverTelephone: invoiceContact.telephone,
             InvoiceReceiverUserMobile: invoiceContact.mobile,
-            InvoiceReceiverEmal: invoiceContact.email,
+            InvoiceReceiverEmail: invoiceContact.email,
+            InvoiceAddrssDetail: invoiceContact.addressString,
         };
         if (invoiceContact.address !== undefined) {
-            let { country, province, city, county, description, zipcode } = invoiceContact.address;
+            let { country, province, city, county, zipcode } = invoiceContact.address;
             InvoiceReceiver.InvoiceReceiverProvince = province && province.chineseName;
-            // InvoiceReceiver.InvoiceReceiverCity = city && city.chineseName;
+            InvoiceReceiver.InvoiceReceiverCity = city && city.chineseName;
             InvoiceReceiver.InvoiceReceiverZipCode = zipcode;
-            InvoiceReceiver.InvoiceAddrssDetail = description;
         }
         return InvoiceReceiver;
     }

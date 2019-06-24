@@ -359,8 +359,13 @@ class OpenApi extends fetch_1.Fetch {
         return ret;
     }
     async saveTuidArr(tuid, arr, owner, data) {
-        let ret = await this.post(`joint/tuid-arr/${tuid}/${owner}/${arr}`, data);
-        return ret;
+        try {
+            let ret = await this.post(`joint/tuid-arr/${tuid}/${owner}/${arr}`, data);
+            return ret;
+        }
+        catch (error) {
+            console.error(error);
+        }
     }
     async getTuidVId(tuid) {
         let parts = tuid.split('.');

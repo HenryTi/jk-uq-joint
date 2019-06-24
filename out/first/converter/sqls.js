@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const config_1 = __importDefault(require("config"));
 const lastjkid = config_1.default.get("lastjkid");
 const lastchemid = config_1.default.get("lastchemid");
+const lastCID = config_1.default.get("lastCID");
 const promiseSize = config_1.default.get("promiseSize");
 exports.sqls = {
     //==============================================================
@@ -80,19 +81,19 @@ exports.sqls = {
     //=========================== customer ===========================
     //==============================================================
     readCustomer: `
-                select top ${promiseSize} CID as ID, UnitID as OrganizationID, Name, FirstName, LastName, Sex as Gender
+                select top ${promiseSize} CID as ID, CID as CustomerID, UnitID as OrganizationID, Name, FirstName, LastName, XYZ, Sex as Gender
                         , convert(nvarchar(30), BirthDate, 121) as BirthDate
                         , Tel1, Tel2, Mobile, Email, Email2, Fax1, Fax2, Zip
                         , BuyersAcName as InvoiceTitle, BuyersTaxNo as TaxNo, CompanyRegisteredAddress as RegisteredAddress
                         , CompanyTelephone as RegisteredTelephone, BankName, BankAccountNumber
-                        , EPR as SalesmanID, CustomerSerivceEPR as CustomerServiceStuffID
+                        , EPR as SalesmanID, CustomerServiceEPR as CustomerServiceStuffID
                         , case C5 when 'xx' then 0 else 1 end as IsValid
                         , SaleComanyID as SalesCompanyID
                         , saleRegionBelongsTo as SalesRegionBelongsTo
                         , convert(nvarchar(30), creaDate, 121) as CreateTime
-                from dbs.dbo.Customers where CID > @iMaxId order by CID`,
+                from dbs.dbo.Customers where CID > @iMaxId and CID > '${lastCID}' order by CID`,
     readOrganization: `
-                select top ${promiseSize} UnitID as ID, unitName as Name, convert(nvarchar(30), creaDate, 121) as CreateTime
+                select top ${promiseSize} UnitID as ID, UnitID as OrgnizationID, unitName as Name, convert(nvarchar(30), creaDate, 121) as CreateTime
                 from dbs.dbo.CustUnits where UnitID > @iMaxId order by UnitID`,
     //==============================================================
     //=========================== Product ===========================
@@ -129,11 +130,11 @@ exports.sqls = {
     //==============================================================
     //=========================== Promotion ===========================
     //==============================================================
-    readPromotionType: `select top ${promiseSize} MType as ID, MTypeName as Description
+    readPromotionType: `select top ${promiseSize} MType as ID, MType as MarketingTypeID, MTypeName as Description
                 from dbs.dbo.MarketingType where MType > @iMaxId order by MType`,
-    readPromotionStatus: `select top ${promiseSize} MStatus as ID, MStatusName as Description
+    readPromotionStatus: `select top ${promiseSize} MStatus as ID, MStatus as MarketingStatusID, MStatusName as Description
                 from dbs.dbo.MarketingStatus where MStatus > @iMaxId order by MStatus`,
-    readPromotion: `select top ${promiseSize} MarketingID as ID, Name
+    readPromotion: `select top ${promiseSize} MarketingID as ID, MarketingID, Name
                         , mType as Type, mstatus as Status, PStartTime as StartDate, PendTime as EndDate, market_code as SalesRegionID, inputtime as CreateTime
                 from dbs.dbo.Marketing where MarketingID > @iMaxId and PStartTime is not null and isnull(PEndTime, '2029-12-01') > getdate() order by MarketingID`,
     //==============================================================

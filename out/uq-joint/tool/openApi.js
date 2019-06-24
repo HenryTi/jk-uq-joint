@@ -61,7 +61,7 @@ class OpenApi extends fetch_1.Fetch {
         return ret;
     }
     async getTuidVId(tuid) {
-        let parts = tuid.split('.');
+        let parts = tuid.split('_');
         let url;
         if (parts.length === 1)
             url = `joint/tuid-vid/${tuid}`;

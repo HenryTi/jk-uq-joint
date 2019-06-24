@@ -6,10 +6,10 @@ exports.Customer = {
     uq: uqs_1.uqs.jkCustomer,
     type: 'tuid',
     entity: 'Customer',
-    key: 'ID',
+    key: 'CustomerID',
     mapper: {
-        $id: 'ID@Customer',
-        no: "ID",
+        $id: 'CustomerID@Customer',
+        no: "CustomerID",
         name: 'Name',
         firstName: 'FirstName',
         lastName: 'LastName',
@@ -18,7 +18,12 @@ exports.Customer = {
         birthDay: 'BirthDate',
         createTime: 'CreateTime',
         isValid: 'IsValid',
+        XYZ: 'XYZ',
     },
+    pull: `select ID, CustomerID, OrganizationID, Name, FirstName, LastName, XYZ, Gender, BirthDate, Tel1, Tel2, Mobile, Email, Email2
+           , Fax1, Fax2, Zip, InvoiceTitle, TaxNo, RegisteredAddress, RegisteredTelephone, BankName, BankAccountNumber
+           , SalesmanID, CustomerServiceStuffID, IsValid, SalesCompanyID, SalesRegionBelongsTo, CreateTime
+           from ProdData.dbo.Export_Customer where ID > @iMaxId order by ID`,
     pullWrite: customerPullWrite_1.customerPullWrite,
     firstPullWrite: customerPullWrite_1.customerFirstPullWrite,
 };
@@ -26,13 +31,15 @@ exports.Organization = {
     uq: uqs_1.uqs.jkCustomer,
     type: 'tuid',
     entity: 'Organization',
-    key: 'ID',
+    key: 'OrgnizationID',
     mapper: {
-        $id: 'ID@Organization',
-        no: 'ID',
+        $id: 'OrgnizationID@Organization',
+        no: 'OrgnizationID',
         name: 'Name',
         createTime: 'CreateTime',
     },
+    pull: `select ID, OrgnizationID, UnitName as Name, CreateTime
+           from ProdData.dbo.Export_Orgnization where ID > @iMaxId order by ID`,
     pullWrite: async (joint, data) => {
         try {
             await joint.uqIn(exports.Organization, data);
@@ -51,7 +58,7 @@ exports.OrganizationCustomer = {
     mapper: {
         organization: "OrganizationID@Organization",
         arr1: {
-            customer: '^ID@Customer',
+            customer: '^CustomerID@Customer',
         }
     }
 };
@@ -99,11 +106,10 @@ exports.InvoiceInfo = {
     uq: uqs_1.uqs.jkCustomer,
     type: 'tuid',
     entity: 'InvoiceInfo',
-    key: 'ID',
+    key: 'CustomerID',
     mapper: {
-        $id: 'ID@InvoiceInfo',
+        $id: 'CustomerID@InvoiceInfo',
         title: 'InvoiceTitle',
-        taxNo: 'TaxNo',
         address: 'RegisteredAddress',
         telephone: 'RegisteredTelephone',
         bank: 'BankName',

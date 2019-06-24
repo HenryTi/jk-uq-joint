@@ -43,7 +43,7 @@ export class Joint {
             console.log('tick ' + new Date().toLocaleString());
             //await this.scanPull();
             await this.scanIn();
-            await this.scanOut();
+            // await this.scanOut();
 
             // bus还没有弄好，暂时屏蔽
             // await this.scanBus();
@@ -88,8 +88,10 @@ export class Joint {
         for (let uqIn of uqIns) {
             let { uq, entity, pull, pullWrite } = uqIn;
             let queueName = uq + ':' + entity;
+            let success = false;
             console.log('scan in ' + queueName);
             for (; ;) {
+                success = false;
                 let message: any;
                 let queue: number;
                 if (pull !== undefined) {
@@ -127,15 +129,19 @@ export class Joint {
 
                 try {
                     if (pullWrite !== undefined) {
-                        await pullWrite(this, message);
+                        success = await pullWrite(this, message);
                     }
                     else {
                         await this.uqIn(uqIn, message);
                     }
                     console.log(`process in ${queue}: `, message);
-                    await execProc('write_queue_in_p', [queueName, queue]);
+                    if (success)
+                        await execProc('write_queue_in_p', [queueName, queue]);
+                    else
+                        break;
                 } catch (error) {
                     console.error(error);
+                    break;
                 }
             }
         }
@@ -170,7 +176,7 @@ export class Joint {
         if (key === undefined) throw 'key is not defined';
         if (uqFullName === undefined) throw 'uq ' + uqFullName + ' not defined';
         if (entity === undefined) throw 'tuid ' + entity + ' not defined';
-        let parts = entity.split('.');
+        let parts = entity.split('_');
         let tuid = parts[0];
         if (parts.length === 1) throw 'tuid ' + entity + ' must has .arr';
         let tuidArr = parts[1];
@@ -279,17 +285,26 @@ export class Joint {
                 let message = await this.uqs.readBus(face, queue);
                 if (message === undefined) break;
                 let { id: newQueue, from, body } = message;
+                console.log(queue);
+                console.log(newQueue);
+                console.log(body);
                 let json = await faceSchemas.unpackBusData(face, body);
                 if (uqIdProps !== undefined && from !== undefined) {
                     let uq = await this.uqs.getUq(from);
                     if (uq !== undefined) {
-                        let newJson = await uq.buildData(json, uqIdProps);
-                        json = newJson;
+                        try {
+                            let newJson = await uq.buildData(json, uqIdProps);
+                            json = newJson;
+                        } catch (error) {
+                            console.error(error);
+                            break;
+                        }
                     }
                 }
 
                 let mapFromUq = new MapFromUq(this.uqInDict, this.unit);
                 let outBody = await mapFromUq.map(json, mapper);
+                console.log(outBody);
                 if (await push(this, uqBus, queue, outBody) === false) break;
                 await execProc('write_queue_out_p', [moniker, newQueue]);
             }

@@ -68,7 +68,7 @@ export const Agreement: UqInMap = {
         startDate: 'StartDate',
         endDate: 'EndDate',
     },
-    pull: `select top 1 ID, AgreementID, CID, ObjType, StartDate, EndDate from ProdData.dbo.Export_Agreement where ID > @iMaxId order by ID`,
+    pull: `select top 1 ID, AgreementID, CID, ObjType, StartDate, EndDate from ProdData.dbo.Export_Agreement where ID > @iMaxId and objType in ( 'C', 'U' ) order by ID`,
     pullWrite: async (joint: Joint, data: any) => {
         try {
             let sql = `select a.CID, md.Manu as BrandID, md.DiscountValue as Discount, a.StartDate, a.EndDate
@@ -95,7 +95,7 @@ export const Agreement: UqInMap = {
                     }
                 }
             }
-        return true
+            return true
         } catch (error) {
             console.error(error);
             return false;
