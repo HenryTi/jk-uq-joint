@@ -16,10 +16,10 @@ class Joint {
             try {
                 console.log('tick ' + new Date().toLocaleString());
                 //await this.scanPull();
-                await this.scanIn();
+                // await this.scanIn();
                 // await this.scanOut();
                 // bus还没有弄好，暂时屏蔽
-                // await this.scanBus();
+                await this.scanBus();
             }
             catch (err) {
                 console.error('error in timer tick');

@@ -48,8 +48,8 @@ function getConsignee(shippingContact: any): any {
     if (address !== undefined) {
         let { country, province, city, county, zipcode } = address;
         Consignee.ConsigneeAddress = {
-            Country: country && country.chineseName,
-            Province: province && province.chineseName,
+            // Country: country && country.chineseName,
+            // Province: province && province.chineseName,
             City: city && city.chineseName,
             County: county && county.chineseName,
             zipcode: zipcode,
