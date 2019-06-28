@@ -164,6 +164,6 @@ export const sqls = {
         //=========================== Agreement ===========================
         //==============================================================
         readAgreement:
-                `select top 1 AgreementId as ID, AgreementID, ObjType
+                `select top ${promiseSize} AgreementId as ID, AgreementID, ObjType
                 from dbs.dbo.Agreement where AgreementID > @iMaxId and objType in ('C', 'U')  order by AgreementId`,
 }

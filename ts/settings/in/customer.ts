@@ -47,8 +47,8 @@ export const Organization: UqInTuid = {
             await joint.uqIn(Organization, data);
             return true;
         } catch (error) {
-            console.log(error);
-            return false;
+            console.error(error);
+            throw error;
         }
     }
 };

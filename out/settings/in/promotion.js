@@ -69,7 +69,7 @@ exports.Promotion = {
         }
         catch (error) {
             console.error(error);
-            return false;
+            throw error;
         }
     },
     firstPullWrite: promotionPullWrite_1.promotionFirstPullWrite,

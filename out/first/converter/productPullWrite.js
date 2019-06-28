@@ -59,7 +59,7 @@ async function productFirstPullWrite(joint, data) {
     }
     catch (error) {
         console.error(error);
-        return false;
+        throw error;
     }
 }
 exports.productFirstPullWrite = productFirstPullWrite;
@@ -78,7 +78,7 @@ async function packFirstPullWrite(joint, data) {
     }
     catch (error) {
         console.error(error);
-        return false;
+        throw error;
     }
 }
 exports.packFirstPullWrite = packFirstPullWrite;

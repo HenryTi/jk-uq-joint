@@ -39,7 +39,7 @@ export async function customerPullWrite(joint: Joint, data: any): Promise<boolea
         return true;
     } catch (error) {
         console.error(error);
-        return false;
+        throw error;
     }
 }
 
@@ -93,7 +93,7 @@ export async function customerFirstPullWrite(joint: Joint, data: any): Promise<b
         return true;
     } catch (error) {
         console.error(error);
-        return false;
+        throw error;
     }
 }
 
@@ -104,6 +104,6 @@ export async function consigneeContactPullWrite(joint: Joint, contactData: any):
         return true;
     } catch (error) {
         console.error(error);
-        return false;
+        throw error;
     }
 }

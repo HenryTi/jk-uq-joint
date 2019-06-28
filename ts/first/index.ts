@@ -43,24 +43,20 @@ const promiseSize = config.get<number>("promiseSize");
                 ret = await readFunc(maxId);
             } catch (error) {
                 console.error(error);
-                continue;
+                throw error;
             }
             if (ret === undefined || count > maxRows) break;
             let { lastId, data: rows } = ret;
 
             rows.forEach(e => {
-                try {
-                    if (firstPullWrite !== undefined) {
-                        promises.push(firstPullWrite(joint, e));
-                    } else if (pullWrite !== undefined) {
-                        promises.push(pullWrite(joint, e));
-                    } else {
-                        promises.push(joint.uqIn(uqIn, e));
-                    }
-                    count++;
-                } catch (error) {
-                    console.error(error);
+                if (firstPullWrite !== undefined) {
+                    promises.push(firstPullWrite(joint, e));
+                } else if (pullWrite !== undefined) {
+                    promises.push(pullWrite(joint, e));
+                } else {
+                    promises.push(joint.uqIn(uqIn, e));
                 }
+                count++;
             });
             maxId = lastId;
 
@@ -71,6 +67,7 @@ const promiseSize = config.get<number>("promiseSize");
                 } catch (error) {
                     // debugger;
                     console.error(error);
+                    throw error;
                 }
                 promises.splice(0);
                 let after = Date.now();

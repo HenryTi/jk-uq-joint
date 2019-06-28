@@ -16,10 +16,10 @@ class Joint {
             try {
                 console.log('tick ' + new Date().toLocaleString());
                 //await this.scanPull();
-                // await this.scanIn();
+                await this.scanIn();
                 // await this.scanOut();
                 // bus还没有弄好，暂时屏蔽
-                await this.scanBus();
+                // await this.scanBus();
             }
             catch (err) {
                 console.error('error in timer tick');
@@ -81,7 +81,7 @@ class Joint {
             let { uq, entity, pull, pullWrite } = uqIn;
             let queueName = uq + ':' + entity;
             let success = false;
-            console.log('scan in ' + queueName);
+            // console.log('scan in ' + queueName);
             for (;;) {
                 success = false;
                 let message;
@@ -128,7 +128,7 @@ class Joint {
                     else {
                         await this.uqIn(uqIn, message);
                     }
-                    console.log(`process in ${queue}: `, message);
+                    // console.log(`process in ${queue}: `, message);
                     if (success)
                         await tool_1.execProc('write_queue_in_p', [queueName, queue]);
                     else
@@ -229,10 +229,16 @@ class Joint {
         let body = await mapToUq.map(data, mapper);
         let uq = await this.uqs.getUq(uqFullName);
         let { $ } = data;
-        if ($ === '-')
-            await uq.delMap(entity, body);
-        else
-            await uq.setMap(entity, body);
+        try {
+            if ($ === '-')
+                await uq.delMap(entity, body);
+            else
+                await uq.setMap(entity, body);
+        }
+        catch (error) {
+            console.log(error);
+            throw error;
+        }
     }
     /**
      *

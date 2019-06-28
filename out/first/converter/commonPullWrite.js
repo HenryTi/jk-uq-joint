@@ -17,7 +17,7 @@ async function PackTypePullWrite(joint, data) {
     }
     catch (error) {
         console.error(error);
-        return false;
+        throw error;
     }
 }
 exports.PackTypePullWrite = PackTypePullWrite;

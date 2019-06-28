@@ -29,7 +29,14 @@ exports.Brand = {
                         , case [Restrict] when 'NoRestrict' then 0 else 1 end as [Restrict]
                         from zcl_mess.dbo.BrandDeliverTime where BrandCode = @BrandID and isValid = 1`;
             promisesSql.push(tools_1.execSql(readBrandDeliveryTime, [{ 'name': 'BrandID', 'value': brandId }]));
-            let sqlResult = await Promise.all(promisesSql);
+            let sqlResult = [];
+            try {
+                sqlResult = await Promise.all(promisesSql);
+            }
+            catch (error) {
+                console.error(error);
+                throw error;
+            }
             let promises = [];
             promises.push(productPullWrite_1.pushRecordset(joint, sqlResult[0], exports.BrandSalesRegion));
             promises.push(productPullWrite_1.pushRecordset(joint, sqlResult[1], exports.BrandDeliveryTime));
@@ -38,7 +45,7 @@ exports.Brand = {
         }
         catch (error) {
             console.error(error);
-            return false;
+            throw error;
         }
     }
 };
@@ -169,7 +176,7 @@ exports.PriceX = {
         }
         catch (error) {
             console.error(error);
-            return false;
+            throw error;
         }
     }
 };

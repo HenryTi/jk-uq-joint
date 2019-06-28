@@ -31,7 +31,14 @@ export const Brand: UqInTuid = {
                         from zcl_mess.dbo.BrandDeliverTime where BrandCode = @BrandID and isValid = 1`;
             promisesSql.push(execSql(readBrandDeliveryTime, [{ 'name': 'BrandID', 'value': brandId }]));
 
-            let sqlResult = await Promise.all(promisesSql);
+            let sqlResult: any[] = []
+            try {
+                sqlResult = await Promise.all(promisesSql);
+            } catch (error) {
+                console.error(error);
+                throw error;
+            }
+
             let promises: PromiseLike<any>[] = [];
             promises.push(pushRecordset(joint, sqlResult[0], BrandSalesRegion));
             promises.push(pushRecordset(joint, sqlResult[1], BrandDeliveryTime));
@@ -39,7 +46,7 @@ export const Brand: UqInTuid = {
             return true;
         } catch (error) {
             console.error(error);
-            return false;
+            throw error;
         }
     }
 };
@@ -178,7 +185,7 @@ export const PriceX: UqInMap = {
             return true;
         } catch (error) {
             console.error(error);
-            return false;
+            throw error;
         }
     }
 };

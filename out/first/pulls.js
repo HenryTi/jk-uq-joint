@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const sqls_1 = require("./converter/sqls");
-const customer_1 = require("../settings/in/customer");
 const customerDiscount_1 = require("../settings/in/customerDiscount");
 /** */
 exports.pulls = [
@@ -35,7 +34,7 @@ exports.pulls = [
     // { read: sqls.readProduct, uqIn: ProductX },
     // 客户和客户单位基本信息
     // { read: sqls.readOrganization, uqIn: Organization },
-    { read: sqls_1.sqls.readCustomer, uqIn: customer_1.Customer },
+    // { read: sqls.readCustomer, uqIn: Customer },
     { read: sqls_1.sqls.readAgreement, uqIn: customerDiscount_1.Agreement },
 ];
 //# sourceMappingURL=pulls.js.map

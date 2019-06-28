@@ -10,6 +10,6 @@ export async function PackTypePullWrite(joint: Joint, data: any): Promise<boolea
         return true;
     } catch (error) {
         console.error(error);
-        return false;
+        throw error;
     }
 }

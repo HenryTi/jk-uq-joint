@@ -23,8 +23,8 @@ export const Employee: UqInTuid = {
             await joint.uqIn(Employee, data);
             return true;
         } catch (error) {
-            console.log(error);
-            return false;
+            console.error(error);
+            throw error;
         }
     },
 };

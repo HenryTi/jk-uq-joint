@@ -34,6 +34,6 @@ export async function promotionFirstPullWrite(joint: Joint, data: any) {
         return true;
     } catch (error) {
         console.error(error);
-        return false;
+        throw error;
     }
 }

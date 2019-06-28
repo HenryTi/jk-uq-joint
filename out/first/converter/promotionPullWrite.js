@@ -41,7 +41,7 @@ async function promotionFirstPullWrite(joint, data) {
     }
     catch (error) {
         console.error(error);
-        return false;
+        throw error;
     }
 }
 exports.promotionFirstPullWrite = promotionFirstPullWrite;

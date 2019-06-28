@@ -42,7 +42,7 @@ async function customerPullWrite(joint, data) {
     }
     catch (error) {
         console.error(error);
-        return false;
+        throw error;
     }
 }
 exports.customerPullWrite = customerPullWrite;
@@ -95,7 +95,7 @@ async function customerFirstPullWrite(joint, data) {
     }
     catch (error) {
         console.error(error);
-        return false;
+        throw error;
     }
 }
 exports.customerFirstPullWrite = customerFirstPullWrite;
@@ -107,7 +107,7 @@ async function consigneeContactPullWrite(joint, contactData) {
     }
     catch (error) {
         console.error(error);
-        return false;
+        throw error;
     }
 }
 exports.consigneeContactPullWrite = consigneeContactPullWrite;

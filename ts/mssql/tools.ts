@@ -35,5 +35,6 @@ export async function execSql(sql: string, params?: { name: string, value: any }
     } catch (error) {
         // debugger;
         console.error(error);
+        throw error;
     }
 };
