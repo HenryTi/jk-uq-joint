@@ -1,6 +1,6 @@
-import { UqBus, DataPush, Joint, DataPull } from "../../uq-joint";
+import { UqBus, DataPush, Joint, DataPull, DataPullResult } from "../../uq-joint";
 import { WebApiClient, httpClient } from "../../tools/webApiClient";
-import { uqPullRead } from "../../first/converter/uqOutRead";
+import { uqPullRead, uqOutRead } from "../../first/converter/uqOutRead";
 
 const facePointPush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus, queue: number, data: any): Promise<boolean> => {
     console.log(data);
@@ -10,9 +10,9 @@ const facePointPush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus, queue:
     return true;
 }
 
-const facePointPull: DataPull<UqBus> = async (joint: Joint, uqBus: UqBus, queue: number): Promise<{ queue: number, data: any }> => {
-    let sql = `select ID, CID, Years, AllScore, ScoreUsed from ProdData.dbo.Export_CustomerScoreBook where ID > @iMaxId order by ID`;
-    return await uqPullRead(sql, queue);
+const facePointPull: DataPull<UqBus> = async (joint: Joint, uqBus: UqBus, queue: string | number): Promise<DataPullResult> => {
+    let sql = `select top 1 ID, CID, Years, AllScore, ScoreUsed from ProdData.dbo.Export_CustomerScoreBook where ID > @iMaxId order by ID`;
+    return await uqOutRead(sql, queue);
 }
 
 export const facePoint: UqBus = {

@@ -1,7 +1,12 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const uqs_1 = require("../uqs");
 const customerPullWrite_1 = require("../../first/converter/customerPullWrite");
+const config_1 = __importDefault(require("config"));
+const promiseSize = config_1.default.get("promiseSize");
 exports.Customer = {
     uq: uqs_1.uqs.jkCustomer,
     type: 'tuid',
@@ -20,7 +25,7 @@ exports.Customer = {
         isValid: 'IsValid',
         XYZ: 'XYZ',
     },
-    pull: `select ID, CustomerID, OrganizationID, Name, FirstName, LastName, XYZ, Gender, BirthDate, Tel1, Tel2, Mobile, Email, Email2
+    pull: `select top ${promiseSize} ID, CustomerID, OrganizationID, Name, FirstName, LastName, XYZ, Gender, BirthDate, Tel1, Tel2, Mobile, Email, Email2
            , Fax1, Fax2, Zip, InvoiceTitle, TaxNo, RegisteredAddress, RegisteredTelephone, BankName, BankAccountNumber
            , SalesmanID, CustomerServiceStuffID, IsValid, SalesCompanyID, SalesRegionBelongsTo, CreateTime
            from ProdData.dbo.Export_Customer where ID > @iMaxId order by ID`,
@@ -38,7 +43,7 @@ exports.Organization = {
         name: 'Name',
         createTime: 'CreateTime',
     },
-    pull: `select ID, OrgnizationID, UnitName as Name, CreateTime
+    pull: `select top ${promiseSize} ID, OrgnizationID, UnitName as Name, CreateTime
            from ProdData.dbo.Export_Orgnization where ID > @iMaxId order by ID`,
     pullWrite: async (joint, data) => {
         try {

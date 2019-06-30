@@ -20,7 +20,7 @@ async function productPullWrite(joint, data) {
     }
     catch (error) {
         console.error(error);
-        return false;
+        throw error;
     }
 }
 exports.productPullWrite = productPullWrite;

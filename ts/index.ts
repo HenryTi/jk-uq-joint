@@ -21,7 +21,7 @@ import { initMssqlPool } from './mssql/tools';
     await initMssqlPool();
     let app = express();
 
-    app.use((err:any, req:Request, res:Response, next:NextFunction) => {
+    app.use((err: any, req: Request, res: Response, next: NextFunction) => {
         res.status(err.status || 500);
         res.render('error', {
             message: err.message,
@@ -30,13 +30,13 @@ import { initMssqlPool } from './mssql/tools';
     });
     app.use(bodyParser.json());
     app.use(cors());
-    app.set('json replacer', (key:string, value:any) => {
+    app.set('json replacer', (key: string, value: any) => {
         if (value === null) return undefined;
         return value;
     });
 
-    app.use(async (req:express.Request, res:express.Response, next:express.NextFunction) => {
-        let s= req.socket;
+    app.use(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+        let s = req.socket;
         let p = '';
         if (req.method !== 'GET') p = JSON.stringify(req.body);
         console.log('%s:%s - %s %s %s', s.remoteAddress, s.remotePort, req.method, req.originalUrl, p);
@@ -52,9 +52,9 @@ import { initMssqlPool } from './mssql/tools';
     app.use('/joint-uq-jk', joint.createRouter());
 
     let port = config.get<number>('port');
-    app.listen(port, async ()=>{
+    app.listen(port, async () => {
         console.log('UQ-API listening on port ' + port);
-        let {host, user} = connection;
+        let { host, user } = connection;
         console.log('process.env.NODE_ENV: %s\nDB host: %s, user: %s',
             process.env.NODE_ENV,
             host,

@@ -37,7 +37,7 @@ export class Uqs {
         return await this.unitx.readBus(face, queue);
     }
 
-    async writeBus(face: string, source: string, newQueue: number, body: any) {
+    async writeBus(face: string, source: string, newQueue: string | number, body: any) {
         await this.unitx.writeBus(face, source, newQueue, body);
     }
 }
@@ -309,7 +309,7 @@ class UqUnitx extends Uq {
         return await this.openApi.readBus(face, queue);
     }
 
-    async writeBus(face: string, source: string, newQueue: number, body: any) {
+    async writeBus(face: string, source: string, newQueue: string | number, body: any) {
         await this.openApi.writeBus(face, source, newQueue, body);
     }
 }
@@ -365,7 +365,7 @@ export class OpenApi extends Fetch {
         });
         return ret;
     }
-    async writeBus(face: string, from: string, queue: number, body: string): Promise<BusMessage> {
+    async writeBus(face: string, from: string, queue: string | number, body: string): Promise<BusMessage> {
         let ret = await this.post('open/joint-write-bus', {
             unit: this.unit,
             face: face,

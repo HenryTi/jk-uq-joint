@@ -2,6 +2,9 @@ import * as _ from 'lodash';
 import { UqInTuid, UqInMap, UqInTuidArr, Joint } from "../../uq-joint";
 import { uqs } from "../uqs";
 import { customerPullWrite, customerFirstPullWrite, consigneeContactPullWrite } from '../../first/converter/customerPullWrite';
+import config from 'config';
+
+const promiseSize = config.get<number>("promiseSize");
 
 export const Customer: UqInTuid = {
     uq: uqs.jkCustomer,
@@ -21,7 +24,7 @@ export const Customer: UqInTuid = {
         isValid: 'IsValid',
         XYZ: 'XYZ',
     },
-    pull: `select ID, CustomerID, OrganizationID, Name, FirstName, LastName, XYZ, Gender, BirthDate, Tel1, Tel2, Mobile, Email, Email2
+    pull: `select top ${promiseSize} ID, CustomerID, OrganizationID, Name, FirstName, LastName, XYZ, Gender, BirthDate, Tel1, Tel2, Mobile, Email, Email2
            , Fax1, Fax2, Zip, InvoiceTitle, TaxNo, RegisteredAddress, RegisteredTelephone, BankName, BankAccountNumber
            , SalesmanID, CustomerServiceStuffID, IsValid, SalesCompanyID, SalesRegionBelongsTo, CreateTime
            from ProdData.dbo.Export_Customer where ID > @iMaxId order by ID`,
@@ -40,7 +43,7 @@ export const Organization: UqInTuid = {
         name: 'Name',
         createTime: 'CreateTime',
     },
-    pull: `select ID, OrgnizationID, UnitName as Name, CreateTime
+    pull: `select top ${promiseSize} ID, OrgnizationID, UnitName as Name, CreateTime
            from ProdData.dbo.Export_Orgnization where ID > @iMaxId order by ID`,
     pullWrite: async (joint: Joint, data: any) => {
         try {

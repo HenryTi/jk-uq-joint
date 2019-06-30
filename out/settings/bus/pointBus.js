@@ -10,8 +10,8 @@ const facePointPush = async (joint, uqBus, queue, data) => {
     return true;
 };
 const facePointPull = async (joint, uqBus, queue) => {
-    let sql = `select ID, CID, Years, AllScore, ScoreUsed from ProdData.dbo.Export_CustomerScoreBook where ID > @iMaxId order by ID`;
-    return await uqOutRead_1.uqPullRead(sql, queue);
+    let sql = `select top 1 ID, CID, Years, AllScore, ScoreUsed from ProdData.dbo.Export_CustomerScoreBook where ID > @iMaxId order by ID`;
+    return await uqOutRead_1.uqOutRead(sql, queue);
 };
 exports.facePoint = {
     face: '百灵威系统工程部/point/point',

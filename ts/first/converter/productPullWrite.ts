@@ -13,7 +13,7 @@ export async function productPullWrite(joint: Joint, data: any) {
         return true;
     } catch (error) {
         console.error(error);
-        return false;
+        throw error;
     }
 }
 

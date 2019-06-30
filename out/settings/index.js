@@ -22,6 +22,7 @@ exports.settings = {
     //pull: pull,
     //push: push,
     bus: bus_1.bus,
-    pullReadFromSql: uqOutRead_1.uqPullRead
+    // pullReadFromSql: uqPullRead
+    pullReadFromSql: uqOutRead_1.uqOutRead
 };
 //# sourceMappingURL=index.js.map

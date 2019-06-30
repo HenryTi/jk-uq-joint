@@ -1,8 +1,13 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const uqs_1 = require("../uqs");
 const tools_1 = require("../../mssql/tools");
 const uqOutRead_1 = require("../../first/converter/uqOutRead");
+const config_1 = __importDefault(require("config"));
+const promiseSize = config_1.default.get("promiseSize");
 exports.CustomerDiscount = {
     uq: uqs_1.uqs.jkCustomerDiscount,
     type: 'map',
@@ -17,16 +22,18 @@ exports.CustomerDiscount = {
         }
     },
     pull: async (joint, uqIn, queue) => {
-        let sql = `select top 1 md.ID, a.CID as CustomerID, md.Manu as BrandID, md.DiscountValue as Discount, a.StartDate, a.EndDate
+        let sql = `select top ${promiseSize} md.ID, a.CID as CustomerID, md.Manu as BrandID, md.DiscountValue as Discount, a.StartDate, a.EndDate
         from ProdData.dbo.Export_AgreementManuDiscount md
         inner join dbs.dbo.Agreement a on md.AgreementID = a.AgreementID
         where md.ID > @iMaxId and a.objType = 'C' order by md.Id`;
         try {
-            let ret = await uqOutRead_1.uqPullRead(sql, queue);
+            let ret = await uqOutRead_1.uqOutRead(sql, queue);
             if (ret !== undefined) {
                 let { data } = ret;
-                data["StartDate"] = data["StartDate"].getTime();
-                data["EndDate"] = data["EndDate"].getTime();
+                data.map(e => {
+                    e["StartDate"] = e["StartDate"].getTime();
+                    e["EndDate"] = e["EndDate"].getTime();
+                });
                 return ret;
             }
         }
@@ -50,16 +57,18 @@ exports.OrganizationDiscount = {
         }
     },
     pull: async (joint, uqIn, queue) => {
-        let sql = `select top 1 md.ID, a.CID as OrgnizationID, md.Manu as BrandID, md.DiscountValue as Discount, a.StartDate, a.EndDate
+        let sql = `select top ${promiseSize} md.ID, a.CID as OrgnizationID, md.Manu as BrandID, md.DiscountValue as Discount, a.StartDate, a.EndDate
         from ProdData.dbo.Export_AgreementManuDiscount md
         inner join dbs.dbo.Agreement a on md.AgreementID = a.AgreementID
         where md.ID > @iMaxId and a.objType = 'U' order by md.Id`;
         try {
-            let ret = await uqOutRead_1.uqPullRead(sql, queue);
+            let ret = await uqOutRead_1.uqOutRead(sql, queue);
             if (ret !== undefined) {
                 let { data } = ret;
-                data["StartDate"] = data["StartDate"].getTime();
-                data["EndDate"] = data["EndDate"].getTime();
+                data.map(e => {
+                    e["StartDate"] = e["StartDate"].getTime();
+                    e["EndDate"] = e["EndDate"].getTime();
+                });
                 return ret;
             }
         }

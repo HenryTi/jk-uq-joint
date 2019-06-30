@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { Settings, UqIn, UqOut, DataPush, UqInTuid, UqInMap, UqInTuidArr } from "./defines";
+import { Settings, UqIn, UqOut, DataPush, UqInTuid, UqInMap, UqInTuidArr, DataPullResult } from "./defines";
 import { tableFromProc, execProc, execSql } from "./db/mysql/tool";
 import { MapFromUq as MapFromUq, MapToUq as MapToUq } from "./tool/mapData";
 import { map } from "./tool/map"; import { createRouter } from './router';
@@ -88,20 +88,19 @@ export class Joint {
         for (let uqIn of uqIns) {
             let { uq, entity, pull, pullWrite } = uqIn;
             let queueName = uq + ':' + entity;
-            let success = false;
             console.log('scan in ' + queueName);
+            let promises: PromiseLike<any>[] = [];
             for (; ;) {
-                success = false;
                 let message: any;
-                let queue: number;
+                let queue: string;
+                let ret: DataPullResult = undefined;
                 if (pull !== undefined) {
                     let retp = await tableFromProc('read_queue_in_p', [queueName]);
                     if (retp.length > 0) {
                         queue = retp[0].queue;
                     } else {
-                        queue = 0;
+                        queue = '0';
                     }
-                    let ret = undefined;
                     switch (typeof pull) {
                         case 'function':
                             ret = await pull(this, uqIn, queue);
@@ -116,29 +115,37 @@ export class Joint {
                             break;
                     }
                     if (ret === undefined) break;
+                    /*
                     queue = ret.queue;
                     message = ret.data;
+                    */
                 }
                 else {
                     let retp = await tableFromProc('read_queue_in', [queueName]);
                     if (!retp || retp.length === 0) break;
                     let { id, body, date } = retp[0];
+                    ret = { lastPointer: id, data: [JSON.parse(body)] };
+                    /*
                     queue = id;
                     message = JSON.parse(body);
+                    */
                 }
 
-                try {
+                let { lastPointer, data } = ret;
+                data.forEach(message => {
                     if (pullWrite !== undefined) {
-                        success = await pullWrite(this, message);
+                        promises.push(pullWrite(this, message));
                     }
                     else {
-                        await this.uqIn(uqIn, message);
+                        promises.push(this.uqIn(uqIn, message));
                     }
+                });
+
+                try {
                     // console.log(`process in ${queue}: `, message);
-                    if (success)
-                        await execProc('write_queue_in_p', [queueName, queue]);
-                    else
-                        break;
+                    await Promise.all(promises);
+                    promises.splice(0);
+                    await execProc('write_queue_in_p', [queueName, lastPointer]);
                 } catch (error) {
                     console.error(error);
                     break;
@@ -326,11 +333,11 @@ export class Joint {
                 }
                 let message = await pull(this, uqBus, queue);
                 if (message === undefined) break;
-                let { queue: newQueue, data } = message;
+                let { lastPointer: newQueue, data } = message;
                 //let newQueue = await this.busIn(queue);
                 //if (newQueue === undefined) break;
                 let mapToUq = new MapToUq(this.uqInDict, this.unit);
-                let inBody = await mapToUq.map(data, mapper);
+                let inBody = await mapToUq.map(data[0], mapper);
                 let packed = await faceSchemas.packBusData(face, inBody);
                 await this.uqs.writeBus(face, joinName, newQueue, packed);
                 await execProc('write_queue_in_p', [moniker, newQueue]);

@@ -2,6 +2,9 @@ import { UqInTuid, UqInMap, UqInTuidArr, UqIn, Joint } from "../../uq-joint";
 import { uqs } from "../uqs";
 import { productPullWrite, productFirstPullWrite, packFirstPullWrite, pushRecordset } from "../../first/converter/productPullWrite";
 import { execSql } from "../../mssql/tools";
+import config from 'config';
+
+const promiseSize = config.get<number>("promiseSize");
 
 export const Brand: UqInTuid = {
     uq: uqs.jkProduct,
@@ -13,7 +16,7 @@ export const Brand: UqInTuid = {
         no: "BrandID",
         name: "BrandName",
     },
-    pull: `select top 1 ID, BrandID, BrandName
+    pull: `select top ${promiseSize} ID, BrandID, BrandName
         from ProdData.dbo.Export_Brand where ID > @iMaxId order by ID`,
     firstPullWrite: async (joint: Joint, data: any): Promise<boolean> => {
         try {
@@ -62,7 +65,7 @@ export const BrandSalesRegion: UqInMap = {
             level: "^Level",
         }
     },
-    pull: `select top 1 ID, BrandID, SalesRegionID, BrandLevel as Level
+    pull: `select top ${promiseSize} ID, BrandID, SalesRegionID, BrandLevel as Level
         from ProdData.dbo.Export_BrandSalesRegion where ID > @iMaxId order by ID`,
 };
 
@@ -81,7 +84,7 @@ export const BrandDeliveryTime: UqInMap = {
             isRestrict: '^Restrict',
         }
     },
-    pull: `select top 1 ID, BrandCode as BrandID, SaleRegionID as SalesRegionID, MinValue, MaxValue, Unit
+    pull: `select top ${promiseSize} ID, BrandCode as BrandID, SaleRegionID as SalesRegionID, MinValue, MaxValue, Unit
         , case [Restrict] when 'NoRestrict' then 0 else 1 end as [Restrict]
         from ProdData.dbo.Export_BrandDeliverTime where id > @iMaxId and isValid = 1 order by id`,
 };
@@ -117,7 +120,7 @@ export const ProductX: UqInTuid = {
         descriptionC: 'DescriptionC',
         isValid: 'IsValid',
     },
-    pull: `select top 1 ID, ProductID, BrandID, ProductNumber, Description, DescriptionC, CasNumber as CAS, ChemicalID
+    pull: `select top ${promiseSize} ID, ProductID, BrandID, ProductNumber, Description, DescriptionC, CasNumber as CAS, ChemicalID
         , MolecularFormula, MolecularWeight, Purity, Grade, MdlNumber, [Restrict], 1 as IsValid
         from ProdData.dbo.Export_Product where ID > @iMaxId order by ID`,
     pullWrite: productPullWrite,
@@ -132,7 +135,7 @@ export const InvalidProduct: UqInTuid = {
     mapper: {
 
     },
-    pull: `select top 1 pv.ID, pv.ProductID, p.manufactory as BrandID, p.originalId as ProductNumber, p.Description, p.DescriptionC
+    pull: `select top ${promiseSize} pv.ID, pv.ProductID, p.manufactory as BrandID, p.originalId as ProductNumber, p.Description, p.DescriptionC
         , zcl_mess.dbo.fc_recas(p.CAS) as CAS, pc.ChemID as ChemicalID
         , p.mf as MolecularFormula, p.mw as MolecularWeight, p.Purity, p.LotNumber as MdlNumber, p.[Restrict], 0 as IsValid
         from ProdData.dbo.Export_Invalid_Product pv inner join zcl_mess.dbo.Product p on pv.ProductID = p.jkid
@@ -155,7 +158,7 @@ export const ProductPackX: UqInTuidArr = {
         radioy: "Quantity",
         unit: "Name",
     },
-    pull: `select top 1 ID, PackagingID as PackingID, ProductID, PackagingQuantity as PackNr, PackagingVolumn as Quantity, PackagingUnit as Name
+    pull: `select top ${promiseSize} ID, PackagingID as PackingID, ProductID, PackagingQuantity as PackNr, PackagingVolumn as Quantity, PackagingUnit as Name
         from ProdData.dbo.Export_Packaging where ID > @iMaxId order by ID`,
     firstPullWrite: packFirstPullWrite,
 };
@@ -174,7 +177,7 @@ export const PriceX: UqInMap = {
             retail: "^Price",
         }
     },
-    pull: `select top 1 jp.ID, jp.PackagingID as PackingID, j.jkid as ProductID, jp.SalesRegionID, j.Price
+    pull: `select top ${promiseSize} jp.ID, jp.PackagingID as PackingID, j.jkid as ProductID, jp.SalesRegionID, j.Price
         , j.Currency, j.ExpireDate as Expire_Date, j.Discontinued
         from ProdData.dbo.Export_PackagingSalesRegion jp inner join zcl_mess.dbo.jkcat j on jp.PackagingID = j.jkcat
         where jp.ID > @iMaxId order by jp.ID`,
@@ -217,7 +220,7 @@ export const ProductSalesRegion: UqInMap = {
             isValid: '^IsValid',
         }
     },
-    pull: `select top 1 ID, ProductID, SalesRegionID, IsValid
+    pull: `select top ${promiseSize} ID, ProductID, SalesRegionID, IsValid
         from ProdData.dbo.Export_ProductSalesRegion where ID > @iMaxId order by ID`,
 };
 

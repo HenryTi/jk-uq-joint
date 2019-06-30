@@ -48,7 +48,7 @@ const promiseSize = config_1.default.get("promiseSize");
             }
             if (ret === undefined || count > maxRows)
                 break;
-            let { lastId, data: rows } = ret;
+            let { lastPointer, data: rows } = ret;
             rows.forEach(e => {
                 if (firstPullWrite !== undefined) {
                     promises.push(firstPullWrite(joint, e));
@@ -61,7 +61,7 @@ const promiseSize = config_1.default.get("promiseSize");
                 }
                 count++;
             });
-            maxId = lastId;
+            maxId = lastPointer;
             if (promises.length >= promiseSize) {
                 let before = Date.now();
                 try {
@@ -77,11 +77,18 @@ const promiseSize = config_1.default.get("promiseSize");
                 let sum = Math.round((after - start) / 1000);
                 let each = Math.round(after - priorEnd);
                 let eachSubmit = Math.round(after - before);
-                console.log('count = ' + count + ' each: ' + each + ' sum: ' + sum + ' eachSubmit: ' + eachSubmit + 'ms; lastId: ' + lastId);
+                console.log('count = ' + count + ' each: ' + each + ' sum: ' + sum + ' eachSubmit: ' + eachSubmit + 'ms; lastId: ' + lastPointer);
                 priorEnd = after;
             }
         }
-        await Promise.all(promises);
+        try {
+            await Promise.all(promises);
+        }
+        catch (error) {
+            // debugger;
+            console.error(error);
+            throw error;
+        }
         promises.splice(0);
         console.log(entity + " end   at " + new Date());
     }

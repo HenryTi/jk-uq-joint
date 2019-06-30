@@ -1,5 +1,5 @@
 import { sqls } from './converter/sqls';
-import { UqIn } from "../uq-joint";
+import { UqIn, DataPullResult } from "../uq-joint";
 
 import { ProductCategory, ProductCategoryLanguage, ProductProductCategory } from "../settings/in/productCategory";
 import { Country, Province, City, County } from "../settings/in/Address";
@@ -18,7 +18,7 @@ import { Employee } from '../settings/in/hr';
  *  1.通过配置UqOutConvert，从数据源中获取要交换的数据，通过配置uqIn，表示源数据要进行的格式转换以及目的地
  */
 
-export type UqOutConverter = (maxId: string) => Promise<{ lastId: string, data: any }>;
+export type UqOutConverter = (maxId: string) => Promise<DataPullResult>;
 
 /** */
 export const pulls: {

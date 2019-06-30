@@ -1,6 +1,11 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const uqs_1 = require("../uqs");
+const config_1 = __importDefault(require("config"));
+const promiseSize = config_1.default.get("promiseSize");
 exports.ProductCategory = {
     uq: uqs_1.uqs.jkProduct,
     type: 'tuid',
@@ -13,7 +18,7 @@ exports.ProductCategory = {
         isLeaf: "IsLeaf",
         orderWithinParent: "OrderWithinParentCategory",
     },
-    pull: `select top 1 ID, ProductCategoryID, ParentProductCategoryID, OrderWithinParentCatetory as OrderWithinParentCategory,
+    pull: `select top ${promiseSize} ID, ProductCategoryID, ParentProductCategoryID, OrderWithinParentCatetory as OrderWithinParentCategory,
         isLeaf, IsValid, IsShow from ProdData.dbo.Export_ProductCategory
         where ID > @iMaxId order by ID`,
 };
@@ -29,7 +34,7 @@ exports.ProductCategoryLanguage = {
         language: "LanguageID@Language",
         name: "ProductCategoryName",
     },
-    pull: `select top 1 ID, ProductCategoryLanguageID, ProductCategoryID, LanguageID, ProductCategoryName
+    pull: `select top ${promiseSize} ID, ProductCategoryLanguageID, ProductCategoryID, LanguageID, ProductCategoryName
         from ProdData.dbo.Export_ProductCategoryLanguage where ID > @iMaxId order by ID`,
 };
 exports.ProductProductCategory = {
@@ -42,7 +47,7 @@ exports.ProductProductCategory = {
             category: "^ProductCategoryID@ProductCategory"
         },
     },
-    pull: `select top 1 ID, SaleProductProductCategoryID, SaleProductID, ProductCategoryID, IsValid
+    pull: `select top ${promiseSize} ID, SaleProductProductCategoryID, SaleProductID, ProductCategoryID, IsValid
         from ProdData.dbo.Export_SaleProductProductCategory where ID > @iMaxId order by ID`,
 };
 //# sourceMappingURL=productCategory.js.map

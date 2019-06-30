@@ -1,7 +1,10 @@
-import { UqInTuid, UqInMap, UqInTuidArr, Joint } from "../../uq-joint";
+import { UqInTuid, UqInMap, UqInTuidArr, Joint, DataPullResult } from "../../uq-joint";
 import { uqs } from "../uqs";
 import { execSql } from "../../mssql/tools";
-import { uqPullRead } from "../../first/converter/uqOutRead";
+import { uqPullRead, uqOutRead } from "../../first/converter/uqOutRead";
+import config from 'config';
+
+const promiseSize = config.get<number>("promiseSize");
 
 export const CustomerDiscount: UqInMap = {
     uq: uqs.jkCustomerDiscount,
@@ -16,17 +19,19 @@ export const CustomerDiscount: UqInMap = {
             endDate: "^EndDate",
         }
     },
-    pull: async (joint: Joint, uqIn: UqInMap, queue: number): Promise<{ queue: number, data: any }> => {
-        let sql = `select top 1 md.ID, a.CID as CustomerID, md.Manu as BrandID, md.DiscountValue as Discount, a.StartDate, a.EndDate
+    pull: async (joint: Joint, uqIn: UqInMap, queue: string | number): Promise<DataPullResult> => {
+        let sql = `select top ${promiseSize} md.ID, a.CID as CustomerID, md.Manu as BrandID, md.DiscountValue as Discount, a.StartDate, a.EndDate
         from ProdData.dbo.Export_AgreementManuDiscount md
         inner join dbs.dbo.Agreement a on md.AgreementID = a.AgreementID
         where md.ID > @iMaxId and a.objType = 'C' order by md.Id`;
         try {
-            let ret = await uqPullRead(sql, queue);
+            let ret = await uqOutRead(sql, queue);
             if (ret !== undefined) {
                 let { data } = ret;
-                data["StartDate"] = data["StartDate"].getTime();
-                data["EndDate"] = data["EndDate"].getTime();
+                data.map(e => {
+                    e["StartDate"] = e["StartDate"].getTime();
+                    e["EndDate"] = e["EndDate"].getTime();
+                })
                 return ret;
             }
         } catch (error) {
@@ -49,17 +54,19 @@ export const OrganizationDiscount: UqInMap = {
             endDate: "^EndDate",
         }
     },
-    pull: async (joint: Joint, uqIn: UqInMap, queue: number): Promise<{ queue: number, data: any }> => {
-        let sql = `select top 1 md.ID, a.CID as OrgnizationID, md.Manu as BrandID, md.DiscountValue as Discount, a.StartDate, a.EndDate
+    pull: async (joint: Joint, uqIn: UqInMap, queue: number): Promise<DataPullResult> => {
+        let sql = `select top ${promiseSize} md.ID, a.CID as OrgnizationID, md.Manu as BrandID, md.DiscountValue as Discount, a.StartDate, a.EndDate
         from ProdData.dbo.Export_AgreementManuDiscount md
         inner join dbs.dbo.Agreement a on md.AgreementID = a.AgreementID
         where md.ID > @iMaxId and a.objType = 'U' order by md.Id`;
         try {
-            let ret = await uqPullRead(sql, queue);
+            let ret = await uqOutRead(sql, queue);
             if (ret !== undefined) {
                 let { data } = ret;
-                data["StartDate"] = data["StartDate"].getTime();
-                data["EndDate"] = data["EndDate"].getTime();
+                data.map(e => {
+                    e["StartDate"] = e["StartDate"].getTime();
+                    e["EndDate"] = e["EndDate"].getTime();
+                })
                 return ret;
             }
         } catch (error) {

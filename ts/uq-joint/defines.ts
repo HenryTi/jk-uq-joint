@@ -2,7 +2,8 @@ import { Mapper } from "./tool/mapper";
 import { Joint } from "./joint";
 import { UqProp } from "./uq/uq";
 
-export type DataPull<T> = (joint: Joint, uqIn: T, queue: number) => Promise<{ queue: number, data: any }>;
+export interface DataPullResult { lastPointer: number | string, data: any[] };
+export type DataPull<T> = (joint: Joint, uqIn: T, queue: number | string) => Promise<DataPullResult>;
 export type PullWrite = (joint: Joint, data: any) => Promise<boolean>;
 export type DataPush<T> = (joint: Joint, uqIn: T, queue: number, data: any) => Promise<boolean>;
 
@@ -89,5 +90,5 @@ export interface Settings {
     uqIns: UqIn[];
     uqOuts: UqOut[];
     bus?: UqBus[];
-    pullReadFromSql?: (sql: string, queue: number) => Promise<{ queue: number, data: any }>;
+    pullReadFromSql?: (sql: string, queue: number | string) => Promise<DataPullResult>;
 }

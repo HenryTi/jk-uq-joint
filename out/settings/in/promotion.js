@@ -14,6 +14,8 @@ const _ = __importStar(require("lodash"));
 const dateformat_1 = __importDefault(require("dateformat"));
 const uqs_1 = require("../uqs");
 const promotionPullWrite_1 = require("../../first/converter/promotionPullWrite");
+const config_1 = __importDefault(require("config"));
+const promiseSize = config_1.default.get("promiseSize");
 exports.PromotionType = {
     uq: uqs_1.uqs.jkPromotion,
     type: 'tuid',
@@ -24,7 +26,7 @@ exports.PromotionType = {
         no: "MarketingTypeID",
         description: 'Description',
     },
-    pull: `select top 1 ID, MarketingTypeID, MarketingTypeName as Description
+    pull: `select top ${promiseSize} ID, MarketingTypeID, MarketingTypeName as Description
         from ProdData.dbo.Export_MarketingType where ID > @iMaxId order by ID`,
 };
 exports.PromotionStatus = {
@@ -37,7 +39,7 @@ exports.PromotionStatus = {
         no: "MarketingStatusID",
         description: 'Description',
     },
-    pull: `select top 1 ID, MarketingStatusID, MarketingStatusName as Description
+    pull: `select top ${promiseSize} ID, MarketingStatusID, MarketingStatusName as Description
         from ProdData.dbo.Export_MarketingStatus where ID > @iMaxId order by ID`,
 };
 exports.Promotion = {
@@ -55,7 +57,7 @@ exports.Promotion = {
         endDate: 'EndDate',
         createTime: 'CreateTime',
     },
-    pull: `select top 1 ID, MarketingID, Name, MarketingType as Type, MarketingStatus as Status, StartTime as StartDate
+    pull: `select top ${promiseSize} ID, MarketingID, Name, MarketingType as Type, MarketingStatus as Status, StartTime as StartDate
         , EndTime as EndDate, SalesRegionID, CreateTime
         from ProdData.dbo.Export_Marketing where ID > @iMaxId order by ID`,
     pullWrite: async (joint, data) => {
@@ -97,7 +99,7 @@ exports.PromotionLanguage = {
             url: '^Url',
         }
     },
-    pull: `select ID, MarketingID as PromotionID, LanguageID, messageText as Description, Url
+    pull: `select top ${promiseSize} ID, MarketingID as PromotionID, LanguageID, messageText as Description, Url
            from ProdData.dbo.Export_MarketingMessageLanguage where ID > @iMaxId order by ID`,
 };
 exports.PromotionPackDiscount = {
@@ -113,7 +115,7 @@ exports.PromotionPackDiscount = {
             MustHasStorage: '^WhenHasStorage',
         }
     },
-    pull: `select a.ID, a.MarketingID as PromotionID, j.jkid as ProductID, a.PackagingID as PackageID, a.Discount, isnull(a.MustHasStorage, 0 ) as WhenHasStorage
+    pull: `select top ${promiseSize} a.ID, a.MarketingID as PromotionID, j.jkid as ProductID, a.PackagingID as PackageID, a.Discount, isnull(a.MustHasStorage, 0 ) as WhenHasStorage
           from ProdData.dbo.Export_ProductsMarketing a join zcl_mess.dbo.jkcat j on a.PackagingID = j.jkcat where a.ID > @iMaxId order by a.ID`,
 };
 //# sourceMappingURL=promotion.js.map

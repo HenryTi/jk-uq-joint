@@ -1,11 +1,11 @@
-import { UqBus, DataPull, Joint } from "../../uq-joint";
-import { uqPullRead } from "../../first/converter/uqOutRead";
+import { UqBus, DataPull, Joint, DataPullResult } from "../../uq-joint";
+import { uqPullRead, uqOutRead } from "../../first/converter/uqOutRead";
 
-const productInventoryPull: DataPull<UqBus> = async (joint: Joint, uqBus: UqBus, queue: number): Promise<{ queue: number, data: any }> => {
+const productInventoryPull: DataPull<UqBus> = async (joint: Joint, uqBus: UqBus, queue: string | number): Promise<DataPullResult> => {
     let sql = `select top 1 wi.ID, wi.WarehouseID, j.jkid as ProductID, wi.PackagingID as PackingID, wi.Inventory
         from ProdData.dbo.Export_WarehouseInventory wi inner join zcl_mess.dbo.jkcat j on wi.PackagingID = j.jkcat
         where wi.ID > @iMaxId order by wi.ID`;
-    return await uqPullRead(sql, queue);
+    return await uqOutRead(sql, queue);
 }
 
 export const faceProductInventory: UqBus = {

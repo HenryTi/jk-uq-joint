@@ -1,6 +1,6 @@
 import config from 'config';
 import { settings } from "../settings";
-import { Joint } from '../uq-joint';
+import { Joint, DataPullResult } from '../uq-joint';
 import { pulls, UqOutConverter } from "./pulls";
 import { uqOutRead } from "./converter/uqOutRead";
 import { host } from "../uq-joint/tool/host";
@@ -27,7 +27,7 @@ const promiseSize = config.get<number>("promiseSize");
         console.log(entity + " start at " + new Date());
         let readFunc: UqOutConverter;
         if (typeof (read) === 'string') {
-            readFunc = async function (maxId: string): Promise<{ lastId: string, data: any }> {
+            readFunc = async function (maxId: string): Promise<DataPullResult> {
                 return await uqOutRead(read as string, maxId);
             }
         }
@@ -35,10 +35,10 @@ const promiseSize = config.get<number>("promiseSize");
             readFunc = read as UqOutConverter;
         }
 
-        let maxId = '', count = 0;
+        let maxId: string = '', count: number = 0;
         let promises: PromiseLike<any>[] = [];
         for (; ;) {
-            let ret: { lastId: string, data: any };
+            let ret: DataPullResult;
             try {
                 ret = await readFunc(maxId);
             } catch (error) {
@@ -46,7 +46,7 @@ const promiseSize = config.get<number>("promiseSize");
                 throw error;
             }
             if (ret === undefined || count > maxRows) break;
-            let { lastId, data: rows } = ret;
+            let { lastPointer, data: rows } = ret;
 
             rows.forEach(e => {
                 if (firstPullWrite !== undefined) {
@@ -58,7 +58,7 @@ const promiseSize = config.get<number>("promiseSize");
                 }
                 count++;
             });
-            maxId = lastId;
+            maxId = lastPointer as string;
 
             if (promises.length >= promiseSize) {
                 let before = Date.now();
@@ -74,11 +74,17 @@ const promiseSize = config.get<number>("promiseSize");
                 let sum = Math.round((after - start) / 1000);
                 let each = Math.round(after - priorEnd);
                 let eachSubmit = Math.round(after - before);
-                console.log('count = ' + count + ' each: ' + each + ' sum: ' + sum + ' eachSubmit: ' + eachSubmit + 'ms; lastId: ' + lastId);
+                console.log('count = ' + count + ' each: ' + each + ' sum: ' + sum + ' eachSubmit: ' + eachSubmit + 'ms; lastId: ' + lastPointer);
                 priorEnd = after;
             }
         }
-        await Promise.all(promises);
+        try {
+            await Promise.all(promises);
+        } catch (error) {
+            // debugger;
+            console.error(error);
+            throw error;
+        }
         promises.splice(0);
         console.log(entity + " end   at " + new Date());
     };

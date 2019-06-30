@@ -1,5 +1,8 @@
 import { UqInTuid, UqInMap, UqInTuidArr, UqIn } from "../../uq-joint";
 import { uqs } from "../uqs";
+import config from 'config';
+
+const promiseSize = config.get<number>("promiseSize");
 
 export const ProductCategory: UqInTuid = {
     uq: uqs.jkProduct,
@@ -13,7 +16,7 @@ export const ProductCategory: UqInTuid = {
         isLeaf: "IsLeaf",
         orderWithinParent: "OrderWithinParentCategory",
     },
-    pull: `select top 1 ID, ProductCategoryID, ParentProductCategoryID, OrderWithinParentCatetory as OrderWithinParentCategory,
+    pull: `select top ${promiseSize} ID, ProductCategoryID, ParentProductCategoryID, OrderWithinParentCatetory as OrderWithinParentCategory,
         isLeaf, IsValid, IsShow from ProdData.dbo.Export_ProductCategory
         where ID > @iMaxId order by ID`,
 };
@@ -30,7 +33,7 @@ export const ProductCategoryLanguage: UqInTuidArr = {
         language: "LanguageID@Language",
         name: "ProductCategoryName",
     },
-    pull: `select top 1 ID, ProductCategoryLanguageID, ProductCategoryID, LanguageID, ProductCategoryName
+    pull: `select top ${promiseSize} ID, ProductCategoryLanguageID, ProductCategoryID, LanguageID, ProductCategoryName
         from ProdData.dbo.Export_ProductCategoryLanguage where ID > @iMaxId order by ID`,
 };
 
@@ -44,6 +47,6 @@ export const ProductProductCategory: UqInMap = {
             category: "^ProductCategoryID@ProductCategory"
         },
     },
-    pull: `select top 1 ID, SaleProductProductCategoryID, SaleProductID, ProductCategoryID, IsValid
+    pull: `select top ${promiseSize} ID, SaleProductProductCategoryID, SaleProductID, ProductCategoryID, IsValid
         from ProdData.dbo.Export_SaleProductProductCategory where ID > @iMaxId order by ID`,
 };
