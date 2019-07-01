@@ -106,7 +106,7 @@ export const PromotionPackDiscount: UqInMap = {
     entity: 'PromotionPackDiscount',
     mapper: {
         promotion: 'PromotionID@Promotion',
-        product: 'ProductID@Product',
+        product: 'ProductID@ProductX',
         arr1: {
             pack: '^PackageID@ProductX_PackX',
             discount: '^Discount',

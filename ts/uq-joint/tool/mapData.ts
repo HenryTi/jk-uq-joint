@@ -133,6 +133,9 @@ abstract class MapData {
     }
 }
 
+/**
+ * 将外部系统的数据格式转换为Tonva的格式
+ */
 export class MapToUq extends MapData {
     protected async tuidId(tuid: string, value: any): Promise<string | number> {
         if (value === undefined || value === null) return;

@@ -125,6 +125,9 @@ class MapData {
         return ret;
     }
 }
+/**
+ * 将外部系统的数据格式转换为Tonva的格式
+ */
 class MapToUq extends MapData {
     async tuidId(tuid, value) {
         if (value === undefined || value === null)

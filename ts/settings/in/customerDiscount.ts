@@ -55,7 +55,7 @@ export const OrganizationDiscount: UqInMap = {
         }
     },
     pull: async (joint: Joint, uqIn: UqInMap, queue: number): Promise<DataPullResult> => {
-        let sql = `select top ${promiseSize} md.ID, a.CID as OrgnizationID, md.Manu as BrandID, md.DiscountValue as Discount, a.StartDate, a.EndDate
+        let sql = `select top ${promiseSize} md.ID, a.CID as OrganizationID, md.Manu as BrandID, md.DiscountValue as Discount, a.StartDate, a.EndDate
         from ProdData.dbo.Export_AgreementManuDiscount md
         inner join dbs.dbo.Agreement a on md.AgreementID = a.AgreementID
         where md.ID > @iMaxId and a.objType = 'U' order by md.Id`;
@@ -85,7 +85,7 @@ export const Agreement: UqInMap = {
         startDate: 'StartDate',
         endDate: 'EndDate',
     },
-    pull: `select top 1 ID, AgreementID, CID, ObjType, StartDate, EndDate from ProdData.dbo.Export_Agreement where ID > @iMaxId and objType in ( 'C', 'U' ) order by ID`,
+    pull: `select top ${promiseSize} ID, AgreementID, CID, ObjType, StartDate, EndDate from ProdData.dbo.Export_Agreement where ID > @iMaxId and objType in ( 'C', 'U' ) order by ID`,
     pullWrite: async (joint: Joint, data: any) => {
         let sql = `select a.CID, md.Manu as BrandID, md.DiscountValue as Discount, a.StartDate, a.EndDate
                 from dbs.dbo.Agreement a

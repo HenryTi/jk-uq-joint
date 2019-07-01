@@ -80,7 +80,7 @@ class Joint {
         for (let uqIn of uqIns) {
             let { uq, entity, pull, pullWrite } = uqIn;
             let queueName = uq + ':' + entity;
-            console.log('scan in ' + queueName);
+            console.log('scan in ' + queueName + ' at ' + new Date());
             let promises = [];
             for (;;) {
                 let message;

@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const dateformat_1 = __importDefault(require("dateformat"));
 const uqs_1 = require("../uqs");
 const customerPullWrite_1 = require("../../first/converter/customerPullWrite");
 const config_1 = __importDefault(require("config"));
@@ -27,7 +28,7 @@ exports.Customer = {
     },
     pull: `select top ${promiseSize} ID, CustomerID, OrganizationID, Name, FirstName, LastName, XYZ, Gender, BirthDate, Tel1, Tel2, Mobile, Email, Email2
            , Fax1, Fax2, Zip, InvoiceTitle, TaxNo, RegisteredAddress, RegisteredTelephone, BankName, BankAccountNumber
-           , SalesmanID, CustomerServiceStuffID, IsValid, SalesCompanyID, SalesRegionBelongsTo, CreateTime
+           , SalesmanID, CustomerServiceStuffID, IsValid, SalesComanyID as SalesCompanyID, SalesRegionBelongsTo, CreateTime
            from ProdData.dbo.Export_Customer where ID > @iMaxId order by ID`,
     pullWrite: customerPullWrite_1.customerPullWrite,
     firstPullWrite: customerPullWrite_1.customerFirstPullWrite,
@@ -36,17 +37,18 @@ exports.Organization = {
     uq: uqs_1.uqs.jkCustomer,
     type: 'tuid',
     entity: 'Organization',
-    key: 'OrgnizationID',
+    key: 'OrganizationID',
     mapper: {
-        $id: 'OrgnizationID@Organization',
-        no: 'OrgnizationID',
+        $id: 'OrganizationID@Organization',
+        no: 'OrganizationID',
         name: 'Name',
         createTime: 'CreateTime',
     },
-    pull: `select top ${promiseSize} ID, OrgnizationID, UnitName as Name, CreateTime
-           from ProdData.dbo.Export_Orgnization where ID > @iMaxId order by ID`,
+    pull: `select top ${promiseSize} ID, OrganizationID, UnitName as Name, CreateTime
+           from ProdData.dbo.Export_Organization where ID > @iMaxId order by ID`,
     pullWrite: async (joint, data) => {
         try {
+            data["CreateTime"] = data["CreateTime"] && dateformat_1.default(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
             await joint.uqIn(exports.Organization, data);
             return true;
         }

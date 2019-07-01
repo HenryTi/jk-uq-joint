@@ -93,7 +93,7 @@ exports.sqls = {
                         , convert(nvarchar(30), creaDate, 121) as CreateTime
                 from dbs.dbo.Customers where CID > @iMaxId and CID > '${lastCID}' order by CID`,
     readOrganization: `
-                select top ${promiseSize} UnitID as ID, UnitID as OrgnizationID, unitName as Name, convert(nvarchar(30), creaDate, 121) as CreateTime
+                select top ${promiseSize} UnitID as ID, UnitID as OrganizationID, unitName as Name, convert(nvarchar(30), creaDate, 121) as CreateTime
                 from dbs.dbo.CustUnits where UnitID > @iMaxId order by UnitID`,
     //==============================================================
     //=========================== Product ===========================

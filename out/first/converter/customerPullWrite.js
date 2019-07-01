@@ -4,11 +4,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const lodash_1 = __importDefault(require("lodash"));
+const dateformat_1 = __importDefault(require("dateformat"));
 const customer_1 = require("../../settings/in/customer");
 const tools_1 = require("../../mssql/tools");
 const productPullWrite_1 = require("./productPullWrite");
 async function customerPullWrite(joint, data) {
     try {
+        data["CreateTime"] = data["CreateTime"] && dateformat_1.default(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
         await joint.uqIn(customer_1.Customer, lodash_1.default.pick(data, ["CustomerID", "Name", "FirstName", "LastName", "XYZ", "Gender", "BirthDate", 'CreateTime', 'IsValid']));
         let promises = [];
         promises.push(joint.uqIn(customer_1.OrganizationCustomer, lodash_1.default.pick(data, ["CustomerID", "OrganizationID"])));

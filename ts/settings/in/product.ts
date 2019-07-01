@@ -138,8 +138,8 @@ export const InvalidProduct: UqInTuid = {
     pull: `select top ${promiseSize} pv.ID, pv.ProductID, p.manufactory as BrandID, p.originalId as ProductNumber, p.Description, p.DescriptionC
         , zcl_mess.dbo.fc_recas(p.CAS) as CAS, pc.ChemID as ChemicalID
         , p.mf as MolecularFormula, p.mw as MolecularWeight, p.Purity, p.LotNumber as MdlNumber, p.[Restrict], 0 as IsValid
-        from ProdData.dbo.Export_Invalid_Product pv inner join zcl_mess.dbo.Product p on pv.ProductID = p.jkid
-        inner join zcl_mess.dbo.ProductChem pc on pc.jkid = p.jkid
+        from ProdData.dbo.Export_Invalid_Product pv inner join zcl_mess.dbo.Products p on pv.ProductID = p.jkid
+        inner join zcl_mess.dbo.ProductsChem pc on pc.jkid = p.jkid
         where pv.ID > @iMaxId order by pv.ID`,
     pullWrite: productPullWrite,
 };
@@ -158,7 +158,7 @@ export const ProductPackX: UqInTuidArr = {
         radioy: "Quantity",
         unit: "Name",
     },
-    pull: `select top ${promiseSize} ID, PackagingID as PackingID, ProductID, PackagingQuantity as PackNr, PackagingVolumn as Quantity, PackagingUnit as Name
+    pull: `select top ${promiseSize} ID, PackagingID as PackingID, ProductID, PackagingQuantity as PackNr, PackagingVolume as Quantity, PackagingUnit as Name
         from ProdData.dbo.Export_Packaging where ID > @iMaxId order by ID`,
     firstPullWrite: packFirstPullWrite,
 };
@@ -177,8 +177,8 @@ export const PriceX: UqInMap = {
             retail: "^Price",
         }
     },
-    pull: `select top ${promiseSize} jp.ID, jp.PackagingID as PackingID, j.jkid as ProductID, jp.SalesRegionID, j.Price
-        , j.Currency, j.ExpireDate as Expire_Date, j.Discontinued
+    pull: `select top ${promiseSize} jp.ID, jp.PackagingID as PackingID, j.jkid as ProductID, jp.SalesRegionID, jp.Price
+        , jp.Currency, jp.ExpireDate as Expire_Date, cast(jp.Discontinued as int) as Discontinued
         from ProdData.dbo.Export_PackagingSalesRegion jp inner join zcl_mess.dbo.jkcat j on jp.PackagingID = j.jkcat
         where jp.ID > @iMaxId order by jp.ID`,
     pullWrite: async (joint: Joint, data: any) => {

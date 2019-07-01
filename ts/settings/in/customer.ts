@@ -1,4 +1,5 @@
 import * as _ from 'lodash';
+import dateFormat from 'dateformat';
 import { UqInTuid, UqInMap, UqInTuidArr, Joint } from "../../uq-joint";
 import { uqs } from "../uqs";
 import { customerPullWrite, customerFirstPullWrite, consigneeContactPullWrite } from '../../first/converter/customerPullWrite';
@@ -26,7 +27,7 @@ export const Customer: UqInTuid = {
     },
     pull: `select top ${promiseSize} ID, CustomerID, OrganizationID, Name, FirstName, LastName, XYZ, Gender, BirthDate, Tel1, Tel2, Mobile, Email, Email2
            , Fax1, Fax2, Zip, InvoiceTitle, TaxNo, RegisteredAddress, RegisteredTelephone, BankName, BankAccountNumber
-           , SalesmanID, CustomerServiceStuffID, IsValid, SalesCompanyID, SalesRegionBelongsTo, CreateTime
+           , SalesmanID, CustomerServiceStuffID, IsValid, SalesComanyID as SalesCompanyID, SalesRegionBelongsTo, CreateTime
            from ProdData.dbo.Export_Customer where ID > @iMaxId order by ID`,
     pullWrite: customerPullWrite,
     firstPullWrite: customerFirstPullWrite,
@@ -36,17 +37,18 @@ export const Organization: UqInTuid = {
     uq: uqs.jkCustomer,
     type: 'tuid',
     entity: 'Organization',
-    key: 'OrgnizationID',
+    key: 'OrganizationID',
     mapper: {
-        $id: 'OrgnizationID@Organization',
-        no: 'OrgnizationID',
+        $id: 'OrganizationID@Organization',
+        no: 'OrganizationID',
         name: 'Name',
         createTime: 'CreateTime',
     },
-    pull: `select top ${promiseSize} ID, OrgnizationID, UnitName as Name, CreateTime
-           from ProdData.dbo.Export_Orgnization where ID > @iMaxId order by ID`,
+    pull: `select top ${promiseSize} ID, OrganizationID, UnitName as Name, CreateTime
+           from ProdData.dbo.Export_Organization where ID > @iMaxId order by ID`,
     pullWrite: async (joint: Joint, data: any) => {
         try {
+            data["CreateTime"] = data["CreateTime"] && dateFormat(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
             await joint.uqIn(Organization, data);
             return true;
         } catch (error) {

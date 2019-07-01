@@ -1,11 +1,13 @@
 import { Joint } from "../../uq-joint";
 import _ from 'lodash';
+import dateFormat from 'dateformat';
 import { Customer, OrganizationCustomer, CustomerContact, Contact, CustomerContacts, InvoiceInfo, CustomerSetting, CustomerHandler } from "../../settings/in/customer";
 import { execSql } from "../../mssql/tools";
 import { pushRecordset } from "./productPullWrite";
 
 export async function customerPullWrite(joint: Joint, data: any): Promise<boolean> {
     try {
+        data["CreateTime"] = data["CreateTime"] && dateFormat(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
         await joint.uqIn(Customer, _.pick(data, ["CustomerID", "Name", "FirstName", "LastName", "XYZ", "Gender", "BirthDate", 'CreateTime', 'IsValid']));
         let promises: PromiseLike<void>[] = [];
         promises.push(joint.uqIn(OrganizationCustomer, _.pick(data, ["CustomerID", "OrganizationID"])));
