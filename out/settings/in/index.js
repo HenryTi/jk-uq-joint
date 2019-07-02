@@ -10,6 +10,7 @@ const customer_1 = require("./customer");
 const productCategory_1 = require("./productCategory");
 const customerDiscount_1 = require("./customerDiscount");
 const hr_1 = require("./hr");
+const salestask_1 = require("./salestask");
 const uqIns = [
     salesRegion_1.Language,
     Address_1.Country,
@@ -57,6 +58,8 @@ const uqIns = [
     customerDiscount_1.Agreement,
     customerDiscount_1.CustomerDiscount,
     customerDiscount_1.OrganizationDiscount,
+    salestask_1.JkTaskType,
+    salestask_1.JkTask,
 ];
 exports.default = uqIns;
 //# sourceMappingURL=index.js.map

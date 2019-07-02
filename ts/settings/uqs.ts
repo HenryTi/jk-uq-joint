@@ -10,4 +10,5 @@ export const uqs = {
     jkPromotion: JKDev + '/promotion',
     jkWarehouse: JKDev + '/warehouse',
     jkOrder: JKDev + '/order',
+    jkSalestask: JKDev + '/salestask',
 }

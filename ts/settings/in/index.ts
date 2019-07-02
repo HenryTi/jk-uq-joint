@@ -8,6 +8,7 @@ import { Customer, Organization, OrganizationCustomer, CustomerContact, Customer
 import { ProductCategory, ProductCategoryLanguage, ProductProductCategory } from "./productCategory";
 import { Agreement, CustomerDiscount, OrganizationDiscount } from "./customerDiscount";
 import { Employee } from "./hr";
+import { JkTaskType, JkTask } from "./salestask";
 
 const uqIns = [
     Language,
@@ -65,6 +66,9 @@ const uqIns = [
     Agreement,
     CustomerDiscount,
     OrganizationDiscount,
+
+    JkTaskType,
+    JkTask,
 ]
 
 export default uqIns;
