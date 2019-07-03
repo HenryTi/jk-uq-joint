@@ -13,6 +13,7 @@ export const JkTaskType: UqInTuid = {
     key: 'WorkTaskTypeID',
     mapper: {
         $id: 'WorkTaskTypeID@JkTaskType',
+        no: "WorkTaskTypeID",
         name: "name",
         TimeLimit: 'TimeLimit',
     },
@@ -27,24 +28,29 @@ export const JkTask: UqInTuid = {
     key: 'WorkTaskID',
     mapper: {
         $id: 'WorkTaskID@JkTask',
+        no: "WorkTaskID",
         description: 'LinkObjectID',
-        Customer: 'CustomerID@Customer',
-        type: 'WorkTaskTypeID@JkTaskType',
-        EmployeeID: "EmployeeID",
+        customer: 'CustomerID@Customer',
+        type: 'typeid',
+        biz: 'bizid',
+        employee: "EmployeeID@Employee",
         sourceNo: 'LinkObjectID',
         priorty: 'TimeLimit',
         deadline: 'RequireCompletionTime',
         createTime: 'CreateTime',
+        completeTime: 'CompleteTime',
     },
-    pull: `select top ${promiseSize} ID, WorkTaskID, WorkTaskSource, CustomerID, WorkTaskTypeID, EmployeeID, LinkObjectID, TimeLimit, RequireCompletionTime, CreateTime
-           from ProdData.dbo.Export_WorkTask where ID > @iMaxId order by ID`,
+    pull: `select   top ${promiseSize} a.ID, a.WorkTaskID, a.WorkTaskSource, a.CustomerID, b.typeid, b.bizid, a.EmployeeID, 
+                    a.LinkObjectID, isnull(a.TimeLimit,0) as TimeLimit, a.RequireCompletionTime, a.CreateTime, a.CompleteTime
+            from    ProdData.dbo.Export_WorkTask as a
+                    inner join ProdData.dbo.TaskBiz as b on a.WorkTaskTypeID = b.jktypeid
+            where a.ID > @iMaxId order by a.ID`,
     pullWrite: async (joint: Joint, data: any) => {
 
         try {
-            data["StartDate"] = data["StartDate"] && dateFormat(data["StartDate"], "yyyy-mm-dd HH:MM:ss");
-            data["EndDate"] = data["EndDate"] && dateFormat(data["EndDate"], "yyyy-mm-dd HH:MM:ss");
-            data["CreateTime"] = data["CreateTime"] && dateFormat(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
-            await joint.uqIn(JkTask, _.pick(data, ["ID", "WorkTaskID", "WorkTaskSource", "CustomerID", "WorkTaskTypeID", "EmployeeID", 'LinkObjectID', 'TimeLimit', 'RequireCompletionTime', 'CreateTime']));
+            data["RequireCompletionTime"] = data["RequireCompletionTime"] && dateFormat(data["RequireCompletionTime"], "yyyy-mm-dd");
+            data["CreateTime"] = data["CreateTime"] && dateFormat(data["CreateTime"], "yyyy-mm-dd");
+            await joint.uqIn(JkTask, _.pick(data, ["ID", "WorkTaskID", "WorkTaskSource", "CustomerID", "typeid", "bizid", "EmployeeID", 'LinkObjectID', 'TimeLimit', 'RequireCompletionTime', 'CreateTime']));
             return true;
         } catch (error) {
             console.error(error);

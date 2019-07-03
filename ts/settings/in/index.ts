@@ -11,6 +11,9 @@ import { Employee } from "./hr";
 import { JkTaskType, JkTask } from "./salestask";
 
 const uqIns = [
+
+    JkTaskType,
+    JkTask,
     Language,
     Country,
     Province,
@@ -67,8 +70,6 @@ const uqIns = [
     CustomerDiscount,
     OrganizationDiscount,
 
-    JkTaskType,
-    JkTask,
 ]
 
 export default uqIns;
