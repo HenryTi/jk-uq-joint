@@ -80,7 +80,7 @@ class Joint {
         for (let uqIn of uqIns) {
             let { uq, entity, pull, pullWrite } = uqIn;
             let queueName = uq + ':' + entity;
-            console.log('scan in ' + queueName + ' at ' + new Date());
+            console.log('scan in ' + queueName + ' at ' + new Date().toLocaleString());
             let promises = [];
             for (;;) {
                 let message;
@@ -242,7 +242,7 @@ class Joint {
                 await uq.setMap(entity, body);
         }
         catch (error) {
-            console.log(error);
+            console.error(error);
             throw error;
         }
     }
@@ -308,9 +308,6 @@ class Joint {
                 if (message === undefined)
                     break;
                 let { id: newQueue, from, body } = message;
-                console.log(queue);
-                console.log(newQueue);
-                console.log(body);
                 let json = await faceSchemas_1.faceSchemas.unpackBusData(face, body);
                 if (uqIdProps !== undefined && from !== undefined) {
                     let uq = await this.uqs.getUq(from);
@@ -327,7 +324,6 @@ class Joint {
                 }
                 let mapFromUq = new mapData_1.MapFromUq(this.uqInDict, this.unit);
                 let outBody = await mapFromUq.map(json, mapper);
-                console.log(outBody);
                 if (await push(this, uqBus, queue, outBody) === false)
                     break;
                 await tool_1.execProc('write_queue_out_p', [moniker, newQueue]);

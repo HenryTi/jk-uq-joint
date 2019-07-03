@@ -88,7 +88,7 @@ export class Joint {
         for (let uqIn of uqIns) {
             let { uq, entity, pull, pullWrite } = uqIn;
             let queueName = uq + ':' + entity;
-            console.log('scan in ' + queueName + ' at ' + new Date());
+            console.log('scan in ' + queueName + ' at ' + new Date().toLocaleString());
             let promises: PromiseLike<any>[] = [];
             for (; ;) {
                 let message: any;
@@ -235,7 +235,7 @@ export class Joint {
             else
                 await uq.setMap(entity, body);
         } catch (error) {
-            console.log(error);
+            console.error(error);
             throw error;
         }
     }
@@ -297,9 +297,6 @@ export class Joint {
                 let message = await this.uqs.readBus(face, queue);
                 if (message === undefined) break;
                 let { id: newQueue, from, body } = message;
-                console.log(queue);
-                console.log(newQueue);
-                console.log(body);
                 let json = await faceSchemas.unpackBusData(face, body);
                 if (uqIdProps !== undefined && from !== undefined) {
                     let uq = await this.uqs.getUq(from);
@@ -316,7 +313,6 @@ export class Joint {
 
                 let mapFromUq = new MapFromUq(this.uqInDict, this.unit);
                 let outBody = await mapFromUq.map(json, mapper);
-                console.log(outBody);
                 if (await push(this, uqBus, queue, outBody) === false) break;
                 await execProc('write_queue_out_p', [moniker, newQueue]);
             }

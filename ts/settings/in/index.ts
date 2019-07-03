@@ -38,8 +38,8 @@ const uqIns = [
     ProductX,
     InvalidProduct,
     ProductChemical,
-    ProductPackX,
-    PriceX,
+    // ProductPackX,
+    // PriceX,
     ProductSalesRegion,
     ProductLegallyProhibited,    // 还没有日常的数据交换
 
