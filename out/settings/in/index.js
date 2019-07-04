@@ -10,7 +10,10 @@ const customer_1 = require("./customer");
 const productCategory_1 = require("./productCategory");
 const customerDiscount_1 = require("./customerDiscount");
 const hr_1 = require("./hr");
+const salestask_1 = require("./salestask");
 const uqIns = [
+    salestask_1.JkTaskType,
+    salestask_1.JkTask,
     salesRegion_1.Language,
     Address_1.Country,
     Address_1.Province,

@@ -11,5 +11,6 @@ exports.uqs = {
     jkPromotion: JKDev + '/promotion',
     jkWarehouse: JKDev + '/warehouse',
     jkOrder: JKDev + '/order',
+    jkSalestask: JKDev + '/salestask',
 };
 //# sourceMappingURL=uqs.js.map
