@@ -10,6 +10,7 @@ exports.uqs = {
     jkCustomerDiscount: JKDev + '/customerDiscount',
     jkPromotion: JKDev + '/promotion',
     jkWarehouse: JKDev + '/warehouse',
+    jkWebUser: JKDev + '/webuser',
     jkOrder: JKDev + '/order',
     jkSalestask: JKDev + '/salestask',
 };

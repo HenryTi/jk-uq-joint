@@ -39,6 +39,37 @@ class CenterApi extends fetch_1.Fetch {
     async unitxBuses(unit, busOwner, bus, face) {
         return await this.get('open/unitx-buses', { unit: unit, busOwner: busOwner, bus: bus, face: face });
     }
+    /**
+     * 顺序取到所有最近的user信息，包括密码
+     * @param start：这个是userid的起始数；
+     * @param page: 这个是每次返回的数组的长度；
+     * 返回值是一个数组，数组中对象的schema如下面的注释所示
+     */
+    async queueOut(start, page) {
+        return await this.get('open/queue-out', { start: start, page: page });
+    }
+    /*
+    param:
+    {
+        $type: '$user',
+        id: 2,
+        name: '1',
+        pwd: 'pwd',
+        nick: 'nick1-1',
+        icon: 'icon1-1',
+        country: 3,
+        mobile: 13901060561,
+        email: 'liaohengyi123@outlook.com',
+        wechat: 'wechat212',
+    }
+    */
+    /**
+     * 用来将user数据写入Tonva系统
+     * @param param: 要写入的user数据，格式如上
+     */
+    async queueIn(param) {
+        return await this.post('open/queue-in', param);
+    }
 }
 exports.centerApi = new CenterApi();
 //# sourceMappingURL=centerApi.js.map

@@ -8,6 +8,7 @@ const database_1 = require("./db/mysql/database");
 const createMapTable_1 = require("./tool/createMapTable");
 const faceSchemas_1 = require("./tool/faceSchemas");
 const uq_1 = require("./uq/uq");
+const centerApi_1 = require("./tool/centerApi");
 const interval = 3 * 1000;
 class Joint {
     constructor(settings) {
@@ -392,6 +393,27 @@ class Joint {
                 await this.uqs.writeBus(face, joinName, newQueue, packed);
                 await tool_1.execProc('write_queue_in_p', [moniker, newQueue]);
             }
+        }
+    }
+    async userIn(uqIn, data) {
+        let { key, mapper, uq: uqFullName, entity: tuid } = uqIn;
+        if (key === undefined)
+            throw 'key is not defined';
+        if (uqFullName === undefined)
+            throw 'tuid ' + tuid + ' not defined';
+        let keyVal = data[key];
+        let mapToUq = new mapData_1.MapToUq(this.uqInDict, this.unit);
+        try {
+            let body = await mapToUq.map(data, mapper);
+            let ret = await centerApi_1.centerApi.queueIn(body);
+            if (ret === undefined)
+                throw '';
+            await map_1.map(tuid, ret, keyVal);
+            return ret;
+        }
+        catch (error) {
+            console.error(error);
+            throw error;
         }
     }
 }

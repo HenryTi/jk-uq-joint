@@ -9,9 +9,9 @@ import { ProductCategory, ProductCategoryLanguage, ProductProductCategory } from
 import { Agreement, CustomerDiscount, OrganizationDiscount } from "./customerDiscount";
 import { Employee } from "./hr";
 import { JkTaskType, JkTask } from "./salestask";
+import { WebUser } from "./webUser";
 
 const uqIns = [
-
     JkTaskType,
     JkTask,
     Language,
@@ -69,7 +69,7 @@ const uqIns = [
     Agreement,
     CustomerDiscount,
     OrganizationDiscount,
-
+    // WebUser,
 ]
 
 export default uqIns;

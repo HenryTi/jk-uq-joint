@@ -7,6 +7,7 @@ import { databaseName } from "./db/mysql/database";
 import { createMapTable } from "./tool/createMapTable";
 import { faceSchemas } from "./tool/faceSchemas";
 import { Uqs } from "./uq/uq";
+import { centerApi } from "./tool/centerApi";
 
 const interval = 3 * 1000;
 
@@ -373,6 +374,26 @@ export class Joint {
                 await this.uqs.writeBus(face, joinName, newQueue, packed);
                 await execProc('write_queue_in_p', [moniker, newQueue]);
             }
+        }
+    }
+
+
+    public async userIn(uqIn: UqInTuid, data: any): Promise<number> {
+        let { key, mapper, uq: uqFullName, entity: tuid } = uqIn;
+        if (key === undefined) throw 'key is not defined';
+        if (uqFullName === undefined) throw 'tuid ' + tuid + ' not defined';
+        let keyVal = data[key];
+        let mapToUq = new MapToUq(this.uqInDict, this.unit);
+        try {
+            let body = await mapToUq.map(data, mapper);
+            let ret = await centerApi.queueIn(body);
+            if (ret === undefined)
+                throw '';
+            await map(tuid, ret, keyVal);
+            return ret;
+        } catch (error) {
+            console.error(error);
+            throw error;
         }
     }
 }

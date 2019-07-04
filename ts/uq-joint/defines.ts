@@ -33,7 +33,7 @@ export interface UqIn {
 
 export interface UqInTuid extends UqIn {
     type: 'tuid';
-    key: string;
+    key: string;    // 在源数据中，tuid主键的名称, 用于建立map
     /**
      * 从
      */
