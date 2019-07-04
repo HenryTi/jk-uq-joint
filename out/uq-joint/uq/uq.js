@@ -365,6 +365,10 @@ class OpenApi extends fetch_1.Fetch {
         }
         catch (error) {
             console.error(error);
+            if (error.code === 'ETIMEDOUT')
+                await this.saveTuidArr(tuid, arr, owner, data);
+            else
+                throw error;
         }
     }
     async getTuidVId(tuid) {

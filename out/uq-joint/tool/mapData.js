@@ -126,7 +126,7 @@ class MapData {
     }
 }
 /**
- * 将外部系统的数据格式转换为Tonva的格式
+ * 将外部系统的数据格式转换为Tonva的格式(从map_表中读取id，没有的话，调用getTuidVid生成一个)
  */
 class MapToUq extends MapData {
     async tuidId(tuid, value) {
@@ -154,14 +154,20 @@ class MapToUq extends MapData {
             ret = await tool_1.execSql(sql);
         }
         if (ret.length === 0) {
-            let openApi = await openApi_1.getOpenApi(uq, this.unit);
             try {
+                let openApi = await openApi_1.getOpenApi(uq, this.unit);
                 let vId = await openApi.getTuidVId(entity);
                 await map_1.map(entity, vId, value);
                 return vId;
             }
             catch (error) {
                 console.error(error);
+                if (error.code === 'ETIMEDOUT') {
+                    await this.tuidId(tuid, value);
+                }
+                else {
+                    throw error;
+                }
             }
         }
         return ret[0]['id'];

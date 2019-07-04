@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const sqls_1 = require("./converter/sqls");
-const customerDiscount_1 = require("../settings/in/customerDiscount");
+const productCategory_1 = require("../settings/in/productCategory");
 /** */
 exports.pulls = [
     /*
@@ -21,20 +21,11 @@ exports.pulls = [
     // 库存
     { read: sqls.readWarehouse, uqIn: Warehouse },
     { read: sqls.readSalesRegionWarehouse, uqIn: SalesRegionWarehouse },
-
+    */
     // 产品相关的数据表
     // 目录树
-    { read: sqls.readProductCategory, uqIn: ProductCategory },
-    { read: sqls.readProductCategoryLanguage, uqIn: ProductCategoryLanguage },
-    // 品牌
-    { read: sqls.readBrand, uqIn: Brand },
-    */
-    // { read: sqls.readChemical, uqIn: Chemical },
-    // 产品
-    // { read: sqls.readProduct, uqIn: ProductX },
-    // 客户和客户单位基本信息
-    // { read: sqls.readOrganization, uqIn: Organization },
-    // { read: sqls.readCustomer, uqIn: Customer },
-    { read: sqls_1.sqls.readAgreement, uqIn: customerDiscount_1.Agreement },
+    { read: sqls_1.sqls.readProductCategory, uqIn: productCategory_1.ProductCategory },
+    { read: sqls_1.sqls.readProductCategoryLanguage, uqIn: productCategory_1.ProductCategoryLanguage },
+    { read: sqls_1.sqls.readProductProductCategory, uqIn: productCategory_1.ProductProductCategory },
 ];
 //# sourceMappingURL=pulls.js.map

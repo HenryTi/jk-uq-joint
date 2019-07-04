@@ -60,15 +60,9 @@ const promiseSize = config.get<number>("promiseSize");
             });
             maxId = lastPointer as string;
 
-            if (promises.length >= promiseSize) {
+            try {
                 let before = Date.now();
-                try {
-                    await Promise.all(promises);
-                } catch (error) {
-                    // debugger;
-                    console.error(error);
-                    throw error;
-                }
+                await pushToTonva(promises);
                 promises.splice(0);
                 let after = Date.now();
                 let sum = Math.round((after - start) / 1000);
@@ -76,6 +70,14 @@ const promiseSize = config.get<number>("promiseSize");
                 let eachSubmit = Math.round(after - before);
                 console.log('count = ' + count + ' each: ' + each + ' sum: ' + sum + ' eachSubmit: ' + eachSubmit + 'ms; lastId: ' + lastPointer);
                 priorEnd = after;
+
+            } catch (error) {
+                console.error(error);
+                if (error.code === "ETIMEDOUT") {
+                    await pushToTonva(promises);
+                } else {
+                    throw error;
+                }
             }
         }
         try {
@@ -90,3 +92,9 @@ const promiseSize = config.get<number>("promiseSize");
     };
     process.exit();
 })();
+
+async function pushToTonva(promises: PromiseLike<any>[]) {
+    if (promises.length >= promiseSize) {
+        await Promise.all(promises);
+    }
+}

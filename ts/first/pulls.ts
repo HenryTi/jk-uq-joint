@@ -49,14 +49,16 @@ export const pulls: {
         // 库存
         { read: sqls.readWarehouse, uqIn: Warehouse },
         { read: sqls.readSalesRegionWarehouse, uqIn: SalesRegionWarehouse },
+        */
 
         // 产品相关的数据表
         // 目录树
         { read: sqls.readProductCategory, uqIn: ProductCategory },
         { read: sqls.readProductCategoryLanguage, uqIn: ProductCategoryLanguage },
+        { read: sqls.readProductProductCategory, uqIn: ProductProductCategory },
+
         // 品牌
-        { read: sqls.readBrand, uqIn: Brand },
-        */
+        // { read: sqls.readBrand, uqIn: Brand },
         // { read: sqls.readChemical, uqIn: Chemical },
         // 产品
         // { read: sqls.readProduct, uqIn: ProductX },
@@ -65,7 +67,7 @@ export const pulls: {
         // { read: sqls.readOrganization, uqIn: Organization },
         // { read: sqls.readCustomer, uqIn: Customer },
 
-        { read: sqls.readAgreement, uqIn: Agreement },
+        // { read: sqls.readAgreement, uqIn: Agreement },
 
         // 市场活动
         // { read: sqls.readPromotionType, uqIn: PromotionType },

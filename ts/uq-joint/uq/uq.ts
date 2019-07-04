@@ -394,6 +394,10 @@ export class OpenApi extends Fetch {
             return ret;
         } catch (error) {
             console.error(error);
+            if (error.code === 'ETIMEDOUT')
+                await this.saveTuidArr(tuid, arr, owner, data);
+            else
+                throw error;
         }
     }
     async getTuidVId(tuid: string): Promise<number> {

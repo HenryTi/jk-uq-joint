@@ -159,7 +159,6 @@ class Joint {
                 await this.uqInMap(uqIn, data);
                 break;
         }
-        //}
     }
     async uqInTuid(uqIn, data) {
         let { key, mapper, uq: uqFullName, entity: tuid } = uqIn;
@@ -171,12 +170,25 @@ class Joint {
         let mapToUq = new mapData_1.MapToUq(this.uqInDict, this.unit);
         let body = await mapToUq.map(data, mapper);
         let uq = await this.uqs.getUq(uqFullName);
-        let ret = await uq.saveTuid(tuid, body);
-        let { id, inId } = ret;
-        if (id < 0)
-            id = -id;
-        await map_1.map(tuid, id, keyVal);
-        return id;
+        try {
+            let ret = await uq.saveTuid(tuid, body);
+            let { id, inId } = ret;
+            if (id < 0)
+                id = -id;
+            await map_1.map(tuid, id, keyVal);
+            return id;
+        }
+        catch (error) {
+            console.error(uqFullName + ':' + tuid);
+            console.error(body);
+            console.error(error);
+            if (error.code === "ETIMEDOUT") {
+                await this.uqInTuid(uqIn, data);
+            }
+            else {
+                throw error;
+            }
+        }
     }
     async uqInTuidArr(uqIn, data) {
         let { key, owner, mapper, uq: uqFullName, entity } = uqIn;
@@ -195,20 +207,32 @@ class Joint {
         if (owner === undefined)
             throw 'owner is not defined';
         let ownerVal = data[owner];
-        let mapToUq = new mapData_1.MapToUq(this.uqInDict, this.unit);
-        let ownerId = await this.mapOwner(uqIn, tuid, ownerVal);
-        if (ownerId === undefined)
-            throw 'owner value is undefined';
-        let body = await mapToUq.map(data, mapper);
-        let uq = await this.uqs.getUq(uqFullName);
-        let ret = await uq.saveTuidArr(tuid, tuidArr, ownerId, body);
-        let { id, inId } = ret;
-        if (id === undefined)
-            id = inId;
-        else if (id < 0)
-            id = -id;
-        await map_1.map(entity, id, keyVal);
-        return id;
+        try {
+            let mapToUq = new mapData_1.MapToUq(this.uqInDict, this.unit);
+            let ownerId = await this.mapOwner(uqIn, tuid, ownerVal);
+            if (ownerId === undefined)
+                throw 'owner value is undefined';
+            let body = await mapToUq.map(data, mapper);
+            let uq = await this.uqs.getUq(uqFullName);
+            let ret = await uq.saveTuidArr(tuid, tuidArr, ownerId, body);
+            let { id, inId } = ret;
+            if (id === undefined)
+                id = inId;
+            else if (id < 0)
+                id = -id;
+            await map_1.map(entity, id, keyVal);
+            return id;
+        }
+        catch (error) {
+            console.error(uqFullName + ':' + tuid + '-' + tuidArr);
+            console.error(error);
+            if (error.code === "ETIMEDOUT") {
+                await this.uqInTuidArr(uqIn, data);
+            }
+            else {
+                throw error;
+            }
+        }
     }
     async mapOwner(uqIn, ownerEntity, ownerVal) {
         let { uq: uqFullName } = uqIn;
@@ -222,10 +246,21 @@ class Joint {
             ret = await tool_1.execSql(sql);
         }
         if (ret.length === 0) {
-            let uq = await this.uqs.getUq(uqFullName);
-            let vId = await uq.getTuidVId(ownerEntity);
-            await map_1.map(ownerEntity, vId, ownerVal);
-            return vId;
+            try {
+                let uq = await this.uqs.getUq(uqFullName);
+                let vId = await uq.getTuidVId(ownerEntity);
+                await map_1.map(ownerEntity, vId, ownerVal);
+                return vId;
+            }
+            catch (error) {
+                console.error(error);
+                if (error.code === "ETIMEDOUT") {
+                    this.mapOwner(uqIn, ownerEntity, ownerVal);
+                }
+                else {
+                    throw error;
+                }
+            }
         }
         return ret[0]['id'];
     }
@@ -233,9 +268,9 @@ class Joint {
         let { mapper, uq: uqFullName, entity } = uqIn;
         let mapToUq = new mapData_1.MapToUq(this.uqInDict, this.unit);
         let body = await mapToUq.map(data, mapper);
-        let uq = await this.uqs.getUq(uqFullName);
-        let { $ } = data;
         try {
+            let uq = await this.uqs.getUq(uqFullName);
+            let { $ } = data;
             if ($ === '-')
                 await uq.delMap(entity, body);
             else
@@ -243,7 +278,12 @@ class Joint {
         }
         catch (error) {
             console.error(error);
-            throw error;
+            if (error.code === "ETIMEDOUT") {
+                await this.uqInMap(uqIn, data);
+            }
+            else {
+                throw error;
+            }
         }
     }
     /**

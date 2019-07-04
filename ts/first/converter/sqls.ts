@@ -125,13 +125,17 @@ export const sqls = {
         //=========================== ProductCategory ===========================
         //==============================================================
         readProductCategory: `
-                select top 1 pc.ProductCategoryID as ID, pc.ProductCategoryID, pc.ParentProductCategoryID, pc.OrderWithinParentCatetory as OrderWithinParentCategory,
+                select top ${promiseSize} pc.ProductCategoryID as ID, pc.ProductCategoryID, pc.ParentProductCategoryID, pc.OrderWithinParentCatetory as OrderWithinParentCategory,
                         pc.IsLeaf, pc.IsValid, pc.IsShow from opdata.dbo.ProductCategory pc
                 where pc.ProductCategoryID > @iMaxId order by pc.ProductCategoryID`,
 
         readProductCategoryLanguage: `
-                select top 1 ID, ID as ProductCategoryLanguageID, ProductCategoryID, LanguageID, ProductCategoryName
+                select top ${promiseSize} ID, ID as ProductCategoryLanguageID, ProductCategoryID, LanguageID, ProductCategoryName
                 from opdata.dbo.ProductCategoryLanguage where ID > @iMaxId order by ID`,
+
+        readProductProductCategory: `
+                select top ${promiseSize} ID, ID as SaleProductProductCategoryID, SaleProductID, ProductCategoryID, IsValid
+                from opdata.dbo.SaleProductProductCategory where ID > @iMaxId order by ID`,
 
         //==============================================================
         //=========================== Warehouse ===========================
