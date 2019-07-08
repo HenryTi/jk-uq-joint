@@ -2,6 +2,4 @@ config/production.json
 config/development.json
 npm-debug.log
 npm-debug.log.*
-/ts/usq-joint
 /node_modules
-/out
