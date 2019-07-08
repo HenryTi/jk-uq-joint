@@ -387,9 +387,10 @@ export class Joint {
         try {
             let body = await mapToUq.map(data, mapper);
             let ret = await centerApi.queueIn(body);
-            if (ret === undefined)
-                throw '';
-            await map(tuid, ret, keyVal);
+            if (ret === undefined || typeof ret !== 'number')
+                throw new Error('user in 返回值不正确。');
+            if (ret > 0)
+                await map(tuid, ret, keyVal);
             return ret;
         } catch (error) {
             console.error(error);

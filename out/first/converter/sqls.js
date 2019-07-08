@@ -7,6 +7,7 @@ const config_1 = __importDefault(require("config"));
 const lastjkid = config_1.default.get("lastjkid");
 const lastchemid = config_1.default.get("lastchemid");
 const lastCID = config_1.default.get("lastCID");
+const lastPPCID = config_1.default.get("lastPPCID");
 const promiseSize = config_1.default.get("promiseSize");
 exports.sqls = {
     //==============================================================
@@ -120,7 +121,7 @@ exports.sqls = {
                 from opdata.dbo.ProductCategoryLanguage where ID > @iMaxId order by ID`,
     readProductProductCategory: `
                 select top ${promiseSize} ID, ID as SaleProductProductCategoryID, SaleProductID, ProductCategoryID, IsValid
-                from opdata.dbo.SaleProductProductCategory where ID > @iMaxId order by ID`,
+                from opdata.dbo.SaleProductProductCategory where ID > @iMaxId and ID > ${lastPPCID} order by ID`,
     //==============================================================
     //=========================== Warehouse ===========================
     //==============================================================

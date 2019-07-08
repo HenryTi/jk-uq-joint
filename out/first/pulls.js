@@ -24,8 +24,8 @@ exports.pulls = [
     */
     // 产品相关的数据表
     // 目录树
-    { read: sqls_1.sqls.readProductCategory, uqIn: productCategory_1.ProductCategory },
-    { read: sqls_1.sqls.readProductCategoryLanguage, uqIn: productCategory_1.ProductCategoryLanguage },
+    // { read: sqls.readProductCategory, uqIn: ProductCategory },
+    // { read: sqls.readProductCategoryLanguage, uqIn: ProductCategoryLanguage },
     { read: sqls_1.sqls.readProductProductCategory, uqIn: productCategory_1.ProductProductCategory },
 ];
 //# sourceMappingURL=pulls.js.map

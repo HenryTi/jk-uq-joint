@@ -63,20 +63,12 @@ const promiseSize = config_1.default.get("promiseSize");
             });
             maxId = lastPointer;
             try {
-                let before = Date.now();
-                await pushToTonva(promises);
-                promises.splice(0);
-                let after = Date.now();
-                let sum = Math.round((after - start) / 1000);
-                let each = Math.round(after - priorEnd);
-                let eachSubmit = Math.round(after - before);
-                console.log('count = ' + count + ' each: ' + each + ' sum: ' + sum + ' eachSubmit: ' + eachSubmit + 'ms; lastId: ' + lastPointer);
-                priorEnd = after;
+                await pushToTonva(promises, start, priorEnd, count, lastPointer);
             }
             catch (error) {
                 console.error(error);
                 if (error.code === "ETIMEDOUT") {
-                    await pushToTonva(promises);
+                    await pushToTonva(promises, start, priorEnd, count, lastPointer);
                 }
                 else {
                     throw error;
@@ -97,9 +89,17 @@ const promiseSize = config_1.default.get("promiseSize");
     ;
     process.exit();
 })();
-async function pushToTonva(promises) {
+async function pushToTonva(promises, start, priorEnd, count, lastPointer) {
     if (promises.length >= promiseSize) {
+        let before = Date.now();
         await Promise.all(promises);
+        promises.splice(0);
+        let after = Date.now();
+        let sum = Math.round((after - start) / 1000);
+        let each = Math.round(after - priorEnd);
+        let eachSubmit = Math.round(after - before);
+        console.log('count = ' + count + ' each: ' + each + ' sum: ' + sum + ' eachSubmit: ' + eachSubmit + 'ms; lastId: ' + lastPointer);
+        priorEnd = after;
     }
 }
 //# sourceMappingURL=index.js.map

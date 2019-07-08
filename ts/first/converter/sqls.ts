@@ -3,6 +3,7 @@ import config from 'config';
 const lastjkid = config.get<string>("lastjkid");
 const lastchemid = config.get<string>("lastchemid");
 const lastCID = config.get<string>("lastCID");
+const lastPPCID = config.get<string>("lastPPCID");
 const promiseSize = config.get<number>("promiseSize");
 
 export const sqls = {
@@ -135,7 +136,7 @@ export const sqls = {
 
         readProductProductCategory: `
                 select top ${promiseSize} ID, ID as SaleProductProductCategoryID, SaleProductID, ProductCategoryID, IsValid
-                from opdata.dbo.SaleProductProductCategory where ID > @iMaxId order by ID`,
+                from opdata.dbo.SaleProductProductCategory where ID > @iMaxId and ID > ${lastPPCID} order by ID`,
 
         //==============================================================
         //=========================== Warehouse ===========================

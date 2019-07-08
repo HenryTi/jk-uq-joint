@@ -8,8 +8,8 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            // "program": "${workspaceFolder}/out/first/index.js",
-            "program": "${workspaceFolder}/out/index.js",
+            "program": "${workspaceFolder}/out/first/index.js",
+            // "program": "${workspaceFolder}/out/index.js",
             "env": {
                 "NODE_ENV": "development"
             },

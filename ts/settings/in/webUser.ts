@@ -5,41 +5,50 @@ import config from 'config';
 
 const promiseSize = config.get<number>("promiseSize");
 
-export const WebUser: UqInTuid = {
+export const WebUserTonva: UqInTuid = {
     uq: uqs.jkWebUser,
     type: 'tuid',
-    entity: 'WebUser',
+    entity: 'WebUserTonva',
     key: 'WebUserID',
     mapper: {
         $type: 'Type',      // 固定值:$user
-        id: 'WebUserID',
+        id: 'IGNORE',
         name: 'UserName',
         pwd: 'Password',
-        nick: "Nick",
-        icon: "Icon",
-        country: "CountryID@Country",
+        nick: "IGNORE",
+        icon: "IGNORE",
+        country: "IGNORE",
         mobile: 'Mobile',
         email: 'Email',
-        wechat: 'Wechat',
-
-        // no: "WebUserID",
-        // firstName: "FirstName",
-        // salutation: "Salutation",
-        // organizationName: 'OrganizationName',
+        wechat: 'WechatOpenID',
     },
-    pull: `select top ${promiseSize} ci.ID, ci.ID as WebUserID, '$user' as Type, cl.UserName, cl.EncryptedPassword as Password, null as Nick, null as Icon
-           , null as CountryID, cc.Mobile, cc.Email, cl.WebChatID as Wechat
-           , ci.TrueName as FirstName, ci.Company as OrganizationName, organization as DepartmentName, ci.Title as Salutation
-           , cc.PostalCode as ZipCode
-           from alidb.jk_eb.dbo.ClientInfo ci inner join alidb.jk_eb.dbo.ClientLogin cl on cl.CIID = ci.ID
-           inner join alidb.jk_eb.dbo.ClienContact cc on cc.CIID = cl.ID
-           where ci.ID > @iMaxId order by ci.ID`,
+    pull: `select top ${promiseSize} ID, WebUserID, '$user' as Type, UserName, Password, null as Nick, null as Icon
+           , TrueName as FirstName, OrganizationName, DepartmentName, Salutation
+           , Mobile, Telephone, Email, Fax, WechatOpenID
+           , Country, Province, City, Address, ZipCode
+           , InvoiceType, InvoiceTitle, TaxNo, BankAccountName
+           , CustomerID, SalesRegionBelongsTo, SalesCompanyID
+           from alidb.ProdData.dbo.Export_WebUser w
+           where ID > @iMaxId and State = 1 order by ID`,
     pullWrite: async (joint: Joint, data: any) => {
         try {
-            await joint.userIn(WebUser,
+            let userId = await joint.userIn(WebUserTonva,
                 _.pick(data,
-                    ['Type', 'WebUserID', 'UserName', 'Password', 'Nick', 'Icon', 'CountryID', 'Mobile', 'Email', 'Wechat'
-                        , 'Salutation', 'OrgnizationName', 'FirstName']));
+                    ['Type', 'WebUserID', 'UserName', 'Password', 'Nick', 'Icon', 'Mobile', 'Email', 'WechatOpenID']));
+            if (userId < 0)
+                return;
+            joint.uqIn(WebUser,
+                {
+                    'UserID': userId, 'WebUserID': data['WebUserID'], 'FirstName': data['FirstName'], 'Salutation': data['Salutation'],
+                    'OrganizationName': data['OrganizationName'], 'DepartmentName': data['DepartmentName']
+                });
+
+            let promises: PromiseLike<any>[] = [];
+            promises.push(joint.uqIn(WebUserContact, _.pick(data, ['WebUserID', 'Mobile', 'Email', 'OrganizationName', 'DepartmentName'
+                , 'Telephone', 'Fax', 'ZipCode', 'WechatOpenID'])));
+            promises.push(joint.uqIn(WebUserCustomer, _.pick(data, ['WebUserID', 'CustomerID'])));
+            // promises.push(joint.uqIn(WebUserSetting, _.pick(data, ['WebUserID', 'InvoiceTypeID'])));
+            await Promise.all(promises);
             return true;
         } catch (error) {
             console.error(error);
@@ -47,6 +56,23 @@ export const WebUser: UqInTuid = {
         }
     }
 };
+
+export const WebUser: UqInTuid = {
+    uq: uqs.jkWebUser,
+    type: 'tuid',
+    entity: 'WebUser',
+    key: 'WebUserID',
+    mapper: {
+        id: 'UserID',
+        no: "WebUserID",
+        name: 'FirstName',
+        firstName: "FirstName",
+        lastName: "",
+        salutation: "Salutation",
+        organizationName: 'OrganizationName',
+        departmentName: 'DepartmentName',
+    }
+}
 
 export const WebUserContact: UqInMap = {
     uq: uqs.jkWebUser,
@@ -75,7 +101,7 @@ export const WebUserCustomer: UqInMap = {
     mapper: {
         webUser: 'WebUserID@WebUser',
         arr1: {
-            customer: '^CID@Customer',
+            customer: '^CustomerID@Customer',
         }
     }
 };

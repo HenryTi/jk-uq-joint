@@ -12,8 +12,9 @@
     "firstMaxRows": 100000,
     "promiseSize": 60,
     "lastjkid": "J07A1351",
-    "lastchemid": 208571,
+    "lastchemid": 298247,
     "lastCID": "GD0025438A",
+    "lastPPCID": 561169,
     "mssqlJkConn": {
         "user": "ERP_LOGIN",
         "password": "BlW_M34wdx_)(*20",
