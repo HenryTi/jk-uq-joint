@@ -37,16 +37,13 @@ export const WebUserTonva: UqInTuid = {
                     ['Type', 'WebUserID', 'UserName', 'Password', 'Nick', 'Icon', 'Mobile', 'Email', 'WechatOpenID']));
             if (userId < 0)
                 return;
-            joint.uqIn(WebUser,
-                {
-                    'UserID': userId, 'WebUserID': data['WebUserID'], 'FirstName': data['FirstName'], 'Salutation': data['Salutation'],
-                    'OrganizationName': data['OrganizationName'], 'DepartmentName': data['DepartmentName']
-                });
-
+            data.UserID = userId;
             let promises: PromiseLike<any>[] = [];
-            promises.push(joint.uqIn(WebUserContact, _.pick(data, ['WebUserID', 'Mobile', 'Email', 'OrganizationName', 'DepartmentName'
+            promises.push(joint.uqIn(WebUser, _.pick(data, ['UserID', 'WebUserID', 'FirstName', 'Salutation', 'OrganizationName', 'DepartmentName'])));
+            promises.push(joint.uqIn(WebUserContact, _.pick(data, ['UserID', 'Mobile', 'Email', 'OrganizationName', 'DepartmentName'
                 , 'Telephone', 'Fax', 'ZipCode', 'WechatOpenID'])));
-            promises.push(joint.uqIn(WebUserCustomer, _.pick(data, ['WebUserID', 'CustomerID'])));
+            if (data['CustomerID'])
+                promises.push(joint.uqIn(WebUserCustomer, _.pick(data, ['UserID', 'CustomerID'])));
             // promises.push(joint.uqIn(WebUserSetting, _.pick(data, ['WebUserID', 'InvoiceTypeID'])));
             await Promise.all(promises);
             return true;
@@ -63,11 +60,10 @@ export const WebUser: UqInTuid = {
     entity: 'WebUser',
     key: 'WebUserID',
     mapper: {
-        id: 'UserID',
+        $id: 'UserID',
         no: "WebUserID",
         name: 'FirstName',
         firstName: "FirstName",
-        lastName: "",
         salutation: "Salutation",
         organizationName: 'OrganizationName',
         departmentName: 'DepartmentName',
@@ -79,7 +75,7 @@ export const WebUserContact: UqInMap = {
     type: 'map',
     entity: 'WebUserContact',
     mapper: {
-        webUser: 'WebUserID@WebUser',
+        webUser: 'UserID',
         arr1: {
             mobile: '^Mobile',
             email: '^Email',
@@ -99,7 +95,7 @@ export const WebUserCustomer: UqInMap = {
     type: 'map',
     entity: 'WebUserCustomer',
     mapper: {
-        webUser: 'WebUserID@WebUser',
+        webUser: 'UserID',
         arr1: {
             customer: '^CustomerID@Customer',
         }
@@ -111,7 +107,7 @@ export const WebUserContacts: UqInMap = {
     type: 'map',
     entity: 'WebUserContacts',
     mapper: {
-        webUser: 'WebUserID@WebUser',
+        webUser: 'UserID',
         arr1: {
             contact: '^ID@Contact',
         }
@@ -123,7 +119,7 @@ export const WebUserSetting: UqInMap = {
     type: 'map',
     entity: 'WebUserSetting',
     mapper: {
-        customer: 'WebUserID@WebUser',
+        customer: 'UserID',
         arr1: {
             shippingContact: '^ShippingContactID@Contact',
             invoiceContact: '^InvoiceContactID@Contact',

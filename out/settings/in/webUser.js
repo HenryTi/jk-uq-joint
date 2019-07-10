@@ -44,14 +44,13 @@ exports.WebUserTonva = {
             let userId = await joint.userIn(exports.WebUserTonva, _.pick(data, ['Type', 'WebUserID', 'UserName', 'Password', 'Nick', 'Icon', 'Mobile', 'Email', 'WechatOpenID']));
             if (userId < 0)
                 return;
-            joint.uqIn(exports.WebUser, {
-                'UserID': userId, 'WebUserID': data['WebUserID'], 'FirstName': data['FirstName'], 'Salutation': data['Salutation'],
-                'OrganizationName': data['OrganizationName'], 'DepartmentName': data['DepartmentName']
-            });
+            data.UserID = userId;
             let promises = [];
-            promises.push(joint.uqIn(exports.WebUserContact, _.pick(data, ['WebUserID', 'Mobile', 'Email', 'OrganizationName', 'DepartmentName',
+            promises.push(joint.uqIn(exports.WebUser, _.pick(data, ['UserID', 'WebUserID', 'FirstName', 'Salutation', 'OrganizationName', 'DepartmentName'])));
+            promises.push(joint.uqIn(exports.WebUserContact, _.pick(data, ['UserID', 'Mobile', 'Email', 'OrganizationName', 'DepartmentName',
                 'Telephone', 'Fax', 'ZipCode', 'WechatOpenID'])));
-            promises.push(joint.uqIn(exports.WebUserCustomer, _.pick(data, ['WebUserID', 'CustomerID'])));
+            if (data['CustomerID'])
+                promises.push(joint.uqIn(exports.WebUserCustomer, _.pick(data, ['UserID', 'CustomerID'])));
             // promises.push(joint.uqIn(WebUserSetting, _.pick(data, ['WebUserID', 'InvoiceTypeID'])));
             await Promise.all(promises);
             return true;
@@ -68,11 +67,10 @@ exports.WebUser = {
     entity: 'WebUser',
     key: 'WebUserID',
     mapper: {
-        id: 'UserID',
+        $id: 'UserID',
         no: "WebUserID",
         name: 'FirstName',
         firstName: "FirstName",
-        lastName: "",
         salutation: "Salutation",
         organizationName: 'OrganizationName',
         departmentName: 'DepartmentName',
@@ -83,7 +81,7 @@ exports.WebUserContact = {
     type: 'map',
     entity: 'WebUserContact',
     mapper: {
-        webUser: 'WebUserID@WebUser',
+        webUser: 'UserID',
         arr1: {
             mobile: '^Mobile',
             email: '^Email',
@@ -102,7 +100,7 @@ exports.WebUserCustomer = {
     type: 'map',
     entity: 'WebUserCustomer',
     mapper: {
-        webUser: 'WebUserID@WebUser',
+        webUser: 'UserID',
         arr1: {
             customer: '^CustomerID@Customer',
         }
@@ -113,7 +111,7 @@ exports.WebUserContacts = {
     type: 'map',
     entity: 'WebUserContacts',
     mapper: {
-        webUser: 'WebUserID@WebUser',
+        webUser: 'UserID',
         arr1: {
             contact: '^ID@Contact',
         }
@@ -124,7 +122,7 @@ exports.WebUserSetting = {
     type: 'map',
     entity: 'WebUserSetting',
     mapper: {
-        customer: 'WebUserID@WebUser',
+        customer: 'UserID',
         arr1: {
             shippingContact: '^ShippingContactID@Contact',
             invoiceContact: '^InvoiceContactID@Contact',
