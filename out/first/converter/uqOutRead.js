@@ -20,13 +20,19 @@ const readOne = async (sqlstring, params) => {
     let prod = recordset[0];
     return { lastId: prod.ID, data: prod };
 };
+/**
+ *
+ * @param sqlstring 要执行的存储过程
+ * @param params
+ * @returns 对象: lastId: 多个结果中最大的id值；data: 是个对象的数组，数组中的对象属性即字段名，值即字段值
+ */
 async function readMany(sqlstring, params) {
     let result = await tools_1.execSql(sqlstring, params);
     let { recordset } = result;
     let rows = recordset.length;
     if (rows === 0)
         return;
-    let prod = recordset[0];
-    return { lastId: recordset[rows - 1].ID, data: recordset };
+    return { lastPointer: recordset[rows - 1].ID, data: recordset };
 }
+exports.readMany = readMany;
 //# sourceMappingURL=uqOutRead.js.map

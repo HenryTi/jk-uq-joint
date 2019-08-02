@@ -18,7 +18,9 @@ const promiseSize = config_1.default.get("promiseSize");
     await host_1.host.start();
     centerApi_1.centerApi.initBaseUrl(host_1.host.centerUrl);
     await tools_1.initMssqlPool();
-    let joint = new uq_joint_1.Joint(settings_1.settings);
+    //let joint = new Joint(settings);
+    let joint = new uq_joint_1.TestJoint(settings_1.settings);
+    //let joint = new ProdJoint(settings);
     console.log('start');
     let start = Date.now();
     let priorEnd = start;
@@ -38,52 +40,68 @@ const promiseSize = config_1.default.get("promiseSize");
         let maxId = '', count = 0;
         let promises = [];
         for (;;) {
-            count++;
             let ret;
             try {
                 ret = await readFunc(maxId);
             }
             catch (error) {
                 console.error(error);
-                continue;
+                throw error;
             }
             if (ret === undefined || count > maxRows)
                 break;
-            let { lastId, data: rows } = ret;
+            let { lastPointer, data: rows } = ret;
             rows.forEach(e => {
-                try {
-                    if (firstPullWrite !== undefined) {
-                        promises.push(firstPullWrite(joint, e));
-                    }
-                    else if (pullWrite !== undefined) {
-                        promises.push(pullWrite(joint, e));
-                    }
-                    else {
-                        promises.push(joint.uqIn(uqIn, e));
-                    }
-                    maxId = lastId;
+                if (firstPullWrite !== undefined) {
+                    promises.push(firstPullWrite(joint, e));
                 }
-                catch (error) {
-                    console.log(error);
+                else if (pullWrite !== undefined) {
+                    promises.push(pullWrite(joint, e));
                 }
+                else {
+                    promises.push(joint.uqIn(uqIn, e));
+                }
+                count++;
             });
-            if (promises.length >= promiseSize) {
-                let before = Date.now();
-                await Promise.all(promises);
-                promises.splice(0);
-                let after = Date.now();
-                let sum = Math.round((after - start) / 1000);
-                let each = Math.round(after - priorEnd);
-                let eachSubmit = Math.round(after - before);
-                console.log('count = ' + count + ' each: ' + each + ' sum: ' + sum + ' eachSubmit: ' + eachSubmit + 'ms');
-                priorEnd = after;
+            maxId = lastPointer;
+            try {
+                await pushToTonva(promises, start, priorEnd, count, lastPointer);
+            }
+            catch (error) {
+                console.error(error);
+                if (error.code === "ETIMEDOUT") {
+                    await pushToTonva(promises, start, priorEnd, count, lastPointer);
+                }
+                else {
+                    throw error;
+                }
             }
         }
-        await Promise.all(promises);
+        try {
+            await Promise.all(promises);
+        }
+        catch (error) {
+            // debugger;
+            console.error(error);
+            throw error;
+        }
         promises.splice(0);
         console.log(entity + " end   at " + new Date());
     }
     ;
     process.exit();
 })();
+async function pushToTonva(promises, start, priorEnd, count, lastPointer) {
+    if (promises.length >= promiseSize) {
+        let before = Date.now();
+        await Promise.all(promises);
+        promises.splice(0);
+        let after = Date.now();
+        let sum = Math.round((after - start) / 1000);
+        let each = Math.round(after - priorEnd);
+        let eachSubmit = Math.round(after - before);
+        console.log('count = ' + count + ' each: ' + each + ' sum: ' + sum + ' eachSubmit: ' + eachSubmit + 'ms; lastId: ' + lastPointer);
+        priorEnd = after;
+    }
+}
 //# sourceMappingURL=index.js.map

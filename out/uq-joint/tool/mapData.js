@@ -6,9 +6,11 @@ const openApi_1 = require("./openApi");
 const database_1 = require("../db/mysql/database");
 const map_1 = require("./map");
 class MapData {
-    constructor(uqInDict, unit) {
-        this.uqInDict = uqInDict;
-        this.unit = unit;
+    //constructor(uqInDict: { [tuid: string]: UqIn }, unit: number) {
+    constructor(joint) {
+        //this.uqInDict = uqInDict;
+        //this.unit = unit;
+        this.joint = joint;
     }
     async mapOwner(tuidAndArr, ownerVal) {
         //let pos = owner.indexOf('@');
@@ -125,11 +127,14 @@ class MapData {
         return ret;
     }
 }
+/**
+ * 将外部系统的数据格式转换为Tonva的格式(从map_表中读取id，没有的话，调用getTuidVid生成一个)
+ */
 class MapToUq extends MapData {
     async tuidId(tuid, value) {
         if (value === undefined || value === null)
             return;
-        let uqIn = this.uqInDict[tuid];
+        let uqIn = this.joint.uqInDict[tuid];
         if (typeof uqIn !== 'object') {
             throw `tuid ${tuid} is not defined in settings.in`;
         }
@@ -151,10 +156,21 @@ class MapToUq extends MapData {
             ret = await tool_1.execSql(sql);
         }
         if (ret.length === 0) {
-            let openApi = await openApi_1.getOpenApi(uq, this.unit);
-            let vId = await openApi.getTuidVId(entity, value);
-            await map_1.map(entity, vId, value);
-            return vId;
+            try {
+                let openApi = await openApi_1.getOpenApi(uq, this.joint.unit);
+                let vId = await openApi.getTuidVId(entity);
+                await map_1.map(entity, vId, value);
+                return vId;
+            }
+            catch (error) {
+                console.error(error);
+                if (error.code === 'ETIMEDOUT') {
+                    await this.tuidId(tuid, value);
+                }
+                else {
+                    throw error;
+                }
+            }
         }
         return ret[0]['id'];
     }
@@ -164,7 +180,7 @@ class MapFromUq extends MapData {
     async tuidId(tuid, value) {
         if (value === undefined || value === null)
             return;
-        let uqIn = this.uqInDict[tuid];
+        let uqIn = this.joint.uqInDict[tuid];
         if (typeof uqIn !== 'object')
             throw `tuid ${tuid} is not defined in settings.in`;
         let { entity, uq } = uqIn;

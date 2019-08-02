@@ -1,3 +1,4 @@
+/*
 import fetch, {Headers} from 'node-fetch';
 import config from 'config';
 
@@ -6,14 +7,10 @@ export const isDevelopment = process.env.NODE_ENV === 'development';
 const centerHost = config.get<string>('centerhost');
 const centerDebugHost = 'localhost:3000'; //'192.168.86.64';
 
-//const centerEnvHost = 'REACT_APP_CENTER_DEBUG_HOST';
-const usqDebugHost = 'localhost:3015'; //'192.168.86.63';
-//const usqEnvHost = 'REACT_APP_USQ_DEBUG_HOST';
-const debugUsqlServer = 'localhost:3009';
-//const envUsqlServer = 'REACT_APP_DEBUG_USQL_SERVER';
+const uqDebugHost = 'localhost:3015'; //'192.168.86.63';
+const debugUqBuilder = 'localhost:3009';
 interface HostValue {
     value: string;
-    //env: string;
     local: boolean;
 }
 
@@ -25,22 +22,18 @@ function tryConfig<T>(name:string):T {
 const hosts:{[name:string]:HostValue} = {
     centerhost: {
         value: tryConfig<string>('debug-centerhost') || centerDebugHost, 
-        //env: centerEnvHost,
         local: false
     },
-    usqhost: {
-        value: tryConfig<string>('debug-usqhost') || usqDebugHost, 
-        //env: usqEnvHost,
+    uqhost: {
+        value: tryConfig<string>('debug-uqhost') || uqDebugHost, 
         local: false
     },
     unitxhost: {
-        value: tryConfig<string>('debug-unitxhost') || usqDebugHost, 
-        //env: usqEnvHost,
+        value: tryConfig<string>('debug-unitxhost') || uqDebugHost, 
         local: false
     },
-    "usql-server": {
-        value: tryConfig<string>('debug-usql-serverhost')  || debugUsqlServer, 
-        //env: envUsqlServer,
+    "uq-build": {
+        value: tryConfig<string>('debug-uq-serverhost')  || debugUqBuilder, 
         local: false
     }
 }
@@ -144,3 +137,4 @@ async function localCheck(url:string, options?:any):Promise<boolean> {
         return false;
     }
 }
+*/

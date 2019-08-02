@@ -40,6 +40,7 @@ async function execSql(sql, params) {
     catch (error) {
         // debugger;
         console.error(error);
+        throw error;
     }
 }
 exports.execSql = execSql;

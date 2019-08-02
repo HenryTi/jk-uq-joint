@@ -26,38 +26,36 @@ const faceOrderPush = async (joint, uqBus, queue, orderIn) => {
     });
     console.log(orderOut);
     // 调用7.253的web api
-    let httpClient = new webApiClient_1.WebApiClient();
     try {
-        let ret = await httpClient.newOrder(orderOut);
-        return true;
+        let success = await webApiClient_1.httpClient.newOrder(orderOut);
+        return success;
     }
     catch (error) {
+        console.error(error);
         return false;
     }
 };
 function getConsignee(shippingContact) {
+    let { name, organizationName, telephone, mobile, email, address, addressString } = shippingContact;
     let Consignee = {
-        ConsigneeName: shippingContact.name,
-        ConsigneeUnitName: shippingContact.organizationName,
-        ConsigneeTelephone: shippingContact.telephone,
-        ConsigneeMobile: shippingContact.mobile,
+        ConsigneeName: name,
+        ConsigneeUnitName: organizationName,
+        ConsigneeTelephone: telephone,
+        ConsigneeMobile: mobile,
         ConsigneeFax: "",
-        ConsigneeEmal: shippingContact.email,
-        ConsigneeAddress: {
-            ConsigneeAddressDetail: shippingContact.addressString,
-        }
+        ConsigneeEmail: email,
     };
-    if (shippingContact.address !== undefined) {
-        let { country, province, city, county, description, zipcode } = shippingContact.address;
+    if (address !== undefined) {
+        let { country, province, city, county, zipcode } = address;
         Consignee.ConsigneeAddress = {
             // Country: country && country.chineseName,
             // Province: province && province.chineseName,
             City: city && city.chineseName,
-            // County: county && county.chineseName,
-            ConsigneeAddressDetail: description,
+            County: county && county.chineseName,
             zipcode: zipcode,
         };
     }
+    Consignee.ConsigneeAddress.ConsigneeAddressDetail = addressString;
     return Consignee;
 }
 function getInvoiceReceiver(invoiceContact) {
@@ -67,14 +65,14 @@ function getInvoiceReceiver(invoiceContact) {
             InvoiceReceiverUnitName: invoiceContact.organizationName,
             InvoiceReceiverTelephone: invoiceContact.telephone,
             InvoiceReceiverUserMobile: invoiceContact.mobile,
-            InvoiceReceiverEmal: invoiceContact.email,
+            InvoiceReceiverEmail: invoiceContact.email,
+            InvoiceAddrssDetail: invoiceContact.addressString,
         };
         if (invoiceContact.address !== undefined) {
-            let { country, province, city, county, description, zipcode } = invoiceContact.address;
+            let { country, province, city, county, zipcode } = invoiceContact.address;
             InvoiceReceiver.InvoiceReceiverProvince = province && province.chineseName;
-            // InvoiceReceiver.InvoiceReceiverCity = city && city.chineseName;
+            InvoiceReceiver.InvoiceReceiverCity = city && city.chineseName;
             InvoiceReceiver.InvoiceReceiverZipCode = zipcode;
-            InvoiceReceiver.InvoiceAddrssDetail = description;
         }
         return InvoiceReceiver;
     }
@@ -98,7 +96,7 @@ exports.faceOrder = {
         SaleOrderItems: {
             $name: "orderItems",
             Row: "$Row",
-            PackageId: "pack@ProductX.PackX",
+            PackageId: "pack@ProductX_PackX",
             Qty: "quantity",
             Price: "price",
             Currency: "^currency@Currency"

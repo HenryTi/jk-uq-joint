@@ -1,34 +1,60 @@
-import { UqInTuid, UqInMap, UqInTuidArr } from "../../uq-joint";
+import * as _ from 'lodash';
+import dateFormat from 'dateformat';
+import { UqInTuid, UqInMap, UqInTuidArr, Joint } from "../../uq-joint";
 import { uqs } from "../uqs";
+import { customerPullWrite, customerFirstPullWrite, consigneeContactPullWrite } from '../../first/converter/customerPullWrite';
+import config from 'config';
+
+const promiseSize = config.get<number>("promiseSize");
 
 export const Customer: UqInTuid = {
     uq: uqs.jkCustomer,
     type: 'tuid',
     entity: 'Customer',
-    key: 'ID',
+    key: 'CustomerID',
     mapper: {
-        $id: 'ID@Customer',
-        no: "ID",
+        $id: 'CustomerID@Customer',
+        no: "CustomerID",
         name: 'Name',
         firstName: 'FirstName',
         lastName: 'LastName',
         gender: 'Gender',
         salutation: 'Salutation',
         birthDay: 'BirthDate',
-        // createTime: 'CreateTime',
-    }
+        createTime: 'CreateTime',
+        isValid: 'IsValid',
+        XYZ: 'XYZ',
+    },
+    pull: `select top ${promiseSize} ID, CustomerID, OrganizationID, Name, FirstName, LastName, XYZ, Gender, BirthDate, Tel1, Tel2, Mobile, Email, Email2
+           , Fax1, Fax2, Zip, InvoiceTitle, TaxNo, RegisteredAddress, RegisteredTelephone, BankName, BankAccountNumber
+           , SalesmanID, CustomerServiceStuffID, IsValid, SalesComanyID as SalesCompanyID, SalesRegionBelongsTo, CreateTime
+           from ProdData.dbo.Export_Customer where ID > @iMaxId order by ID`,
+    pullWrite: customerPullWrite,
+    firstPullWrite: customerFirstPullWrite,
 };
 
 export const Organization: UqInTuid = {
     uq: uqs.jkCustomer,
     type: 'tuid',
     entity: 'Organization',
-    key: 'ID',
+    key: 'OrganizationID',
     mapper: {
-        $id: 'ID@Organization',
-        no: 'ID',
+        $id: 'OrganizationID@Organization',
+        no: 'OrganizationID',
         name: 'Name',
         createTime: 'CreateTime',
+    },
+    pull: `select top ${promiseSize} ID, OrganizationID, UnitName as Name, CreateTime
+           from ProdData.dbo.Export_Organization where ID > @iMaxId order by ID`,
+    pullWrite: async (joint: Joint, data: any) => {
+        try {
+            data["CreateTime"] = data["CreateTime"] && dateFormat(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
+            await joint.uqIn(Organization, data);
+            return true;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
     }
 };
 
@@ -39,7 +65,7 @@ export const OrganizationCustomer: UqInMap = {
     mapper: {
         organization: "OrganizationID@Organization",
         arr1: {
-            customer: '^ID@Customer',
+            customer: '^CustomerID@Customer',
         }
     }
 };
@@ -47,51 +73,15 @@ export const OrganizationCustomer: UqInMap = {
 export const CustomerContact: UqInTuidArr = {
     uq: uqs.jkCustomer,
     type: 'tuid-arr',
-    entity: 'Customer.Contact',
+    entity: 'Customer_Contact',
     owner: 'CustomerID',
     key: 'ID',
     mapper: {
-        $id: 'ID@CustomerContact',
+        $id: 'ID@Customer_Contact',
         type: 'TypeID',
         content: 'Content',
     }
 };
-
-/*
-export const CustomerConsigneeContact: UqInMap = {
-    uq: uqs.jkCustomer,
-    type: 'map',
-    entity: 'CustomerConsigneeContact',
-    mapper: {
-        customer: 'CustomerID@Customer',
-        name: 'Name',
-        organizationName: 'OrganizationName',
-        mobile: 'Mobile',
-        telephone: 'Telephone',
-        email: 'Email',
-        addressString: 'Addr',
-        address: "AddressID@Address",
-        isDefault: 'isDefault',
-    }
-};
-
-export const CustomerInvoiceContact: UqInMap = {
-    uq: uqs.jkCustomer,
-    type: 'map',
-    entity: 'CustomerInvoiceContact',
-    mapper: {
-        customer: 'CustomerID@Customer',
-        name: 'Name',
-        organizationName: 'OrganizationName',
-        mobile: 'Mobile',
-        telephone: 'Telephone',
-        email: 'Email',
-        addressString: 'Addr',
-        address: "AddressID@Address",
-        isDefault: 'isDefault',
-    }
-};
-*/
 
 export const CustomerContacts: UqInMap = {
     uq: uqs.jkCustomer,
@@ -104,20 +94,6 @@ export const CustomerContacts: UqInMap = {
         }
     }
 };
-
-/*
-export const CustomerInvoiceContact: UqInMap = {
-    uq: uqs.jkCustomer,
-    type: 'map',
-    entity: 'CustomerInvoiceContact',
-    mapper: {
-        customer: 'CustomerID@Customer',
-        arr1: {
-            contact: '^ID@Contact',
-        }
-    }
-};
-*/
 
 export const Contact: UqInTuid = {
     uq: uqs.jkCustomer,
@@ -133,5 +109,49 @@ export const Contact: UqInTuid = {
         email: 'Email',
         addressString: 'Addr',
         address: "AddressID@Address",
+    },
+    pullWrite: consigneeContactPullWrite,
+};
+
+export const InvoiceInfo: UqInTuid = {
+    uq: uqs.jkCustomer,
+    type: 'tuid',
+    entity: 'InvoiceInfo',
+    key: 'CustomerID',  // CustomerID作为InvoiceInfo的ID
+    mapper: {
+        $id: 'CustomerID@InvoiceInfo',
+        title: 'InvoiceTitle',
+        address: 'RegisteredAddress',
+        telephone: 'RegisteredTelephone',
+        bank: 'BankName',
+        accountNo: 'BankAccountNumber',
+    },
+};
+
+export const CustomerSetting: UqInMap = {
+    uq: uqs.jkCustomer,
+    type: 'map',
+    entity: 'CustomerSetting',
+    mapper: {
+        customer: 'CustomerID@Customer',
+        arr1: {
+            shippingContact: '^ShippingContactID@Contact',
+            invoiceContact: '^InvoiceContactID@Contact',
+            invoiceType: '^InvoiceTypeID@InvoiceType',
+            invoiceInfo: '^InvoiceInfoID@InvoiceInfo',
+        }
+    }
+};
+
+export const CustomerHandler: UqInMap = {
+    uq: uqs.jkCustomer,
+    type: 'map',
+    entity: 'CustomerHandler',
+    mapper: {
+        customer: 'CustomerID@Customer',
+        salesman: 'SalesmanID@Employee',
+        arr1: {
+            customerServiceStuff: '^CustomerServiceStuffID@Employee',
+        }
     }
 };

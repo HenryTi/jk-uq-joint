@@ -3,6 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fetch_1 = require("./fetch");
 const centerApi_1 = require("./centerApi");
 const host_1 = require("./host");
+/**
+ * 这个OpenApi好像是没有用
+ */
 class OpenApi extends fetch_1.Fetch {
     constructor(baseUrl, unit) {
         super(baseUrl);
@@ -60,22 +63,14 @@ class OpenApi extends fetch_1.Fetch {
         let ret = await this.post(`joint/tuid-arr/${tuid}/${owner}/${arr}`, data);
         return ret;
     }
-    async getTuidVId(tuid, uniqueValue) {
-        let parts = tuid.split('.');
+    async getTuidVId(tuid) {
+        let parts = tuid.split('_');
         let url;
         if (parts.length === 1)
             url = `joint/tuid-vid/${tuid}`;
         else
             url = `joint/tuid-arr-vid/${parts[0]}/${parts[1]}`;
-        let ret = await this.get(url, { u: uniqueValue });
-        return ret;
-    }
-    async loadTuidMainValue(tuidName, id, allProps) {
-        let ret = await this.post(`open/tuid-main/${tuidName}`, { unit: this.unit, id: id, all: allProps });
-        return ret;
-    }
-    async loadTuidDivValue(tuidName, divName, id, ownerId, allProps) {
-        let ret = await this.post(`open/tuid-div/${tuidName}/${divName}`, { unit: this.unit, id: id, ownerId: ownerId, all: allProps });
+        let ret = await this.get(url);
         return ret;
     }
     async scanSheet(sheet, scanStartId) {
@@ -90,12 +85,6 @@ class OpenApi extends fetch_1.Fetch {
     }
     async delMap(map, data) {
         await this.post('joint/action-json/' + map + '$del$', data);
-    }
-    async loadEntities() {
-        return await this.get('open/entities/' + this.unit);
-    }
-    async schema(entityName) {
-        return await this.get('open/entity/' + entityName);
     }
 }
 exports.OpenApi = OpenApi;

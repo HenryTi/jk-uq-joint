@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const sqls_1 = require("./converter/sqls");
-const product_1 = require("../settings/in/product");
+const productCategory_1 = require("../settings/in/productCategory");
 /** */
 exports.pulls = [
     /*
@@ -14,20 +14,18 @@ exports.pulls = [
     { read: sqls.readPackType, uqIn: PackType},
     { read: sqls.readCurrency, uqIn: Currency },
     { read: sqls.readSalesRegion, uqIn: SalesRegion },
-
+    { read: sqls.readInvoiceType, uqIn: InvoiceType },
+    { read: sqls.readEmployee, uqIn: Employee },
+    */
+    /*
     // 库存
     { read: sqls.readWarehouse, uqIn: Warehouse },
     { read: sqls.readSalesRegionWarehouse, uqIn: SalesRegionWarehouse },
-
-    // 产品相关的数据表
-    // 品牌
-    { read: sqls.readBrand, uqIn: Brand },
-    // 目录树
-    { read: sqls.readProductCategory, uqIn: ProductCategory },
-    { read: sqls.readProductCategoryLanguage, uqIn: ProductCategoryLanguage },
-    { read: sqls.readChemical, uqIn: Chemical },
     */
-    // 产品
-    { read: sqls_1.sqls.readProduct, uqIn: product_1.ProductX },
+    // 产品相关的数据表
+    // 目录树
+    // { read: sqls.readProductCategory, uqIn: ProductCategory },
+    // { read: sqls.readProductCategoryLanguage, uqIn: ProductCategoryLanguage },
+    { read: sqls_1.sqls.readProductProductCategory, uqIn: productCategory_1.ProductProductCategory },
 ];
 //# sourceMappingURL=pulls.js.map

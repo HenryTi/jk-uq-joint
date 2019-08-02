@@ -85,6 +85,7 @@ class FaceSchemas {
     private pack(schema:BusSchema, data:any):string {
         let result:string[] = [];
         if (data !== undefined) {
+            if (Array.isArray(data) === false) data = [data];
             let len = data.length;
             for (let i=0;i<len;i++) this.packBusMain(result, schema, data[0]);
         }
@@ -188,6 +189,7 @@ class FaceSchemas {
         function to(v:string, type:string):any {
             switch (type) {
                 default: return v;
+                case 'id':
                 case 'number':
                 case 'tinyint':
                 case 'smallint':

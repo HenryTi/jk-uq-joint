@@ -57,7 +57,9 @@ const tools_1 = require("./mssql/tools");
             console.error(e);
         }
     });
-    let joint = new uq_joint_1.Joint(settings_1.settings);
+    //let joint = new Joint(settings);
+    let joint = new uq_joint_1.ProdJoint(settings_1.settings);
+    //let joint = new TestJoint(settings);
     app.use('/joint-uq-jk', joint.createRouter());
     let port = config_1.default.get('port');
     app.listen(port, async () => {
