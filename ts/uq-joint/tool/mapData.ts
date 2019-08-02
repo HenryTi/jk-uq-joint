@@ -1,17 +1,21 @@
 import { Mapper } from "./mapper";
 import { execSql } from "../db/mysql/tool";
 import { createMapTable } from "./createMapTable";
-import { getOpenApi } from "./openApi";
 import { databaseName } from "../db/mysql/database";
 import { map } from "./map";
 import { UqIn } from "../defines";
+import { Joint } from "../joint";
 
 abstract class MapData {
-    protected unit: number;
-    protected uqInDict: { [tuid: string]: UqIn };
-    constructor(uqInDict: { [tuid: string]: UqIn }, unit: number) {
-        this.uqInDict = uqInDict;
-        this.unit = unit;
+    protected joint: Joint;
+    //protected unit: number;
+    //protected uqInDict: { [tuid: string]: UqIn };
+    //protected settings: Settings;
+    //constructor(settings: Settings) {
+    constructor(joint: Joint) {
+        this.joint = joint;
+        //this.uqInDict = joint.uqInDict;
+        //this.unit = joint.unit;
     }
     protected abstract tuidId(tuid: string, value: any): Promise<string | number>;
 
@@ -137,7 +141,8 @@ export class MapToUq extends MapData {
     protected async tuidId(tuid: string, value: any): Promise<string | number> {
         if (value === undefined || value === null) return;
 
-        let uqIn = this.uqInDict[tuid];
+        //let usIn = this.settings.in[tuid];
+        let uqIn = this.joint.uqInDict[tuid];
         if (typeof uqIn !== 'object') {
             throw `tuid ${tuid} is not defined in settings.in`;
         }
@@ -159,8 +164,9 @@ export class MapToUq extends MapData {
             ret = await execSql(sql);
         }
         if (ret.length === 0) {
-            let openApi = await getOpenApi(uq, this.unit);
-            let vId = await openApi.getTuidVId(entity, value);
+            //let openApi = await getOpenApi(uq, this.settings.unit);
+            let openApi = await this.joint.getOpenApi(uq);
+            let vId = await openApi.getTuidVId(entity);
             await map(entity, vId, value);
             return vId;
         }
@@ -170,14 +176,7 @@ export class MapToUq extends MapData {
 
 export class MapFromUq extends MapData {
     protected async tuidId(tuid: string, value: any): Promise<string | number> {
-        if (value === undefined || value === null) return;
-
-        let uqIn = this.uqInDict[tuid];
-        if (typeof uqIn !== 'object')
-            throw `tuid ${tuid} is not defined in settings.in`;
-
-        let { entity, uq } = uqIn as UqIn;
-        let sql = `select no from \`${databaseName}\`.\`map_${entity}\` where id='${value}'`;
+        let sql = `select no from \`${databaseName}\`.\`map_${tuid}\` where no='${value}'`;
         let ret: any[] = await execSql(sql);
         if (ret.length === 0) return 'n/a';
         return ret[0].no;

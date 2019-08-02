@@ -1,6 +1,5 @@
-/*
 import { UqOutConverter } from "../pulls";
-import { read } from './uqOutRead'
+import { read } from ".";
 
 export const readProductCategory: UqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
@@ -23,4 +22,3 @@ export const readProductProductCategory: UqOutConverter = async (maxId: string):
         from opdata.dbo.SaleProductProductCategory where ID > '${maxId}' order by ID`;
     return await read(sqlstring);
 };
-*/

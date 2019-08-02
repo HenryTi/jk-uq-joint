@@ -5,7 +5,6 @@ export const uqs = {
     jkChemical: JKDev + '/chemical',
     jkProduct: JKDev + '/product',
     jkCustomer: JKDev + '/customer',
-    jkCustomerDiscount: JKDev + '/customerDiscount',
     jkPromotion: JKDev + '/promotion',
     jkWarehouse: JKDev + '/warehouse',
     jkOrder: JKDev + '/order',

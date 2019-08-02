@@ -1,5 +1,4 @@
-import * as _ from 'lodash';
-import { UqInTuid, UqInMap, Joint } from "../../uq-joint";
+import { UqInTuid, UqInMap } from "../../uq-joint";
 import { uqs } from "../uqs";
 
 export const Promotion: UqInTuid = {
@@ -16,20 +15,6 @@ export const Promotion: UqInTuid = {
         startDate: 'StartDate',
         endDate: 'EndDate',
         createTime: 'CreateTime',
-    },
-    pullWrite: async (joint: Joint, data: any) => {
-
-        try {
-            data["StartDate"] = data["StartDate"] && data["StartDate"].getTime();
-            data["EndDate"] = data["StartDate"] && data["EndDate"].getTime();
-            data["CreateTime"] = data["CreateTime"] && data["CreateTime"].getTime();
-            await joint.uqIn(Promotion, _.pick(data, ["ID", "Name", "Type", "Status", "StartDate", 'EndDate', 'CreateTime']));
-            await joint.uqIn(PromotionSalesRegion, _.pick(data, ["ID", "SalesRegionID"]));
-            return true;
-        } catch (error) {
-            console.error(error);
-            return false;
-        }
     }
 };
 
@@ -54,7 +39,7 @@ export const PromotionLanguage: UqInMap = {
         arr1: {
             language: '^LanguageID@Language',
             description: '^Description',
-            url: '^Url',
+            url: 'Url',
         }
     }
 };

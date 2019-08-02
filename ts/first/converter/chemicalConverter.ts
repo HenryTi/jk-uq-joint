@@ -1,6 +1,5 @@
-/*
 import { UqOutConverter } from "../pulls";
-import { read } from "./uqOutRead";
+import { read } from ".";
 
 export const readChemical: UqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
@@ -9,10 +8,3 @@ export const readChemical: UqOutConverter = async (maxId: string): Promise<{ las
         from opdata.dbo.sc_chemical where reliability = 0 and chemID > '${iMaxId}' order by chemID`;
     return await read(sqlstring);
 };
-export const readChemical = `
-select top 1
-    chemID as ID, cas, Description, DescriptionC, molWeight, molFomula, mdlNumber
-    from opdata.dbo.sc_chemical
-    where reliability = 0 and chemID > @iMaxId order by chemID
-`;
-*/

@@ -1,6 +1,5 @@
-/*
 import { UqOutConverter } from "../pulls";
-import { read } from './uqOutRead'
+import { read } from ".";
 
 export const readBrand: UqOutConverter = async (maxId: string): Promise<{ lastId: string, data: any }> => {
 
@@ -65,4 +64,3 @@ export const readProductLegallyProhibited: UqOutConverter = async (maxId: string
         from zcl_mess.dbo.sc_safe_ProdCache where jkid + market_code > '${maxId}' order by jkid + market_code`;
     return await read(sqlstring);
 };
-*/

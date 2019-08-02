@@ -1,82 +1,124 @@
-import fetch, {Headers} from 'node-fetch';
+import fetch from 'node-fetch';
 import config from 'config';
 
 export const isDevelopment = process.env.NODE_ENV === 'development';
-
-const centerHost = config.get<string>('centerhost');
-const centerDebugHost = 'localhost:3000'; //'192.168.86.64';
-
-const uqDebugHost = 'localhost:3015'; //'192.168.86.63';
-const debugUqBuilder = 'localhost:3009';
-interface HostValue {
-    value: string;
-    local: boolean;
-}
-
 function tryConfig<T>(name:string):T {
     if (config.has(name) === false) return;
     return config.get<T>(name);
 }
 
+const centerHost = tryConfig<string>('centerhost');
+const centerDebugHost = 'localhost:3000'; //'192.168.86.64';
+
+//const resHost = process.env['REACT_APP_RES_HOST'] || centerHost;
+const resDebugHost = 'localhost:3015'; //'192.168.86.63';
+
+const uqDebugHost = 'localhost:3015'; //'192.168.86.63';
+const uqDebugBuilderHost = 'localhost:3009';
+
+interface HostValue {
+    value: string;
+    local: boolean;
+}
 const hosts:{[name:string]:HostValue} = {
     centerhost: {
-        value: tryConfig<string>('debug-centerhost') || centerDebugHost, 
+        value: tryConfig('debug-center-host') || centerDebugHost, 
+        local: false
+    },
+    reshost: {
+        value: tryConfig('debug-res-host') || resDebugHost,
         local: false
     },
     uqhost: {
-        value: tryConfig<string>('debug-uqhost') || uqDebugHost, 
+        value: tryConfig('debug-uq-host') || uqDebugHost, 
         local: false
     },
     unitxhost: {
-        value: tryConfig<string>('debug-unitxhost') || uqDebugHost, 
+        value: tryConfig('debug-unitx-host') || uqDebugHost, 
         local: false
     },
     "uq-build": {
-        value: tryConfig<string>('debug-uq-serverhost')  || debugUqBuilder, 
+        value: tryConfig('debug-uq-build-host') || uqDebugBuilderHost, 
         local: false
     }
 }
 
-function centerUrlFromHost(host:string) {return `http://${host}/tv/`}
-function centerWsFromHost(host:string) {return `ws://${host}/tv/`}
-    
+function centerUrlFromHost(host:string) {
+    if (host.startsWith('https://') === true) {
+        if (host.endsWith('/')) return host;
+        return host + '/';
+    }
+    return `http://${host}/`;
+}
+function centerWsFromHost(host:string) {
+    let https = 'https://';
+    if (host.startsWith(https) === true) {
+        host = host.substr(https.length);
+        if (host.endsWith('/') === true) host = host.substr(0, host.length-1);
+        return 'wss://' + host + '/tv/';
+    }
+    return `ws://${host}/tv/`
+}
+
+const fetchOptions = {
+    method: "GET",
+    mode: "no-cors", // no-cors, cors, *same-origin
+    headers: {
+        "Content-Type": "text/plain"
+    },
+};
+
 class Host {
     centerUrl: string;
-    //ws: string;
+    testing: boolean;
+    ws: string;
+    resHost: string;
 
-    async start() {
+    async start(testing:boolean) {
+        this.testing = testing;
         if (isDevelopment === true) {
             await this.tryLocal();
         }
         let host = this.getCenterHost();
         this.centerUrl = centerUrlFromHost(host);
-        //this.ws = centerWsFromHost(host);
+        this.ws = centerWsFromHost(host);
+        this.resHost = this.getResHost();
     }
 
     private debugHostUrl(host:string) {return `http://${host}/hello`}
     private async tryLocal() {
         let promises:PromiseLike<any>[] = [];
+        let hostArr:string[] = [];
         for (let i in hosts) {
             let hostValue = hosts[i];
             let {value} = hostValue;
-            //let host = process.env[env] || value;
-            let fetchUrl = this.debugHostUrl(value);
-            let fetchOptions = {
-                method: "GET",
-                mode: "no-cors", // no-cors, cors, *same-origin
-                headers: {
-                    "Content-Type": "text/plain"
-                },
-            };
-            promises.push(localCheck(fetchUrl, fetchOptions));
+            if (hostArr.findIndex(v => v === value) < 0) hostArr.push(value);
+        }
+
+        for (let host of hostArr) {
+            let fetchUrl = this.debugHostUrl(host);
+            promises.push(localCheck(fetchUrl));
         }
         let results = await Promise.all(promises);
+        let len = hostArr.length;
+        for (let i=0; i<len; i++) {
+            let local = results[i];
+            let host = hostArr[i];
+            for (let j in hosts) {
+                let hostValue = hosts[j];
+                if (hostValue.value === host) {
+                    hostValue.local = local;
+                }
+            }
+        }
+        /*
         let p = 0;
         for (let i in hosts) {
             let hostValue = hosts[i];
             hostValue.local = results[p];
             ++p;
         }
+        */
     }
 
     private getCenterHost():string {
@@ -87,21 +129,37 @@ class Host {
         return centerHost;
     }
 
-    getUrlOrDebug(url:string, urlDebug:string):string {
-        if (isDevelopment !== true) return url;
-        if (!urlDebug) return url;
-        for (let i in hosts) {
-            let host = hosts[i];
-            let {value, local} = host;
-            let hostString = `://${i}/`;
-            let pos = urlDebug.indexOf(hostString);
-            if (pos > 0) {
-                if (local === false) break;
-                urlDebug = urlDebug.replace(hostString, `://${value}/`);
-                return urlDebug;
-            }
+    private getResHost():string {
+        let {value, local} = hosts.reshost;
+        if (isDevelopment === true) {
+            if (local === true) return value;
         }
-        return url;
+        return this.resHost;
+    }
+
+    getUrlOrDebug(url:string, debugHost:string = 'uqhost'):string {
+        if (isDevelopment === false) return url;
+        let host = hosts[debugHost];
+        if (host === undefined) return url;
+        let {value, local} = host;
+        if (local === false) return url;
+        return `http://${value}/`;
+    }
+    getUrlOrTest(db:string, url:string, urlTest:string):string {
+        let path:string;
+        if (this.testing === true) {
+            if (urlTest !== '-') url = urlTest;
+            path = 'uq/test/' + db + '/';
+        }
+        else {
+            path = 'uq/prod/' + db + '/';
+        }
+        url = this.getUrlOrDebug(url);
+        return url + path;
+    }
+
+    async localCheck(urlDebug: string):Promise<boolean> {
+        return await localCheck(urlDebug);
     }
 }
 
@@ -113,11 +171,11 @@ export const host:Host = new Host();
 
 // 实际上，一秒钟不够。web服务器会自动停。重启的时候，可能会比较长时间。也许两秒甚至更多。
 //const timeout = 2000;
-const timeout = 100;
+const timeout = 200;
 
-function fetchLocalCheck(url:string, options?:any):Promise<any> {
+function fetchLocalCheck(url:string):Promise<any> {
     return new Promise((resolve, reject) => {
-      fetch(url, options)
+      fetch(url, fetchOptions as any)
       .then(v => {
           v.text().then(resolve).catch(reject);
       })
@@ -127,12 +185,12 @@ function fetchLocalCheck(url:string, options?:any):Promise<any> {
     });
 }
 
-async function localCheck(url:string, options?:any):Promise<boolean> {
+async function localCheck(url:string):Promise<boolean> {
     try {
-        await fetchLocalCheck(url, options);
+        await fetchLocalCheck(url);
         return true;
     }
-    catch {
+    catch (err) {
         return false;
     }
 }

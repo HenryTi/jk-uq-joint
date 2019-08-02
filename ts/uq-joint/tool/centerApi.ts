@@ -1,14 +1,4 @@
-//import config from 'config';
 import {Fetch} from './fetch';
-
-/*
-const centerHost = config.get<string>('centerhost');
-const centerUrl = urlSetCenterHost(config.get<string>('center'));
-
-export function urlSetCenterHost(url:string):string {
-    return url.replace('://centerhost/', '://'+centerHost+'/');
-}
-*/
 
 class CenterApi extends Fetch {
     async busSchema(owner:string, bus:string):Promise<string> {
@@ -31,20 +21,35 @@ class CenterApi extends Fetch {
         return await this.get('open/uq-url', {unit:unit, uq:uq});
     }
 
-    async urlFromUq(unit:number, uqFullName:string):Promise<any> {
+    async urlFromUq(unit:number, uqFullName:string):Promise<{db:string, url:string, urlTest:string}> {
         return await this.get('open/url-from-uq', {unit:unit, uq:uqFullName});
-    }
-
-    async uqDb(name:string):Promise<any> {
-        return await this.get('open/uqdb', {name:name});
-    }
-
-    async pushTo(msg:any):Promise<void> {
-        return await this.post('push', msg);
     }
 
     async unitxBuses(unit:number, busOwner:string, bus:string, face:string):Promise<any[]> {
         return await this.get('open/unitx-buses', {unit:unit, busOwner:busOwner, bus:bus, face:face});
+    }
+
+    async queueOut(start:number, page:number):Promise<any[]> {
+        return await this.get('open/queue-out', {start:start, page:page});
+    }
+
+    /*
+    param:
+    { 
+        $type: '$user',
+        id: 2, 
+        name: '1', 
+        pwd: 'pwd', 
+        nick: 'nick1-1',
+        icon: 'icon1-1',
+        country: 3, 
+        mobile: 13901060561, 
+        email: 'liaohengyi123@outlook.com', 
+        wechat: 'wechat212',
+    }
+    */
+    async queueIn(param:any):Promise<number> {
+        return await this.post('open/queue-in', param)
     }
 }
 

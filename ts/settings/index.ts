@@ -3,11 +3,10 @@ import { Settings } from "../uq-joint";
 //import pull from "./pull";
 import { bus } from "./bus";
 import uqIns from "./in";
-import { uqPullRead } from "../first/converter/uqOutRead";
 //import push from "./push";
 
 export const settings: Settings = {
-    name: 'j&k_uq_joint',
+    name: 'j&k_usq_joint',
     unit: 24,
     allowedIP: [
         '218.249.142.140',
@@ -19,5 +18,4 @@ export const settings: Settings = {
     //pull: pull,
     //push: push,
     bus: bus,
-    pullReadFromSql: uqPullRead
 }

@@ -32,13 +32,13 @@ export abstract class Fetch {
     }
 
     private async innerFetch(url: string, method:string, body?:any): Promise<any> {
-        // console.log('innerFetch ' + method + '  ' + this.baseUrl + url);
+        console.log('innerFetch ' + method + '  ' + this.baseUrl + url);
         var headers = new Headers();
         headers.append('Accept', 'application/json'); // This one is enough for GET requests
         headers.append('Content-Type', 'application/json'); // This one sends body
         this.appendHeaders(headers);
         let res = await fetch(
-            this.baseUrl + url,
+            this.baseUrl + url, 
             {
                 headers: headers, /*{
                     "Content-Type": 'application/json',
@@ -69,3 +69,4 @@ export abstract class Fetch {
         return json;
     }
 }
+
