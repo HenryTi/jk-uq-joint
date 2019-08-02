@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const tool_1 = require("../db/mysql/tool");
 const createMapTable_1 = require("./createMapTable");
-const openApi_1 = require("./openApi");
+//import { getOpenApi } from "./openApi";
 const database_1 = require("../db/mysql/database");
 const map_1 = require("./map");
 class MapData {
@@ -157,7 +157,7 @@ class MapToUq extends MapData {
         }
         if (ret.length === 0) {
             try {
-                let openApi = await openApi_1.getOpenApi(uq, this.joint.unit);
+                let openApi = await this.joint.getOpenApi(uq);
                 let vId = await openApi.getTuidVId(entity);
                 await map_1.map(entity, vId, value);
                 return vId;

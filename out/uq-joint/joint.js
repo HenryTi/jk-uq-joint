@@ -9,6 +9,8 @@ const createMapTable_1 = require("./tool/createMapTable");
 const faceSchemas_1 = require("./tool/faceSchemas");
 const uq_1 = require("./uq/uq");
 const centerApi_1 = require("./tool/centerApi");
+const openApi_1 = require("./tool/openApi");
+const host_1 = require("./tool/host");
 const interval = 3 * 1000;
 class Joint {
     constructor(settings) {
@@ -29,12 +31,13 @@ class Joint {
                 setTimeout(this.tick, interval);
             }
         };
+        this.uqOpenApis = {};
         this.settings = settings;
         let { unit, uqIns: uqIns } = settings;
         this.unit = unit;
         if (uqIns === undefined)
             return;
-        this.uqs = new uq_1.Uqs(unit);
+        this.uqs = new uq_1.Uqs(this, unit);
         for (let uqIn of uqIns) {
             let { entity, type } = uqIn;
             if (this.uqInDict[entity] !== undefined)
@@ -46,8 +49,41 @@ class Joint {
         return router_1.createRouter(this.settings);
     }
     async start() {
+        await host_1.host.start(this.prodOrTest === 'test');
+        centerApi_1.centerApi.initBaseUrl(host_1.host.centerUrl);
         await this.uqs.init();
         setTimeout(this.tick, interval);
+    }
+    //async getOpenApi(uqFullName:string, unit:number):Promise<OpenApi> {
+    async getOpenApi(uq) {
+        let openApis = this.uqOpenApis[uq];
+        if (openApis === null)
+            return null;
+        if (openApis === undefined) {
+            this.uqOpenApis[uq] = openApis = {};
+        }
+        let uqUrl = await centerApi_1.centerApi.urlFromUq(this.unit, uq);
+        if (uqUrl === undefined)
+            return openApis[this.unit] = null;
+        //let {url, urlDebug} = uqUrl;
+        //url = await host.getUrlOrDebug(url, urlDebug);
+        /*
+        if (urlDebug !== undefined) {
+            try {
+                urlDebug = urlSetUqHost(urlDebug);
+                urlDebug = urlSetUnitxHost(urlDebug);
+                let ret = await fetch(urlDebug + 'hello');
+                if (ret.status !== 200) throw 'not ok';
+                let text = await ret.text();
+                url = urlDebug;
+            }
+            catch (err) {
+            }
+        }
+        */
+        let { db, url, urlTest } = uqUrl;
+        let realUrl = host_1.host.getUrlOrTest(db, url, urlTest);
+        return openApis[this.unit] = new openApi_1.OpenApi(realUrl, this.unit);
     }
     /*
     private async scanPull() {

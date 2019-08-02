@@ -23,7 +23,7 @@ export abstract class Joint {
         let { unit, uqIns: uqIns } = settings;
         this.unit = unit;
         if (uqIns === undefined) return;
-        this.uqs = new Uqs(unit);
+        this.uqs = new Uqs(this, unit);
         for (let uqIn of uqIns) {
             let { entity, type } = uqIn;
             if (this.uqInDict[entity] !== undefined) throw 'can not have multiple ' + entity;

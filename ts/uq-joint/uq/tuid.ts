@@ -1,5 +1,6 @@
 import { Entity } from "./entity";
-import { OpenApi, Uq } from "./uq";
+import { Uq } from "./uq";
+import { OpenApi } from "../tool/openApi";
 
 const maxCacheSize = 1000;
 class Cache {

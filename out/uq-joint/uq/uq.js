@@ -1,14 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const fetch_1 = require("../tool/fetch");
-const centerApi_1 = require("../tool/centerApi");
-const host_1 = require("../tool/host");
 const tuid_1 = require("./tuid");
 const $unitx = '$$$/$unitx';
 class Uqs {
-    constructor(unit) {
+    constructor(joint, unit) {
         this.uqs = {};
+        this.joint = joint;
         this.unit = unit;
+    }
+    async getOpenApi(uq) {
+        return await this.joint.getOpenApi(uq);
     }
     async getUq(uqFullName) {
         let uq = this.uqs[uqFullName];
@@ -168,12 +169,13 @@ class Uq {
         await this.loadEntities();
     }
     async initOpenApi() {
-        let uqUrl = await centerApi_1.centerApi.urlFromUq(this.unit, this.uqFullName);
-        if (uqUrl === undefined)
-            return;
+        /*
+        let uqUrl = await centerApi.urlFromUq(this.unit, this.uqFullName);
+        if (uqUrl === undefined) return;
         let { url, urlDebug } = uqUrl;
-        url = await host_1.host.getUrlOrDebug(url, urlDebug);
-        this.openApi = new OpenApi(url, this.unit);
+        url = await host.getUrlOrDebug(url, urlDebug);
+        */
+        this.openApi = await this.uqs.getOpenApi(this.uqFullName); //new OpenApi(url, this.unit);
     }
     buildTuids(tuids) {
         for (let i in tuids) {
@@ -305,109 +307,4 @@ class UqUnitx extends Uq {
         await this.openApi.writeBus(face, source, newQueue, body);
     }
 }
-class OpenApi extends fetch_1.Fetch {
-    constructor(baseUrl, unit) {
-        super(baseUrl);
-        this.unit = unit;
-    }
-    appendHeaders(headers) {
-        headers.append('unit', String(this.unit));
-    }
-    async fresh(unit, stamps) {
-        let ret = await this.post('open/fresh', {
-            unit: unit,
-            stamps: stamps
-        });
-        return ret;
-    }
-    async bus(faces, faceUnitMessages) {
-        let ret = await this.post('open/bus', {
-            faces: faces,
-            faceUnitMessages: faceUnitMessages,
-        });
-        return ret;
-    }
-    async readBus(face, queue) {
-        let ret = await this.post('open/joint-read-bus', {
-            unit: this.unit,
-            face: face,
-            queue: queue
-        });
-        return ret;
-    }
-    async writeBus(face, from, queue, body) {
-        let ret = await this.post('open/joint-write-bus', {
-            unit: this.unit,
-            face: face,
-            from: from,
-            sourceId: queue,
-            body: body,
-        });
-        return ret;
-    }
-    async tuid(id, tuid, maps) {
-        let ret = await this.post('open/tuid', {
-            unit: this.unit,
-            id: id,
-            tuid: tuid,
-            maps: maps,
-        });
-        return ret;
-    }
-    async saveTuid(tuid, data) {
-        let ret = await this.post('joint/tuid/' + tuid, data);
-        return ret;
-    }
-    async saveTuidArr(tuid, arr, owner, data) {
-        try {
-            let ret = await this.post(`joint/tuid-arr/${tuid}/${owner}/${arr}`, data);
-            return ret;
-        }
-        catch (error) {
-            console.error(error);
-            if (error.code === 'ETIMEDOUT')
-                await this.saveTuidArr(tuid, arr, owner, data);
-            else
-                throw error;
-        }
-    }
-    async getTuidVId(tuid) {
-        let parts = tuid.split('.');
-        let url;
-        if (parts.length === 1)
-            url = `joint/tuid-vid/${tuid}`;
-        else
-            url = `joint/tuid-arr-vid/${parts[0]}/${parts[1]}`;
-        let ret = await this.get(url);
-        return ret;
-    }
-    async loadTuidMainValue(tuidName, id, allProps) {
-        let ret = await this.post(`open/tuid-main/${tuidName}`, { unit: this.unit, id: id, all: allProps });
-        return ret;
-    }
-    async loadTuidDivValue(tuidName, divName, id, ownerId, allProps) {
-        let ret = await this.post(`open/tuid-div/${tuidName}/${divName}`, { unit: this.unit, id: id, ownerId: ownerId, all: allProps });
-        return ret;
-    }
-    async scanSheet(sheet, scanStartId) {
-        let ret = await this.get('joint/sheet-scan/' + sheet + '/' + scanStartId);
-        return ret;
-    }
-    async action(action, data) {
-        await this.post('joint/action-json/' + action, data);
-    }
-    async setMap(map, data) {
-        await this.post('joint/action-json/' + map + '$add$', data);
-    }
-    async delMap(map, data) {
-        await this.post('joint/action-json/' + map + '$del$', data);
-    }
-    async loadEntities() {
-        return await this.get('open/entities/' + this.unit);
-    }
-    async schema(entityName) {
-        return await this.get('open/entity/' + entityName);
-    }
-}
-exports.OpenApi = OpenApi;
 //# sourceMappingURL=uq.js.map
