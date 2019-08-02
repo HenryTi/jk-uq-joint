@@ -15,7 +15,7 @@ async function productPullWrite(joint, data) {
     try {
         // await joint.uqIn(Product, _.pick(data, ["ID", "BrandID", "ProductNumber", "Description", "DescriptionC"]));
         await joint.uqIn(product_1.ProductX, _.pick(data, ["ID", "ProductID", "BrandID", "ProductNumber", "Description", "DescriptionC", "IsValid"]));
-        await joint.uqIn(product_1.ProductChemical, _.pick(data, ["ID", "ChemicalID", "Purity", "CAS", "MolecularFomula", "MolecularWeight"]));
+        await joint.uqIn(product_1.ProductChemical, _.pick(data, ["ProductID", "ChemicalID", "Purity", "CAS", "MolecularFomula", "MolecularWeight"]));
         return true;
     }
     catch (error) {
@@ -28,7 +28,7 @@ async function productFirstPullWrite(joint, data) {
     try {
         await joint.uqIn(product_1.ProductX, _.pick(data, ["ID", "ProductID", "BrandID", "ProductNumber", "Description", "DescriptionC", "IsValid"]));
         let promises = [];
-        promises.push(joint.uqIn(product_1.ProductChemical, _.pick(data, ["ID", "ChemicalID", "Purity", "CAS", "MolecularFomula", "MolecularWeight"])));
+        promises.push(joint.uqIn(product_1.ProductChemical, _.pick(data, ["ProductID", "ChemicalID", "Purity", "CAS", "MolecularFomula", "MolecularWeight"])));
         let productId = data["ProductID"];
         let promisesSql = [];
         let packsql = `

@@ -190,7 +190,7 @@ exports.ProductChemical = {
     type: 'map',
     entity: 'ProductChemical',
     mapper: {
-        product: "ID@ProductX",
+        product: "ProductID@ProductX",
         arr1: {
             chemical: "^ChemicalID@Chemical",
             CAS: "^CAS",

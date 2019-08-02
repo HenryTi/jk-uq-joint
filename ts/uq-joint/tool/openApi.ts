@@ -10,6 +10,9 @@ export interface BusMessage {
     body: string;
 }
 
+/**
+ * 这个OpenApi好像是没有用
+ */
 export class OpenApi extends Fetch {
     protected unit: number;
     constructor(baseUrl: string, unit: number) {

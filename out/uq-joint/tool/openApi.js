@@ -3,6 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fetch_1 = require("./fetch");
 const centerApi_1 = require("./centerApi");
 const host_1 = require("./host");
+/**
+ * 这个OpenApi好像是没有用
+ */
 class OpenApi extends fetch_1.Fetch {
     constructor(baseUrl, unit) {
         super(baseUrl);

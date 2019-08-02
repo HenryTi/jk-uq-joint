@@ -9,7 +9,7 @@ export async function productPullWrite(joint: Joint, data: any) {
     try {
         // await joint.uqIn(Product, _.pick(data, ["ID", "BrandID", "ProductNumber", "Description", "DescriptionC"]));
         await joint.uqIn(ProductX, _.pick(data, ["ID", "ProductID", "BrandID", "ProductNumber", "Description", "DescriptionC", "IsValid"]));
-        await joint.uqIn(ProductChemical, _.pick(data, ["ID", "ChemicalID", "Purity", "CAS", "MolecularFomula", "MolecularWeight"]));
+        await joint.uqIn(ProductChemical, _.pick(data, ["ProductID", "ChemicalID", "Purity", "CAS", "MolecularFomula", "MolecularWeight"]));
         return true;
     } catch (error) {
         console.error(error);
@@ -23,7 +23,7 @@ export async function productFirstPullWrite(joint: Joint, data: any) {
         await joint.uqIn(ProductX, _.pick(data, ["ID", "ProductID", "BrandID", "ProductNumber", "Description", "DescriptionC", "IsValid"]));
 
         let promises: PromiseLike<any>[] = [];
-        promises.push(joint.uqIn(ProductChemical, _.pick(data, ["ID", "ChemicalID", "Purity", "CAS", "MolecularFomula", "MolecularWeight"])));
+        promises.push(joint.uqIn(ProductChemical, _.pick(data, ["ProductID", "ChemicalID", "Purity", "CAS", "MolecularFomula", "MolecularWeight"])));
         let productId = data["ProductID"];
 
         let promisesSql: PromiseLike<any>[] = [];
