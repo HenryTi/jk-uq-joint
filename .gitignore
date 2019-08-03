@@ -3,3 +3,5 @@ config/development.json
 npm-debug.log
 npm-debug.log.*
 /node_modules
+/build
+/out
