@@ -1,2 +1,2 @@
 export * from './defines';
-export {Joint} from './joint';
+export {Joint, ProdJoint, TestJoint} from './joint';

@@ -1,10 +1,10 @@
 import config from 'config';
 import { settings } from "../settings";
-import { Joint, DataPullResult } from '../uq-joint';
+import { Joint, DataPullResult, TestJoint, ProdJoint } from '../uq-joint';
 import { pulls, UqOutConverter } from "./pulls";
 import { uqOutRead } from "./converter/uqOutRead";
-import { host } from "../uq-joint/tool/host";
-import { centerApi } from "../uq-joint/tool/centerApi";
+//import { host } from "../uq-joint/tool/host";
+//import { centerApi } from "../uq-joint/tool/centerApi";
 import { initMssqlPool } from '../mssql/tools';
 
 const maxRows = config.get<number>("firstMaxRows");
@@ -12,12 +12,14 @@ const promiseSize = config.get<number>("promiseSize");
 
 (async function () {
     console.log(process.env.NODE_ENV);
-    await host.start();
-    centerApi.initBaseUrl(host.centerUrl);
+    //await host.start();
+    //centerApi.initBaseUrl(host.centerUrl);
 
     await initMssqlPool();
 
-    let joint = new Joint(settings);
+    //let joint = new Joint(settings);
+    let joint = new TestJoint(settings);
+    //let joint = new ProdJoint(settings);
     console.log('start');
     let start = Date.now();
     let priorEnd = start;

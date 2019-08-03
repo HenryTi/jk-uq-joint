@@ -1,17 +1,22 @@
 import { Mapper } from "./mapper";
 import { execSql } from "../db/mysql/tool";
 import { createMapTable } from "./createMapTable";
-import { getOpenApi } from "./openApi";
+//import { getOpenApi } from "./openApi";
 import { databaseName } from "../db/mysql/database";
 import { map } from "./map";
 import { UqIn } from "../defines";
+import { Joint } from "../joint";
 
 abstract class MapData {
-    protected unit: number;
-    protected uqInDict: { [tuid: string]: UqIn };
-    constructor(uqInDict: { [tuid: string]: UqIn }, unit: number) {
-        this.uqInDict = uqInDict;
-        this.unit = unit;
+    //protected unit: number;
+    //protected uqInDict: { [tuid: string]: UqIn };
+    protected joint: Joint;
+
+    //constructor(uqInDict: { [tuid: string]: UqIn }, unit: number) {
+    constructor(joint: Joint) {
+        //this.uqInDict = uqInDict;
+        //this.unit = unit;
+        this.joint = joint;
     }
     protected abstract tuidId(tuid: string, value: any): Promise<string | number>;
 
@@ -140,7 +145,7 @@ export class MapToUq extends MapData {
     protected async tuidId(tuid: string, value: any): Promise<string | number> {
         if (value === undefined || value === null) return;
 
-        let uqIn = this.uqInDict[tuid];
+        let uqIn = this.joint.uqInDict[tuid];
         if (typeof uqIn !== 'object') {
             throw `tuid ${tuid} is not defined in settings.in`;
         }
@@ -163,7 +168,7 @@ export class MapToUq extends MapData {
         }
         if (ret.length === 0) {
             try {
-                let openApi = await getOpenApi(uq, this.unit);
+                let openApi = await this.joint.getOpenApi(uq);
                 let vId = await openApi.getTuidVId(entity);
                 await map(entity, vId, value);
                 return vId;
@@ -184,7 +189,7 @@ export class MapFromUq extends MapData {
     protected async tuidId(tuid: string, value: any): Promise<string | number> {
         if (value === undefined || value === null) return;
 
-        let uqIn = this.uqInDict[tuid];
+        let uqIn = this.joint.uqInDict[tuid];
         if (typeof uqIn !== 'object')
             throw `tuid ${tuid} is not defined in settings.in`;
 

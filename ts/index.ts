@@ -2,16 +2,16 @@ import express, { Request, Response, NextFunction } from 'express';
 import * as bodyParser from 'body-parser';
 import cors from 'cors';
 import config from 'config';
-import { Joint } from './uq-joint';
+import { Joint, ProdJoint, TestJoint } from './uq-joint';
 import { settings } from './settings';
-import { host } from './uq-joint/tool/host';
-import { centerApi } from './uq-joint/tool/centerApi';
+//import { host } from './uq-joint/tool/host';
+//import { centerApi } from './uq-joint/tool/centerApi';
 import { initMssqlPool } from './mssql/tools';
 
 (async function () {
     console.log(process.env.NODE_ENV);
-    await host.start();
-    centerApi.initBaseUrl(host.centerUrl);
+    //await host.start();
+    //centerApi.initBaseUrl(host.centerUrl);
 
     let connection = config.get<any>("mysqlConn");
     if (connection === undefined || connection.host === '0.0.0.0') {
@@ -48,7 +48,9 @@ import { initMssqlPool } from './mssql/tools';
         }
     });
 
-    let joint = new Joint(settings);
+    //let joint = new Joint(settings);
+    let joint = new ProdJoint(settings);
+    //let joint = new TestJoint(settings);
     app.use('/joint-uq-jk', joint.createRouter());
 
     let port = config.get<number>('port');

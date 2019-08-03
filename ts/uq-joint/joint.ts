@@ -8,21 +8,22 @@ import { createMapTable } from "./tool/createMapTable";
 import { faceSchemas } from "./tool/faceSchemas";
 import { Uqs } from "./uq/uq";
 import { centerApi } from "./tool/centerApi";
+import { ProdOrTest } from "./tool/prodOrTest";
+import { OpenApi } from "./tool/openApi";
+import { host } from "./tool/host";
 
 const interval = 3 * 1000;
 
-export class Joint {
+export abstract class Joint {
     protected uqs: Uqs;
     protected settings: Settings;
-    protected uqInDict: { [tuid: string]: UqIn } = {};
-    protected unit: number;
 
     constructor(settings: Settings) {
         this.settings = settings;
         let { unit, uqIns: uqIns } = settings;
         this.unit = unit;
         if (uqIns === undefined) return;
-        this.uqs = new Uqs(unit);
+        this.uqs = new Uqs(this, unit);
         for (let uqIn of uqIns) {
             let { entity, type } = uqIn;
             if (this.uqInDict[entity] !== undefined) throw 'can not have multiple ' + entity;
@@ -30,11 +31,18 @@ export class Joint {
         }
     }
 
+    readonly uqInDict: { [tuid: string]: UqIn };
+    readonly unit: number;
+
+    protected abstract get prodOrTest(): ProdOrTest;
+
     createRouter(): Router {
         return createRouter(this.settings);
     }
 
     async start() {
+        await host.start(this.prodOrTest === 'test');
+        centerApi.initBaseUrl(host.centerUrl);
         await this.uqs.init();
         setTimeout(this.tick, interval);
     }
@@ -56,6 +64,37 @@ export class Joint {
         finally {
             setTimeout(this.tick, interval);
         }
+    }
+
+    private uqOpenApis: { [uqFullName: string]: { [unit: number]: OpenApi } } = {};
+    //async getOpenApi(uqFullName:string, unit:number):Promise<OpenApi> {
+    async getOpenApi(uq: string): Promise<OpenApi> {
+        let openApis = this.uqOpenApis[uq];
+        if (openApis === null) return null;
+        if (openApis === undefined) {
+            this.uqOpenApis[uq] = openApis = {};
+        }
+        let uqUrl = await centerApi.urlFromUq(this.unit, uq);
+        if (uqUrl === undefined) return openApis[this.unit] = null;
+        //let {url, urlDebug} = uqUrl;
+        //url = await host.getUrlOrDebug(url, urlDebug);
+        /*
+        if (urlDebug !== undefined) {
+            try {
+                urlDebug = urlSetUqHost(urlDebug);
+                urlDebug = urlSetUnitxHost(urlDebug);
+                let ret = await fetch(urlDebug + 'hello');
+                if (ret.status !== 200) throw 'not ok';
+                let text = await ret.text();
+                url = urlDebug;
+            }
+            catch (err) {
+            }
+        }
+        */
+        let { db, url, urlTest } = uqUrl;
+        let realUrl = host.getUrlOrTest(db, url, urlTest)
+        return openApis[this.unit] = new OpenApi(realUrl, this.unit);
     }
 
     /*
@@ -168,7 +207,7 @@ export class Joint {
         if (key === undefined) throw 'key is not defined';
         if (uqFullName === undefined) throw 'tuid ' + tuid + ' not defined';
         let keyVal = data[key];
-        let mapToUq = new MapToUq(this.uqInDict, this.unit);
+        let mapToUq = new MapToUq(this);
         let body = await mapToUq.map(data, mapper);
         let uq = await this.uqs.getUq(uqFullName);
         try {
@@ -202,7 +241,7 @@ export class Joint {
         if (owner === undefined) throw 'owner is not defined';
         let ownerVal = data[owner];
         try {
-            let mapToUq = new MapToUq(this.uqInDict, this.unit);
+            let mapToUq = new MapToUq(this);
             let ownerId = await this.mapOwner(uqIn, tuid, ownerVal);
             if (ownerId === undefined) throw 'owner value is undefined';
             let body = await mapToUq.map(data, mapper);
@@ -256,7 +295,7 @@ export class Joint {
 
     protected async uqInMap(uqIn: UqInMap, data: any): Promise<void> {
         let { mapper, uq: uqFullName, entity } = uqIn;
-        let mapToUq = new MapToUq(this.uqInDict, this.unit);
+        let mapToUq = new MapToUq(this);
         let body = await mapToUq.map(data, mapper);
 
         try {
@@ -347,7 +386,7 @@ export class Joint {
                     }
                 }
 
-                let mapFromUq = new MapFromUq(this.uqInDict, this.unit);
+                let mapFromUq = new MapFromUq(this);
                 let outBody = await mapFromUq.map(json, mapper);
                 if (await push(this, uqBus, queue, outBody) === false) break;
                 await execProc('write_queue_out_p', [moniker, newQueue]);
@@ -368,7 +407,7 @@ export class Joint {
                 let { lastPointer: newQueue, data } = message;
                 //let newQueue = await this.busIn(queue);
                 //if (newQueue === undefined) break;
-                let mapToUq = new MapToUq(this.uqInDict, this.unit);
+                let mapToUq = new MapToUq(this);
                 let inBody = await mapToUq.map(data[0], mapper);
                 let packed = await faceSchemas.packBusData(face, inBody);
                 await this.uqs.writeBus(face, joinName, newQueue, packed);
@@ -383,7 +422,7 @@ export class Joint {
         if (key === undefined) throw 'key is not defined';
         if (uqFullName === undefined) throw 'tuid ' + tuid + ' not defined';
         let keyVal = data[key];
-        let mapToUq = new MapToUq(this.uqInDict, this.unit);
+        let mapToUq = new MapToUq(this);
         try {
             let body = await mapToUq.map(data, mapper);
             let ret = await centerApi.queueIn(body);
@@ -397,4 +436,12 @@ export class Joint {
             throw error;
         }
     }
+}
+
+export class ProdJoint extends Joint {
+    protected get prodOrTest(): ProdOrTest { return 'prod' }
+}
+
+export class TestJoint extends Joint {
+    protected get prodOrTest(): ProdOrTest { return 'test' }
 }
