@@ -139,7 +139,7 @@ abstract class MapData {
 }
 
 /**
- * 将外部系统的数据格式转换为Tonva的格式(从map_表中读取id，没有的话，调用getTuidVid生成一个)
+ * 根据外部系统的no从映射表中获取tonva中的id(映射表中不存在的话，调用getTuidVid生成一个，并写入映射表)
  */
 export class MapToUq extends MapData {
     protected async tuidId(tuid: string, value: any): Promise<string | number> {
@@ -157,7 +157,7 @@ export class MapToUq extends MapData {
                 break;
         }
         let { entity, uq } = uqIn as UqIn;
-        let sql = `select id from \`${databaseName}\`.\`map_${entity}\` where no='${value}'`;
+        let sql = `select id from \`${databaseName}\`.\`map_${entity.toLowerCase()}\` where no='${value}'`;
         let ret: any[];
         try {
             ret = await execSql(sql);
@@ -185,6 +185,9 @@ export class MapToUq extends MapData {
     }
 }
 
+/**
+ * 根据tonva中的id从映射表中获取no
+ */
 export class MapFromUq extends MapData {
     protected async tuidId(tuid: string, value: any): Promise<string | number> {
         if (value === undefined || value === null) return;

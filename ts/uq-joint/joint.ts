@@ -8,13 +8,12 @@ import { createMapTable } from "./tool/createMapTable";
 import { faceSchemas } from "./tool/faceSchemas";
 import { Uqs } from "./uq/uq";
 import { centerApi } from "./tool/centerApi";
-import { ProdOrTest } from "./tool/prodOrTest";
 import { OpenApi } from "./tool/openApi";
 import { host } from "./tool/host";
 
 const interval = 3 * 1000;
 
-export abstract class Joint {
+export class Joint {
     protected uqs: Uqs;
     protected settings: Settings;
 
@@ -31,19 +30,21 @@ export abstract class Joint {
         }
     }
 
-    readonly uqInDict: { [tuid: string]: UqIn };
+    readonly uqInDict: { [tuid: string]: UqIn } = {};
     readonly unit: number;
-
-    protected abstract get prodOrTest(): ProdOrTest;
 
     createRouter(): Router {
         return createRouter(this.settings);
     }
 
-    async start() {
-        await host.start(this.prodOrTest === 'test');
+    async init() {
+        await host.start();
         centerApi.initBaseUrl(host.centerUrl);
         await this.uqs.init();
+    }
+
+    async start() {
+        await this.init();
         setTimeout(this.tick, interval);
     }
 
@@ -213,16 +214,21 @@ export abstract class Joint {
         try {
             let ret = await uq.saveTuid(tuid, body);
             let { id, inId } = ret;
-            if (id < 0) id = -id;
-            await map(tuid, id, keyVal);
-            return id;
+            if (id) {
+                if (id < 0) id = -id;
+                await map(tuid, id, keyVal);
+                return id;
+            } else {
+                console.error('aave ' + uqFullName + ':' + tuid + ' no ' + keyVal + ' failed.');
+                console.error(body);
+            }
         } catch (error) {
-            console.error(uqFullName + ':' + tuid);
-            console.error(body);
             console.error(error);
             if (error.code === "ETIMEDOUT") {
                 await this.uqInTuid(uqIn, data);
             } else {
+                console.error(uqFullName + ':' + tuid);
+                console.error(body);
                 throw error;
             }
         }
@@ -248,24 +254,34 @@ export abstract class Joint {
             let uq = await this.uqs.getUq(uqFullName);
             let ret = await uq.saveTuidArr(tuid, tuidArr, ownerId, body);
             let { id, inId } = ret;
-            if (id === undefined) id = inId;
-            else if (id < 0) id = -id;
-            await map(entity, id, keyVal);
-            return id;
+            if (id) {
+                if (id < 0) id = -id;
+                await map(tuid, id, keyVal);
+                return id;
+            } else {
+                console.error('aave ' + uqFullName + ':' + tuid + ' no ' + keyVal + ' failed.');
+                console.error(body);
+            }
         } catch (error) {
-            console.error(uqFullName + ':' + tuid + '-' + tuidArr);
             console.error(error);
             if (error.code === "ETIMEDOUT") {
                 await this.uqInTuidArr(uqIn, data);
             } else {
+                console.error('save tuid arr ' + uqFullName + ':' + tuid + '-' + tuidArr + ' no: ' + keyVal + ' failed.');
                 throw error;
             }
         }
     }
 
+    /**
+     * 在tuidDiv中，根据其owner的no获取id，若owner尚未生成id，则生成之
+     * @param uqIn
+     * @param ownerEntity
+     * @param ownerVal
+     */
     private async mapOwner(uqIn: UqInTuidArr, ownerEntity: string, ownerVal: any) {
         let { uq: uqFullName } = uqIn;
-        let sql = `select id from \`${databaseName}\`.\`map_${ownerEntity}\` where no='${ownerVal}'`;
+        let sql = `select id from \`${databaseName}\`.\`map_${ownerEntity.toLowerCase()}\` where no='${ownerVal}'`;
         let ret: any[];
         try {
             ret = await execSql(sql);
@@ -436,12 +452,4 @@ export abstract class Joint {
             throw error;
         }
     }
-}
-
-export class ProdJoint extends Joint {
-    protected get prodOrTest(): ProdOrTest { return 'prod' }
-}
-
-export class TestJoint extends Joint {
-    protected get prodOrTest(): ProdOrTest { return 'test' }
 }

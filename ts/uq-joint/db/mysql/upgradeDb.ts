@@ -1,28 +1,13 @@
-import config from 'config';
-import {createDatabase, existsDatabase, useDatabase} from './database';
-import {tableDefs} from './tables';
-import {procDefs} from './procs';
-import {execSql, tableFromSql, tablesFromSql, 
-    execProc, tableFromProc, tablesFromProc, 
-    buildProcedureSql, buildTableSql} from './tool';
+import { createDatabase, existsDatabase, useDatabase, databaseName } from './database';
+import { tableDefs } from './tables';
+import { procDefs } from './procs';
+import {
+    execSql, tableFromSql,
+    buildProcedureSql, buildTableSql
+} from './tool';
 //import {buildRoot} from './buildRoot';
-    
-export async function upgrade() {
-    let env:string|undefined = process.env['NODE_ENV'];
-    if (env === undefined) {
-        //console.log('to upgrade, please set NODE_ENV to debug or release');
-        //return;
-        env = process.env['NODE_ENV'] = 'debug';
-        console.log('NODE_ENV=%s', process.env['NODE_ENV']);
-    }
-    switch (env.toLowerCase()) {
-        default:
-            console.log('to upgrade, please set NODE_ENV to debug or release');
-            return;
-        case 'debug':
-        case 'release': break;
-    }
 
+export async function upgrade() {
     let sqlExists = existsDatabase;
     let tbl = await tableFromSql(sqlExists);
     let exists = tbl[0];
@@ -34,7 +19,6 @@ export async function upgrade() {
             return;
         }
     }
-    let databaseName = config.get<string>("database");
     console.log('Start upgrade database %s', databaseName);
     await execSql(useDatabase);
 
@@ -52,7 +36,7 @@ export async function upgrade() {
     for (let i in procDefs) {
         let proc = procDefs[i];
         let pName = proc.name;
-        let procType = proc.returns === undefined? 'PROCEDURE':'FUNCTION';
+        let procType = proc.returns === undefined ? 'PROCEDURE' : 'FUNCTION';
         console.log('CREATE ' + procType + ' ' + pName);
         let drop = 'DROP ' + procType + ' IF EXISTS ' + pName;
         await execSql(drop);

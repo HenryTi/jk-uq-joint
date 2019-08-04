@@ -1,6 +1,6 @@
 import config from 'config';
 import { settings } from "../settings";
-import { Joint, DataPullResult, TestJoint, ProdJoint } from '../uq-joint';
+import { Joint, DataPullResult } from '../uq-joint';
 import { pulls, UqOutConverter } from "./pulls";
 import { uqOutRead } from "./converter/uqOutRead";
 //import { host } from "../uq-joint/tool/host";
@@ -17,9 +17,8 @@ const promiseSize = config.get<number>("promiseSize");
 
     await initMssqlPool();
 
-    //let joint = new Joint(settings);
-    let joint = new TestJoint(settings);
-    //let joint = new ProdJoint(settings);
+    let joint = new Joint(settings);
+    await joint.init();
     console.log('start');
     let start = Date.now();
     let priorEnd = start;
