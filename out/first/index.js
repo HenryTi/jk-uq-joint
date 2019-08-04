@@ -13,6 +13,7 @@ const uqOutRead_1 = require("./converter/uqOutRead");
 const tools_1 = require("../mssql/tools");
 const maxRows = config_1.default.get("firstMaxRows");
 const promiseSize = config_1.default.get("promiseSize");
+const pullEntities = config_1.default.get("firstEntities");
 (async function () {
     console.log(process.env.NODE_ENV);
     //await host.start();
@@ -23,8 +24,10 @@ const promiseSize = config_1.default.get("promiseSize");
     console.log('start');
     let start = Date.now();
     let priorEnd = start;
-    for (var i = 0; i < pulls_1.pulls.length; i++) {
-        let { read, uqIn } = pulls_1.pulls[i];
+    for (var i = 0; i < pullEntities.length; i++) {
+        let { read, uqIn } = pulls_1.pulls[pullEntities[i]];
+        if (!uqIn)
+            break;
         let { entity, pullWrite, firstPullWrite } = uqIn;
         console.log(entity + " start at " + new Date());
         let readFunc;

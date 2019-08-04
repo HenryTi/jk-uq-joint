@@ -11,53 +11,53 @@ exports.sqls = {
     //=========================== Common ===========================
     //==============================================================
     readPackTypeStandard: `
-                select top 1 a.ID, a.Unit, b.Name
+                select top ${promiseSize} a.ID, a.Unit, b.Name
                 from opdata.dbo.JNKStandardUnit a
                         inner join opdata.dbo.JNKStandardUnitType b on a.UnitTypeId = b.ID
                 where a.ID > @iMaxId
                 order by a.ID`,
     readPackType: `
-                select top 1 a.ID, a.UnitE, a.UnitC, a.StandardUnitID
+                select top ${promiseSize} a.ID, a.UnitE, a.UnitC, a.StandardUnitID
                 from opdata.dbo.SupplierPackingUnit a
                 where a.ID > @iMaxId
                 order by a.ID`,
     readCurrency: `
-                select top 1 currency as ID
+                select top ${promiseSize} currency as ID
                 from zcl_mess.dbo.vw_currency_now
                 where currency > @iMaxId
                 order by currency`,
     readSalesRegion: `
-                select top 1 market_code as ID, Market_name, Currency
+                select top ${promiseSize} market_code as ID, Market_name, Currency
                 from zcl_mess.dbo.market
                 where market_code > @iMaxId
                 order by market_code`,
     readLanguage: `
-                select top 1 LanguageID as ID, LanguageStr
+                select top ${promiseSize} LanguageID as ID, LanguageStr
                 from dbs.dbo.Languages
                 where LanguageId > @iMaxId
                 order by LanguageID`,
     readCountry: `
-                select top 1 code as ID, Countries, ChineseName
+                select top ${promiseSize} code as ID, Countries, ChineseName
                 from dbs.dbo.CountryCode1
                 where code > @iMaxId and level = 1
                 order by code`,
     readProvince: `
-                select top 1 code as ID, Countries, ChineseName, parentCode
+                select top ${promiseSize} code as ID, Countries, ChineseName, parentCode
                 from dbs.dbo.CountryCode1
                 where code > @iMaxId and level = 2
                 order by code`,
     readCity: `
-                select top 1 code as ID, Countries, ChineseName, parentCode
+                select top ${promiseSize} code as ID, Countries, ChineseName, parentCode
                 from dbs.dbo.CountryCode1
                 where code > @iMaxId and level = 3
                 order by code`,
     readCounty: `
-                select top 1 code as ID, Countries, ChineseName, parentCode
+                select top ${promiseSize} code as ID, Countries, ChineseName, parentCode
                 from dbs.dbo.CountryCode1
                 where code > @iMaxId and level = 4
                 order by code`,
     readInvoiceType: `
-                select  ID, description
+                select top ${promiseSize} ID, description
                 from (
                     select 1 as ID, '普通发票' as Description
                     union
@@ -101,7 +101,7 @@ exports.sqls = {
     //=========================== Product ===========================
     //==============================================================
     readBrand: `
-                select top 1 code as ID, Code as BrandID, name as BrandName from zcl_mess.dbo.manufactory where code > @iMaxId order by code`,
+                select top ${promiseSize} code as ID, Code as BrandID, name as BrandName from zcl_mess.dbo.manufactory where code > @iMaxId order by code`,
     readProduct: `
                 select top ${promiseSize} p.jkid as ID, p.jkid as ProductID, p.manufactory as BrandID, p.originalId as ProductNumber
                         , isnull(p.Description, 'N/A') as Description, p.DescriptionC
@@ -127,10 +127,10 @@ exports.sqls = {
     //=========================== Warehouse ===========================
     //==============================================================
     readWarehouse: `
-                select top 1 CompanyID as ID, companyName as WarehouseName, companyAddr
+                select top ${promiseSize} CompanyID as ID, companyName as WarehouseName, companyAddr
                 from dbs.dbo.Scompany where CompanyID > @iMaxId order by CompanyId`,
     readSalesRegionWarehouse: `
-                select top 1 ID, CompanyID as WarehouseID, Location as SalesRegionID, minDeliverTime, maxDeliverTime
+                select top ${promiseSize} ID, CompanyID as WarehouseID, Location as SalesRegionID, minDeliverTime, maxDeliverTime
                 from dbs.dbo.CompanyLocation where ID > @iMaxId order by Id`,
     //==============================================================
     //=========================== Promotion ===========================

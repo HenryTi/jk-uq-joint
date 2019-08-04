@@ -219,7 +219,7 @@ export class Joint {
                 await map(tuid, id, keyVal);
                 return id;
             } else {
-                console.error('aave ' + uqFullName + ':' + tuid + ' no ' + keyVal + ' failed.');
+                console.error('save ' + uqFullName + ':' + tuid + ' no ' + keyVal + ' failed.');
                 console.error(body);
             }
         } catch (error) {
@@ -240,7 +240,7 @@ export class Joint {
         if (uqFullName === undefined) throw 'uq ' + uqFullName + ' not defined';
         if (entity === undefined) throw 'tuid ' + entity + ' not defined';
         let parts = entity.split('_');
-        let tuid = parts[0];
+        let tuidOwner = parts[0];
         if (parts.length === 1) throw 'tuid ' + entity + ' must has .arr';
         let tuidArr = parts[1];
         let keyVal = data[key];
@@ -248,18 +248,19 @@ export class Joint {
         let ownerVal = data[owner];
         try {
             let mapToUq = new MapToUq(this);
-            let ownerId = await this.mapOwner(uqIn, tuid, ownerVal);
+            let ownerId = await this.mapOwner(uqIn, tuidOwner, ownerVal);
             if (ownerId === undefined) throw 'owner value is undefined';
             let body = await mapToUq.map(data, mapper);
             let uq = await this.uqs.getUq(uqFullName);
-            let ret = await uq.saveTuidArr(tuid, tuidArr, ownerId, body);
+            let ret = await uq.saveTuidArr(tuidOwner, tuidArr, ownerId, body);
             let { id, inId } = ret;
+            if (id === undefined) id = inId;
+            else if (id < 0) id = -id;
             if (id) {
-                if (id < 0) id = -id;
-                await map(tuid, id, keyVal);
+                await map(entity, id, keyVal);
                 return id;
             } else {
-                console.error('aave ' + uqFullName + ':' + tuid + ' no ' + keyVal + ' failed.');
+                console.error('save tuid arr ' + uqFullName + ':' + entity + ' no: ' + keyVal + ' failed.');
                 console.error(body);
             }
         } catch (error) {
@@ -267,7 +268,7 @@ export class Joint {
             if (error.code === "ETIMEDOUT") {
                 await this.uqInTuidArr(uqIn, data);
             } else {
-                console.error('save tuid arr ' + uqFullName + ':' + tuid + '-' + tuidArr + ' no: ' + keyVal + ' failed.');
+                console.error('save tuid arr ' + uqFullName + ':' + entity + ' no: ' + keyVal + ' failed.');
                 throw error;
             }
         }

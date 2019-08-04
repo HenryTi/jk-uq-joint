@@ -9,6 +9,7 @@ import { initMssqlPool } from '../mssql/tools';
 
 const maxRows = config.get<number>("firstMaxRows");
 const promiseSize = config.get<number>("promiseSize");
+const pullEntities = config.get<string[]>("firstEntities");
 
 (async function () {
     console.log(process.env.NODE_ENV);
@@ -22,8 +23,9 @@ const promiseSize = config.get<number>("promiseSize");
     console.log('start');
     let start = Date.now();
     let priorEnd = start;
-    for (var i = 0; i < pulls.length; i++) {
-        let { read, uqIn } = pulls[i];
+    for (var i = 0; i < pullEntities.length; i++) {
+        let { read, uqIn } = pulls[pullEntities[i]];
+        if (!uqIn) break;
         let { entity, pullWrite, firstPullWrite } = uqIn;
         console.log(entity + " start at " + new Date());
         let readFunc: UqOutConverter;
