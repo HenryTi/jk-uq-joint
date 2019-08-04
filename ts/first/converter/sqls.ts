@@ -63,9 +63,13 @@ export const sqls = {
                 order by code`,
 
         readInvoiceType: `
-                select 1 as ID, '普通发票' as Description
-                union
-                select 2 as ID, '增值税发票' as Description`,
+                select  ID, description
+                from (
+                    select 1 as ID, '普通发票' as Description
+                    union
+                    select 2 as ID, '增值税发票' as Description
+                ) t where ID > @iMaxId
+                order by ID`,
 
         //==============================================================
         //=========================== chemical ===========================
