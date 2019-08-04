@@ -4,10 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const config_1 = __importDefault(require("config"));
-const lastjkid = config_1.default.get("lastjkid");
-const lastchemid = config_1.default.get("lastchemid");
-const lastCID = config_1.default.get("lastCID");
-const lastPPCID = config_1.default.get("lastPPCID");
+const idBrokened = config_1.default.get("idBrokened");
 const promiseSize = config_1.default.get("promiseSize");
 exports.sqls = {
     //==============================================================
@@ -76,7 +73,7 @@ exports.sqls = {
                 select top ${promiseSize}
                 chemID as ID, cas, Description, DescriptionC, molWeight, molFomula, mdlNumber
                 from opdata.dbo.sc_chemical
-                where reliability = 0 and chemID > @iMaxId and chemID > ${lastchemid} order by chemID
+                where reliability = 0 and chemID > @iMaxId and chemID > ${idBrokened.chemid} order by chemID
                         `,
     //==============================================================
     //=========================== customer ===========================
@@ -92,7 +89,7 @@ exports.sqls = {
                         , SaleComanyID as SalesCompanyID
                         , saleRegionBelongsTo as SalesRegionBelongsTo
                         , convert(nvarchar(30), creaDate, 121) as CreateTime
-                from dbs.dbo.Customers where CID > @iMaxId and CID > '${lastCID}' order by CID`,
+                from dbs.dbo.Customers where CID > @iMaxId and CID > '${idBrokened.CID}' order by CID`,
     readOrganization: `
                 select top ${promiseSize} UnitID as ID, UnitID as OrganizationID, unitName as Name, convert(nvarchar(30), creaDate, 121) as CreateTime
                 from dbs.dbo.CustUnits where UnitID > @iMaxId order by UnitID`,
@@ -108,7 +105,7 @@ exports.sqls = {
                         , p.[Restrict], p.LotNumber as MdlNumber, case when(select count(pv.jkid) from zcl_mess.dbo.Invalid_Products pv where pv.jkid = p.jkid) > 0 then 0 else 1 end as IsValid
                 from zcl_mess.dbo.products p inner join zcl_mess.dbo.productschem pc on pc.jkid = p.jkid
                 left join zcl_mess.dbo.Invalid_products pv on pv.jkid = p.jkid
-                where p.jkid > @iMaxId and p.jkid > '${lastjkid}' order by p.jkid`,
+                where p.jkid > @iMaxId and p.jkid > '${idBrokened.jkid}' order by p.jkid`,
     //==============================================================
     //=========================== ProductCategory ===========================
     //==============================================================
@@ -121,7 +118,7 @@ exports.sqls = {
                 from opdata.dbo.ProductCategoryLanguage where ID > @iMaxId order by ID`,
     readProductProductCategory: `
                 select top ${promiseSize} ID, ID as SaleProductProductCategoryID, SaleProductID, ProductCategoryID, IsValid
-                from opdata.dbo.SaleProductProductCategory where ID > @iMaxId and ID > ${lastPPCID} order by ID`,
+                from opdata.dbo.SaleProductProductCategory where ID > @iMaxId and ID > ${idBrokened.PPCID} order by ID`,
     //==============================================================
     //=========================== Warehouse ===========================
     //==============================================================

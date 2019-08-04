@@ -292,7 +292,7 @@ class Joint {
      */
     async mapOwner(uqIn, ownerEntity, ownerVal) {
         let { uq: uqFullName } = uqIn;
-        let sql = `select id from \`${database_1.databaseName}\`.\`map_${ownerEntity}\` where no='${ownerVal}'`;
+        let sql = `select id from \`${database_1.databaseName}\`.\`map_${ownerEntity.toLowerCase()}\` where no='${ownerVal}'`;
         let ret;
         try {
             ret = await tool_1.execSql(sql);

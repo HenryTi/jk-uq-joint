@@ -146,7 +146,7 @@ class MapToUq extends MapData {
                 break;
         }
         let { entity, uq } = uqIn;
-        let sql = `select id from \`${database_1.databaseName}\`.\`map_${entity}\` where no='${value}'`;
+        let sql = `select id from \`${database_1.databaseName}\`.\`map_${entity.toLowerCase()}\` where no='${value}'`;
         let ret;
         try {
             ret = await tool_1.execSql(sql);

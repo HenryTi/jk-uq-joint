@@ -5,13 +5,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const node_fetch_1 = __importDefault(require("node-fetch"));
 const config_1 = __importDefault(require("config"));
-exports.isDevelopment = process.env.NODE_ENV === 'development';
+// export const isDevelopment = process.env.NODE_ENV === 'development';
+exports.isDevelopment = process.env.NODE_ENV !== 'production';
 function tryConfig(name) {
     if (config_1.default.has(name) === false)
         return;
     return config_1.default.get(name);
 }
 const centerHost = tryConfig('centerhost');
+const uqPath = tryConfig('uqPath');
 const centerDebugHost = 'localhost:3000'; //'192.168.86.64';
 //const resHost = process.env['REACT_APP_RES_HOST'] || centerHost;
 const resDebugHost = 'localhost:3015'; //'192.168.86.63';
@@ -138,13 +140,10 @@ class Host {
     }
     getUrlOrTest(db, url, urlTest) {
         let path;
+        path = uqPath + db + '/';
         if (exports.isDevelopment === true) {
             if (urlTest && urlTest !== '-')
                 url = urlTest;
-            path = 'uq/test/' + db + '/';
-        }
-        else {
-            path = 'uq/prod/' + db + '/';
         }
         url = this.getUrlOrDebug(url);
         return url + path;
