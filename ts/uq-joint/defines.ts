@@ -69,7 +69,7 @@ export interface UqBus {
      */
     face: string;
     /**
-     *
+     * 用于定义目标系统schema各字段的来源
      */
     mapper: Mapper;
     /**

@@ -74,7 +74,7 @@ class CenterApi extends Fetch {
     */
 
     /**
-     * 用来将user数据写入Tonva系统
+     * 用来将user数据写入Tonva系统（的中心服务器?)
      * @param param: 要写入的user数据，格式如上
      */
     async queueIn(param: any): Promise<number> {

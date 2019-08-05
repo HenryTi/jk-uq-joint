@@ -61,16 +61,18 @@ const pullEntities = config.get<string[]>("firstEntities");
                 }
                 count++;
             });
-            maxId = lastPointer as string;
 
             try {
                 await pushToTonva(promises, start, priorEnd, count, lastPointer);
+                maxId = lastPointer as string;
             } catch (error) {
                 console.error(error);
                 if (error.code === "ETIMEDOUT") {
                     await pushToTonva(promises, start, priorEnd, count, lastPointer);
+                    maxId = lastPointer as string;
                 } else {
-                    throw error;
+                    continue;
+                    // throw error;
                 }
             }
         }

@@ -34,7 +34,10 @@ export async function execSql(sql: string, params?: { name: string, value: any }
         return result;
     } catch (error) {
         // debugger;
-        console.error(error);
-        throw error;
+        console.error(error + ":" + sql);
+        if (error.code === 'ETIMEOUT')
+            await execSql(sql, params);
+        else
+            throw error;
     }
 };
