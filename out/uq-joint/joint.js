@@ -1,4 +1,7 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const tool_1 = require("./db/mysql/tool");
 const mapData_1 = require("./tool/mapData");
@@ -11,6 +14,8 @@ const uq_1 = require("./uq/uq");
 const centerApi_1 = require("./tool/centerApi");
 const openApi_1 = require("./tool/openApi");
 const host_1 = require("./tool/host");
+const config_1 = __importDefault(require("config"));
+const uqInEntities = config_1.default.get("afterFirstEntities");
 const interval = 3 * 1000;
 class Joint {
     constructor(settings) {
@@ -34,12 +39,12 @@ class Joint {
         };
         this.uqOpenApis = {};
         this.settings = settings;
-        let { unit, uqIns: uqIns } = settings;
+        let { unit, uqIns: allUqIns } = settings;
         this.unit = unit;
-        if (uqIns === undefined)
+        if (allUqIns === undefined)
             return;
         this.uqs = new uq_1.Uqs(this, unit);
-        for (let uqIn of uqIns) {
+        for (let uqIn of allUqIns) {
             let { entity, type } = uqIn;
             if (this.uqInDict[entity] !== undefined)
                 throw 'can not have multiple ' + entity;
@@ -114,10 +119,11 @@ class Joint {
      *
      */
     async scanIn() {
-        let { uqIns, pullReadFromSql } = this.settings;
-        if (uqIns === undefined)
-            return; //
-        for (let uqIn of uqIns) {
+        let { pullReadFromSql } = this.settings;
+        for (let uqInName of uqInEntities) {
+            let uqIn = this.uqInDict[uqInName];
+            if (uqIn === undefined)
+                continue;
             let { uq, entity, pull, pullWrite } = uqIn;
             let queueName = uq + ':' + entity;
             console.log('scan in ' + queueName + ' at ' + new Date().toLocaleString());
@@ -149,10 +155,8 @@ class Joint {
                     }
                     if (ret === undefined)
                         break;
-                    /*
-                    queue = ret.queue;
-                    message = ret.data;
-                    */
+                    // queue = ret.queue;
+                    // message = ret.data;
                 }
                 else {
                     let retp = await tool_1.tableFromProc('read_queue_in', [queueName]);
@@ -160,10 +164,8 @@ class Joint {
                         break;
                     let { id, body, date } = retp[0];
                     ret = { lastPointer: id, data: [JSON.parse(body)] };
-                    /*
-                    queue = id;
-                    message = JSON.parse(body);
-                    */
+                    // queue = id;
+                    // message = JSON.parse(body);
                 }
                 let { lastPointer, data } = ret;
                 data.forEach(message => {

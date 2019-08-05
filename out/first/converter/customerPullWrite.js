@@ -50,6 +50,7 @@ async function customerPullWrite(joint, data) {
 exports.customerPullWrite = customerPullWrite;
 async function customerFirstPullWrite(joint, data) {
     try {
+        data["CreateTime"] = data["CreateTime"] && dateformat_1.default(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
         await joint.uqIn(customer_1.Customer, lodash_1.default.pick(data, ["ID", "CustomerID", "Name", "FirstName", "LastName", "XYZ", "Gender", "BirthDate", 'CreateTime', 'IsValid']));
         let promises = [];
         promises.push(joint.uqIn(customer_1.OrganizationCustomer, lodash_1.default.pick(data, ["CustomerID", "OrganizationID"])));

@@ -10,6 +10,9 @@ import { Uqs } from "./uq/uq";
 import { centerApi } from "./tool/centerApi";
 import { OpenApi } from "./tool/openApi";
 import { host } from "./tool/host";
+import config from 'config';
+
+const uqInEntities = config.get<string[]>("afterFirstEntities");
 
 const interval = 3 * 1000;
 
@@ -19,11 +22,11 @@ export class Joint {
 
     constructor(settings: Settings) {
         this.settings = settings;
-        let { unit, uqIns: uqIns } = settings;
+        let { unit, uqIns: allUqIns } = settings;
         this.unit = unit;
-        if (uqIns === undefined) return;
+        if (allUqIns === undefined) return;
         this.uqs = new Uqs(this, unit);
-        for (let uqIn of uqIns) {
+        for (let uqIn of allUqIns) {
             let { entity, type } = uqIn;
             if (this.uqInDict[entity] !== undefined) throw 'can not have multiple ' + entity;
             this.uqInDict[entity] = uqIn;
@@ -124,9 +127,13 @@ export class Joint {
      *
      */
     private async scanIn() {
-        let { uqIns, pullReadFromSql } = this.settings;
-        if (uqIns === undefined) return;//
-        for (let uqIn of uqIns) {
+
+        let { pullReadFromSql } = this.settings;
+        for (let uqInName of uqInEntities) {
+
+            let uqIn = this.uqInDict[uqInName];
+            if (uqIn === undefined) continue;
+
             let { uq, entity, pull, pullWrite } = uqIn;
             let queueName = uq + ':' + entity;
             console.log('scan in ' + queueName + ' at ' + new Date().toLocaleString());
@@ -156,20 +163,16 @@ export class Joint {
                             break;
                     }
                     if (ret === undefined) break;
-                    /*
-                    queue = ret.queue;
-                    message = ret.data;
-                    */
+                    // queue = ret.queue;
+                    // message = ret.data;
                 }
                 else {
                     let retp = await tableFromProc('read_queue_in', [queueName]);
                     if (!retp || retp.length === 0) break;
                     let { id, body, date } = retp[0];
                     ret = { lastPointer: id, data: [JSON.parse(body)] };
-                    /*
-                    queue = id;
-                    message = JSON.parse(body);
-                    */
+                    // queue = id;
+                    // message = JSON.parse(body);
                 }
 
                 let { lastPointer, data } = ret;
