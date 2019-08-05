@@ -31,7 +31,7 @@ exports.pulls = {
     // 目录树
     "ProductCategory": { read: sqls_1.sqls.readProductCategory, uqIn: productCategory_1.ProductCategory },
     "ProductCategoryLanguage": { read: sqls_1.sqls.readProductCategoryLanguage, uqIn: productCategory_1.ProductCategoryLanguage },
-    "ProductProductCategory": { read: sqls_1.sqls.readProductProductCategory, uqIn: productCategory_1.ProductProductCategory },
+    // "ProductProductCategory": { read: sqls.readProductProductCategory, uqIn: ProductProductCategory },
     // 品牌
     "Brand": { read: sqls_1.sqls.readBrand, uqIn: product_1.Brand },
     "Chemical": { read: sqls_1.sqls.readChemical, uqIn: chemical_1.Chemical },

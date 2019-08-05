@@ -7,6 +7,7 @@ const uqs_1 = require("../uqs");
 const productPullWrite_1 = require("../../first/converter/productPullWrite");
 const tools_1 = require("../../mssql/tools");
 const config_1 = __importDefault(require("config"));
+const dateformat_1 = __importDefault(require("dateformat"));
 const promiseSize = config_1.default.get("promiseSize");
 exports.Brand = {
     uq: uqs_1.uqs.jkProduct,
@@ -175,7 +176,7 @@ exports.PriceX = {
         where jp.ID > @iMaxId order by jp.ID`,
     pullWrite: async (joint, data) => {
         try {
-            data["Expire_Date"] = data["Expire_Date"].getTime();
+            data["Expire_Date"] = data["Expire_Date"] && dateformat_1.default(data["Expire_Date"], "yyyy-mm-dd HH:MM:ss");
             await joint.uqIn(exports.PriceX, data);
             return true;
         }

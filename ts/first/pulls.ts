@@ -53,7 +53,7 @@ export const pulls: {
     // 目录树
     "ProductCategory": { read: sqls.readProductCategory, uqIn: ProductCategory },
     "ProductCategoryLanguage": { read: sqls.readProductCategoryLanguage, uqIn: ProductCategoryLanguage },
-    "ProductProductCategory": { read: sqls.readProductProductCategory, uqIn: ProductProductCategory },
+    // "ProductProductCategory": { read: sqls.readProductProductCategory, uqIn: ProductProductCategory },
 
     // 品牌
     "Brand": { read: sqls.readBrand, uqIn: Brand },

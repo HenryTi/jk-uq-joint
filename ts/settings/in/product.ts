@@ -3,6 +3,7 @@ import { uqs } from "../uqs";
 import { productPullWrite, productFirstPullWrite, packFirstPullWrite, pushRecordset } from "../../first/converter/productPullWrite";
 import { execSql } from "../../mssql/tools";
 import config from 'config';
+import dateFormat from 'dateformat';
 
 const promiseSize = config.get<number>("promiseSize");
 
@@ -183,7 +184,7 @@ export const PriceX: UqInMap = {
         where jp.ID > @iMaxId order by jp.ID`,
     pullWrite: async (joint: Joint, data: any) => {
         try {
-            data["Expire_Date"] = data["Expire_Date"].getTime();
+            data["Expire_Date"] = data["Expire_Date"] && dateFormat(data["Expire_Date"], "yyyy-mm-dd HH:MM:ss");
             await joint.uqIn(PriceX, data);
             return true;
         } catch (error) {
