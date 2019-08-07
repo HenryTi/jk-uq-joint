@@ -89,6 +89,7 @@ exports.CustomerContacts = {
         customer: 'CustomerID@Customer',
         arr1: {
             contact: '^ID@Contact',
+            isDefault: '^isDefault',
         }
     }
 };

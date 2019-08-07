@@ -83,12 +83,12 @@ async function customerFirstPullWrite(joint, data) {
         let consigneeSql = `
             select ID, CID as CustomerID, userName as Name, userUnit as OrganizationName, isnull(userMobile, '') as Mobile
                     , email as Email, userZipCode as Zip, userAdd as Addr, isDefault
-                    from dbs.dbo.net_OrderBase_txt where cid = @CustomerID order by ID`;
+                    from dbs.dbo.net_OrderBase_txt where cid = @CustomerID and userName is not null order by ID`;
         promisesSql.push(tools_1.execSql(consigneeSql, [{ 'name': 'CustomerID', 'value': customerId }]));
         let invoiceContactSql = `
             select ID, CID as CustomerID, Name, Unit as OrganizationName, isnull(Mobile, '') as Mobile, Tel as Telephone
                     , Email, Zip, Addr, isDefault
-                    from dbs.dbo.order_InvoiceInfo_txt where CID = @CustomerID order by ID`;
+                    from dbs.dbo.order_InvoiceInfo_txt where CID = @CustomerID and Name is not null order by ID`;
         promisesSql.push(tools_1.execSql(invoiceContactSql, [{ 'name': 'CustomerID', 'value': customerId }]));
         let sqlResult = await Promise.all(promisesSql);
         promises.push(productPullWrite_1.pushRecordset(joint, sqlResult[0], customer_1.Contact));
