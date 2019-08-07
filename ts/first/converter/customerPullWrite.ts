@@ -100,7 +100,7 @@ export async function customerFirstPullWrite(joint: Joint, data: any): Promise<b
     }
 }
 
-export async function consigneeContactPullWrite(joint: Joint, contactData: any): Promise<boolean> {
+export async function contactPullWrite(joint: Joint, contactData: any): Promise<boolean> {
     try {
         await joint.uqIn(Contact, contactData);
         await joint.uqIn(CustomerContacts, _.pick(contactData, ["ID", "CustomerID"]));

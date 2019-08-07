@@ -53,17 +53,20 @@ export const pulls: {
     // 目录树
     "ProductCategory": { read: sqls.readProductCategory, uqIn: ProductCategory },
     "ProductCategoryLanguage": { read: sqls.readProductCategoryLanguage, uqIn: ProductCategoryLanguage },
-    // "ProductProductCategory": { read: sqls.readProductProductCategory, uqIn: ProductProductCategory },
+    "ProductProductCategory": { read: sqls.readProductProductCategory, uqIn: ProductProductCategory },
 
     // 品牌
     "Brand": { read: sqls.readBrand, uqIn: Brand },
     "Chemical": { read: sqls.readChemical, uqIn: Chemical },
     // 产品
     "ProductX": { read: sqls.readProduct, uqIn: ProductX },
+    "ProductLegallyProhibited": { read: sqls.readProductLegallyProhibited, uqIn: ProductLegallyProhibited },
 
     // 客户和客户单位基本信息
     "Organization": { read: sqls.readOrganization, uqIn: Organization },
     "Customer": { read: sqls.readCustomer, uqIn: Customer },
+    "CustomerShippingAddress": { read: sqls.readCustomerShippingAddress, uqIn: Contact },
+    "CustomerInvoiceAddress": { read: sqls.readCustomerShippingAddress, uqIn: Contact },
 
     "Agreement": { read: sqls.readAgreement, uqIn: Agreement },
 

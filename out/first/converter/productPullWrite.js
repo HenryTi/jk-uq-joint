@@ -10,7 +10,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const _ = __importStar(require("lodash"));
 const product_1 = require("../../settings/in/product");
 const tools_1 = require("../../mssql/tools");
-const productCategory_1 = require("../../settings/in/productCategory");
 async function productPullWrite(joint, data) {
     try {
         // await joint.uqIn(Product, _.pick(data, ["ID", "BrandID", "ProductNumber", "Description", "DescriptionC"]));
@@ -41,19 +40,22 @@ async function productFirstPullWrite(joint, data) {
             select ExCID as ID, jkid as ProductID, market_code as SalesRegionID, IsValid
                 from zcl_mess.dbo.ProductsLocation where jkid = @ProductID`;
         promisesSql.push(tools_1.execSql(readProductSalesRegion, [{ 'name': 'ProductID', 'value': productId }]));
+        /*
         let readProductLegallyProhibited = `
             select jkid + market_code as ID, jkid as ProductID, market_code as SalesRegionID, left(description, 20) as Reason
                 from zcl_mess.dbo.sc_safe_ProdCache where jkid = @ProductID`;
-        promisesSql.push(tools_1.execSql(readProductLegallyProhibited, [{ 'name': 'ProductID', 'value': productId }]));
+        promisesSql.push(execSql(readProductLegallyProhibited, [{ 'name': 'ProductID', 'value': productId }]));
+
         let readProductProductCategory = `
             select ID, ID as SaleProductProductCategoryID, SaleProductID, ProductCategoryID, IsValid
                     from opdata.dbo.SaleProductProductCategory where SaleProductID = @ProductID order by ID`;
-        promisesSql.push(tools_1.execSql(readProductProductCategory, [{ 'name': 'ProductID', 'value': productId }]));
+        promisesSql.push(execSql(readProductProductCategory, [{ 'name': 'ProductID', 'value': productId }]));
+        */
         let sqlResult = await Promise.all(promisesSql);
         promises.push(pushRecordset(joint, sqlResult[0], product_1.ProductPackX));
         promises.push(pushRecordset(joint, sqlResult[1], product_1.ProductSalesRegion));
-        promises.push(pushRecordset(joint, sqlResult[2], product_1.ProductLegallyProhibited));
-        promises.push(pushRecordset(joint, sqlResult[3], productCategory_1.ProductProductCategory));
+        // promises.push(pushRecordset(joint, sqlResult[2], ProductLegallyProhibited));
+        // promises.push(pushRecordset(joint, sqlResult[3], ProductProductCategory));
         await Promise.all(promises);
         return true;
     }

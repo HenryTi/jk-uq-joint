@@ -39,6 +39,7 @@ export async function productFirstPullWrite(joint: Joint, data: any) {
                 from zcl_mess.dbo.ProductsLocation where jkid = @ProductID`;
         promisesSql.push(execSql(readProductSalesRegion, [{ 'name': 'ProductID', 'value': productId }]));
 
+        /*
         let readProductLegallyProhibited = `
             select jkid + market_code as ID, jkid as ProductID, market_code as SalesRegionID, left(description, 20) as Reason
                 from zcl_mess.dbo.sc_safe_ProdCache where jkid = @ProductID`;
@@ -48,12 +49,13 @@ export async function productFirstPullWrite(joint: Joint, data: any) {
             select ID, ID as SaleProductProductCategoryID, SaleProductID, ProductCategoryID, IsValid
                     from opdata.dbo.SaleProductProductCategory where SaleProductID = @ProductID order by ID`;
         promisesSql.push(execSql(readProductProductCategory, [{ 'name': 'ProductID', 'value': productId }]));
+        */
 
         let sqlResult = await Promise.all(promisesSql);
         promises.push(pushRecordset(joint, sqlResult[0], ProductPackX));
         promises.push(pushRecordset(joint, sqlResult[1], ProductSalesRegion));
-        promises.push(pushRecordset(joint, sqlResult[2], ProductLegallyProhibited));
-        promises.push(pushRecordset(joint, sqlResult[3], ProductProductCategory));
+        // promises.push(pushRecordset(joint, sqlResult[2], ProductLegallyProhibited));
+        // promises.push(pushRecordset(joint, sqlResult[3], ProductProductCategory));
         await Promise.all(promises);
         return true;
     } catch (error) {

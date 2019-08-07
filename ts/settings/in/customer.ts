@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import dateFormat from 'dateformat';
 import { UqInTuid, UqInMap, UqInTuidArr, Joint } from "../../uq-joint";
 import { uqs } from "../uqs";
-import { customerPullWrite, customerFirstPullWrite, consigneeContactPullWrite } from '../../first/converter/customerPullWrite';
+import { customerPullWrite, customerFirstPullWrite, contactPullWrite } from '../../first/converter/customerPullWrite';
 import config from 'config';
 
 const promiseSize = config.get<number>("promiseSize");
@@ -30,7 +30,7 @@ export const Customer: UqInTuid = {
            , SalesmanID, CustomerServiceStuffID, IsValid, SalesComanyID as SalesCompanyID, SalesRegionBelongsTo, CreateTime
            from ProdData.dbo.Export_Customer where ID > @iMaxId order by ID`,
     pullWrite: customerPullWrite,
-    firstPullWrite: customerFirstPullWrite,
+    firstPullWrite: customerPullWrite,
 };
 
 export const Organization: UqInTuid = {
@@ -111,7 +111,7 @@ export const Contact: UqInTuid = {
         addressString: 'Addr',
         address: "AddressID@Address",
     },
-    pullWrite: consigneeContactPullWrite,
+    pullWrite: contactPullWrite,
 };
 
 export const InvoiceInfo: UqInTuid = {

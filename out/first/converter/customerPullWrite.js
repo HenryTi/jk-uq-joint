@@ -102,7 +102,7 @@ async function customerFirstPullWrite(joint, data) {
     }
 }
 exports.customerFirstPullWrite = customerFirstPullWrite;
-async function consigneeContactPullWrite(joint, contactData) {
+async function contactPullWrite(joint, contactData) {
     try {
         await joint.uqIn(customer_1.Contact, contactData);
         await joint.uqIn(customer_1.CustomerContacts, lodash_1.default.pick(contactData, ["ID", "CustomerID"]));
@@ -113,5 +113,5 @@ async function consigneeContactPullWrite(joint, contactData) {
         throw error;
     }
 }
-exports.consigneeContactPullWrite = consigneeContactPullWrite;
+exports.contactPullWrite = contactPullWrite;
 //# sourceMappingURL=customerPullWrite.js.map

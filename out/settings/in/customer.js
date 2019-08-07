@@ -31,7 +31,7 @@ exports.Customer = {
            , SalesmanID, CustomerServiceStuffID, IsValid, SalesComanyID as SalesCompanyID, SalesRegionBelongsTo, CreateTime
            from ProdData.dbo.Export_Customer where ID > @iMaxId order by ID`,
     pullWrite: customerPullWrite_1.customerPullWrite,
-    firstPullWrite: customerPullWrite_1.customerFirstPullWrite,
+    firstPullWrite: customerPullWrite_1.customerPullWrite,
 };
 exports.Organization = {
     uq: uqs_1.uqs.jkCustomer,
@@ -108,7 +108,7 @@ exports.Contact = {
         addressString: 'Addr',
         address: "AddressID@Address",
     },
-    pullWrite: customerPullWrite_1.consigneeContactPullWrite,
+    pullWrite: customerPullWrite_1.contactPullWrite,
 };
 exports.InvoiceInfo = {
     uq: uqs_1.uqs.jkCustomer,

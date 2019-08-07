@@ -93,10 +93,18 @@ exports.sqls = {
                         , SaleComanyID as SalesCompanyID
                         , saleRegionBelongsTo as SalesRegionBelongsTo
                         , convert(nvarchar(30), creaDate, 121) as CreateTime
-                from dbs.dbo.Customers where CID > @iMaxId and CID > '${idBrokened.CID}' order by CID`,
+                from dbs.dbo.Customers where CID > @iMaxId and CID > '${idBrokened.CID}' and Name is not null order by CID`,
     readOrganization: `
                 select top ${promiseSize} UnitID as ID, UnitID as OrganizationID, unitName as Name, convert(nvarchar(30), creaDate, 121) as CreateTime
                 from dbs.dbo.CustUnits where UnitID > @iMaxId order by UnitID`,
+    readCustomerShippingAddress: `
+                select top ${promiseSize} ID, CID as CustomerID, userName as Name, userUnit as OrganizationName, isnull(userMobile, '') as Mobile
+                    , email as Email, userZipCode as Zip, userAdd as Addr, isDefault
+                from dbs.dbo.net_OrderBase_txt where id > @iMaxId and userName is not null order by ID`,
+    readCustomerInvoiceAddress: `
+                select top ${promiseSize} ID, CID as CustomerID, Name, Unit as OrganizationName, isnull(Mobile, '') as Mobile, Tel as Telephone
+                    , Email, Zip, Addr, isDefault
+                from dbs.dbo.order_InvoiceInfo_txt where ID > @iMaxId and Name is not null order by ID`,
     //==============================================================
     //=========================== Product ===========================
     //==============================================================
@@ -110,6 +118,9 @@ exports.sqls = {
                 from zcl_mess.dbo.products p inner join zcl_mess.dbo.productschem pc on pc.jkid = p.jkid
                 left join zcl_mess.dbo.Invalid_products pv on pv.jkid = p.jkid
                 where p.jkid > @iMaxId and p.jkid > '${idBrokened.jkid}' order by p.jkid`,
+    readProductLegallyProhibited: `
+                select top ${promiseSize} jkid + market_code as ID, jkid as ProductID, market_code as SalesRegionID, left(description, 20) as Reason
+                from zcl_mess.dbo.sc_safe_ProdCache where jkid + market_code > @iMaxId order by jkid + market_code`,
     //==============================================================
     //=========================== ProductCategory ===========================
     //==============================================================

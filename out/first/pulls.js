@@ -31,15 +31,18 @@ exports.pulls = {
     // 目录树
     "ProductCategory": { read: sqls_1.sqls.readProductCategory, uqIn: productCategory_1.ProductCategory },
     "ProductCategoryLanguage": { read: sqls_1.sqls.readProductCategoryLanguage, uqIn: productCategory_1.ProductCategoryLanguage },
-    // "ProductProductCategory": { read: sqls.readProductProductCategory, uqIn: ProductProductCategory },
+    "ProductProductCategory": { read: sqls_1.sqls.readProductProductCategory, uqIn: productCategory_1.ProductProductCategory },
     // 品牌
     "Brand": { read: sqls_1.sqls.readBrand, uqIn: product_1.Brand },
     "Chemical": { read: sqls_1.sqls.readChemical, uqIn: chemical_1.Chemical },
     // 产品
     "ProductX": { read: sqls_1.sqls.readProduct, uqIn: product_1.ProductX },
+    "ProductLegallyProhibited": { read: sqls_1.sqls.readProductLegallyProhibited, uqIn: product_1.ProductLegallyProhibited },
     // 客户和客户单位基本信息
     "Organization": { read: sqls_1.sqls.readOrganization, uqIn: customer_1.Organization },
     "Customer": { read: sqls_1.sqls.readCustomer, uqIn: customer_1.Customer },
+    "CustomerShippingAddress": { read: sqls_1.sqls.readCustomerShippingAddress, uqIn: customer_1.Contact },
+    "CustomerInvoiceAddress": { read: sqls_1.sqls.readCustomerShippingAddress, uqIn: customer_1.Contact },
     "Agreement": { read: sqls_1.sqls.readAgreement, uqIn: customerDiscount_1.Agreement },
     // 市场活动
     "PromotionType": { read: sqls_1.sqls.readPromotionType, uqIn: promotion_1.PromotionType },
