@@ -143,7 +143,7 @@ export const sqls = {
         //=========================== Warehouse ===========================
         //==============================================================
         readWarehouse: `
-                select top ${promiseSize} CompanyID as ID, companyName as WarehouseName, companyAddr
+                select top ${promiseSize} CompanyID as ID, CompanyID as WarehouseID, companyName as WarehouseName, companyAddr
                 from dbs.dbo.Scompany where CompanyID > @iMaxId order by CompanyId`,
 
         readSalesRegionWarehouse: `

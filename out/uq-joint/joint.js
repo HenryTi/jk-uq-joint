@@ -26,6 +26,7 @@ class Joint {
                 //await this.scanPull();
                 await this.scanIn();
                 // await this.scanOut();
+                // this.scanCenterBus();
                 // bus还没有弄好，暂时屏蔽
                 // await this.scanBus();
             }
@@ -453,6 +454,10 @@ class Joint {
                 await tool_1.execProc('write_queue_in_p', [moniker, newQueue]);
             }
         }
+    }
+    async scanCenterBus() {
+        let ret = await centerApi_1.centerApi.queueOut(0, 100);
+        console.log(ret);
     }
     async userIn(uqIn, data) {
         let { key, mapper, uq: uqFullName, entity: tuid } = uqIn;

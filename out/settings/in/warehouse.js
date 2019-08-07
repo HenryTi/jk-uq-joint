@@ -8,7 +8,7 @@ exports.Warehouse = {
     key: 'ID',
     mapper: {
         $id: 'ID@Warehouse',
-        no: "ID",
+        no: "WarehouseID",
         name: "WarehouseName",
     }
 };

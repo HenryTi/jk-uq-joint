@@ -57,7 +57,7 @@ export class Joint {
             //await this.scanPull();
             await this.scanIn();
             // await this.scanOut();
-
+            // this.scanCenterBus();
             // bus还没有弄好，暂时屏蔽
             // await this.scanBus();
         }
@@ -436,6 +436,11 @@ export class Joint {
         }
     }
 
+    protected async scanCenterBus() {
+
+        let ret = await centerApi.queueOut(0, 100);
+        console.log(ret);
+    }
 
     public async userIn(uqIn: UqInTuid, data: any): Promise<number> {
         let { key, mapper, uq: uqFullName, entity: tuid } = uqIn;
