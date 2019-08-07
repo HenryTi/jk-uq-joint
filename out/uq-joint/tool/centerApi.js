@@ -28,7 +28,7 @@ class CenterApi extends fetch_1.Fetch {
         return await this.get('open/uq-url', { unit: unit, uq: uq });
     }
     async urlFromUq(unit, uqFullName) {
-        return await this.get('open/url-from-uq', { unit: unit, uq: uqFullName });
+        return await this.post('open/url-from-uq', { unit: unit, uq: uqFullName });
     }
     async uqDb(name) {
         return await this.get('open/uqdb', { name: name });

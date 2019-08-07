@@ -32,7 +32,7 @@ class CenterApi extends Fetch {
     }
 
     async urlFromUq(unit: number, uqFullName: string): Promise<any> {
-        return await this.get('open/url-from-uq', { unit: unit, uq: uqFullName });
+        return await this.post('open/url-from-uq', { unit: unit, uq: uqFullName });
     }
 
     async uqDb(name: string): Promise<any> {
