@@ -5,6 +5,15 @@ export const faceWebUser: UqBus = {
     face: '百灵威系统工程部/WebUser/WebUser',
     mapper: {
         id: false,
+        no: true,
+        name: true,
+        firstName: true,
+        lastName: true,
+        gender: true,
+        salutation: true,
+        orgnizationName: true,
+        departmentName: true,
+        /*
         Id: "no",
         UserName: "",
         Password: "",
@@ -26,6 +35,7 @@ export const faceWebUser: UqBus = {
         Tax: "",
         Account: "",
         Distributor: false
+        */
     },
     // push: faceOrderPush,
     uqIdProps: {

@@ -77,6 +77,7 @@ export async function customerFirstPullWrite(joint: Joint, data: any): Promise<b
             }));
         }
 
+        /*
         let promisesSql: PromiseLike<any>[] = [];
         let consigneeSql = `
             select ID, CID as CustomerID, userName as Name, userUnit as OrganizationName, isnull(userMobile, '') as Mobile
@@ -92,6 +93,7 @@ export async function customerFirstPullWrite(joint: Joint, data: any): Promise<b
         let sqlResult = await Promise.all(promisesSql);
         promises.push(pushRecordset(joint, sqlResult[0], Contact));
         promises.push(pushRecordset(joint, sqlResult[1], Contact));
+        */
         await Promise.all(promises);
         return true;
     } catch (error) {

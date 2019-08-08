@@ -6,8 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const lodash_1 = __importDefault(require("lodash"));
 const dateformat_1 = __importDefault(require("dateformat"));
 const customer_1 = require("../../settings/in/customer");
-const tools_1 = require("../../mssql/tools");
-const productPullWrite_1 = require("./productPullWrite");
 async function customerPullWrite(joint, data) {
     try {
         data["CreateTime"] = data["CreateTime"] && dateformat_1.default(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
@@ -79,20 +77,23 @@ async function customerFirstPullWrite(joint, data) {
                 'CustomerID': customerId, 'InvoiceInfoID': customerId
             }));
         }
-        let promisesSql = [];
+        /*
+        let promisesSql: PromiseLike<any>[] = [];
         let consigneeSql = `
             select ID, CID as CustomerID, userName as Name, userUnit as OrganizationName, isnull(userMobile, '') as Mobile
                     , email as Email, userZipCode as Zip, userAdd as Addr, isDefault
                     from dbs.dbo.net_OrderBase_txt where cid = @CustomerID and userName is not null order by ID`;
-        promisesSql.push(tools_1.execSql(consigneeSql, [{ 'name': 'CustomerID', 'value': customerId }]));
+        promisesSql.push(execSql(consigneeSql, [{ 'name': 'CustomerID', 'value': customerId }]));
+
         let invoiceContactSql = `
             select ID, CID as CustomerID, Name, Unit as OrganizationName, isnull(Mobile, '') as Mobile, Tel as Telephone
                     , Email, Zip, Addr, isDefault
                     from dbs.dbo.order_InvoiceInfo_txt where CID = @CustomerID and Name is not null order by ID`;
-        promisesSql.push(tools_1.execSql(invoiceContactSql, [{ 'name': 'CustomerID', 'value': customerId }]));
+        promisesSql.push(execSql(invoiceContactSql, [{ 'name': 'CustomerID', 'value': customerId }]));
         let sqlResult = await Promise.all(promisesSql);
-        promises.push(productPullWrite_1.pushRecordset(joint, sqlResult[0], customer_1.Contact));
-        promises.push(productPullWrite_1.pushRecordset(joint, sqlResult[1], customer_1.Contact));
+        promises.push(pushRecordset(joint, sqlResult[0], Contact));
+        promises.push(pushRecordset(joint, sqlResult[1], Contact));
+        */
         await Promise.all(promises);
         return true;
     }
