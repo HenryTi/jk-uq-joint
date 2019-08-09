@@ -1,5 +1,6 @@
-import { UqBus } from "../../uq-joint";
+import { UqBus, Joint } from "../../uq-joint";
 import { uqs } from "../uqs";
+import { httpClient } from "../../tools/webApiClient";
 
 export const faceUser: UqBus = {
     face: '百灵威系统工程部/WebUser/User',
@@ -13,6 +14,15 @@ export const faceUser: UqBus = {
         mobile: true,
         email: true,
         pwd: true,
+    },
+    push: async (joint: Joint, uqIn: UqBus, queue: number, data: any): Promise<boolean> => {
+        try {
+            let success = await httpClient.RegisterWebUser(data);
+            return success;
+        } catch (error) {
+            console.error(error);
+            return false;
+        }
     }
 }
 
@@ -29,46 +39,98 @@ export const faceWebUser: UqBus = {
         salutation: true,
         orgnizationName: true,
         departmentName: true,
-        /*
-        Id: "no",
-        UserName: "",
-        Password: "",
-        Name: "name",
-        Sex: "gender",
-        UnitName: "orgnizationName",   // Compay?
-        DepartmentName: "departmentName",
-        Mobile: "mobile",
-        Tel: "telephone",
-        Fax: "fax",
-        PostCode: "zipCode",
-        Email: "email",
-        EmailTF: false,   //EmailPermit?
-        ProvinceName: "",
-        CityName: "",
-        Address: "",
-        InvoiceType: "",
-        InvoiceHeader: "",
-        Tax: "",
-        Account: "",
-        Distributor: false
-        */
     },
-    // push: faceOrderPush,
-    uqIdProps: {
-        shippingContact: {
-            uq: uqs.jkCustomer,
-            tuid: 'Contact',
-            props: {
-                name: true,
-                address: {
-                    props: {
-                        province: true,
-                        country: true,
-                        city: true,
-                        county: true,
-                    }
-                }
-            }
-        },
+    push: async (joint: Joint, uqIn: UqBus, queue: number, data: any): Promise<boolean> => {
+        try {
+            let success = await httpClient.UpdateWebUser(data);
+            return success;
+        } catch (error) {
+            console.error(error);
+            return false;
+        }
     }
 };
+
+export const faceWebUserContact: UqBus = {
+    face: '百灵威系统工程部/WebUser/WebUserContact',
+    from: 'local',
+    mapper: {
+        webUser: false,
+        telephone: true,
+        mobile: true,
+        email: true,
+        fax: true,
+        zipCode: true,
+        wechatId: false,
+        addressString: false,
+        address: false,
+    },
+    uqIdProps: {
+        webUser: {
+            uq: uqs.jkWebUser,
+            tuid: 'WebUser'
+        }
+    },
+    push: async (joint: Joint, uqIn: UqBus, queue: number, data: any): Promise<boolean> => {
+        try {
+            let success = await httpClient.UpdateWebUserContact(data);
+            return success;
+        } catch (error) {
+            console.error(error);
+            return false;
+        }
+    }
+};
+
+export const faceWebUserInvoice: UqBus = {
+    face: '百灵威系统工程部/WebUser/WebUserInvoice',
+    from: 'local',
+    mapper: {
+        webUser: false,
+        title: true,
+        taxNo: true,
+        address: true,
+        telephone: true,
+        bank: true,
+        accountNo: true,
+    },
+    uqIdProps: {
+        webUser: {
+            uq: uqs.jkWebUser,
+            tuid: 'WebUser'
+        }
+    },
+    push: async (joint: Joint, uqIn: UqBus, queue: number, data: any): Promise<boolean> => {
+        try {
+            let success = await httpClient.UpdateWebUserInvoice(data);
+            return success;
+        } catch (error) {
+            console.error(error);
+            return false;
+        }
+    }
+};
+
+/*
+Id: "no",
+UserName: "",
+Password: "",
+Name: "name",
+Sex: "gender",
+UnitName: "orgnizationName",   // Compay?
+DepartmentName: "departmentName",
+Mobile: "mobile",
+Tel: "telephone",
+Fax: "fax",
+PostCode: "zipCode",
+Email: "email",
+EmailTF: false,   //EmailPermit?
+ProvinceName: "",
+CityName: "",
+Address: "",
+InvoiceType: "",
+InvoiceHeader: "",
+Tax: "",
+Account: "",
+Distributor: false
+*/

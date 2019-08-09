@@ -25,6 +25,18 @@ class WebApiClient extends fetch_1.Fetch {
         let ret = await this.get("Customer/Get/0023A8557A");
         return ret;
     }
+    async RegisterWebUser(data) {
+        return false;
+    }
+    async UpdateWebUser(data) {
+        return false;
+    }
+    async UpdateWebUserContact(data) {
+        return false;
+    }
+    async UpdateWebUserInvoice(data) {
+        return false;
+    }
 }
 exports.WebApiClient = WebApiClient;
 exports.httpClient = new WebApiClient();

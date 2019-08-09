@@ -33,8 +33,8 @@ class Joint {
                 // await this.scanBus();
             }
             catch (err) {
-                console.error('error in timer tick');
-                console.error(err);
+                logger.error('error in timer tick');
+                logger.error(err);
             }
             finally {
                 setTimeout(this.tick, interval);
@@ -150,7 +150,6 @@ class Joint {
                         case 'string':
                             if (pullReadFromSql === undefined) {
                                 let err = 'pullReadFromSql should be defined in settings!';
-                                console.error(err);
                                 throw err;
                             }
                             ret = await pullReadFromSql(pull, queue);
@@ -180,13 +179,12 @@ class Joint {
                     }
                 });
                 try {
-                    // console.log(`process in ${queue}: `, message);
                     await Promise.all(promises);
                     promises.splice(0);
                     await tool_1.execProc('write_queue_in_p', [queueName, lastPointer]);
                 }
                 catch (error) {
-                    console.error(error);
+                    logger.error(error);
                     break;
                 }
             }
@@ -225,18 +223,18 @@ class Joint {
                 return id;
             }
             else {
-                console.error('save ' + uqFullName + ':' + tuid + ' no ' + keyVal + ' failed.');
-                console.error(body);
+                logger.error('save ' + uqFullName + ':' + tuid + ' no ' + keyVal + ' failed.');
+                logger.error(body);
             }
         }
         catch (error) {
-            console.error(error);
             if (error.code === "ETIMEDOUT") {
+                logger.error(error);
                 await this.uqInTuid(uqIn, data);
             }
             else {
-                console.error(uqFullName + ':' + tuid);
-                console.error(body);
+                logger.error(uqFullName + ':' + tuid);
+                logger.error(body);
                 throw error;
             }
         }
@@ -276,17 +274,17 @@ class Joint {
                 return id;
             }
             else {
-                console.error('save tuid arr ' + uqFullName + ':' + entity + ' no: ' + keyVal + ' failed.');
-                console.error(body);
+                logger.error('save tuid arr ' + uqFullName + ':' + entity + ' no: ' + keyVal + ' failed.');
+                logger.error(body);
             }
         }
         catch (error) {
-            console.error(error);
             if (error.code === "ETIMEDOUT") {
+                logger.error(error);
                 await this.uqInTuidArr(uqIn, data);
             }
             else {
-                console.error('save tuid arr ' + uqFullName + ':' + entity + ' no: ' + keyVal + ' failed.');
+                logger.error('save tuid arr ' + uqFullName + ':' + entity + ' no: ' + keyVal + ' failed.');
                 throw error;
             }
         }
@@ -316,8 +314,8 @@ class Joint {
                 return vId;
             }
             catch (error) {
-                console.error(error);
                 if (error.code === "ETIMEDOUT") {
+                    logger.error(error);
                     this.mapOwner(uqIn, ownerEntity, ownerVal);
                 }
                 else {
@@ -340,8 +338,8 @@ class Joint {
                 await uq.setMap(entity, body);
         }
         catch (error) {
-            console.error(error);
             if (error.code === "ETIMEDOUT") {
+                logger.error(error);
                 await this.uqInMap(uqIn, data);
             }
             else {
@@ -430,7 +428,7 @@ class Joint {
                                 json = newJson;
                             }
                             catch (error) {
-                                console.error(error);
+                                logger.error(error);
                                 break;
                             }
                         }
@@ -490,7 +488,6 @@ class Joint {
             return ret;
         }
         catch (error) {
-            console.error(error);
             throw error;
         }
     }

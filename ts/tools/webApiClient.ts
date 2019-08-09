@@ -24,6 +24,22 @@ export class WebApiClient extends Fetch {
         let ret = await this.get("Customer/Get/0023A8557A");
         return ret;
     }
+
+    async RegisterWebUser(data: any): Promise<boolean> {
+        return false;
+    }
+
+    async UpdateWebUser(data: any): Promise<boolean> {
+        return false;
+    }
+
+    async UpdateWebUserContact(data: any): Promise<boolean> {
+        return false;
+    }
+
+    async UpdateWebUserInvoice(data: any): Promise<boolean> {
+        return false;
+    }
 }
 
 export const httpClient = new WebApiClient();
