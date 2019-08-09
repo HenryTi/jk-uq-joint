@@ -10,6 +10,7 @@ const productInventoryPull: DataPull<UqBus> = async (joint: Joint, uqBus: UqBus,
 
 export const faceProductInventory: UqBus = {
     face: '百灵威系统工程部/point/productInventory',
+    from: 'local',
     mapper: {
         warehouse: 'WarehouseID@Warehouse',
         product: 'ProductID@ProductX',

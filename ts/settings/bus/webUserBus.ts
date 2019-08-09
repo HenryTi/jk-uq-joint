@@ -1,8 +1,24 @@
 import { UqBus } from "../../uq-joint";
 import { uqs } from "../uqs";
 
+export const faceUser: UqBus = {
+    face: '百灵威系统工程部/WebUser/User',
+    from: 'center',
+    mapper: {
+        id: true,
+        name: true,
+        nice: false,
+        icon: false,
+        country: false,
+        mobile: true,
+        email: true,
+        pwd: true,
+    }
+}
+
 export const faceWebUser: UqBus = {
     face: '百灵威系统工程部/WebUser/WebUser',
+    from: 'local',
     mapper: {
         id: false,
         no: true,

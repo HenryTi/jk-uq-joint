@@ -12,7 +12,7 @@ export const WebUserTonva: UqInTuid = {
     key: 'WebUserID',
     mapper: {
         $type: 'Type',      // 固定值:$user
-        id: 'IGNORE',
+        id: false,
         name: 'UserName',
         pwd: 'Password',
         nick: "IGNORE",

@@ -156,23 +156,30 @@ class MapToUq extends MapData {
             ret = await tool_1.execSql(sql);
         }
         if (ret.length === 0) {
-            try {
-                let openApi = await this.joint.getOpenApi(uq);
-                let vId = await openApi.getTuidVId(entity);
+            let vId = await this.getTuidVid(uq, entity);
+            if (vId !== undefined) {
                 await map_1.map(entity, vId, value);
                 return vId;
             }
-            catch (error) {
-                console.error(error);
-                if (error.code === 'ETIMEDOUT') {
-                    await this.tuidId(tuid, value);
-                }
-                else {
-                    throw error;
-                }
+            else {
+                throw 'entity: ' + entity + ' getTuidVid result: undefined.';
             }
         }
         return ret[0]['id'];
+    }
+    async getTuidVid(uq, entity) {
+        try {
+            let openApi = await this.joint.getOpenApi(uq);
+            let vId = await openApi.getTuidVId(entity);
+            return vId;
+        }
+        catch (error) {
+            console.error(error);
+            if (error.code === 'EITMEOUT')
+                return this.getTuidVid(uq, entity);
+            else
+                throw error;
+        }
     }
 }
 exports.MapToUq = MapToUq;

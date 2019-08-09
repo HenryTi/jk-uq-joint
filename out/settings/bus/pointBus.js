@@ -15,6 +15,7 @@ const facePointPull = async (joint, uqBus, queue) => {
 };
 exports.facePoint = {
     face: '百灵威系统工程部/point/point',
+    from: 'local',
     mapper: {
         member: 'CID@Customer',
         years: 'Years',

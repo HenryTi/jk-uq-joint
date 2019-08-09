@@ -11,17 +11,18 @@ const uqOutRead_1 = require("./converter/uqOutRead");
 //import { host } from "../uq-joint/tool/host";
 //import { centerApi } from "../uq-joint/tool/centerApi";
 const tools_1 = require("../mssql/tools");
+const logger_1 = require("../tools/logger");
 const maxRows = config_1.default.get("firstMaxRows");
 const promiseSize = config_1.default.get("promiseSize");
 const pullEntities = config_1.default.get("firstEntities");
 (async function () {
-    console.log(process.env.NODE_ENV);
+    logger_1.logger.info(process.env.NODE_ENV);
     //await host.start();
     //centerApi.initBaseUrl(host.centerUrl);
     await tools_1.initMssqlPool();
     let joint = new uq_joint_1.Joint(settings_1.settings);
     await joint.init();
-    console.log('start');
+    logger_1.logger.info('start');
     let start = Date.now();
     let priorEnd = start;
     for (var i = 0; i < pullEntities.length; i++) {
@@ -29,7 +30,7 @@ const pullEntities = config_1.default.get("firstEntities");
         if (!uqIn)
             break;
         let { entity, pullWrite, firstPullWrite } = uqIn;
-        console.log(entity + " start at " + new Date());
+        logger_1.logger.info(entity + " start at " + new Date());
         let readFunc;
         if (typeof (read) === 'string') {
             readFunc = async function (maxId) {
@@ -47,7 +48,7 @@ const pullEntities = config_1.default.get("firstEntities");
                 ret = await readFunc(maxId);
             }
             catch (error) {
-                console.error(error);
+                logger_1.logger.error(error);
                 throw error;
             }
             if (ret === undefined || count > maxRows)
@@ -70,7 +71,7 @@ const pullEntities = config_1.default.get("firstEntities");
                 await pushToTonva(promises, start, priorEnd, count, lastPointer);
             }
             catch (error) {
-                console.error(error);
+                logger_1.logger.error(error);
                 if (error.code === "ETIMEDOUT") {
                     await pushToTonva(promises, start, priorEnd, count, lastPointer);
                 }
@@ -84,11 +85,11 @@ const pullEntities = config_1.default.get("firstEntities");
         }
         catch (error) {
             // debugger;
-            console.error(error);
+            logger_1.logger.error(error);
             throw error;
         }
         promises.splice(0);
-        console.log(entity + " end   at " + new Date());
+        logger_1.logger.info(entity + " end   at " + new Date());
     }
     ;
     process.exit();
@@ -102,7 +103,7 @@ async function pushToTonva(promises, start, priorEnd, count, lastPointer) {
         let sum = Math.round((after - start) / 1000);
         let each = Math.round(after - priorEnd);
         let eachSubmit = Math.round(after - before);
-        console.log('count = ' + count + ' each: ' + each + ' sum: ' + sum + ' eachSubmit: ' + eachSubmit + 'ms; lastId: ' + lastPointer);
+        logger_1.logger.info('count = ' + count + ' each: ' + each + ' sum: ' + sum + ' eachSubmit: ' + eachSubmit + 'ms; lastId: ' + lastPointer);
         priorEnd = after;
     }
 }

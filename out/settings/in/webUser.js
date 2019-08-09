@@ -21,7 +21,7 @@ exports.WebUserTonva = {
     key: 'WebUserID',
     mapper: {
         $type: 'Type',
-        id: 'IGNORE',
+        id: false,
         name: 'UserName',
         pwd: 'Password',
         nick: "IGNORE",

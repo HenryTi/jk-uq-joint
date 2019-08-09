@@ -17,6 +17,7 @@ const facePointPull: DataPull<UqBus> = async (joint: Joint, uqBus: UqBus, queue:
 
 export const facePoint: UqBus = {
     face: '百灵威系统工程部/point/point',
+    from: 'local',
     mapper: {
         member: 'CID@Customer',
         years: 'Years',

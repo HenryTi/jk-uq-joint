@@ -15,6 +15,8 @@ const centerApi_1 = require("./tool/centerApi");
 const openApi_1 = require("./tool/openApi");
 const host_1 = require("./tool/host");
 const config_1 = __importDefault(require("config"));
+const log4js_1 = require("log4js");
+const logger = log4js_1.getLogger('joint');
 const uqInEntities = config_1.default.get("afterFirstEntities");
 const interval = 3 * 1000;
 class Joint {
@@ -391,7 +393,7 @@ class Joint {
             return;
         let monikerPrefix = '$bus/';
         for (let uqBus of bus) {
-            let { face, mapper, push, pull, uqIdProps } = uqBus;
+            let { face, from: busFrom, mapper, push, pull, uqIdProps } = uqBus;
             // bus out(从bus中读取消息，发送到外部系统)
             let moniker = monikerPrefix + face;
             for (;;) {
@@ -405,21 +407,32 @@ class Joint {
                 else {
                     queue = 430000000000000;
                 }
-                let message = await this.uqs.readBus(face, queue);
-                if (message === undefined)
-                    break;
-                let { id: newQueue, from, body } = message;
-                let json = await faceSchemas_1.faceSchemas.unpackBusData(face, body);
-                if (uqIdProps !== undefined && from !== undefined) {
-                    let uq = await this.uqs.getUq(from);
-                    if (uq !== undefined) {
-                        try {
-                            let newJson = await uq.buildData(json, uqIdProps);
-                            json = newJson;
-                        }
-                        catch (error) {
-                            console.error(error);
-                            break;
+                let newQueue, json;
+                if (busFrom === 'center') {
+                    let message = await this.userOut(face, queue);
+                    if (message === undefined)
+                        break;
+                    newQueue = message['$queue'];
+                    json = message;
+                }
+                else {
+                    let message = await this.uqs.readBus(face, queue);
+                    if (message === undefined)
+                        break;
+                    let { id, from, body } = message;
+                    newQueue = id;
+                    json = await faceSchemas_1.faceSchemas.unpackBusData(face, body);
+                    if (uqIdProps !== undefined && from !== undefined) {
+                        let uq = await this.uqs.getUq(from);
+                        if (uq !== undefined) {
+                            try {
+                                let newJson = await uq.buildData(json, uqIdProps);
+                                json = newJson;
+                            }
+                            catch (error) {
+                                console.error(error);
+                                break;
+                            }
                         }
                     }
                 }
@@ -455,8 +468,8 @@ class Joint {
             }
         }
     }
-    async scanCenterBus() {
-        let ret = await centerApi_1.centerApi.queueOut(0, 100);
+    async userOut(face, queue) {
+        let ret = await centerApi_1.centerApi.queueOut(queue, 1);
         console.log(ret);
     }
     async userIn(uqIn, data) {

@@ -48,9 +48,10 @@ exports.JkTask = {
         createTime: 'CreateTime',
         completeTime: 'CompleteTime',
     },
-    pull: `select   top ${promiseSize} a.ID, a.WorkTaskID, a.WorkTaskSource, a.CustomerID, 0 as typeid, 0 as bizid, a.EmployeeID, 
+    pull: `select   top ${promiseSize} a.ID, a.WorkTaskID, a.WorkTaskSource, a.CustomerID, b.typeid, b.bizid, a.EmployeeID, 
                     a.LinkObjectID, isnull(a.TimeLimit,0) as TimeLimit, a.RequireCompletionTime, a.CreateTime, a.CompleteTime
             from    ProdData.dbo.Export_WorkTask as a
+                    inner join ProdData.dbo.TaskBiz as b on a.WorkTaskTypeID = b.jktypeid
             where a.ID > @iMaxId order by a.ID`,
     pullWrite: async (joint, data) => {
         try {

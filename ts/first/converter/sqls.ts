@@ -128,10 +128,11 @@ export const sqls = {
                 select top ${promiseSize} p.jkid as ID, p.jkid as ProductID, p.manufactory as BrandID, p.originalId as ProductNumber
                         , isnull(p.Description, 'N/A') as Description, p.DescriptionC
                         , pc.chemid as ChemicalID, zcl_mess.dbo.fc_recas(p.CAS) as CAS, p.MF as MolecularFomula, p.MW as MolecularWeight, p.Purity
-                        , p.[Restrict], p.LotNumber as MdlNumber, case when(select count(pv.jkid) from zcl_mess.dbo.Invalid_Products pv where pv.jkid = p.jkid) > 0 then 0 else 1 end as IsValid
+                        , p.[Restrict], p.LotNumber as MdlNumber, 1 as IsValid
+                        -- , case when(select count(pv.jkid) from zcl_mess.dbo.Invalid_Products pv where pv.jkid = p.jkid) > 0 then 0 else 1 end as IsValid
                 from zcl_mess.dbo.products p inner join zcl_mess.dbo.productschem pc on pc.jkid = p.jkid
-                left join zcl_mess.dbo.Invalid_products pv on pv.jkid = p.jkid
-                where p.jkid > @iMaxId and p.jkid > '${idBrokened.jkid}' order by p.jkid`,
+                where p.jkid > @iMaxId and p.jkid > '${idBrokened.jkid}'
+                      and p.jkid not in ( select jkid from zcl_mess.dbo.Invalid_products ) order by p.jkid`,
 
         readProductLegallyProhibited: `
                 select top ${promiseSize} jkid + market_code as ID, jkid as ProductID, market_code as SalesRegionID, left(description, 20) as Reason

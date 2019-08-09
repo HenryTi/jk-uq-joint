@@ -69,6 +69,10 @@ export interface UqBus {
      */
     face: string;
     /**
+     * bus数据的来源，center表示来自中心服务器；local表示来自非中心服务器；
+     */
+    from: 'center' | 'local';
+    /**
      * 用于定义目标系统schema各字段的来源
      */
     mapper: Mapper;
