@@ -1,29 +1,47 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uqs_1 = require("../uqs");
-const webApiClient_1 = require("../../tools/webApiClient");
+const UserApiClient_1 = require("../../tools/UserApiClient");
+const map_1 = require("../../uq-joint/tool/map");
+const logger_1 = require("../../tools/logger");
 exports.faceUser = {
     face: '百灵威系统工程部/WebUser/User',
     from: 'center',
     mapper: {
-        id: true,
-        name: true,
-        nice: false,
-        icon: false,
-        country: false,
-        mobile: true,
-        email: true,
-        pwd: true,
+        id: 'id@WebUser',
+        UserName: 'name',
+        Password: 'pwd',
+        // nice: false,
+        // icon: false,
+        // country: false,
+        Mobile: 'mobile',
+        Email: 'email',
     },
     push: async (joint, uqIn, queue, data) => {
+        let ret;
         try {
-            let success = await webApiClient_1.httpClient.RegisterWebUser(data);
-            return success;
+            let { innerId } = data;
+            if (innerId !== 'n/a') {
+                ret = await UserApiClient_1.userApiClient.UpdateWebUserContact(data);
+            }
+            else {
+                ret = await UserApiClient_1.userApiClient.RegisterWebUser(data);
+            }
         }
         catch (error) {
-            console.error(error);
-            return false;
+            let { code, message } = error;
+            if (code === 'ENAMEUSED') {
+                logger_1.logger.error(error + ';data:' + data);
+                return true;
+            }
+            else
+                return false;
         }
+        if (ret !== undefined) {
+            let { face } = uqIn;
+            await map_1.map('$bus/' + face, data.id, ret.Identity);
+        }
+        return true;
     }
 };
 exports.faceWebUser = {
@@ -42,7 +60,7 @@ exports.faceWebUser = {
     },
     push: async (joint, uqIn, queue, data) => {
         try {
-            let success = await webApiClient_1.httpClient.UpdateWebUser(data);
+            let success = await UserApiClient_1.userApiClient.UpdateWebUser(data);
             return success;
         }
         catch (error) {
@@ -73,7 +91,7 @@ exports.faceWebUserContact = {
     },
     push: async (joint, uqIn, queue, data) => {
         try {
-            let success = await webApiClient_1.httpClient.UpdateWebUserContact(data);
+            let success = await UserApiClient_1.userApiClient.UpdateWebUserContact(data);
             return success;
         }
         catch (error) {
@@ -102,7 +120,7 @@ exports.faceWebUserInvoice = {
     },
     push: async (joint, uqIn, queue, data) => {
         try {
-            let success = await webApiClient_1.httpClient.UpdateWebUserInvoice(data);
+            let success = await UserApiClient_1.userApiClient.UpdateWebUserInvoice(data);
             return success;
         }
         catch (error) {

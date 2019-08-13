@@ -26,11 +26,10 @@ class Joint {
             try {
                 console.log('tick ' + new Date().toLocaleString());
                 //await this.scanPull();
-                await this.scanIn();
+                // await this.scanIn();
                 // await this.scanOut();
-                // this.scanCenterBus();
                 // bus还没有弄好，暂时屏蔽
-                // await this.scanBus();
+                await this.scanBus();
             }
             catch (err) {
                 logger.error('error in timer tick');
@@ -403,12 +402,13 @@ class Joint {
                     queue = retp[0].queue;
                 }
                 else {
-                    queue = 430000000000000;
+                    // queue = 430000000000000;
+                    queue = 0;
                 }
                 let newQueue, json;
                 if (busFrom === 'center') {
                     let message = await this.userOut(face, queue);
-                    if (message === undefined)
+                    if (message === undefined && message['$queue'] === undefined)
                         break;
                     newQueue = message['$queue'];
                     json = message;
@@ -468,7 +468,7 @@ class Joint {
     }
     async userOut(face, queue) {
         let ret = await centerApi_1.centerApi.queueOut(queue, 1);
-        console.log(ret);
+        return ret !== undefined && ret.length === 1 && ret[0];
     }
     async userIn(uqIn, data) {
         let { key, mapper, uq: uqFullName, entity: tuid } = uqIn;

@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const dateformat_1 = __importDefault(require("dateformat"));
 const uqs_1 = require("../uqs");
 const tools_1 = require("../../mssql/tools");
 const uqOutRead_1 = require("../../first/converter/uqOutRead");
@@ -106,17 +107,19 @@ exports.Agreement = {
             for (var i = 0; i < recordset.length; i++) {
                 let row = recordset[i];
                 let { CID, BrandID, Discount, StartDate, EndDate } = row;
+                StartDate = StartDate && dateformat_1.default(StartDate, "yyyy-mm-dd HH:MM:ss");
+                EndDate = EndDate && dateformat_1.default(EndDate, "yyyy-mm-dd HH:MM:ss");
                 try {
                     if (data['ObjType'] === 'C') {
                         await joint.uqIn(exports.CustomerDiscount, {
                             "CustomerID": CID,
-                            "BrandID": BrandID, 'Discount': Discount, "StartDate": StartDate.getTime(), "EndDate": EndDate.getTime()
+                            "BrandID": BrandID, 'Discount': Discount, "StartDate": StartDate, "EndDate": EndDate
                         });
                     }
                     if (data['ObjType'] === 'U') {
                         await joint.uqIn(exports.OrganizationDiscount, {
                             "OrganizationID": CID,
-                            "BrandID": BrandID, 'Discount': Discount, "StartDate": StartDate.getTime(), "EndDate": EndDate.getTime()
+                            "BrandID": BrandID, 'Discount': Discount, "StartDate": StartDate, "EndDate": EndDate
                         });
                     }
                 }

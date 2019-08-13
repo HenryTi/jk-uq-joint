@@ -57,11 +57,10 @@ export class Joint {
         try {
             console.log('tick ' + new Date().toLocaleString());
             //await this.scanPull();
-            await this.scanIn();
+            // await this.scanIn();
             // await this.scanOut();
-            // this.scanCenterBus();
             // bus还没有弄好，暂时屏蔽
-            // await this.scanBus();
+            await this.scanBus();
         }
         catch (err) {
             logger.error('error in timer tick');
@@ -327,7 +326,7 @@ export class Joint {
                 await uq.setMap(entity, body);
         } catch (error) {
             if (error.code === "ETIMEDOUT") {
-            logger.error(error);
+                logger.error(error);
                 await this.uqInMap(uqIn, data);
             } else {
                 throw error;
@@ -387,12 +386,13 @@ export class Joint {
                 if (retp.length > 0) {
                     queue = retp[0].queue;
                 } else {
-                    queue = 430000000000000;
+                    // queue = 430000000000000;
+                    queue = 0;
                 }
                 let newQueue, json;
                 if (busFrom === 'center') {
                     let message = await this.userOut(face, queue);
-                    if (message === undefined) break;
+                    if (message === undefined && message['$queue'] === undefined) break;
                     newQueue = message['$queue'];
                     json = message;
                 } else {
@@ -447,7 +447,7 @@ export class Joint {
 
     protected async userOut(face: string, queue: number) {
         let ret = await centerApi.queueOut(queue, 1);
-        console.log(ret);
+        return ret !== undefined && ret.length === 1 && ret[0];
     }
 
     public async userIn(uqIn: UqInTuid, data: any): Promise<number> {

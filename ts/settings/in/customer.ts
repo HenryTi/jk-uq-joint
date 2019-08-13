@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import dateFormat from 'dateformat';
 import { UqInTuid, UqInMap, UqInTuidArr, Joint } from "../../uq-joint";
 import { uqs } from "../uqs";
-import { customerPullWrite, customerFirstPullWrite, contactPullWrite } from '../../first/converter/customerPullWrite';
+import { customerPullWrite, contactPullWrite } from '../../first/converter/customerPullWrite';
 import config from 'config';
 
 const promiseSize = config.get<number>("promiseSize");

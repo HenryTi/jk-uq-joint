@@ -1,4 +1,5 @@
 import { UqInTuid, UqInMap, UqInTuidArr, Joint, DataPullResult } from "../../uq-joint";
+import dateFormat from 'dateformat';
 import { uqs } from "../uqs";
 import { execSql } from "../../mssql/tools";
 import { uqPullRead, uqOutRead } from "../../first/converter/uqOutRead";
@@ -103,17 +104,19 @@ export const Agreement: UqInMap = {
             for (var i = 0; i < recordset.length; i++) {
                 let row = recordset[i];
                 let { CID, BrandID, Discount, StartDate, EndDate } = row;
+                StartDate = StartDate && dateFormat(StartDate, "yyyy-mm-dd HH:MM:ss");
+                EndDate = EndDate && dateFormat(EndDate, "yyyy-mm-dd HH:MM:ss");
                 try {
                     if (data['ObjType'] === 'C') {
                         await joint.uqIn(CustomerDiscount, {
                             "CustomerID": CID
-                            , "BrandID": BrandID, 'Discount': Discount, "StartDate": StartDate.getTime(), "EndDate": EndDate.getTime()
+                            , "BrandID": BrandID, 'Discount': Discount, "StartDate": StartDate, "EndDate": EndDate
                         });
                     }
                     if (data['ObjType'] === 'U') {
                         await joint.uqIn(OrganizationDiscount, {
                             "OrganizationID": CID
-                            , "BrandID": BrandID, 'Discount': Discount, "StartDate": StartDate.getTime(), "EndDate": EndDate.getTime()
+                            , "BrandID": BrandID, 'Discount': Discount, "StartDate": StartDate, "EndDate": EndDate
                         });
                     }
                 } catch (error) {

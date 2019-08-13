@@ -1,28 +1,45 @@
 import { UqBus, Joint } from "../../uq-joint";
 import { uqs } from "../uqs";
-import { httpClient } from "../../tools/webApiClient";
+import { userApiClient } from "../../tools/UserApiClient";
+import { map } from "../../uq-joint/tool/map";
+import { logger } from "../../tools/logger";
 
 export const faceUser: UqBus = {
     face: '百灵威系统工程部/WebUser/User',
     from: 'center',
     mapper: {
-        id: true,
-        name: true,
-        nice: false,
-        icon: false,
-        country: false,
-        mobile: true,
-        email: true,
-        pwd: true,
+        id: 'id@WebUser',
+        UserName: 'name',
+        Password: 'pwd',
+        // nice: false,
+        // icon: false,
+        // country: false,
+        Mobile: 'mobile',
+        Email: 'email',
     },
     push: async (joint: Joint, uqIn: UqBus, queue: number, data: any): Promise<boolean> => {
+        let ret;
         try {
-            let success = await httpClient.RegisterWebUser(data);
-            return success;
+            let { innerId } = data;
+            if (innerId !== 'n/a') {
+                ret = await userApiClient.UpdateWebUserContact(data);
+            }
+            else {
+                ret = await userApiClient.RegisterWebUser(data);
+            }
         } catch (error) {
-            console.error(error);
-            return false;
+            let { code, message } = error;
+            if (code === 'ENAMEUSED') {
+                logger.error(error + ';data:' + data);
+                return true;
+            } else
+                return false;
         }
+        if (ret !== undefined) {
+            let { face } = uqIn;
+            await map('$bus/' + face, data.id, ret.Identity);
+        }
+        return true;
     }
 }
 
@@ -42,7 +59,7 @@ export const faceWebUser: UqBus = {
     },
     push: async (joint: Joint, uqIn: UqBus, queue: number, data: any): Promise<boolean> => {
         try {
-            let success = await httpClient.UpdateWebUser(data);
+            let success = await userApiClient.UpdateWebUser(data);
             return success;
         } catch (error) {
             console.error(error);
@@ -73,7 +90,7 @@ export const faceWebUserContact: UqBus = {
     },
     push: async (joint: Joint, uqIn: UqBus, queue: number, data: any): Promise<boolean> => {
         try {
-            let success = await httpClient.UpdateWebUserContact(data);
+            let success = await userApiClient.UpdateWebUserContact(data);
             return success;
         } catch (error) {
             console.error(error);
@@ -102,7 +119,7 @@ export const faceWebUserInvoice: UqBus = {
     },
     push: async (joint: Joint, uqIn: UqBus, queue: number, data: any): Promise<boolean> => {
         try {
-            let success = await httpClient.UpdateWebUserInvoice(data);
+            let success = await userApiClient.UpdateWebUserInvoice(data);
             return success;
         } catch (error) {
             console.error(error);

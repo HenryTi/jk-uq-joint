@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const orderUsqBus_1 = require("./orderUsqBus");
+const webUserBus_1 = require("./webUserBus");
 exports.bus = [
-    orderUsqBus_1.faceOrder,
+    // faceOrder,
+    webUserBus_1.faceUser,
 ];
 //# sourceMappingURL=index.js.map
