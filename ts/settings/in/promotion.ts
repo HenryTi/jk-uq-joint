@@ -61,7 +61,7 @@ export const Promotion: UqInTuid = {
             data["EndDate"] = data["EndDate"] && dateFormat(data["EndDate"], "yyyy-mm-dd HH:MM:ss");
             data["CreateTime"] = data["CreateTime"] && dateFormat(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
             await joint.uqIn(Promotion, _.pick(data, ["ID", "MarketingID", "Name", "Type", "Status", "StartDate", 'EndDate', 'CreateTime']));
-            await joint.uqIn(PromotionSalesRegion, _.pick(data, ["ID", "SalesRegionID"]));
+            await joint.uqIn(PromotionSalesRegion, _.pick(data, ["MarketingID", "SalesRegionID"]));
             return true;
         } catch (error) {
             console.error(error);
@@ -76,7 +76,7 @@ export const PromotionSalesRegion: UqInMap = {
     type: 'map',
     entity: 'PromotionSalesRegion',
     mapper: {
-        promotion: 'ID@Promotion',
+        promotion: 'MarketingID@Promotion',
         arr1: {
             salesRegion: '^SalesRegionID@SalesRegion',
         }
@@ -88,14 +88,14 @@ export const PromotionLanguage: UqInMap = {
     type: 'map',
     entity: 'PromotionLanguage',
     mapper: {
-        promotion: 'PromotionID@Promotion',
+        promotion: 'MarketingID@Promotion',
         arr1: {
             language: '^LanguageID@Language',
             description: '^Description',
             url: '^Url',
         }
     },
-    pull: `select top ${promiseSize} ID, MarketingID as PromotionID, LanguageID, messageText as Description, Url
+    pull: `select top ${promiseSize} ID, MarketingID, LanguageID, messageText as Description, Url
            from ProdData.dbo.Export_MarketingMessageLanguage where ID > @iMaxId order by ID`,
 
 };
@@ -105,7 +105,7 @@ export const PromotionPackDiscount: UqInMap = {
     type: 'map',
     entity: 'PromotionPackDiscount',
     mapper: {
-        promotion: 'PromotionID@Promotion',
+        promotion: 'MarketingID@Promotion',
         product: 'ProductID@ProductX',
         arr1: {
             pack: '^PackageID@ProductX_PackX',
@@ -113,6 +113,6 @@ export const PromotionPackDiscount: UqInMap = {
             MustHasStorage: '^WhenHasStorage',
         }
     },
-    pull: `select top ${promiseSize} a.ID, a.MarketingID as PromotionID, j.jkid as ProductID, a.PackagingID as PackageID, a.Discount, isnull(a.MustHasStorage, 0 ) as WhenHasStorage
+    pull: `select top ${promiseSize} a.ID, a.MarketingID, j.jkid as ProductID, a.PackagingID as PackageID, a.Discount, isnull(a.MustHasStorage, 0 ) as WhenHasStorage
           from ProdData.dbo.Export_ProductsMarketing a join zcl_mess.dbo.jkcat j on a.PackagingID = j.jkcat where a.ID > @iMaxId order by a.ID`,
 };

@@ -20,17 +20,17 @@ async function promotionFirstPullWrite(joint, data) {
         data["StartDate"] = data["StartDate"] && dateformat_1.default(data["StartDate"], "yyyy-mm-dd HH:MM:ss");
         data["EndDate"] = data["EndDate"] && dateformat_1.default(data["EndDate"], "yyyy-mm-dd HH:MM:ss");
         data["CreateTime"] = data["CreateTime"] && dateformat_1.default(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
-        await joint.uqIn(promotion_1.Promotion, _.pick(data, ["ID", "Name", "Type", "Status", "StartDate", "EndDate", "CreateTime"]));
+        await joint.uqIn(promotion_1.Promotion, _.pick(data, ["ID", "MarketingID", "Name", "Type", "Status", "StartDate", "EndDate", "CreateTime"]));
         let promises = [];
-        promises.push(joint.uqIn(promotion_1.PromotionSalesRegion, _.pick(data, ["ID", "SalesRegionID"])));
+        promises.push(joint.uqIn(promotion_1.PromotionSalesRegion, _.pick(data, ["MarketingID", "SalesRegionID"])));
         let promotionID = data["ID"];
         let promisesSql = [];
         let promotionLanguageSql = `
-            select ExcID as ID, MarketingID as PromotionID, LanguageID, messageText as Description, Url
+            select ExcID as ID, MarketingID, LanguageID, messageText as Description, Url
                     from dbs.dbo.MarketingMessageLanguages where MarketingID = @promotionID order by ExcID`;
         promisesSql.push(tools_1.execSql(promotionLanguageSql, [{ 'name': 'promotionID', 'value': promotionID }]));
         let readPromotionPacks = `
-            select ExcID as ID, MarketingID as PromotionID, jkid as ProductID, jkcat as PackageID, activeDiscount as Discount, isnull(isStock, 0 ) as WhenHasStorage
+            select ExcID as ID, MarketingID, jkid as ProductID, jkcat as PackageID, activeDiscount as Discount, isnull(isStock, 0 ) as WhenHasStorage
                     from zcl_mess.dbo.ProductsMarketing where marketingID = @promotionID order by ExcID`;
         promisesSql.push(tools_1.execSql(readPromotionPacks, [{ 'name': 'promotionID', 'value': promotionID }]));
         let sqlResult = await Promise.all(promisesSql);
