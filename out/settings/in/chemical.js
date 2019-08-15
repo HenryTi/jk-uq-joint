@@ -12,9 +12,9 @@ exports.Chemical = {
         CAS: "CAS",
         description: "Description",
         descriptionCN: "DescriptionC",
-        molecularFomula: "molFomula",
-        molecularWeight: "molWeight",
-        mdlNumber: "mdlNumber",
+        molecularFomula: "MolFomula",
+        molecularWeight: "MolWeight",
+        mdlNumber: "MdlNumber",
     }
 };
 //# sourceMappingURL=chemical.js.map
