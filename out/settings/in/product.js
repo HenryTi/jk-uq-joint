@@ -8,6 +8,7 @@ const productPullWrite_1 = require("../../first/converter/productPullWrite");
 const tools_1 = require("../../mssql/tools");
 const config_1 = __importDefault(require("config"));
 const dateformat_1 = __importDefault(require("dateformat"));
+const logger_1 = require("../../tools/logger");
 const promiseSize = config_1.default.get("promiseSize");
 exports.Brand = {
     uq: uqs_1.uqs.jkProduct,
@@ -23,7 +24,7 @@ exports.Brand = {
         from ProdData.dbo.Export_Brand where ID > @iMaxId order by ID`,
     firstPullWrite: async (joint, data) => {
         try {
-            joint.uqIn(exports.Brand, data);
+            await joint.uqIn(exports.Brand, data);
             let brandId = data['BrandID'];
             let promisesSql = [];
             let brandSalesRegionSql = `
@@ -40,7 +41,7 @@ exports.Brand = {
                 sqlResult = await Promise.all(promisesSql);
             }
             catch (error) {
-                console.error(error);
+                logger_1.logger.error(error);
                 throw error;
             }
             let promises = [];
@@ -50,7 +51,7 @@ exports.Brand = {
             return true;
         }
         catch (error) {
-            console.error(error);
+            logger_1.logger.error(error);
             throw error;
         }
     }
@@ -181,7 +182,7 @@ exports.PriceX = {
             return true;
         }
         catch (error) {
-            console.error(error);
+            logger_1.logger.error(error);
             throw error;
         }
     }

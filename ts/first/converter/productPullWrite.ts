@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 import { ProductX, ProductChemical, ProductPackX, PriceX, ProductSalesRegion, ProductLegallyProhibited } from "../../settings/in/product";
 import { execSql } from "../../mssql/tools";
 import { ProductProductCategory } from "../../settings/in/productCategory";
+import { logger } from "../../tools/logger";
 
 export async function productPullWrite(joint: Joint, data: any) {
 
@@ -12,7 +13,7 @@ export async function productPullWrite(joint: Joint, data: any) {
         await joint.uqIn(ProductChemical, _.pick(data, ["ProductID", "ChemicalID", "Purity", "CAS", "MolecularFomula", "MolecularWeight"]));
         return true;
     } catch (error) {
-        console.error(error);
+        logger.error(error);
         throw error;
     }
 }
@@ -59,7 +60,7 @@ export async function productFirstPullWrite(joint: Joint, data: any) {
         await Promise.all(promises);
         return true;
     } catch (error) {
-        console.error(error);
+        logger.error(error);
         throw error;
     }
 }
@@ -79,7 +80,7 @@ export async function packFirstPullWrite(joint: Joint, data: any) {
         await pushRecordset(joint, priceResult, PriceX);
         return true;
     } catch (error) {
-        console.error(error);
+        logger.error(error);
         throw error;
     }
 }

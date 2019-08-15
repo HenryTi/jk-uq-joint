@@ -15,6 +15,7 @@ const _ = __importStar(require("lodash"));
 const tools_1 = require("../../mssql/tools");
 const promotion_1 = require("../../settings/in/promotion");
 const productPullWrite_1 = require("./productPullWrite");
+const logger_1 = require("../../tools/logger");
 async function promotionFirstPullWrite(joint, data) {
     try {
         data["StartDate"] = data["StartDate"] && dateformat_1.default(data["StartDate"], "yyyy-mm-dd HH:MM:ss");
@@ -40,7 +41,7 @@ async function promotionFirstPullWrite(joint, data) {
         return true;
     }
     catch (error) {
-        console.error(error);
+        logger_1.logger.error(error);
         throw error;
     }
 }

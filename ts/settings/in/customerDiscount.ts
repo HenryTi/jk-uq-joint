@@ -1,9 +1,10 @@
-import { UqInTuid, UqInMap, UqInTuidArr, Joint, DataPullResult } from "../../uq-joint";
+import { UqInMap, Joint, DataPullResult } from "../../uq-joint";
 import dateFormat from 'dateformat';
 import { uqs } from "../uqs";
 import { execSql } from "../../mssql/tools";
-import { uqPullRead, uqOutRead } from "../../first/converter/uqOutRead";
+import { uqOutRead } from "../../first/converter/uqOutRead";
 import config from 'config';
+import { logger } from "../../tools/logger";
 
 const promiseSize = config.get<number>("promiseSize");
 
@@ -30,13 +31,13 @@ export const CustomerDiscount: UqInMap = {
             if (ret !== undefined) {
                 let { data } = ret;
                 data.map(e => {
-                    e["StartDate"] = e["StartDate"].getTime();
-                    e["EndDate"] = e["EndDate"].getTime();
+                    e["StartDate"] = e["StartDate"] && dateFormat(e["StartDate"], 'yyyy-mm-dd HH:MM:ss');
+                    e["EndDate"] = e["EndDate"] && dateFormat(e["EndDate"], 'yyyy-mm-dd HH:MM:ss');
                 })
                 return ret;
             }
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             throw error;
         }
     }
@@ -65,13 +66,13 @@ export const OrganizationDiscount: UqInMap = {
             if (ret !== undefined) {
                 let { data } = ret;
                 data.map(e => {
-                    e["StartDate"] = e["StartDate"].getTime();
-                    e["EndDate"] = e["EndDate"].getTime();
+                    e["StartDate"] = e["StartDate"] && dateFormat(e["StartDate"], 'yyyy-mm-dd HH:MM:ss');
+                    e["EndDate"] = e["EndDate"] && dateFormat(e["EndDate"], 'yyyy-mm-dd HH:MM:ss');
                 })
                 return ret;
             }
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             throw error;
         }
     }
@@ -96,7 +97,7 @@ export const Agreement: UqInMap = {
         try {
             result = await execSql(sql, [{ 'name': 'agreementID', 'value': data['AgreementID'] }]);
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             throw error;
         }
         if (result !== undefined) {
@@ -120,7 +121,7 @@ export const Agreement: UqInMap = {
                         });
                     }
                 } catch (error) {
-                    console.error(error);
+                    logger.error(error);
                     throw error;
                 }
             }

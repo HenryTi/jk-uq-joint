@@ -13,6 +13,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const _ = __importStar(require("lodash"));
 const uqs_1 = require("../uqs");
 const config_1 = __importDefault(require("config"));
+const logger_1 = require("../../tools/logger");
 const promiseSize = config_1.default.get("promiseSize");
 exports.WebUserTonva = {
     uq: uqs_1.uqs.jkWebUser,
@@ -56,7 +57,7 @@ exports.WebUserTonva = {
             return true;
         }
         catch (error) {
-            console.error(error);
+            logger_1.logger.error(error);
             throw error;
         }
     }

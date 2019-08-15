@@ -2,6 +2,7 @@ import { UqInTuid, UqInMap, Joint, DataPullResult } from "../../uq-joint";
 import * as _ from 'lodash';
 import { uqs } from "../uqs";
 import config from 'config';
+import { logger } from "../../tools/logger";
 
 const promiseSize = config.get<number>("promiseSize");
 
@@ -48,7 +49,7 @@ export const WebUserTonva: UqInTuid = {
             await Promise.all(promises);
             return true;
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             throw error;
         }
     }

@@ -7,6 +7,7 @@ const dateformat_1 = __importDefault(require("dateformat"));
 const uqs_1 = require("../uqs");
 const customerPullWrite_1 = require("../../first/converter/customerPullWrite");
 const config_1 = __importDefault(require("config"));
+const logger_1 = require("../../tools/logger");
 const promiseSize = config_1.default.get("promiseSize");
 exports.Customer = {
     uq: uqs_1.uqs.jkCustomer,
@@ -53,7 +54,7 @@ exports.Organization = {
             return true;
         }
         catch (error) {
-            console.error(error);
+            logger_1.logger.error(error);
             throw error;
         }
     }

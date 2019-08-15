@@ -8,6 +8,7 @@ const uqs_1 = require("../uqs");
 const tools_1 = require("../../mssql/tools");
 const uqOutRead_1 = require("../../first/converter/uqOutRead");
 const config_1 = __importDefault(require("config"));
+const logger_1 = require("../../tools/logger");
 const promiseSize = config_1.default.get("promiseSize");
 exports.CustomerDiscount = {
     uq: uqs_1.uqs.jkCustomerDiscount,
@@ -32,14 +33,14 @@ exports.CustomerDiscount = {
             if (ret !== undefined) {
                 let { data } = ret;
                 data.map(e => {
-                    e["StartDate"] = e["StartDate"].getTime();
-                    e["EndDate"] = e["EndDate"].getTime();
+                    e["StartDate"] = e["StartDate"] && dateformat_1.default(e["StartDate"], 'yyyy-mm-dd HH:MM:ss');
+                    e["EndDate"] = e["EndDate"] && dateformat_1.default(e["EndDate"], 'yyyy-mm-dd HH:MM:ss');
                 });
                 return ret;
             }
         }
         catch (error) {
-            console.error(error);
+            logger_1.logger.error(error);
             throw error;
         }
     }
@@ -67,14 +68,14 @@ exports.OrganizationDiscount = {
             if (ret !== undefined) {
                 let { data } = ret;
                 data.map(e => {
-                    e["StartDate"] = e["StartDate"].getTime();
-                    e["EndDate"] = e["EndDate"].getTime();
+                    e["StartDate"] = e["StartDate"] && dateformat_1.default(e["StartDate"], 'yyyy-mm-dd HH:MM:ss');
+                    e["EndDate"] = e["EndDate"] && dateformat_1.default(e["EndDate"], 'yyyy-mm-dd HH:MM:ss');
                 });
                 return ret;
             }
         }
         catch (error) {
-            console.error(error);
+            logger_1.logger.error(error);
             throw error;
         }
     }
@@ -99,7 +100,7 @@ exports.Agreement = {
             result = await tools_1.execSql(sql, [{ 'name': 'agreementID', 'value': data['AgreementID'] }]);
         }
         catch (error) {
-            console.error(error);
+            logger_1.logger.error(error);
             throw error;
         }
         if (result !== undefined) {
@@ -124,7 +125,7 @@ exports.Agreement = {
                     }
                 }
                 catch (error) {
-                    console.error(error);
+                    logger_1.logger.error(error);
                     throw error;
                 }
             }

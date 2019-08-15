@@ -2,6 +2,7 @@ import { Joint } from "../../uq-joint";
 import _ from 'lodash';
 import dateFormat from 'dateformat';
 import { Customer, OrganizationCustomer, CustomerContact, Contact, CustomerContacts, InvoiceInfo, CustomerSetting, CustomerHandler } from "../../settings/in/customer";
+import { logger } from "../../tools/logger";
 
 export async function customerPullWrite(joint: Joint, data: any): Promise<boolean> {
     try {
@@ -38,7 +39,7 @@ export async function customerPullWrite(joint: Joint, data: any): Promise<boolea
         await Promise.all(promises);
         return true;
     } catch (error) {
-        console.error(error);
+        logger.error(error);
         throw error;
     }
 }
@@ -49,7 +50,7 @@ export async function contactPullWrite(joint: Joint, contactData: any): Promise<
         await joint.uqIn(CustomerContacts, _.pick(contactData, ["ID", "CustomerID"]));
         return true;
     } catch (error) {
-        console.error(error);
+        logger.error(error);
         throw error;
     }
 }

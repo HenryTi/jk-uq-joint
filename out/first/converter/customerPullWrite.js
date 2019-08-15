@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const lodash_1 = __importDefault(require("lodash"));
 const dateformat_1 = __importDefault(require("dateformat"));
 const customer_1 = require("../../settings/in/customer");
+const logger_1 = require("../../tools/logger");
 async function customerPullWrite(joint, data) {
     try {
         data["CreateTime"] = data["CreateTime"] && dateformat_1.default(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
@@ -41,7 +42,7 @@ async function customerPullWrite(joint, data) {
         return true;
     }
     catch (error) {
-        console.error(error);
+        logger_1.logger.error(error);
         throw error;
     }
 }
@@ -53,7 +54,7 @@ async function contactPullWrite(joint, contactData) {
         return true;
     }
     catch (error) {
-        console.error(error);
+        logger_1.logger.error(error);
         throw error;
     }
 }

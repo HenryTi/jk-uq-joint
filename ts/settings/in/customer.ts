@@ -4,6 +4,7 @@ import { UqInTuid, UqInMap, UqInTuidArr, Joint } from "../../uq-joint";
 import { uqs } from "../uqs";
 import { customerPullWrite, contactPullWrite } from '../../first/converter/customerPullWrite';
 import config from 'config';
+import { logger } from '../../tools/logger';
 
 const promiseSize = config.get<number>("promiseSize");
 
@@ -52,7 +53,7 @@ export const Organization: UqInTuid = {
             await joint.uqIn(Organization, data);
             return true;
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             throw error;
         }
     }

@@ -4,6 +4,7 @@ import { productPullWrite, productFirstPullWrite, packFirstPullWrite, pushRecord
 import { execSql } from "../../mssql/tools";
 import config from 'config';
 import dateFormat from 'dateformat';
+import { logger } from "../../tools/logger";
 
 const promiseSize = config.get<number>("promiseSize");
 
@@ -21,7 +22,7 @@ export const Brand: UqInTuid = {
         from ProdData.dbo.Export_Brand where ID > @iMaxId order by ID`,
     firstPullWrite: async (joint: Joint, data: any): Promise<boolean> => {
         try {
-            joint.uqIn(Brand, data);
+            await joint.uqIn(Brand, data);
             let brandId = data['BrandID'];
             let promisesSql: PromiseLike<any>[] = [];
             let brandSalesRegionSql = `
@@ -39,7 +40,7 @@ export const Brand: UqInTuid = {
             try {
                 sqlResult = await Promise.all(promisesSql);
             } catch (error) {
-                console.error(error);
+                logger.error(error);
                 throw error;
             }
 
@@ -49,7 +50,7 @@ export const Brand: UqInTuid = {
             await Promise.all(promises);
             return true;
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             throw error;
         }
     }
@@ -188,7 +189,7 @@ export const PriceX: UqInMap = {
             await joint.uqIn(PriceX, data);
             return true;
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             throw error;
         }
     }

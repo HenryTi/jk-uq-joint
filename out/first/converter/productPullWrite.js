@@ -10,6 +10,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const _ = __importStar(require("lodash"));
 const product_1 = require("../../settings/in/product");
 const tools_1 = require("../../mssql/tools");
+const logger_1 = require("../../tools/logger");
 async function productPullWrite(joint, data) {
     try {
         // await joint.uqIn(Product, _.pick(data, ["ID", "BrandID", "ProductNumber", "Description", "DescriptionC"]));
@@ -18,7 +19,7 @@ async function productPullWrite(joint, data) {
         return true;
     }
     catch (error) {
-        console.error(error);
+        logger_1.logger.error(error);
         throw error;
     }
 }
@@ -60,7 +61,7 @@ async function productFirstPullWrite(joint, data) {
         return true;
     }
     catch (error) {
-        console.error(error);
+        logger_1.logger.error(error);
         throw error;
     }
 }
@@ -79,7 +80,7 @@ async function packFirstPullWrite(joint, data) {
         return true;
     }
     catch (error) {
-        console.error(error);
+        logger_1.logger.error(error);
         throw error;
     }
 }

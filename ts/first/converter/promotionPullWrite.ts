@@ -4,6 +4,7 @@ import * as _ from 'lodash';
 import { execSql } from "../../mssql/tools";
 import { Promotion, PromotionSalesRegion, PromotionLanguage, PromotionPackDiscount } from "../../settings/in/promotion";
 import { pushRecordset } from "./productPullWrite";
+import { logger } from "../../tools/logger";
 
 export async function promotionFirstPullWrite(joint: Joint, data: any) {
 
@@ -33,7 +34,7 @@ export async function promotionFirstPullWrite(joint: Joint, data: any) {
         await Promise.all(promises);
         return true;
     } catch (error) {
-        console.error(error);
+        logger.error(error);
         throw error;
     }
 }
