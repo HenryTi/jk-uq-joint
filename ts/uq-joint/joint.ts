@@ -12,6 +12,7 @@ import { OpenApi } from "./tool/openApi";
 import { host } from "./tool/host";
 import config from 'config';
 import { getLogger } from 'log4js';
+import { decrypt } from "../tools/hashPassword";
 
 const logger = getLogger('joint');
 const uqInEntities = config.get<string[]>("afterFirstEntities");
@@ -392,7 +393,12 @@ export class Joint {
                 let newQueue, json;
                 if (busFrom === 'center') {
                     let message = await this.userOut(face, queue);
-                    if (message === undefined && message['$queue'] === undefined) break;
+                    if (message === null) {
+                        newQueue = queue + 1;
+                        await execProc('write_queue_out_p', [moniker, newQueue]);
+                        break;
+                    }
+                    if (message === undefined || message['$queue'] === undefined) break;
                     newQueue = message['$queue'];
                     json = message;
                 } else {
@@ -447,7 +453,17 @@ export class Joint {
 
     protected async userOut(face: string, queue: number) {
         let ret = await centerApi.queueOut(queue, 1);
-        return ret !== undefined && ret.length === 1 && ret[0];
+        if (ret !== undefined && ret.length === 1) {
+            let user = ret[0];
+            if (user === null) return user;
+            let pwd = user.pwd;
+            if (!pwd)
+                user.pwd = '123456';
+            else
+                user.pwd = decrypt(pwd);
+            if (!user.pwd) user.pwd = '123456';
+            return user;
+        }
     }
 
     public async userIn(uqIn: UqInTuid, data: any): Promise<number> {

@@ -306,5 +306,7 @@ class UqUnitx extends Uq {
     async writeBus(face, source, newQueue, body) {
         await this.openApi.writeBus(face, source, newQueue, body);
     }
+    async loadEntities() {
+    }
 }
 //# sourceMappingURL=uq.js.map

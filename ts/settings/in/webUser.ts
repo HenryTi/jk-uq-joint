@@ -3,6 +3,8 @@ import * as _ from 'lodash';
 import { uqs } from "../uqs";
 import config from 'config';
 import { logger } from "../../tools/logger";
+import { Contact } from "./customer";
+import { Address } from "./Address";
 
 const promiseSize = config.get<number>("promiseSize");
 
@@ -108,9 +110,27 @@ export const WebUserContacts: UqInMap = {
     type: 'map',
     entity: 'WebUserContacts',
     mapper: {
-        webUser: 'UserID',
+        webUser: 'WebUserID@WebUser',
         arr1: {
             contact: '^ID@Contact',
+        }
+    },
+    pull: `select top ${promiseSize} ID, AddressID, WebUserID, Name, OrganizationName, Mobile, Telephone, CountryID
+           , ProvinceID, CityID, [Address] as Addr, ZipCode, Email, IsDefault
+           from alidb.ProdData.dbo.Export_WebUserAddress where ID > @iMaxId order by ID`,
+    pullWrite: async (joint: Joint, data: any) => {
+        try {
+            let addressId = data['CountyID'] || data['CityID'] || data['ProvinceID'] || data["CountryID"];
+            if (addressId) {
+                await joint.uqIn(Address, { 'ID': addressId, 'CountryID': data['CountryID'], 'ProvinceID': data['ProvinceID'], 'CityID': data['CityID'] });
+            }
+            data['AddressID'] = addressId;
+            await joint.uqIn(Contact, data);
+            await joint.uqIn(WebUserContacts, { 'WebUserID': data['WebUserID'], 'ID': data['ID'] });
+            return true;
+        } catch (error) {
+            logger.error(error);
+            throw error;
         }
     }
 };

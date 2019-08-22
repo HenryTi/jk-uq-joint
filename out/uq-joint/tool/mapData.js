@@ -194,8 +194,15 @@ class MapFromUq extends MapData {
         if (typeof uqIn !== 'object')
             throw `tuid ${tuid} is not defined in settings.in`;
         let { entity, uq } = uqIn;
-        let sql = `select no from \`${database_1.databaseName}\`.\`map_${entity}\` where id='${value}'`;
-        let ret = await tool_1.execSql(sql);
+        let sql = `select no from \`${database_1.databaseName}\`.\`map_${entity.toLowerCase()}\` where id='${value}'`;
+        let ret;
+        try {
+            ret = await tool_1.execSql(sql);
+        }
+        catch (error) {
+            await createMapTable_1.createMapTable(entity);
+            ret = await tool_1.execSql(sql);
+        }
         if (ret.length === 0)
             return 'n/a';
         return ret[0].no;

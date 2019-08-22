@@ -2,11 +2,15 @@ import { UqBus } from "../../uq-joint";
 import { faceOrder } from "./orderUsqBus";
 import { faceProductInventory } from "./productInventoryBus";
 import { facePoint } from "./pointBus";
-import { faceUser } from "./webUserBus";
+import { faceUser, faceWebUser, faceWebUserContact, faceWebUserContacts, faceWebUserInvoice } from "./webUserBus";
 
 export const bus: UqBus[] = [
     // faceOrder,
     faceUser,
+    faceWebUser,
+    faceWebUserContact,
+    faceWebUserContacts,
+    faceWebUserInvoice,
     /*
     facePoint,
     faceProductInventory,

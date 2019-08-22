@@ -205,8 +205,14 @@ export class MapFromUq extends MapData {
             throw `tuid ${tuid} is not defined in settings.in`;
 
         let { entity, uq } = uqIn as UqIn;
-        let sql = `select no from \`${databaseName}\`.\`map_${entity}\` where id='${value}'`;
-        let ret: any[] = await execSql(sql);
+        let sql = `select no from \`${databaseName}\`.\`map_${entity.toLowerCase()}\` where id='${value}'`;
+        let ret: any[];
+        try {
+            ret = await execSql(sql);
+        } catch (error) {
+            await createMapTable(entity);
+            ret = await execSql(sql);
+        }
         if (ret.length === 0) return 'n/a';
         return ret[0].no;
     }

@@ -254,7 +254,7 @@ export class Uq {
         }
     }
 
-    private async loadEntities() {
+    protected async loadEntities() {
         let entities = await this.openApi.loadEntities();
         this.buildEntities(entities);
     }
@@ -321,6 +321,9 @@ class UqUnitx extends Uq {
 
     async writeBus(face: string, source: string, newQueue: string | number, body: any) {
         await this.openApi.writeBus(face, source, newQueue, body);
+    }
+
+    protected async loadEntities() {
     }
 }
 

@@ -10,6 +10,7 @@ function tryConfig<T>(name: string): T {
 
 const centerHost = tryConfig<string>('centerhost');
 const uqPath = tryConfig<string>('uqPath');
+const uqUnitxPath = tryConfig<string>('uqUnitxPath');
 const centerDebugHost = 'localhost:3000'; //'192.168.86.64';
 
 //const resHost = process.env['REACT_APP_RES_HOST'] || centerHost;
@@ -150,8 +151,7 @@ class Host {
         return `http://${value}/`;
     }
     getUrlOrTest(db: string, url: string, urlTest: string): string {
-        let path: string;
-        path = uqPath + db + '/';
+        let path: string = db === '$unitx'? uqUnitxPath : uqPath + db + '/';
         if (isDevelopment === true) {
             if (urlTest && urlTest !== '-') url = urlTest;
         }

@@ -16,6 +16,7 @@ const openApi_1 = require("./tool/openApi");
 const host_1 = require("./tool/host");
 const config_1 = __importDefault(require("config"));
 const log4js_1 = require("log4js");
+const hashPassword_1 = require("../tools/hashPassword");
 const logger = log4js_1.getLogger('joint');
 const uqInEntities = config_1.default.get("afterFirstEntities");
 const interval = 3 * 1000;
@@ -408,7 +409,12 @@ class Joint {
                 let newQueue, json;
                 if (busFrom === 'center') {
                     let message = await this.userOut(face, queue);
-                    if (message === undefined && message['$queue'] === undefined)
+                    if (message === null) {
+                        newQueue = queue + 1;
+                        await tool_1.execProc('write_queue_out_p', [moniker, newQueue]);
+                        break;
+                    }
+                    if (message === undefined || message['$queue'] === undefined)
                         break;
                     newQueue = message['$queue'];
                     json = message;
@@ -468,7 +474,19 @@ class Joint {
     }
     async userOut(face, queue) {
         let ret = await centerApi_1.centerApi.queueOut(queue, 1);
-        return ret !== undefined && ret.length === 1 && ret[0];
+        if (ret !== undefined && ret.length === 1) {
+            let user = ret[0];
+            if (user === null)
+                return user;
+            let pwd = user.pwd;
+            if (!pwd)
+                user.pwd = '123456';
+            else
+                user.pwd = hashPassword_1.decrypt(pwd);
+            if (!user.pwd)
+                user.pwd = '123456';
+            return user;
+        }
     }
     async userIn(uqIn, data) {
         let { key, mapper, uq: uqFullName, entity: tuid } = uqIn;

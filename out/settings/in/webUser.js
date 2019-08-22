@@ -14,6 +14,8 @@ const _ = __importStar(require("lodash"));
 const uqs_1 = require("../uqs");
 const config_1 = __importDefault(require("config"));
 const logger_1 = require("../../tools/logger");
+const customer_1 = require("./customer");
+const Address_1 = require("./Address");
 const promiseSize = config_1.default.get("promiseSize");
 exports.WebUserTonva = {
     uq: uqs_1.uqs.jkWebUser,
@@ -112,9 +114,28 @@ exports.WebUserContacts = {
     type: 'map',
     entity: 'WebUserContacts',
     mapper: {
-        webUser: 'UserID',
+        webUser: 'WebUserID@WebUser',
         arr1: {
             contact: '^ID@Contact',
+        }
+    },
+    pull: `select top ${promiseSize} ID, AddressID, WebUserID, Name, OrganizationName, Mobile, Telephone, CountryID
+           , ProvinceID, CityID, [Address] as Addr, ZipCode, Email, IsDefault
+           from alidb.ProdData.dbo.Export_WebUserAddress where ID > @iMaxId order by ID`,
+    pullWrite: async (joint, data) => {
+        try {
+            let addressId = data['CountyID'] || data['CityID'] || data['ProvinceID'] || data["CountryID"];
+            if (addressId) {
+                await joint.uqIn(Address_1.Address, { 'ID': addressId, 'CountryID': data['CountryID'], 'ProvinceID': data['ProvinceID'], 'CityID': data['CityID'] });
+            }
+            data['AddressID'] = addressId;
+            await joint.uqIn(customer_1.Contact, data);
+            await joint.uqIn(exports.WebUserContacts, { 'WebUserID': data['WebUserID'], 'ID': data['ID'] });
+            return true;
+        }
+        catch (error) {
+            logger_1.logger.error(error);
+            throw error;
         }
     }
 };
