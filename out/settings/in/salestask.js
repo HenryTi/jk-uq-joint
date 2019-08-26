@@ -39,8 +39,6 @@ exports.JkTask = {
         no: "WorkTaskID",
         description: 'LinkObjectID',
         customer: 'CustomerID@Customer',
-        type: 'typeid',
-        biz: 'bizid',
         employee: "EmployeeID@Employee",
         sourceNo: 'LinkObjectID',
         priorty: 'TimeLimit',
@@ -48,16 +46,15 @@ exports.JkTask = {
         createTime: 'CreateTime',
         completeTime: 'CompleteTime',
     },
-    pull: `select   top ${promiseSize} a.ID, a.WorkTaskID, a.WorkTaskSource, a.CustomerID, b.typeid, b.bizid, a.EmployeeID, 
+    pull: `select   top ${promiseSize} a.ID, a.WorkTaskID, a.WorkTaskSource, a.CustomerID, a.EmployeeID, 
                     a.LinkObjectID, isnull(a.TimeLimit,0) as TimeLimit, a.RequireCompletionTime, a.CreateTime, a.CompleteTime
             from    ProdData.dbo.Export_WorkTask as a
-                    inner join ProdData.dbo.TaskBiz as b on a.WorkTaskTypeID = b.jktypeid
             where a.ID > @iMaxId order by a.ID`,
     pullWrite: async (joint, data) => {
         try {
             data["RequireCompletionTime"] = data["RequireCompletionTime"] && dateformat_1.default(data["RequireCompletionTime"], "yyyy-mm-dd");
             data["CreateTime"] = data["CreateTime"] && dateformat_1.default(data["CreateTime"], "yyyy-mm-dd");
-            await joint.uqIn(exports.JkTask, _.pick(data, ["ID", "WorkTaskID", "WorkTaskSource", "CustomerID", "typeid", "bizid", "EmployeeID", 'LinkObjectID', 'TimeLimit', 'RequireCompletionTime', 'CreateTime']));
+            await joint.uqIn(exports.JkTask, _.pick(data, ["ID", "WorkTaskID", "WorkTaskSource", "CustomerID", "EmployeeID", 'LinkObjectID', 'TimeLimit', 'RequireCompletionTime', 'CreateTime']));
             return true;
         }
         catch (error) {
