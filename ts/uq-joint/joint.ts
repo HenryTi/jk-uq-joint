@@ -16,6 +16,7 @@ import { decrypt } from "../tools/hashPassword";
 
 const logger = getLogger('joint');
 const uqInEntities = config.get<string[]>("afterFirstEntities");
+const uqBusSettings = config.get<string[]>("uqBus");
 
 const interval = 3 * 1000;
 
@@ -58,9 +59,8 @@ export class Joint {
         try {
             console.log('tick ' + new Date().toLocaleString());
             //await this.scanPull();
-            // await this.scanIn();
+            await this.scanIn();
             // await this.scanOut();
-            // bus还没有弄好，暂时屏蔽
             await this.scanBus();
         }
         catch (err) {
@@ -126,7 +126,7 @@ export class Joint {
     */
 
     /**
-     *
+     * 从外部系统同步数据到Tonva
      */
     private async scanIn() {
 
@@ -369,14 +369,15 @@ export class Joint {
     }
 
     /**
-     *
+     * 通过bus做双向数据同步（bus out和bus in)
      */
     protected async scanBus() {
         let { name: joinName, bus } = this.settings;
         if (bus === undefined) return;
         let monikerPrefix = '$bus/';
 
-        for (let uqBus of bus) {
+        for (let uqBusName of uqBusSettings) {
+            let uqBus = bus[uqBusName];
             let { face, from: busFrom, mapper, push, pull, uqIdProps } = uqBus;
             // bus out(从bus中读取消息，发送到外部系统)
             let moniker = monikerPrefix + face;
