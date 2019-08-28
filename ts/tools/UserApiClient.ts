@@ -68,6 +68,26 @@ class UserApiClient extends Fetch {
         }
         return ret;
     }
+
+    async MapWebUserToCustomer(data: any): Promise<boolean> {
+        let ret;
+        try {
+            ret = await this.post("TonvaUser/MapToCustomerInner", data);
+        } catch (error) {
+            throw error;
+        }
+        return ret;
+    }
+
+    async SetContractor(data: any): Promise<boolean> {
+        let ret;
+        try {
+            ret = await this.post("TonvaUser/SetContractor", data);
+        } catch (error) {
+            throw error;
+        }
+        return ret;
+    }
 }
 
 export const userApiClient = new UserApiClient();

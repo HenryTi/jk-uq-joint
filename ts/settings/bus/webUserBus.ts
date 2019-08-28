@@ -232,3 +232,43 @@ export const faceWebUserContacts: UqBus = {
         }
     }
 };
+
+export const faceWebUserCustomer: UqBus = {
+    face: '百灵威系统工程部/WebUser/WebUserCustomer',
+    from: 'local',
+    mapper: {
+        WebUserId: 'id@webUser',
+        CustomerId: 'customer@Customer',
+    },
+    push: async (joint: Joint, uqIn: UqBus, queue: number, data: any): Promise<boolean> => {
+        try {
+            let success = await userApiClient.MapWebUserToCustomer(data);
+            return success;
+        } catch (error) {
+            console.error(error);
+            if (error.code === 400)
+                return true;
+            return false;
+        }
+    }
+};
+
+export const faceCustomerContractor: UqBus = {
+    face: '百灵威系统工程部/WebUser/CustomerContractor',
+    from: 'local',
+    mapper: {
+        CustomerId: 'customer@Customer',
+        ContractorId: 'contractor@Customer',
+    },
+    push: async (joint: Joint, uqIn: UqBus, queue: number, data: any): Promise<boolean> => {
+        try {
+            let success = await userApiClient.SetContractor(data);
+            return success;
+        } catch (error) {
+            console.error(error);
+            if (error.code === 400)
+                return true;
+            return false;
+        }
+    }
+};

@@ -9,6 +9,8 @@ const customer_1 = require("../../settings/in/customer");
 const logger_1 = require("../../tools/logger");
 async function customerPullWrite(joint, data) {
     try {
+        if (!data["Name"])
+            return true;
         data["CreateTime"] = data["CreateTime"] && dateformat_1.default(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
         await joint.uqIn(customer_1.Customer, lodash_1.default.pick(data, ["CustomerID", "Name", "FirstName", "LastName", "XYZ", "Gender", "BirthDate", 'CreateTime', 'IsValid']));
         let promises = [];

@@ -11,6 +11,8 @@ exports.bus = {
     "faceWebUserContact": webUserBus_1.faceWebUserContact,
     "faceWebUserContacts": webUserBus_1.faceWebUserContacts,
     "faceWebUserInvoice": webUserBus_1.faceWebUserInvoice,
+    "faceWebUserCustomer": webUserBus_1.faceWebUserCustomer,
+    "faceCustomerContractor": webUserBus_1.faceCustomerContractor,
     "facePoint": pointBus_1.facePoint,
     "faceProductInventory": productInventoryBus_1.faceProductInventory,
 };

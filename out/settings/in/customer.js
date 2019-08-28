@@ -151,4 +151,20 @@ exports.CustomerHandler = {
         }
     }
 };
+/*
+ * 这个比较特殊：该映射用于将内部的
+*/
+exports.CustomerContractor = {
+    uq: uqs_1.uqs.jkCustomer,
+    type: 'map',
+    entity: 'CustomerHandler',
+    mapper: {
+        customer: 'CustomerID@Customer',
+        arr1: {
+            contractor: '^ContractorID@Customer',
+        }
+    },
+    pull: `select top ${promiseSize} ID, CustomerID, ContractorID, CreateTime
+           from alidb.ProdData.dbo.Export_CustomerContractor where ID > @iMaxId order by ID`,
+};
 //# sourceMappingURL=customer.js.map

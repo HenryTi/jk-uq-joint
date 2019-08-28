@@ -70,6 +70,26 @@ class UserApiClient extends fetch_1.Fetch {
         }
         return ret;
     }
+    async MapWebUserToCustomer(data) {
+        let ret;
+        try {
+            ret = await this.post("TonvaUser/MapToCustomerInner", data);
+        }
+        catch (error) {
+            throw error;
+        }
+        return ret;
+    }
+    async SetContractor(data) {
+        let ret;
+        try {
+            ret = await this.post("TonvaUser/SetContractor", data);
+        }
+        catch (error) {
+            throw error;
+        }
+        return ret;
+    }
 }
 exports.userApiClient = new UserApiClient();
 //# sourceMappingURL=UserApiClient.js.map

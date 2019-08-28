@@ -236,4 +236,44 @@ exports.faceWebUserContacts = {
         }
     }
 };
+exports.faceWebUserCustomer = {
+    face: '百灵威系统工程部/WebUser/WebUserCustomer',
+    from: 'local',
+    mapper: {
+        WebUserId: 'id@webUser',
+        CustomerId: 'customer@Customer',
+    },
+    push: async (joint, uqIn, queue, data) => {
+        try {
+            let success = await UserApiClient_1.userApiClient.MapWebUserToCustomer(data);
+            return success;
+        }
+        catch (error) {
+            console.error(error);
+            if (error.code === 400)
+                return true;
+            return false;
+        }
+    }
+};
+exports.faceCustomerContractor = {
+    face: '百灵威系统工程部/WebUser/CustomerContractor',
+    from: 'local',
+    mapper: {
+        CustomerId: 'customer@Customer',
+        ContractorId: 'contractor@Customer',
+    },
+    push: async (joint, uqIn, queue, data) => {
+        try {
+            let success = await UserApiClient_1.userApiClient.SetContractor(data);
+            return success;
+        }
+        catch (error) {
+            console.error(error);
+            if (error.code === 400)
+                return true;
+            return false;
+        }
+    }
+};
 //# sourceMappingURL=webUserBus.js.map

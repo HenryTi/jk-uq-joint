@@ -6,6 +6,9 @@ import { logger } from "../../tools/logger";
 
 export async function customerPullWrite(joint: Joint, data: any): Promise<boolean> {
     try {
+        if (!data["Name"])
+            return true;
+
         data["CreateTime"] = data["CreateTime"] && dateFormat(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
         await joint.uqIn(Customer, _.pick(data, ["CustomerID", "Name", "FirstName", "LastName", "XYZ", "Gender", "BirthDate", 'CreateTime', 'IsValid']));
         let promises: PromiseLike<void>[] = [];
