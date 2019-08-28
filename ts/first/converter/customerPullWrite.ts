@@ -10,6 +10,7 @@ export async function customerPullWrite(joint: Joint, data: any): Promise<boolea
             return true;
 
         data["CreateTime"] = data["CreateTime"] && dateFormat(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
+        data["BirthDate"] = data["BirthDate"] && dateFormat(data["BirthDate"], "yyyy-mm-dd HH:MM:ss");
         await joint.uqIn(Customer, _.pick(data, ["CustomerID", "Name", "FirstName", "LastName", "XYZ", "Gender", "BirthDate", 'CreateTime', 'IsValid']));
         let promises: PromiseLike<void>[] = [];
         promises.push(joint.uqIn(OrganizationCustomer, _.pick(data, ["CustomerID", "OrganizationID"])));
