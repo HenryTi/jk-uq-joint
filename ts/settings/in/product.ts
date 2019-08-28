@@ -195,6 +195,35 @@ export const PriceX: UqInMap = {
     }
 };
 
+export const AgentPrice: UqInMap = {
+    uq: uqs.jkProduct,
+    type: 'map',
+    entity: 'AgentPrice',
+    mapper: {
+        product: "ProductId@ProductX",
+        pack: "PackageId@ProductX_PackX",
+        arr1: {
+            salesRegion: "^SalesRegion@SalesRegion",
+            expireDate: "^Expiredate",
+            discountinued: "^Discontinued",
+            agentPrice: "^AgencyPrice",
+        }
+    },
+    pull: `select   top ${promiseSize}  ID, ProductId, PackageId, SalesRegion,AgencyPrice, Expiredate, Discontinued
+            from    ProdData.dbo.Export_ProductAgencyPrice as a
+            where  ID > @iMaxId order by  ID`,
+    pullWrite: async (joint: Joint, data: any) => {
+        try {
+            data["Expiredate"] = data["Expiredate"] && dateFormat(data["Expiredate"], "yyyy-mm-dd HH:MM:ss");
+            await joint.uqIn(AgentPrice, data);
+            return true;
+        } catch (error) {
+            logger.error(error);
+            throw error;
+        }
+    }
+};
+
 export const ProductChemical: UqInMap = {
     uq: uqs.jkProduct,
     type: 'map',

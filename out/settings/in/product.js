@@ -187,6 +187,35 @@ exports.PriceX = {
         }
     }
 };
+exports.AgentPrice = {
+    uq: uqs_1.uqs.jkProduct,
+    type: 'map',
+    entity: 'AgentPrice',
+    mapper: {
+        product: "ProductId@ProductX",
+        pack: "PackageId@ProductX_PackX",
+        arr1: {
+            salesRegion: "^SalesRegion@SalesRegion",
+            expireDate: "^Expiredate",
+            discountinued: "^Discontinued",
+            agentPrice: "^AgencyPrice",
+        }
+    },
+    pull: `select   top ${promiseSize}  ID, ProductId, PackageId, SalesRegion,AgencyPrice, Expiredate, Discontinued
+            from    ProdData.dbo.Export_ProductAgencyPrice as a
+            where  ID > @iMaxId order by  ID`,
+    pullWrite: async (joint, data) => {
+        try {
+            data["Expiredate"] = data["Expiredate"] && dateformat_1.default(data["Expiredate"], "yyyy-mm-dd HH:MM:ss");
+            await joint.uqIn(exports.AgentPrice, data);
+            return true;
+        }
+        catch (error) {
+            logger_1.logger.error(error);
+            throw error;
+        }
+    }
+};
 exports.ProductChemical = {
     uq: uqs_1.uqs.jkProduct,
     type: 'map',
