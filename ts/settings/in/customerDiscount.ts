@@ -30,7 +30,7 @@ export const CustomerDiscount: UqInMap = {
             let ret = await uqOutRead(sql, queue);
             if (ret !== undefined) {
                 let { data } = ret;
-                data.map(e => {
+                data.forEach(e => {
                     e["StartDate"] = e["StartDate"] && dateFormat(e["StartDate"], 'yyyy-mm-dd HH:MM:ss');
                     e["EndDate"] = e["EndDate"] && dateFormat(e["EndDate"], 'yyyy-mm-dd HH:MM:ss');
                 })
@@ -65,7 +65,7 @@ export const OrganizationDiscount: UqInMap = {
             let ret = await uqOutRead(sql, queue);
             if (ret !== undefined) {
                 let { data } = ret;
-                data.map(e => {
+                data.forEach((e) => {
                     e["StartDate"] = e["StartDate"] && dateFormat(e["StartDate"], 'yyyy-mm-dd HH:MM:ss');
                     e["EndDate"] = e["EndDate"] && dateFormat(e["EndDate"], 'yyyy-mm-dd HH:MM:ss');
                 })

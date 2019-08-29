@@ -32,7 +32,7 @@ exports.CustomerDiscount = {
             let ret = await uqOutRead_1.uqOutRead(sql, queue);
             if (ret !== undefined) {
                 let { data } = ret;
-                data.map(e => {
+                data.forEach(e => {
                     e["StartDate"] = e["StartDate"] && dateformat_1.default(e["StartDate"], 'yyyy-mm-dd HH:MM:ss');
                     e["EndDate"] = e["EndDate"] && dateformat_1.default(e["EndDate"], 'yyyy-mm-dd HH:MM:ss');
                 });
@@ -67,7 +67,7 @@ exports.OrganizationDiscount = {
             let ret = await uqOutRead_1.uqOutRead(sql, queue);
             if (ret !== undefined) {
                 let { data } = ret;
-                data.map(e => {
+                data.forEach((e) => {
                     e["StartDate"] = e["StartDate"] && dateformat_1.default(e["StartDate"], 'yyyy-mm-dd HH:MM:ss');
                     e["EndDate"] = e["EndDate"] && dateformat_1.default(e["EndDate"], 'yyyy-mm-dd HH:MM:ss');
                 });

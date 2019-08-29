@@ -46,7 +46,7 @@ exports.WebUserTonva = {
         try {
             let userId = await joint.userIn(exports.WebUserTonva, _.pick(data, ['Type', 'WebUserID', 'UserName', 'Password', 'Nick', 'Icon', 'Mobile', 'Email', 'WechatOpenID']));
             if (userId < 0)
-                return;
+                return true;
             data.UserID = userId;
             let promises = [];
             promises.push(joint.uqIn(exports.WebUser, _.pick(data, ['UserID', 'WebUserID', 'FirstName', 'Salutation', 'OrganizationName', 'DepartmentName'])));

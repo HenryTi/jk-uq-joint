@@ -39,7 +39,7 @@ export const WebUserTonva: UqInTuid = {
                 _.pick(data,
                     ['Type', 'WebUserID', 'UserName', 'Password', 'Nick', 'Icon', 'Mobile', 'Email', 'WechatOpenID']));
             if (userId < 0)
-                return;
+                return true;
             data.UserID = userId;
             let promises: PromiseLike<any>[] = [];
             promises.push(joint.uqIn(WebUser, _.pick(data, ['UserID', 'WebUserID', 'FirstName', 'Salutation', 'OrganizationName', 'DepartmentName'])));
