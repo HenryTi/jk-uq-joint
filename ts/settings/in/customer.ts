@@ -127,6 +127,7 @@ export const InvoiceInfo: UqInTuid = {
         telephone: 'RegisteredTelephone',
         bank: 'BankName',
         accountNo: 'BankAccountNumber',
+        invoiceType: 'InvoiceType',
     },
 };
 
@@ -136,12 +137,10 @@ export const CustomerSetting: UqInMap = {
     entity: 'CustomerSetting',
     mapper: {
         customer: 'CustomerID@Customer',
-        arr1: {
-            shippingContact: '^ShippingContactID@Contact',
-            invoiceContact: '^InvoiceContactID@Contact',
-            invoiceType: '^InvoiceTypeID@InvoiceType',
-            invoiceInfo: '^InvoiceInfoID@InvoiceInfo',
-        }
+        shippingContact: 'ShippingContactID@Contact',
+        invoiceContact: 'InvoiceContactID@Contact',
+        invoiceType: 'InvoiceTypeID@InvoiceType',
+        invoiceInfo: 'InvoiceInfoID@InvoiceInfo',
     }
 };
 

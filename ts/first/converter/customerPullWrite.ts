@@ -35,9 +35,11 @@ export async function customerPullWrite(joint: Joint, data: any): Promise<boolea
         if (data['InvoiceTitle']) {
             // CustomerID作为发票的no
             promises.push(joint.uqIn(InvoiceInfo, _.pick(data, ['CustomerID', 'InvoiceTitle', 'TaxNo', 'RegisteredAddress', 'RegisteredTelephone', 'BankName', 'BankAccountNumber'])));
+            /*
             promises.push(joint.uqIn(CustomerSetting, {
                 'CustomerID': customerId, 'InvoiceInfoID': customerId
             }));
+            */
         }
 
         await Promise.all(promises);

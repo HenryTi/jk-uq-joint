@@ -37,9 +37,11 @@ async function customerPullWrite(joint, data) {
         if (data['InvoiceTitle']) {
             // CustomerID作为发票的no
             promises.push(joint.uqIn(customer_1.InvoiceInfo, lodash_1.default.pick(data, ['CustomerID', 'InvoiceTitle', 'TaxNo', 'RegisteredAddress', 'RegisteredTelephone', 'BankName', 'BankAccountNumber'])));
-            promises.push(joint.uqIn(customer_1.CustomerSetting, {
+            /*
+            promises.push(joint.uqIn(CustomerSetting, {
                 'CustomerID': customerId, 'InvoiceInfoID': customerId
             }));
+            */
         }
         await Promise.all(promises);
         return true;

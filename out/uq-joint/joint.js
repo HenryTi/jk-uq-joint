@@ -496,15 +496,17 @@ class Joint {
         if (uqFullName === undefined)
             throw 'tuid ' + tuid + ' not defined';
         let keyVal = data[key];
-        let mapToUq = new mapData_1.MapToUq(this);
+        let mapToUq = new mapData_1.MapUserToUq(this);
         try {
             let body = await mapToUq.map(data, mapper);
+            if (body.id <= 0) {
+                delete body.id;
+            }
             let ret = await centerApi_1.centerApi.queueIn(body);
             if (ret === undefined || typeof ret !== 'number') {
-                ret = -5;
                 console.error(body);
                 console.error(ret);
-                console.error('user in 返回undefinned.');
+                ret = -5;
             }
             if (ret > 0)
                 await map_1.map(tuid, ret, keyVal);

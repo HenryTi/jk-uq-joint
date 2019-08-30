@@ -24,7 +24,7 @@ exports.WebUserTonva = {
     key: 'WebUserID',
     mapper: {
         $type: 'Type',
-        id: false,
+        id: 'WebUserID@WebUser',
         name: 'UserName',
         pwd: 'Password',
         nick: "IGNORE",
@@ -51,9 +51,16 @@ exports.WebUserTonva = {
             let promises = [];
             promises.push(joint.uqIn(exports.WebUser, _.pick(data, ['UserID', 'WebUserID', 'FirstName', 'Salutation', 'OrganizationName', 'DepartmentName'])));
             promises.push(joint.uqIn(exports.WebUserContact, _.pick(data, ['UserID', 'Mobile', 'Email', 'OrganizationName', 'DepartmentName',
-                'Telephone', 'Fax', 'ZipCode', 'WechatOpenID'])));
+                'Telephone', 'Fax', 'ZipCode', 'WechatOpenID', 'Address'])));
             if (data['CustomerID'])
                 promises.push(joint.uqIn(exports.WebUserCustomer, _.pick(data, ['UserID', 'CustomerID'])));
+            if (data['InvoiceTitle']) {
+                promises.push(joint.uqIn(customer_1.InvoiceInfo, {
+                    "CustomerID": data["WebUserID"], "InvoiceTitle": data["InvoiceTitle"],
+                    "RegisteredAddress": data['TaxNo'], "BankName": data['BankAccountName'], 'InvoiceType': data['InvoiceType']
+                }));
+                // promises.push(joint.uqIn(WebUserSetting, { 'UserID': userId, 'InvoiceInfoID': data['WebUserID'] }));
+            }
             // promises.push(joint.uqIn(WebUserSetting, _.pick(data, ['WebUserID', 'InvoiceTypeID'])));
             await Promise.all(promises);
             return true;
@@ -85,17 +92,16 @@ exports.WebUserContact = {
     entity: 'WebUserContact',
     mapper: {
         webUser: 'UserID',
-        arr1: {
-            mobile: '^Mobile',
-            email: '^Email',
-            organizationName: '^OrganizationName',
-            departmentName: '^DepartmentName',
-            telephone: '^Telephone',
-            fax: '^Fax',
-            zipCode: '^ZipCode',
-            address: '',
-            wechatId: 'Wechat',
-        }
+        mobile: 'Mobile',
+        email: 'Email',
+        organizationName: 'OrganizationName',
+        departmentName: 'DepartmentName',
+        telephone: 'Telephone',
+        fax: 'Fax',
+        zipCode: 'ZipCode',
+        address: '',
+        addressString: 'Address',
+        wechatId: 'Wechat',
     }
 };
 exports.WebUserCustomer = {
@@ -104,9 +110,7 @@ exports.WebUserCustomer = {
     entity: 'WebUserCustomer',
     mapper: {
         webUser: 'UserID',
-        arr1: {
-            customer: '^CustomerID@Customer',
-        }
+        customer: 'CustomerID@Customer',
     }
 };
 exports.WebUserContacts = {
@@ -145,12 +149,10 @@ exports.WebUserSetting = {
     entity: 'WebUserSetting',
     mapper: {
         customer: 'UserID',
-        arr1: {
-            shippingContact: '^ShippingContactID@Contact',
-            invoiceContact: '^InvoiceContactID@Contact',
-            invoiceType: '^InvoiceTypeID@InvoiceType',
-            invoiceInfo: '^InvoiceInfoID@InvoiceInfo',
-        }
+        shippingContact: 'ShippingContactID@Contact',
+        invoiceContact: 'InvoiceContactID@Contact',
+        invoiceType: 'InvoiceTypeID@InvoiceType',
+        invoiceInfo: 'InvoiceInfoID@InvoiceInfo',
     }
 };
 //# sourceMappingURL=webUser.js.map

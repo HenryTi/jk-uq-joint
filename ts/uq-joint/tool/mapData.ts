@@ -169,7 +169,9 @@ export class MapToUq extends MapData {
         if (ret.length === 0) {
             let vId = await this.getTuidVid(uq, entity);
             if (vId !== undefined) {
-                await map(entity, vId, value);
+                if (typeof vId === 'number' && vId > 0) {
+                    await map(entity, vId, value);
+                }
                 return vId;
             } else {
                 throw 'entity: ' + entity + ' getTuidVid result: undefined.';
@@ -178,7 +180,7 @@ export class MapToUq extends MapData {
         return ret[0]['id'];
     }
 
-    private async getTuidVid(uq: string, entity: string) {
+    protected async getTuidVid(uq: string, entity: string) {
         try {
             let openApi = await this.joint.getOpenApi(uq);
             let vId = await openApi.getTuidVId(entity);
@@ -190,6 +192,15 @@ export class MapToUq extends MapData {
             else
                 throw error;
         }
+    }
+}
+
+/**
+ * 根据外部系统的no从映射表中获取tonva中的id(映射表中不存在的话，调用getTuidVid生成一个，并写入映射表)
+ */
+export class MapUserToUq extends MapToUq {
+    protected async getTuidVid(uq: string, entity: string) {
+        return -1;
     }
 }
 

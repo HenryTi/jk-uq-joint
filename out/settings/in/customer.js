@@ -123,6 +123,7 @@ exports.InvoiceInfo = {
         telephone: 'RegisteredTelephone',
         bank: 'BankName',
         accountNo: 'BankAccountNumber',
+        invoiceType: 'InvoiceType',
     },
 };
 exports.CustomerSetting = {
@@ -131,12 +132,10 @@ exports.CustomerSetting = {
     entity: 'CustomerSetting',
     mapper: {
         customer: 'CustomerID@Customer',
-        arr1: {
-            shippingContact: '^ShippingContactID@Contact',
-            invoiceContact: '^InvoiceContactID@Contact',
-            invoiceType: '^InvoiceTypeID@InvoiceType',
-            invoiceInfo: '^InvoiceInfoID@InvoiceInfo',
-        }
+        shippingContact: 'ShippingContactID@Contact',
+        invoiceContact: 'InvoiceContactID@Contact',
+        invoiceType: 'InvoiceTypeID@InvoiceType',
+        invoiceInfo: 'InvoiceInfoID@InvoiceInfo',
     }
 };
 exports.CustomerHandler = {

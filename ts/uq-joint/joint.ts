@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { Settings, UqIn, UqOut, DataPush, UqInTuid, UqInMap, UqInTuidArr, DataPullResult } from "./defines";
 import { tableFromProc, execProc, execSql } from "./db/mysql/tool";
-import { MapFromUq as MapFromUq, MapToUq as MapToUq } from "./tool/mapData";
+import { MapFromUq as MapFromUq, MapToUq as MapToUq, MapUserToUq } from "./tool/mapData";
 import { map } from "./tool/map"; import { createRouter } from './router';
 import { databaseName } from "./db/mysql/database";
 import { createMapTable } from "./tool/createMapTable";
@@ -472,15 +472,17 @@ export class Joint {
         if (key === undefined) throw 'key is not defined';
         if (uqFullName === undefined) throw 'tuid ' + tuid + ' not defined';
         let keyVal = data[key];
-        let mapToUq = new MapToUq(this);
+        let mapToUq = new MapUserToUq(this);
         try {
             let body = await mapToUq.map(data, mapper);
+            if (body.id <= 0) {
+                delete body.id;
+            }
             let ret = await centerApi.queueIn(body);
             if (ret === undefined || typeof ret !== 'number') {
-                ret = -5;
                 console.error(body);
                 console.error(ret);
-                console.error('user in 返回undefinned.')
+                ret = -5;
             }
             if (ret > 0)
                 await map(tuid, ret, keyVal);

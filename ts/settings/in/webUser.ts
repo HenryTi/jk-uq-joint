@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { uqs } from "../uqs";
 import config from 'config';
 import { logger } from "../../tools/logger";
-import { Contact } from "./customer";
+import { Contact, InvoiceInfo } from "./customer";
 import { Address } from "./Address";
 
 const promiseSize = config.get<number>("promiseSize");
@@ -15,7 +15,7 @@ export const WebUserTonva: UqInTuid = {
     key: 'WebUserID',
     mapper: {
         $type: 'Type',      // 固定值:$user
-        id: false,
+        id: 'WebUserID@WebUser',
         name: 'UserName',
         pwd: 'Password',
         nick: "IGNORE",
@@ -44,9 +44,16 @@ export const WebUserTonva: UqInTuid = {
             let promises: PromiseLike<any>[] = [];
             promises.push(joint.uqIn(WebUser, _.pick(data, ['UserID', 'WebUserID', 'FirstName', 'Salutation', 'OrganizationName', 'DepartmentName'])));
             promises.push(joint.uqIn(WebUserContact, _.pick(data, ['UserID', 'Mobile', 'Email', 'OrganizationName', 'DepartmentName'
-                , 'Telephone', 'Fax', 'ZipCode', 'WechatOpenID'])));
+                , 'Telephone', 'Fax', 'ZipCode', 'WechatOpenID', 'Address'])));
             if (data['CustomerID'])
                 promises.push(joint.uqIn(WebUserCustomer, _.pick(data, ['UserID', 'CustomerID'])));
+            if (data['InvoiceTitle']) {
+                promises.push(joint.uqIn(InvoiceInfo, {
+                    "CustomerID": data["WebUserID"], "InvoiceTitle": data["InvoiceTitle"]
+                    , "RegisteredAddress": data['TaxNo'], "BankName": data['BankAccountName'], 'InvoiceType': data['InvoiceType']
+                }));
+                // promises.push(joint.uqIn(WebUserSetting, { 'UserID': userId, 'InvoiceInfoID': data['WebUserID'] }));
+            }
             // promises.push(joint.uqIn(WebUserSetting, _.pick(data, ['WebUserID', 'InvoiceTypeID'])));
             await Promise.all(promises);
             return true;
@@ -79,17 +86,16 @@ export const WebUserContact: UqInMap = {
     entity: 'WebUserContact',
     mapper: {
         webUser: 'UserID',
-        arr1: {
-            mobile: '^Mobile',
-            email: '^Email',
-            organizationName: '^OrganizationName',
-            departmentName: '^DepartmentName',
-            telephone: '^Telephone',
-            fax: '^Fax',
-            zipCode: '^ZipCode',
-            address: '',
-            wechatId: 'Wechat',
-        }
+        mobile: 'Mobile',
+        email: 'Email',
+        organizationName: 'OrganizationName',
+        departmentName: 'DepartmentName',
+        telephone: 'Telephone',
+        fax: 'Fax',
+        zipCode: 'ZipCode',
+        address: '',
+        addressString: 'Address',
+        wechatId: 'Wechat',
     }
 };
 
@@ -99,9 +105,7 @@ export const WebUserCustomer: UqInMap = {
     entity: 'WebUserCustomer',
     mapper: {
         webUser: 'UserID',
-        arr1: {
-            customer: '^CustomerID@Customer',
-        }
+        customer: 'CustomerID@Customer',
     }
 };
 
@@ -141,11 +145,9 @@ export const WebUserSetting: UqInMap = {
     entity: 'WebUserSetting',
     mapper: {
         customer: 'UserID',
-        arr1: {
-            shippingContact: '^ShippingContactID@Contact',
-            invoiceContact: '^InvoiceContactID@Contact',
-            invoiceType: '^InvoiceTypeID@InvoiceType',
-            invoiceInfo: '^InvoiceInfoID@InvoiceInfo',
-        }
+        shippingContact: 'ShippingContactID@Contact',
+        invoiceContact: 'InvoiceContactID@Contact',
+        invoiceType: 'InvoiceTypeID@InvoiceType',
+        invoiceInfo: 'InvoiceInfoID@InvoiceInfo',
     }
 };
