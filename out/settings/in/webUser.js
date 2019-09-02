@@ -16,6 +16,7 @@ const config_1 = __importDefault(require("config"));
 const logger_1 = require("../../tools/logger");
 const customer_1 = require("./customer");
 const Address_1 = require("./Address");
+const mssql_1 = require("mssql");
 const promiseSize = config_1.default.get("promiseSize");
 exports.WebUserTonva = {
     uq: uqs_1.uqs.jkWebUser,
@@ -55,14 +56,14 @@ exports.WebUserTonva = {
             if (data['CustomerID'])
                 promises.push(joint.uqIn(exports.WebUserCustomer, _.pick(data, ['UserID', 'CustomerID'])));
             if (data['InvoiceTitle']) {
-                promises.push(joint.uqIn(customer_1.InvoiceInfo, {
-                    "CustomerID": data["WebUserID"], "InvoiceTitle": data["InvoiceTitle"],
-                    "RegisteredAddress": data['TaxNo'], "BankName": data['BankAccountName'], 'InvoiceType': data['InvoiceType']
-                }));
-                // promises.push(joint.uqIn(WebUserSetting, { 'UserID': userId, 'InvoiceInfoID': data['WebUserID'] }));
+                promises.push(InvoiceInfoIn(joint, data, userId));
             }
-            // promises.push(joint.uqIn(WebUserSetting, _.pick(data, ['WebUserID', 'InvoiceTypeID'])));
-            await Promise.all(promises);
+            if (data['InvoiceType']) {
+                let invoiceTypeId = data['InvoiceType'] === '增值发票' ? 2 : 1;
+                exports.WebUserSettingAlter.mapper.arr1["contentId"] = "^contentID";
+                promises.push(joint.uqIn(exports.WebUserSettingAlter, { 'UserID': userId, 'Type': 'ivInvoiceType', 'contentID': invoiceTypeId }));
+            }
+            await mssql_1.Promise.all(promises);
             return true;
         }
         catch (error) {
@@ -71,6 +72,16 @@ exports.WebUserTonva = {
         }
     }
 };
+async function InvoiceInfoIn(joint, data, userId) {
+    if (data['InvoiceTitle']) {
+        await joint.uqIn(customer_1.InvoiceInfo, {
+            "CustomerID": data["WebUserID"], "InvoiceTitle": data["InvoiceTitle"],
+            "RegisteredAddress": data['TaxNo'], "BankName": data['BankAccountName'], 'InvoiceType': data['InvoiceType']
+        });
+        exports.WebUserSettingAlter.mapper.arr1["contentId"] = "^contentID@InvoiceInfo";
+        await joint.uqIn(exports.WebUserSettingAlter, { 'UserID': userId, 'Type': 'ivInvoiceInfo', 'contentID': data['WebUserID'] });
+    }
+}
 exports.WebUser = {
     uq: uqs_1.uqs.jkWebUser,
     type: 'tuid',
@@ -124,7 +135,7 @@ exports.WebUserContacts = {
         }
     },
     pull: `select top ${promiseSize} ID, AddressID, WebUserID, Name, OrganizationName, Mobile, Telephone, CountryID
-           , ProvinceID, CityID, [Address] as Addr, ZipCode, Email, IsDefault
+           , ProvinceID, CityID, [Address] as Addr, ZipCode, Email, IsDefault, AddressType
            from alidb.ProdData.dbo.Export_WebUserAddress where ID > @iMaxId order by ID`,
     pullWrite: async (joint, data) => {
         try {
@@ -135,6 +146,13 @@ exports.WebUserContacts = {
             data['AddressID'] = addressId;
             await joint.uqIn(customer_1.Contact, data);
             await joint.uqIn(exports.WebUserContacts, { 'WebUserID': data['WebUserID'], 'ID': data['ID'] });
+            /*
+            if (data['IsDefault']) {
+                WebUserSettingAlter.mapper.arr1["contentId"] = "^contentID@Contact";
+                let type = data["AddressType"] === 0 ? 'ivShippingContact' : 'ivInvoiceContact';
+                await joint.uqIn(WebUserSettingAlter, { 'UserID': userId, 'Type': type, 'contentID': data['ID'] });
+            }
+            */
             return true;
         }
         catch (error) {
@@ -148,11 +166,33 @@ exports.WebUserSetting = {
     type: 'map',
     entity: 'WebUserSetting',
     mapper: {
-        customer: 'UserID',
+        webUser: 'UserID',
         shippingContact: 'ShippingContactID@Contact',
         invoiceContact: 'InvoiceContactID@Contact',
         invoiceType: 'InvoiceTypeID@InvoiceType',
         invoiceInfo: 'InvoiceInfoID@InvoiceInfo',
+    }
+};
+exports.WebUserSettingAlter = {
+    uq: uqs_1.uqs.jkWebUser,
+    type: 'map',
+    entity: 'WebUserSettingAlter',
+    mapper: {
+        webUser: 'UserID',
+        arr1: {
+            type: '^Type@WebUserSettingType',
+            contentId: '^contentID',
+        }
+    }
+};
+exports.WebUserSettingType = {
+    uq: uqs_1.uqs.jkWebUser,
+    type: 'tuid',
+    entity: 'WebUserSettingType',
+    key: 'WebUserSettingTypeID',
+    mapper: {
+        $id: 'WebUserSettingTypeID@WebUserSettingType',
+        description: "Description",
     }
 };
 //# sourceMappingURL=webUser.js.map
