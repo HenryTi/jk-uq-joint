@@ -158,12 +158,12 @@ export const CustomerHandler: UqInMap = {
 };
 
 /*
- * 这个比较特殊：该映射用于将内部的
+ * 这个比较特殊：该映射用于将内部的CID导入到Tonva系统
 */
 export const CustomerContractor: UqInMap = {
     uq: uqs.jkCustomer,
     type: 'map',
-    entity: 'CustomerHandler',
+    entity: 'CustomerContractor',
     mapper: {
         customer: 'CustomerID@Customer',
         arr1: {
