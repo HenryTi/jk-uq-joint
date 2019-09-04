@@ -98,9 +98,9 @@ exports.Contact = {
     uq: uqs_1.uqs.jkCustomer,
     type: 'tuid',
     entity: 'Contact',
-    key: 'ID',
+    key: 'ContactID',
     mapper: {
-        $id: 'ID@Contact',
+        $id: 'ContactID@Contact',
         name: 'Name',
         organizationName: 'OrganizationName',
         mobile: 'Mobile',

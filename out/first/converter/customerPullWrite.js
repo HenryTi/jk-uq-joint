@@ -55,7 +55,7 @@ exports.customerPullWrite = customerPullWrite;
 async function contactPullWrite(joint, contactData) {
     try {
         await joint.uqIn(customer_1.Contact, contactData);
-        await joint.uqIn(customer_1.CustomerContacts, lodash_1.default.pick(contactData, ["ID", "CustomerID"]));
+        await joint.uqIn(customer_1.CustomerContacts, lodash_1.default.pick(contactData, ["ID", "CustomerID", "isDefault"]));
         return true;
     }
     catch (error) {

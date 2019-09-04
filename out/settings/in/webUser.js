@@ -16,7 +16,8 @@ const config_1 = __importDefault(require("config"));
 const logger_1 = require("../../tools/logger");
 const customer_1 = require("./customer");
 const Address_1 = require("./Address");
-const mssql_1 = require("mssql");
+const tool_1 = require("../../uq-joint/db/mysql/tool");
+const database_1 = require("../../uq-joint/db/mysql/database");
 const promiseSize = config_1.default.get("promiseSize");
 exports.WebUserTonva = {
     uq: uqs_1.uqs.jkWebUser,
@@ -63,7 +64,7 @@ exports.WebUserTonva = {
                 exports.WebUserSettingAlter.mapper.arr1["contentId"] = "^contentID";
                 promises.push(joint.uqIn(exports.WebUserSettingAlter, { 'UserID': userId, 'Type': 'ivInvoiceType', 'contentID': invoiceTypeId }));
             }
-            await mssql_1.Promise.all(promises);
+            await Promise.all(promises);
             return true;
         }
         catch (error) {
@@ -129,12 +130,12 @@ exports.WebUserContacts = {
     type: 'map',
     entity: 'WebUserContacts',
     mapper: {
-        webUser: 'WebUserID@WebUser',
+        webUser: 'UserID',
         arr1: {
             contact: '^ID@Contact',
         }
     },
-    pull: `select top ${promiseSize} ID, AddressID, WebUserID, Name, OrganizationName, Mobile, Telephone, CountryID
+    pull: `select top ${promiseSize} ID, AddressID as ContactID, WebUserID, Name, OrganizationName, Mobile, Telephone, CountryID
            , ProvinceID, CityID, [Address] as Addr, ZipCode, Email, IsDefault, AddressType
            from alidb.ProdData.dbo.Export_WebUserAddress where ID > @iMaxId order by ID`,
     pullWrite: async (joint, data) => {
@@ -145,14 +146,20 @@ exports.WebUserContacts = {
             }
             data['AddressID'] = addressId;
             await joint.uqIn(customer_1.Contact, data);
-            await joint.uqIn(exports.WebUserContacts, { 'WebUserID': data['WebUserID'], 'ID': data['ID'] });
-            /*
-            if (data['IsDefault']) {
-                WebUserSettingAlter.mapper.arr1["contentId"] = "^contentID@Contact";
-                let type = data["AddressType"] === 0 ? 'ivShippingContact' : 'ivInvoiceContact';
-                await joint.uqIn(WebUserSettingAlter, { 'UserID': userId, 'Type': type, 'contentID': data['ID'] });
+            let userId = -1;
+            try {
+                userId = await getUserId(data['WebUserID']);
             }
-            */
+            catch (error) {
+            }
+            if (userId > 0) {
+                await joint.uqIn(exports.WebUserContacts, { 'UserID': userId, 'ID': data['ContactID'] });
+                if (data['IsDefault']) {
+                    exports.WebUserSettingAlter.mapper.arr1["contentId"] = "^contentID@Contact";
+                    let type = data["AddressType"] === 0 ? 'ivShippingContact' : 'ivInvoiceContact';
+                    await joint.uqIn(exports.WebUserSettingAlter, { 'UserID': userId, 'Type': type, 'contentID': data['ContactID'] });
+                }
+            }
             return true;
         }
         catch (error) {
@@ -161,6 +168,19 @@ exports.WebUserContacts = {
         }
     }
 };
+async function getUserId(webUserID) {
+    let sql = `select id from \`${database_1.databaseName}\`.\`map_webuser\` where no='${webUserID}'`;
+    let ret;
+    try {
+        ret = await tool_1.execSql(sql);
+        if (ret.length === 1)
+            return ret[0]['id'];
+    }
+    catch (err) {
+        throw err;
+    }
+    return -1;
+}
 exports.WebUserSetting = {
     uq: uqs_1.uqs.jkWebUser,
     type: 'map',

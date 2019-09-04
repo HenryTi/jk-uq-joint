@@ -42,7 +42,7 @@ exports.pulls = {
     "Organization": { read: sqls_1.sqls.readOrganization, uqIn: customer_1.Organization },
     "Customer": { read: sqls_1.sqls.readCustomer, uqIn: customer_1.Customer },
     "CustomerShippingAddress": { read: sqls_1.sqls.readCustomerShippingAddress, uqIn: customer_1.Contact },
-    "CustomerInvoiceAddress": { read: sqls_1.sqls.readCustomerShippingAddress, uqIn: customer_1.Contact },
+    "CustomerInvoiceAddress": { read: sqls_1.sqls.readCustomerInvoiceAddress, uqIn: customer_1.Contact },
     "Agreement": { read: sqls_1.sqls.readAgreement, uqIn: customerDiscount_1.Agreement },
     // 市场活动
     "PromotionType": { read: sqls_1.sqls.readPromotionType, uqIn: promotion_1.PromotionType },

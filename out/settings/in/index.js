@@ -64,6 +64,7 @@ const uqIns = [
     webUser_1.WebUserTonva,
     webUser_1.WebUser,
     webUser_1.WebUserContact,
+    webUser_1.WebUserContacts,
     webUser_1.WebUserCustomer,
     webUser_1.WebUserSettingType,
     webUser_1.WebUserSetting,

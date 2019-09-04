@@ -101,9 +101,9 @@ export const Contact: UqInTuid = {
     uq: uqs.jkCustomer,
     type: 'tuid',
     entity: 'Contact',
-    key: 'ID',
+    key: 'ContactID',
     mapper: {
-        $id: 'ID@Contact',
+        $id: 'ContactID@Contact',
         name: 'Name',
         organizationName: 'OrganizationName',
         mobile: 'Mobile',

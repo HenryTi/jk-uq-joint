@@ -9,7 +9,7 @@ import { ProductCategory, ProductCategoryLanguage, ProductProductCategory } from
 import { Agreement, CustomerDiscount, OrganizationDiscount } from "./customerDiscount";
 import { Employee } from "./hr";
 import { JkTaskType, JkTask } from "./salestask";
-import { WebUser, WebUserTonva, WebUserContact, WebUserCustomer, WebUserSetting, WebUserSettingAlter, WebUserSettingType } from "./webUser";
+import { WebUser, WebUserTonva, WebUserContact, WebUserCustomer, WebUserSetting, WebUserSettingAlter, WebUserSettingType, WebUserContacts } from "./webUser";
 
 const uqIns = [
 
@@ -74,6 +74,7 @@ const uqIns = [
     WebUserTonva,
     WebUser,
     WebUserContact,
+    WebUserContacts,
     WebUserCustomer,
     WebUserSettingType,
     WebUserSetting,

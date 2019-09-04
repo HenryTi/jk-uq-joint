@@ -98,11 +98,11 @@ exports.sqls = {
                 select top ${promiseSize} UnitID as ID, UnitID as OrganizationID, unitName as Name, convert(nvarchar(30), creaDate, 121) as CreateTime
                 from dbs.dbo.CustUnits where UnitID > @iMaxId order by UnitID`,
     readCustomerShippingAddress: `
-                select top ${promiseSize} ID, CID as CustomerID, userName as Name, userUnit as OrganizationName, isnull(userMobile, '') as Mobile
+                select top ${promiseSize} ID, ID as ContactID, CID as CustomerID, userName as Name, userUnit as OrganizationName, isnull(userMobile, '') as Mobile
                     , email as Email, userZipCode as Zip, userAdd as Addr, isDefault, 0 as AddressType
                 from dbs.dbo.net_OrderBase_txt where id > @iMaxId and userName is not null order by ID`,
     readCustomerInvoiceAddress: `
-                select top ${promiseSize} ID, CID as CustomerID, Name, Unit as OrganizationName, isnull(Mobile, '') as Mobile, Tel as Telephone
+                select top ${promiseSize} ID, ID as ContactID, CID as CustomerID, Name, Unit as OrganizationName, isnull(Mobile, '') as Mobile, Tel as Telephone
                     , Email, Zip, Addr, isDefault, 1 as AddressType
                 from dbs.dbo.order_InvoiceInfo_txt where ID > @iMaxId and Name is not null order by ID`,
     //==============================================================

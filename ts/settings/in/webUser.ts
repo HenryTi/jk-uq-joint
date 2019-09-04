@@ -5,6 +5,8 @@ import config from 'config';
 import { logger } from "../../tools/logger";
 import { Contact, InvoiceInfo } from "./customer";
 import { Address } from "./Address";
+import { execSql } from "../../uq-joint/db/mysql/tool";
+import { databaseName } from "../../uq-joint/db/mysql/database";
 
 const promiseSize = config.get<number>("promiseSize");
 
@@ -125,12 +127,12 @@ export const WebUserContacts: UqInMap = {
     type: 'map',
     entity: 'WebUserContacts',
     mapper: {
-        webUser: 'WebUserID@WebUser',
+        webUser: 'UserID',
         arr1: {
             contact: '^ID@Contact',
         }
     },
-    pull: `select top ${promiseSize} ID, AddressID, WebUserID, Name, OrganizationName, Mobile, Telephone, CountryID
+    pull: `select top ${promiseSize} ID, AddressID as ContactID, WebUserID, Name, OrganizationName, Mobile, Telephone, CountryID
            , ProvinceID, CityID, [Address] as Addr, ZipCode, Email, IsDefault, AddressType
            from alidb.ProdData.dbo.Export_WebUserAddress where ID > @iMaxId order by ID`,
     pullWrite: async (joint: Joint, data: any) => {
@@ -141,14 +143,21 @@ export const WebUserContacts: UqInMap = {
             }
             data['AddressID'] = addressId;
             await joint.uqIn(Contact, data);
-            await joint.uqIn(WebUserContacts, { 'WebUserID': data['WebUserID'], 'ID': data['ID'] });
-            /*
-            if (data['IsDefault']) {
-                WebUserSettingAlter.mapper.arr1["contentId"] = "^contentID@Contact";
-                let type = data["AddressType"] === 0 ? 'ivShippingContact' : 'ivInvoiceContact';
-                await joint.uqIn(WebUserSettingAlter, { 'UserID': userId, 'Type': type, 'contentID': data['ID'] });
+
+            let userId = -1;
+            try {
+                userId = await getUserId(data['WebUserID']);
+            } catch (error) {
+
             }
-            */
+            if (userId > 0) {
+                await joint.uqIn(WebUserContacts, { 'UserID': userId, 'ID': data['ContactID'] });
+                if (data['IsDefault']) {
+                    WebUserSettingAlter.mapper.arr1["contentId"] = "^contentID@Contact";
+                    let type = data["AddressType"] === 0 ? 'ivShippingContact' : 'ivInvoiceContact';
+                    await joint.uqIn(WebUserSettingAlter, { 'UserID': userId, 'Type': type, 'contentID': data['ContactID'] });
+                }
+            }
             return true;
         } catch (error) {
             logger.error(error);
@@ -156,6 +165,21 @@ export const WebUserContacts: UqInMap = {
         }
     }
 };
+
+
+async function getUserId(webUserID: string) {
+    let sql = `select id from \`${databaseName}\`.\`map_webuser\` where no='${webUserID}'`;
+    let ret: any[];
+    try {
+        ret = await execSql(sql);
+        if (ret.length === 1)
+            return ret[0]['id'];
+    }
+    catch (err) {
+        throw err;
+    }
+    return -1;
+}
 
 export const WebUserSetting: UqInMap = {
     uq: uqs.jkWebUser,
