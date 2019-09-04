@@ -53,6 +53,10 @@ export async function customerPullWrite(joint: Joint, data: any): Promise<boolea
 export async function contactPullWrite(joint: Joint, contactData: any): Promise<boolean> {
     try {
         await joint.uqIn(Contact, contactData);
+        if (contactData['isDefault'])
+            contactData['isDefault'] = 1;
+        else
+            contactData['isDefault'] = 0;
         await joint.uqIn(CustomerContacts, _.pick(contactData, ["ID", "CustomerID", "isDefault"]));
         return true;
     } catch (error) {
