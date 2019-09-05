@@ -1,7 +1,4 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
@@ -10,7 +7,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const dateformat_1 = __importDefault(require("dateformat"));
 const _ = __importStar(require("lodash"));
 const tools_1 = require("../../mssql/tools");
 const promotion_1 = require("../../settings/in/promotion");
@@ -18,9 +14,9 @@ const productPullWrite_1 = require("./productPullWrite");
 const logger_1 = require("../../tools/logger");
 async function promotionFirstPullWrite(joint, data) {
     try {
-        data["StartDate"] = data["StartDate"] && dateformat_1.default(data["StartDate"], "yyyy-mm-dd HH:MM:ss");
-        data["EndDate"] = data["EndDate"] && dateformat_1.default(data["EndDate"], "yyyy-mm-dd HH:MM:ss");
-        data["CreateTime"] = data["CreateTime"] && dateformat_1.default(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
+        data["StartDate"] = data["StartDate"] && data["StartDate"].getTime(); // dateFormat(data["StartDate"], "yyyy-mm-dd HH:MM:ss");
+        data["EndDate"] = data["EndDate"] && data["EndDate"].getTime(); // dateFormat(data["EndDate"], "yyyy-mm-dd HH:MM:ss");
+        data["CreateTime"] = data["CreateTime"] && data["CreateTime"].getTime(); // dateFormat(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
         await joint.uqIn(promotion_1.Promotion, _.pick(data, ["ID", "MarketingID", "Name", "Type", "Status", "StartDate", "EndDate", "CreateTime"]));
         let promises = [];
         promises.push(joint.uqIn(promotion_1.PromotionSalesRegion, _.pick(data, ["MarketingID", "SalesRegionID"])));

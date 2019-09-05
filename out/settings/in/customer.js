@@ -3,7 +3,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const dateformat_1 = __importDefault(require("dateformat"));
 const uqs_1 = require("../uqs");
 const customerPullWrite_1 = require("../../first/converter/customerPullWrite");
 const config_1 = __importDefault(require("config"));
@@ -49,7 +48,7 @@ exports.Organization = {
            from ProdData.dbo.Export_Organization where ID > @iMaxId order by ID`,
     pullWrite: async (joint, data) => {
         try {
-            data["CreateTime"] = data["CreateTime"] && dateformat_1.default(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
+            data["CreateTime"] = data["CreateTime"] && data["CreateTime"].getTime(); // dateFormat(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
             await joint.uqIn(exports.Organization, data);
             return true;
         }

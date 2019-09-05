@@ -11,7 +11,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const _ = __importStar(require("lodash"));
-const dateformat_1 = __importDefault(require("dateformat"));
 const uqs_1 = require("../uqs");
 const config_1 = __importDefault(require("config"));
 const promiseSize = config_1.default.get("promiseSize");
@@ -46,14 +45,14 @@ exports.JkTask = {
         createTime: 'CreateTime',
         completeTime: 'CompleteTime',
     },
-    pull: `select   top ${promiseSize} a.ID, a.WorkTaskID, a.WorkTaskSource, a.CustomerID, a.EmployeeID, 
+    pull: `select   top ${promiseSize} a.ID, a.WorkTaskID, a.WorkTaskSource, a.CustomerID, a.EmployeeID,
                     a.LinkObjectID, isnull(a.TimeLimit,0) as TimeLimit, a.RequireCompletionTime, a.CreateTime, a.CompleteTime
             from    ProdData.dbo.Export_WorkTask as a
             where a.ID > @iMaxId order by a.ID`,
     pullWrite: async (joint, data) => {
         try {
-            data["RequireCompletionTime"] = data["RequireCompletionTime"] && dateformat_1.default(data["RequireCompletionTime"], "yyyy-mm-dd"); //转换日期格式（存在日期才转换）
-            data["CreateTime"] = data["CreateTime"] && dateformat_1.default(data["CreateTime"], "yyyy-mm-dd");
+            data["RequireCompletionTime"] = data["RequireCompletionTime"] && data['RequireCompletionTime'].getTime(); // dateFormat(data["RequireCompletionTime"], "yyyy-mm-dd"); //转换日期格式（存在日期才转换）
+            data["CreateTime"] = data["CreateTime"] && data['CreateTime'].getTime(); // dateFormat(data["CreateTime"], "yyyy-mm-dd");
             await joint.uqIn(exports.JkTask, _.pick(data, ["ID", "WorkTaskID", "WorkTaskSource", "CustomerID", "EmployeeID", 'LinkObjectID', 'TimeLimit', 'RequireCompletionTime', 'CreateTime']));
             return true;
         }

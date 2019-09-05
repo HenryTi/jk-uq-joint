@@ -49,7 +49,7 @@ export const Organization: UqInTuid = {
            from ProdData.dbo.Export_Organization where ID > @iMaxId order by ID`,
     pullWrite: async (joint: Joint, data: any) => {
         try {
-            data["CreateTime"] = data["CreateTime"] && dateFormat(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
+            data["CreateTime"] = data["CreateTime"] && data["CreateTime"].getTime(); // dateFormat(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
             await joint.uqIn(Organization, data);
             return true;
         } catch (error) {

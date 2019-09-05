@@ -57,9 +57,9 @@ export const Promotion: UqInTuid = {
     pullWrite: async (joint: Joint, data: any) => {
 
         try {
-            data["StartDate"] = data["StartDate"] && dateFormat(data["StartDate"], "yyyy-mm-dd HH:MM:ss");
-            data["EndDate"] = data["EndDate"] && dateFormat(data["EndDate"], "yyyy-mm-dd HH:MM:ss");
-            data["CreateTime"] = data["CreateTime"] && dateFormat(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
+            data["StartDate"] = data["StartDate"] && data['StartDate'].getTime(); // dateFormat(data["StartDate"], "yyyy-mm-dd HH:MM:ss");
+            data["EndDate"] = data["EndDate"] && data['EndDate'].getTime(); // dateFormat(data["EndDate"], "yyyy-mm-dd HH:MM:ss");
+            data["CreateTime"] = data["CreateTime"] && data['CreateTime'].getTime(); // dateFormat(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
             await joint.uqIn(Promotion, _.pick(data, ["ID", "MarketingID", "Name", "Type", "Status", "StartDate", 'EndDate', 'CreateTime']));
             await joint.uqIn(PromotionSalesRegion, _.pick(data, ["MarketingID", "SalesRegionID"]));
             return true;
