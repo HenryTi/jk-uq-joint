@@ -45,8 +45,8 @@ export const JkTask: UqInTuid = {
     pullWrite: async (joint: Joint, data: any) => {
 
         try {
-            data["RequireCompletionTime"] = data["RequireCompletionTime"] && data['RequireCompletionTime'].getTime(); // dateFormat(data["RequireCompletionTime"], "yyyy-mm-dd"); //转换日期格式（存在日期才转换）
-            data["CreateTime"] = data["CreateTime"] && data['CreateTime'].getTime(); // dateFormat(data["CreateTime"], "yyyy-mm-dd");
+            data["RequireCompletionTime"] = data["RequireCompletionTime"] && dateFormat(data["RequireCompletionTime"], "yyyy-mm-dd"); //转换日期格式（存在日期才转换）
+            data["CreateTime"] = data["CreateTime"] && dateFormat(data["CreateTime"], "yyyy-mm-dd");
             await joint.uqIn(JkTask, _.pick(data, ["ID", "WorkTaskID", "WorkTaskSource", "CustomerID", "EmployeeID", 'LinkObjectID', 'TimeLimit', 'RequireCompletionTime', 'CreateTime']));
             return true;
         } catch (error) {

@@ -11,7 +11,7 @@ async function customerPullWrite(joint, data) {
     try {
         if (!data["Name"])
             return true;
-        data["CreateTime"] = data["CreateTime"] && data['CreateTime'].getTime(); // dateFormat(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
+        data["CreateTime"] = data["CreateTime"] && data['CreateTime'].getTime() / 1000; // dateFormat(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
         data["BirthDate"] = data["BirthDate"] && dateformat_1.default(data["BirthDate"], "yyyy-mm-dd HH:MM:ss");
         await joint.uqIn(customer_1.Customer, lodash_1.default.pick(data, ["CustomerID", "Name", "FirstName", "LastName", "XYZ", "Gender", "BirthDate", 'CreateTime', 'IsValid']));
         let promises = [];

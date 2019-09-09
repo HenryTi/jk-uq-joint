@@ -18,7 +18,7 @@ exports.Employee = {
     },
     pullWrite: async (joint, data) => {
         try {
-            data["CreateTime"] = data["CreateTime"].getTime(); // dateFormat(data["CreateTime"], 'yyyy-mm-dd HH:MM:ss');
+            data["CreateTime"] = data["CreateTime"].getTime() / 1000; // dateFormat(data["CreateTime"], 'yyyy-mm-dd HH:MM:ss');
             await joint.uqIn(exports.Employee, data);
             return true;
         }

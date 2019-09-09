@@ -14,9 +14,9 @@ const productPullWrite_1 = require("./productPullWrite");
 const logger_1 = require("../../tools/logger");
 async function promotionFirstPullWrite(joint, data) {
     try {
-        data["StartDate"] = data["StartDate"] && data["StartDate"].getTime(); // dateFormat(data["StartDate"], "yyyy-mm-dd HH:MM:ss");
-        data["EndDate"] = data["EndDate"] && data["EndDate"].getTime(); // dateFormat(data["EndDate"], "yyyy-mm-dd HH:MM:ss");
-        data["CreateTime"] = data["CreateTime"] && data["CreateTime"].getTime(); // dateFormat(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
+        data["StartDate"] = data["StartDate"] && data["StartDate"].getTime() / 1000; // dateFormat(data["StartDate"], "yyyy-mm-dd HH:MM:ss");
+        data["EndDate"] = data["EndDate"] && data["EndDate"].getTime() / 1000; // dateFormat(data["EndDate"], "yyyy-mm-dd HH:MM:ss");
+        data["CreateTime"] = data["CreateTime"] && data["CreateTime"].getTime() / 1000; // dateFormat(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
         await joint.uqIn(promotion_1.Promotion, _.pick(data, ["ID", "MarketingID", "Name", "Type", "Status", "StartDate", "EndDate", "CreateTime"]));
         let promises = [];
         promises.push(joint.uqIn(promotion_1.PromotionSalesRegion, _.pick(data, ["MarketingID", "SalesRegionID"])));

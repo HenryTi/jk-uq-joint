@@ -61,9 +61,9 @@ exports.Promotion = {
         from ProdData.dbo.Export_Marketing where ID > @iMaxId order by ID`,
     pullWrite: async (joint, data) => {
         try {
-            data["StartDate"] = data["StartDate"] && data['StartDate'].getTime(); // dateFormat(data["StartDate"], "yyyy-mm-dd HH:MM:ss");
-            data["EndDate"] = data["EndDate"] && data['EndDate'].getTime(); // dateFormat(data["EndDate"], "yyyy-mm-dd HH:MM:ss");
-            data["CreateTime"] = data["CreateTime"] && data['CreateTime'].getTime(); // dateFormat(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
+            data["StartDate"] = data["StartDate"] && data['StartDate'].getTime() / 1000; // dateFormat(data["StartDate"], "yyyy-mm-dd HH:MM:ss");
+            data["EndDate"] = data["EndDate"] && data['EndDate'].getTime() / 1000; // dateFormat(data["EndDate"], "yyyy-mm-dd HH:MM:ss");
+            data["CreateTime"] = data["CreateTime"] && data['CreateTime'].getTime() / 1000; // dateFormat(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
             await joint.uqIn(exports.Promotion, _.pick(data, ["ID", "MarketingID", "Name", "Type", "Status", "StartDate", 'EndDate', 'CreateTime']));
             await joint.uqIn(exports.PromotionSalesRegion, _.pick(data, ["MarketingID", "SalesRegionID"]));
             return true;
