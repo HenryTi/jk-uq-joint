@@ -117,6 +117,7 @@ exports.ProductX = {
         origin: 'ProductNumber',
         description: 'Description',
         descriptionC: 'DescriptionC',
+        imageUrl: 'ChemicalID',
         isValid: 'IsValid',
     },
     pull: `select top ${promiseSize} ID, ProductID, BrandID, ProductNumber, Description, DescriptionC, CasNumber as CAS, ChemicalID
