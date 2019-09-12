@@ -45,8 +45,8 @@ export class Uqs {
         return await this.unitx.readBus(face, queue);
     }
 
-    async writeBus(face: string, source: string, newQueue: string | number, body: any) {
-        await this.unitx.writeBus(face, source, newQueue, body);
+    async writeBus(face: string, source: string, newQueue: string | number, busVersion:number, body: any) {
+        await this.unitx.writeBus(face, source, newQueue, busVersion, body);
     }
 }
 
@@ -319,8 +319,8 @@ class UqUnitx extends Uq {
         return await this.openApi.readBus(face, queue);
     }
 
-    async writeBus(face: string, source: string, newQueue: string | number, body: any) {
-        await this.openApi.writeBus(face, source, newQueue, body);
+    async writeBus(face: string, source: string, newQueue: string | number, busVersion:number, body: any) {
+        await this.openApi.writeBus(face, source, newQueue, busVersion, body);
     }
 
     protected async loadEntities() {
