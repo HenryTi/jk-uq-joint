@@ -40,13 +40,14 @@ export class OpenApi extends Fetch {
         });
         return ret;
     }
-    async writeBus(face: string, from: string, queue: number | string, body: string): Promise<BusMessage> {
+    async writeBus(face: string, from: string, queue: number | string, busVersion: number, body: string): Promise<BusMessage> {
         //let ret = await this.post('open/joint-write-bus', {
         let ret = await this.post('joint-write-bus', {
             unit: this.unit,
             face: face,
             from: from,
-            sourceId: queue,
+            fromQueueId: queue,
+            version: busVersion,
             body: body,
         });
         return ret;

@@ -467,8 +467,10 @@ class Joint {
                 //if (newQueue === undefined) break;
                 let mapToUq = new mapData_1.MapToUq(this);
                 let inBody = await mapToUq.map(data[0], mapper);
+                // henry??? 暂时不处理bus version
+                let busVersion = 0;
                 let packed = await faceSchemas_1.faceSchemas.packBusData(face, inBody);
-                await this.uqs.writeBus(face, joinName, newQueue, packed);
+                await this.uqs.writeBus(face, joinName, newQueue, busVersion, packed);
                 await tool_1.execProc('write_queue_in_p', [moniker, newQueue]);
             }
         }
