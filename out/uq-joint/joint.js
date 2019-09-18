@@ -398,6 +398,7 @@ class Joint {
             for (;;) {
                 if (push === undefined)
                     break;
+                console.log('scan bus out ' + uqBusName + ' at ' + new Date().toLocaleString());
                 let queue;
                 let retp = await tool_1.tableFromProc('read_queue_out_p', [moniker]);
                 if (retp.length > 0) {
@@ -451,6 +452,7 @@ class Joint {
             for (;;) {
                 if (pull === undefined)
                     break;
+                console.log('scan bus in ' + uqBusName + ' at ' + new Date().toLocaleString());
                 let queue;
                 let retp = await tool_1.tableFromProc('read_queue_in_p', [moniker]);
                 if (retp.length > 0) {

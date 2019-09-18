@@ -73,11 +73,10 @@ export const faceWebUser: UqBus = {
             if (!Name) {
                 data.Name = FirstName + LastName;
             }
-            console.log(data);
             let success = await userApiClient.UpdateWebUserBaseInfo(data);
             return success;
         } catch (error) {
-            console.error(error);
+            console.error(error + '; data: ' + data);
             if (error.code === 400)
                 return true;
             return false;
@@ -112,8 +111,8 @@ export const faceWebUserContact: UqBus = {
         }
     },
     push: async (joint: Joint, uqIn: UqBus, queue: number, data: any): Promise<boolean> => {
+        let webUserParam = _.clone(data);
         try {
-            let webUserParam = _.clone(data);
             if (data.address !== undefined) {
                 let { country, province, city, county } = data.address;
                 webUserParam.CountryName = country && country.chineseName;
@@ -121,11 +120,10 @@ export const faceWebUserContact: UqBus = {
                 webUserParam.CityName = city && city.chineseName;
                 webUserParam.CountyName = county && county.chineseName;
             }
-            console.log(webUserParam);
             let success = await userApiClient.UpdateWebUserContact(webUserParam);
             return success;
         } catch (error) {
-            console.error(error);
+            console.error(error + '; data' + data);
             return false;
         }
     }

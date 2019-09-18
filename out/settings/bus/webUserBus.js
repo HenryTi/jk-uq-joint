@@ -78,12 +78,11 @@ exports.faceWebUser = {
             if (!Name) {
                 data.Name = FirstName + LastName;
             }
-            console.log(data);
             let success = await UserApiClient_1.userApiClient.UpdateWebUserBaseInfo(data);
             return success;
         }
         catch (error) {
-            console.error(error);
+            console.error(error + '; data: ' + data);
             if (error.code === 400)
                 return true;
             return false;
@@ -117,8 +116,8 @@ exports.faceWebUserContact = {
         }
     },
     push: async (joint, uqIn, queue, data) => {
+        let webUserParam = lodash_1.default.clone(data);
         try {
-            let webUserParam = lodash_1.default.clone(data);
             if (data.address !== undefined) {
                 let { country, province, city, county } = data.address;
                 webUserParam.CountryName = country && country.chineseName;
@@ -126,12 +125,11 @@ exports.faceWebUserContact = {
                 webUserParam.CityName = city && city.chineseName;
                 webUserParam.CountyName = county && county.chineseName;
             }
-            console.log(webUserParam);
             let success = await UserApiClient_1.userApiClient.UpdateWebUserContact(webUserParam);
             return success;
         }
         catch (error) {
-            console.error(error);
+            console.error(error + '; data' + data);
             return false;
         }
     }

@@ -383,6 +383,7 @@ export class Joint {
             let moniker = monikerPrefix + face;
             for (; ;) {
                 if (push === undefined) break;
+                console.log('scan bus out ' + uqBusName + ' at ' + new Date().toLocaleString());
                 let queue: number;
                 let retp = await tableFromProc('read_queue_out_p', [moniker]);
                 if (retp.length > 0) {
@@ -431,6 +432,7 @@ export class Joint {
             // bus in(从外部系统读入数据，写入bus)
             for (; ;) {
                 if (pull === undefined) break;
+                console.log('scan bus in ' + uqBusName + ' at ' + new Date().toLocaleString());
                 let queue: number;
                 let retp = await tableFromProc('read_queue_in_p', [moniker]);
                 if (retp.length > 0) {

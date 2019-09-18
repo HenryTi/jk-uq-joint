@@ -152,13 +152,13 @@ exports.WebUserContacts = {
             }
             catch (error) {
             }
-            if (userId > 0) {
-                await joint.uqIn(exports.WebUserContacts, { 'UserID': userId, 'ID': data['ContactID'] });
-                if (data['IsDefault']) {
-                    exports.WebUserSettingAlter.mapper.arr1["contentId"] = "^contentID@Contact";
-                    let type = data["AddressType"] === 0 ? 'ivShippingContact' : 'ivInvoiceContact';
-                    await joint.uqIn(exports.WebUserSettingAlter, { 'UserID': userId, 'Type': type, 'contentID': data['ContactID'] });
-                }
+            if (userId <= 0)
+                throw 'web user not import, wait next';
+            await joint.uqIn(exports.WebUserContacts, { 'UserID': userId, 'ID': data['ContactID'] });
+            if (data['IsDefault']) {
+                exports.WebUserSettingAlter.mapper.arr1["contentId"] = "^contentID@Contact";
+                let type = data["AddressType"] === 0 ? 'ivShippingContact' : 'ivInvoiceContact';
+                await joint.uqIn(exports.WebUserSettingAlter, { 'UserID': userId, 'Type': type, 'contentID': data['ContactID'] });
             }
             return true;
         }
