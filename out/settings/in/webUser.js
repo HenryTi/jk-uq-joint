@@ -140,12 +140,6 @@ exports.WebUserContacts = {
            from alidb.ProdData.dbo.Export_WebUserAddress where ID > @iMaxId order by ID`,
     pullWrite: async (joint, data) => {
         try {
-            let addressId = data['CountyID'] || data['CityID'] || data['ProvinceID'] || data["CountryID"];
-            if (addressId) {
-                await joint.uqIn(Address_1.Address, { 'ID': addressId, 'CountryID': data['CountryID'], 'ProvinceID': data['ProvinceID'], 'CityID': data['CityID'] });
-            }
-            data['AddressID'] = addressId;
-            await joint.uqIn(customer_1.Contact, data);
             let userId = -1;
             try {
                 userId = await getUserId(data['WebUserID']);
@@ -154,6 +148,12 @@ exports.WebUserContacts = {
             }
             if (userId <= 0)
                 throw 'web user not import, wait next';
+            let addressId = data['CountyID'] || data['CityID'] || data['ProvinceID'] || data["CountryID"];
+            if (addressId) {
+                await joint.uqIn(Address_1.Address, { 'ID': addressId, 'CountryID': data['CountryID'], 'ProvinceID': data['ProvinceID'], 'CityID': data['CityID'] });
+            }
+            data['AddressID'] = addressId;
+            await joint.uqIn(customer_1.Contact, data);
             await joint.uqIn(exports.WebUserContacts, { 'UserID': userId, 'ID': data['ContactID'] });
             if (data['IsDefault']) {
                 exports.WebUserSettingAlter.mapper.arr1["contentId"] = "^contentID@Contact";

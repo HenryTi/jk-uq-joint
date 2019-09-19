@@ -21,15 +21,23 @@ async function comparePassword(pwd, auth) {
 exports.comparePassword = comparePassword;
 const algorithm = 'aes-128-cbc';
 const cryptoPassword = 'pickering-on-ca';
+const keyLength = 16;
 function encrypt(pwd) {
-    const mykey = crypto.createCipher(algorithm, cryptoPassword);
+    let key = Buffer.concat([Buffer.from(cryptoPassword)], keyLength);
+    let iv = crypto.randomBytes(16);
+    const mykey = crypto.createCipheriv(algorithm, key, iv);
+    // const mykey = crypto.createCipher(algorithm, cryptoPassword);
     let cryptedPwd = mykey.update(pwd, 'utf8', 'hex');
     cryptedPwd += mykey.final('hex');
     return cryptedPwd;
 }
 exports.encrypt = encrypt;
 function decrypt(cryptedPwd) {
+    let key = Buffer.concat([Buffer.from(cryptoPassword)], keyLength);
+    let iv = crypto.randomBytes(16);
+    // const mykeyD = crypto.createDecipheriv(algorithm, key, iv);
     const mykeyD = crypto.createDecipher(algorithm, cryptoPassword);
+    // mykeyD.setAutoPadding(false);
     let str = mykeyD.update(cryptedPwd, 'hex', 'utf8');
     str = mykeyD.final('utf8');
     return str;

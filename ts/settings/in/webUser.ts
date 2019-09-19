@@ -137,13 +137,6 @@ export const WebUserContacts: UqInMap = {
            from alidb.ProdData.dbo.Export_WebUserAddress where ID > @iMaxId order by ID`,
     pullWrite: async (joint: Joint, data: any) => {
         try {
-            let addressId = data['CountyID'] || data['CityID'] || data['ProvinceID'] || data["CountryID"];
-            if (addressId) {
-                await joint.uqIn(Address, { 'ID': addressId, 'CountryID': data['CountryID'], 'ProvinceID': data['ProvinceID'], 'CityID': data['CityID'] });
-            }
-            data['AddressID'] = addressId;
-            await joint.uqIn(Contact, data);
-
             let userId = -1;
             try {
                 userId = await getUserId(data['WebUserID']);
@@ -152,6 +145,13 @@ export const WebUserContacts: UqInMap = {
             }
             if (userId <= 0)
                 throw 'web user not import, wait next';
+
+            let addressId = data['CountyID'] || data['CityID'] || data['ProvinceID'] || data["CountryID"];
+            if (addressId) {
+                await joint.uqIn(Address, { 'ID': addressId, 'CountryID': data['CountryID'], 'ProvinceID': data['ProvinceID'], 'CityID': data['CityID'] });
+            }
+            data['AddressID'] = addressId;
+            await joint.uqIn(Contact, data);
 
             await joint.uqIn(WebUserContacts, { 'UserID': userId, 'ID': data['ContactID'] });
             if (data['IsDefault']) {
