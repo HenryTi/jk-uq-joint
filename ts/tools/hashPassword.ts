@@ -14,25 +14,36 @@ export async function comparePassword(pwd: string, auth: string) {
 
 const algorithm = 'aes-128-cbc';
 const cryptoPassword = 'pickering-on-ca';
+const ivText = 'longcheng';
 const keyLength = 16;
+const ivLength = 16;
 
 export function encrypt(pwd: string): string {
-    let key = Buffer.concat([Buffer.from(cryptoPassword)], keyLength);
-    let iv = crypto.randomBytes(16);
-    const mykey = crypto.createCipheriv(algorithm, key, iv);
-    // const mykey = crypto.createCipher(algorithm, cryptoPassword);
-    let cryptedPwd: string = mykey.update(pwd, 'utf8', 'hex');
-    cryptedPwd += mykey.final('hex');
-    return cryptedPwd;
+    try {
+        let key = Buffer.concat([Buffer.from(cryptoPassword)], keyLength);
+        let iv = Buffer.concat([Buffer.from(ivText)], ivLength);
+        const cipher = crypto.createCipheriv(algorithm, key, iv);
+        let encrypted = cipher.update(Buffer.from(pwd, 'utf8'));
+        encrypted = Buffer.concat([encrypted, cipher.final()]);
+        return encrypted.toString('hex');
+    }
+    catch (err) {
+        console.error(err);
+        throw err;
+    }
 }
 
 export function decrypt(cryptedPwd: string): string {
-    let key = Buffer.concat([Buffer.from(cryptoPassword)], keyLength);
-    let iv = crypto.randomBytes(16);
-    // const mykeyD = crypto.createDecipheriv(algorithm, key, iv);
-    const mykeyD = crypto.createDecipher(algorithm, cryptoPassword);
-    // mykeyD.setAutoPadding(false);
-    let str = mykeyD.update(cryptedPwd, 'hex', 'utf8');
-    str = mykeyD.final('utf8');
-    return str;
+    try {
+        let key = Buffer.concat([Buffer.from(cryptoPassword)], keyLength);
+        let iv = Buffer.concat([Buffer.from(ivText)], ivLength);
+        const decipher = crypto.createDecipheriv(algorithm, key, iv);
+        let de = decipher.update(Buffer.from(cryptedPwd, 'hex'));
+        de = Buffer.concat([de, decipher.final()]);
+        return de.toString();
+    }
+    catch (err) {
+        console.error(err);
+        throw err;
+    }
 }

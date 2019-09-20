@@ -144,7 +144,7 @@ export const WebUserContacts: UqInMap = {
 
             }
             if (userId <= 0)
-                throw 'web user not import, wait next';
+                throw 'web user not import, wait next. ID:' + data['ID'];
 
             let addressId = data['CountyID'] || data['CityID'] || data['ProvinceID'] || data["CountryID"];
             if (addressId) {

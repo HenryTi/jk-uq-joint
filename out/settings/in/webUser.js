@@ -147,7 +147,7 @@ exports.WebUserContacts = {
             catch (error) {
             }
             if (userId <= 0)
-                throw 'web user not import, wait next';
+                throw 'web user not import, wait next. ID:' + data['ID'];
             let addressId = data['CountyID'] || data['CityID'] || data['ProvinceID'] || data["CountryID"];
             if (addressId) {
                 await joint.uqIn(Address_1.Address, { 'ID': addressId, 'CountryID': data['CountryID'], 'ProvinceID': data['ProvinceID'], 'CityID': data['CityID'] });
