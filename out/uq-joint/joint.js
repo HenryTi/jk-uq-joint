@@ -20,7 +20,7 @@ const hashPassword_1 = require("../tools/hashPassword");
 const logger = log4js_1.getLogger('joint');
 const uqInEntities = config_1.default.get("afterFirstEntities");
 const uqBusSettings = config_1.default.get("uqBus");
-const interval = 3 * 1000;
+const interval = config_1.default.get("interval");
 class Joint {
     constructor(settings) {
         this.uqInDict = {};

@@ -18,7 +18,7 @@ const logger = getLogger('joint');
 const uqInEntities = config.get<string[]>("afterFirstEntities");
 const uqBusSettings = config.get<string[]>("uqBus");
 
-const interval = 3 * 1000;
+const interval = config.get<number>("interval");
 
 export class Joint {
     protected uqs: Uqs;
