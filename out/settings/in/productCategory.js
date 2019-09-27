@@ -19,7 +19,7 @@ exports.ProductCategory = {
         orderWithinParent: "OrderWithinParentCategory",
     },
     pull: `select top ${promiseSize} ID, ProductCategoryID, ParentProductCategoryID, OrderWithinParentCatetory as OrderWithinParentCategory,
-        isLeaf, IsValid, IsShow from ProdData.dbo.Export_ProductCategory
+        IsLeaf, IsValid, IsShow from ProdData.dbo.Export_ProductCategory
         where ID > @iMaxId order by ID`,
 };
 exports.ProductCategoryLanguage = {
