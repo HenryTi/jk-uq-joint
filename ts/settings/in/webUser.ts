@@ -34,7 +34,16 @@ export const WebUserTonva: UqInTuid = {
            , InvoiceType, InvoiceTitle, TaxNo, BankAccountName
            , CustomerID, SalesRegionBelongsTo, SalesCompanyID
            from alidb.ProdData.dbo.Export_WebUser w
-           where ID > @iMaxId and State = 1 order by ID`,
+           where ID > @iMaxId and State in (1, 5) order by ID`,
+    /**
+     * WebUser的导入步骤：
+     * 1.导入tonva系统，生成id;
+     * 2.导入webUser/webUserContact中；
+     * 3.如果有对应的customer，则导入webUserCustomer中;
+     * 4.如果有对应的invoiceinfo，则需1.导入到common.invoiceinfo中；2.将生成的invoiceid写入到webuserSetting中（但不能覆盖该表中其他数据），
+     *      为此目的，使用了webusersettingalter表，数据先导入此表，在手动导入到webusersetting表中；
+     * 5.invoicetype的导入同invoiceinfo;
+     */
     pullWrite: async (joint: Joint, data: any) => {
         try {
             let userId = await joint.userIn(WebUserTonva,
@@ -135,6 +144,9 @@ export const WebUserContacts: UqInMap = {
     pull: `select top ${promiseSize} ID, AddressID as ContactID, WebUserID, Name, OrganizationName, Mobile, Telephone, CountryID
            , ProvinceID, CityID, [Address] as Addr, ZipCode, Email, IsDefault, AddressType
            from alidb.ProdData.dbo.Export_WebUserAddress where ID > @iMaxId order by ID`,
+    /**
+     *
+     */
     pullWrite: async (joint: Joint, data: any) => {
         try {
             let userId = -1;

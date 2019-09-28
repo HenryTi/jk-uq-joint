@@ -27,7 +27,7 @@ class Joint {
         this.uqInDict = {};
         this.tick = async () => {
             try {
-                console.log('tick ' + new Date().toLocaleString());
+                console.log('tick: ' + new Date().toLocaleString() + "; tickCount: " + this.tickCount);
                 //await this.scanPull();
                 await this.scanIn();
                 // await this.scanOut();
