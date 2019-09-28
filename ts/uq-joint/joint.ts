@@ -15,7 +15,7 @@ import { getLogger } from 'log4js';
 import { decrypt } from "../tools/hashPassword";
 
 const logger = getLogger('joint');
-const uqInEntities = config.get<string[]>("afterFirstEntities");
+const uqInEntities = config.get<{ name: string, intervalUnit: number }[]>("afterFirstEntities");
 const uqBusSettings = config.get<string[]>("uqBus");
 
 const interval = config.get<number>("interval");
@@ -23,6 +23,7 @@ const interval = config.get<number>("interval");
 export class Joint {
     protected uqs: Uqs;
     protected settings: Settings;
+    private tickCount: number = 0;
 
     constructor(settings: Settings) {
         this.settings = settings;
@@ -62,6 +63,7 @@ export class Joint {
             await this.scanIn();
             // await this.scanOut();
             await this.scanBus();
+            this.tickCount++;
         }
         catch (err) {
             logger.error('error in timer tick');
@@ -133,10 +135,11 @@ export class Joint {
         let { pullReadFromSql } = this.settings;
         for (let uqInName of uqInEntities) {
 
-            let uqIn = this.uqInDict[uqInName];
+            let uqIn = this.uqInDict[uqInName.name];
             if (uqIn === undefined) continue;
 
             let { uq, entity, pull, pullWrite } = uqIn;
+            if (this.tickCount % (uqInName.intervalUnit || 1) !== 0) continue;
             let queueName = uq + ':' + entity;
             console.log('scan in ' + queueName + ' at ' + new Date().toLocaleString());
             let promises: PromiseLike<any>[] = [];

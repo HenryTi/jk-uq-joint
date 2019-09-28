@@ -23,6 +23,7 @@ const uqBusSettings = config_1.default.get("uqBus");
 const interval = config_1.default.get("interval");
 class Joint {
     constructor(settings) {
+        this.tickCount = 0;
         this.uqInDict = {};
         this.tick = async () => {
             try {
@@ -31,6 +32,7 @@ class Joint {
                 await this.scanIn();
                 // await this.scanOut();
                 await this.scanBus();
+                this.tickCount++;
             }
             catch (err) {
                 logger.error('error in timer tick');
@@ -124,10 +126,12 @@ class Joint {
     async scanIn() {
         let { pullReadFromSql } = this.settings;
         for (let uqInName of uqInEntities) {
-            let uqIn = this.uqInDict[uqInName];
+            let uqIn = this.uqInDict[uqInName.name];
             if (uqIn === undefined)
                 continue;
             let { uq, entity, pull, pullWrite } = uqIn;
+            if (this.tickCount % (uqInName.intervalUnit || 1) !== 0)
+                continue;
             let queueName = uq + ':' + entity;
             console.log('scan in ' + queueName + ' at ' + new Date().toLocaleString());
             let promises = [];
