@@ -141,9 +141,11 @@ export const WebUserContacts: UqInMap = {
             contact: '^ID@Contact',
         }
     },
-    pull: `select top ${promiseSize} ID, AddressID as ContactID, WebUserID, Name, OrganizationName, Mobile, Telephone, CountryID
-           , ProvinceID, CityID, [Address] as Addr, ZipCode, Email, IsDefault, AddressType
-           from alidb.ProdData.dbo.Export_WebUserAddress where ID > @iMaxId order by ID`,
+    pull: `select top ${promiseSize} wa.ID, wa.AddressID as ContactID, wa.WebUserID, wa.Name, wa.OrganizationName, wa.Mobile, wa.Telephone, wa.CountryID
+           , wa.ProvinceID, wa.CityID, wa.[Address] as Addr, wa.ZipCode, wa.Email, wa.IsDefault, wa.AddressType
+           from alidb.ProdData.dbo.Export_WebUserAddress wa
+           inner join alidb.jk_eb.dbo.ClientLogin cl on cl.CIID = wa.WebUserID
+           where wa.ID > @iMaxId and cl.State in (0, 1, 5) order by wa.ID`,
     /**
      *
      */
