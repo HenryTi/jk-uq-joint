@@ -486,14 +486,28 @@ export class Joint {
                 delete body.id;
             }
             let ret = await centerApi.queueIn(body);
-            if (ret === undefined || typeof ret !== 'number') {
+            if (!body.id && (ret === undefined || typeof ret !== 'number')) {
                 console.error(body);
-                console.error(ret);
-                ret = -5;
+                let { id: code, message } = ret as any;
+                switch (code) {
+                    case -2:
+                        data.Email += '\t';
+                        ret = await this.userIn(uqIn, data);
+                        break;
+                    case -3:
+                        data.Mobile += '\t';
+                        ret = await this.userIn(uqIn, data);
+                        break;
+                    default:
+                        console.error(ret);
+                        ret = -5;
+                        break;
+                }
             }
-            if (ret > 0)
+            if (ret > 0) {
                 await map(tuid, ret, keyVal);
-            return ret;
+            }
+            return body.id || ret;
         } catch (error) {
             throw error;
         }

@@ -22,12 +22,14 @@ exports.faceUser = {
         Mobile: 'mobile',
         Email: 'email',
     },
+    /**
+     * 仅处理已经导入就系统的注册信息的变更，不处理新注册客户信息导入（因为1.tonva上的注册客户不一定是商城的注册客户；2.tonva上注册后信息不全，也没法审核）
+     */
     push: async (joint, uqIn, queue, data) => {
-        let ret;
-        let { id: tonvaId, Id } = data;
+        let { Id } = data;
         if (Id && Id !== 'n/a') {
             try {
-                ret = await UserApiClient_1.userApiClient.ChangeRegisterInfo(data);
+                await UserApiClient_1.userApiClient.ChangeRegisterInfo(data);
             }
             catch (error) {
                 let { code, message } = error;
@@ -38,31 +40,13 @@ exports.faceUser = {
                 return false;
             }
         }
-        else {
-            try {
-                ret = await UserApiClient_1.userApiClient.RegisterWebUser(data);
-            }
-            catch (error) {
-                let { code } = error;
-                logger_1.logger.error(error + ';data:' + data);
-                if (code === 409) {
-                    return true;
-                }
-                else
-                    return false;
-            }
-            if (ret !== undefined) {
-                let { face } = uqIn;
-                await map_1.map('webuser', tonvaId, ret.Identity);
-            }
-            return true;
-        }
     }
 };
 exports.faceWebUser = {
     face: '百灵威系统工程部/WebUser/WebUser',
     from: 'local',
     mapper: {
+        id: true,
         Id: 'id@WebUser',
         no: false,
         Name: 'name',
@@ -73,6 +57,14 @@ exports.faceWebUser = {
         Department: 'departmentName',
     },
     push: async (joint, uqIn, queue, data) => {
+        let { Id } = data;
+        if (!Id || Id === 'n/a') {
+            let no = await RegisterWebUser(data);
+            if (no < 0)
+                return false;
+            else
+                data.Id = no;
+        }
         try {
             let { Name, FirstName, LastName } = data;
             if (!Name) {
@@ -89,10 +81,30 @@ exports.faceWebUser = {
         }
     }
 };
+async function RegisterWebUser(data) {
+    // 首先去获取到注册信息，去老系统中注册，怎么获取？需要Henry提供接口
+    let dataCenter; // = Henry提供新接口
+    let ret;
+    try {
+        ret = await UserApiClient_1.userApiClient.RegisterWebUser(dataCenter);
+    }
+    catch (error) {
+        let { code } = error;
+        logger_1.logger.error(error + ';data:' + dataCenter);
+        if (code !== 409) {
+            return -1;
+        }
+    }
+    if (ret !== undefined) {
+        await map_1.map('webuser', data.id, ret.Identity);
+        return ret.Identity;
+    }
+}
 exports.faceWebUserContact = {
     face: '百灵威系统工程部/WebUser/WebUserContact',
     from: 'local',
     mapper: {
+        webUser: true,
         Id: 'webUser@WebUser',
         Telephone: 'telephone',
         Mobile: 'mobile',
@@ -116,6 +128,15 @@ exports.faceWebUserContact = {
         }
     },
     push: async (joint, uqIn, queue, data) => {
+        let { Id } = data;
+        if (!Id || Id === 'n/a') {
+            data.id = data.webUser;
+            let no = await RegisterWebUser(data);
+            if (no < 0)
+                return false;
+            else
+                data.Id = no;
+        }
         let webUserParam = lodash_1.default.clone(data);
         try {
             if (data.address !== undefined) {
@@ -138,6 +159,7 @@ exports.faceWebUserInvoice = {
     face: '百灵威系统工程部/WebUser/WebUserInvoice',
     from: 'local',
     mapper: {
+        webUser: true,
         Id: 'webUser@WebUser',
         InvoiceType: 'invoiceType',
         invoiceInfo: true,
@@ -157,6 +179,15 @@ exports.faceWebUserInvoice = {
         }
     },
     push: async (joint, uqIn, queue, data) => {
+        let { Id } = data;
+        if (!Id || Id === 'n/a') {
+            data.id = data.webUser;
+            let no = await RegisterWebUser(data);
+            if (no < 0)
+                return false;
+            else
+                data.Id = no;
+        }
         try {
             let param = lodash_1.default.clone(data);
             let { invoiceInfo } = data;
@@ -182,6 +213,7 @@ exports.faceWebUserContacts = {
     face: '百灵威系统工程部/WebUser/WebUserContacts',
     from: 'local',
     mapper: {
+        id: true,
         Id: 'id@webUser',
         contact: true,
     },
@@ -202,6 +234,14 @@ exports.faceWebUserContacts = {
         }
     },
     push: async (joint, uqIn, queue, data) => {
+        let { Id } = data;
+        if (!Id || Id === 'n/a') {
+            let no = await RegisterWebUser(data);
+            if (no < 0)
+                return false;
+            else
+                data.Id = no;
+        }
         try {
             let param = lodash_1.default.clone(data);
             let { name, organizationName, telephone, mobile, email, address, addressString } = data.contact;

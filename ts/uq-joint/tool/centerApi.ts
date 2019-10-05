@@ -76,6 +76,8 @@ class CenterApi extends Fetch {
     /**
      * 用来将user数据写入Tonva系统（的中心服务器?)
      * @param param: 要写入的user数据，格式如上
+     * @returns 正数值表示新建user的id；
+     * 出现错误时{id, message} id的含义：-1:id和name不匹配；-2：email已经被使用过了；-3: mobile已经被使用过了；-4: wechat已经被使用了；
      */
     async queueIn(param: any): Promise<number> {
         return await this.post('open/queue-in', param)
