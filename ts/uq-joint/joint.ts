@@ -23,7 +23,7 @@ const interval = config.get<number>("interval");
 export class Joint {
     protected uqs: Uqs;
     protected settings: Settings;
-    private tickCount: number = 0;
+    private tickCount: number = -1;
 
     constructor(settings: Settings) {
         this.settings = settings;
@@ -58,12 +58,12 @@ export class Joint {
 
     private tick = async () => {
         try {
+            this.tickCount++;
             console.log('tick: ' + new Date().toLocaleString() + "; tickCount: " + this.tickCount);
             //await this.scanPull();
             await this.scanIn();
             // await this.scanOut();
             await this.scanBus();
-            this.tickCount++;
         }
         catch (err) {
             logger.error('error in timer tick');

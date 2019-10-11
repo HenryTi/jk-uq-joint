@@ -4,6 +4,7 @@ import { userApiClient } from "../../tools/UserApiClient";
 import { map } from "../../uq-joint/tool/map";
 import { logger } from "../../tools/logger";
 import _ from 'lodash';
+import { centerApi } from "../../uq-joint/tool/centerApi";
 
 export const faceUser: UqBus = {
     face: '百灵威系统工程部/WebUser/User',
@@ -36,6 +37,7 @@ export const faceUser: UqBus = {
                 return false;
             }
         }
+        return true;
     }
 }
 
@@ -57,10 +59,16 @@ export const faceWebUser: UqBus = {
         let { Id } = data;
         if (!Id || Id === 'n/a') {
             let no = await RegisterWebUser(data);
-            if (no < 0)
-                return false;
-            else
-                data.Id = no;
+            switch (no) {
+                case -3:
+                    return false;
+                case -2:
+                case -1:
+                    return true;
+                default:
+                    data.Id = no;
+                    break;
+            }
         }
 
         try {
@@ -79,21 +87,34 @@ export const faceWebUser: UqBus = {
     }
 };
 
-async function RegisterWebUser(data: any) {
+/**
+ * 将在新系统中注册的用户导入到旧系统中；
+ * @param user 从Bus中得到的User信息
+ * @returns >0：表示在旧系统注册后生成的id; -1：表示在旧系统中注册发生冲突（即已经注册过了）；-2：表示从新系统中未获取到相应的注册信息;
+ *  -3:表示调用中心服务器出现错误（需重试）；
+ */
+async function RegisterWebUser(user: any) {
     // 首先去获取到注册信息，去老系统中注册，怎么获取？需要Henry提供接口
-    let dataCenter; // = Henry提供新接口
+    let userInCenter;
+    try {
+        userInCenter = centerApi.queueOutOne(user.id); // = Henry提供新接口
+    } catch (error) {
+        return -3;
+    }
+    if (!userInCenter)
+        return -2;
     let ret;
     try {
-        ret = await userApiClient.RegisterWebUser(dataCenter);
+        ret = await userApiClient.RegisterWebUser(userInCenter);
     } catch (error) {
         let { code } = error;
-        logger.error(error + ';data:' + dataCenter);
+        logger.error(error + ';data:' + userInCenter);
         if (code !== 409) {
             return -1;
         }
     }
     if (ret !== undefined) {
-        await map('webuser', data.id, ret.Identity);
+        await map('webuser', user.id, ret.Identity);
         return ret.Identity;
     }
 }
@@ -130,10 +151,16 @@ export const faceWebUserContact: UqBus = {
         if (!Id || Id === 'n/a') {
             data.id = data.webUser;
             let no = await RegisterWebUser(data);
-            if (no < 0)
-                return false;
-            else
-                data.Id = no;
+            switch (no) {
+                case -3:
+                    return false;
+                case -2:
+                case -1:
+                    return true;
+                default:
+                    data.Id = no;
+                    break;
+            }
         }
 
         let webUserParam = _.clone(data);
@@ -182,10 +209,16 @@ export const faceWebUserInvoice: UqBus = {
         if (!Id || Id === 'n/a') {
             data.id = data.webUser;
             let no = await RegisterWebUser(data);
-            if (no < 0)
-                return false;
-            else
-                data.Id = no;
+            switch (no) {
+                case -3:
+                    return false;
+                case -2:
+                case -1:
+                    return true;
+                default:
+                    data.Id = no;
+                    break;
+            }
         }
 
         try {
@@ -239,10 +272,16 @@ export const faceWebUserContacts: UqBus = {
         let { Id } = data;
         if (!Id || Id === 'n/a') {
             let no = await RegisterWebUser(data);
-            if (no < 0)
-                return false;
-            else
-                data.Id = no;
+            switch (no) {
+                case -3:
+                    return false;
+                case -2:
+                case -1:
+                    return true;
+                default:
+                    data.Id = no;
+                    break;
+            }
         }
 
         try {

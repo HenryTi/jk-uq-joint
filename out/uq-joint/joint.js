@@ -23,16 +23,16 @@ const uqBusSettings = config_1.default.get("uqBus");
 const interval = config_1.default.get("interval");
 class Joint {
     constructor(settings) {
-        this.tickCount = 0;
+        this.tickCount = -1;
         this.uqInDict = {};
         this.tick = async () => {
             try {
+                this.tickCount++;
                 console.log('tick: ' + new Date().toLocaleString() + "; tickCount: " + this.tickCount);
                 //await this.scanPull();
                 await this.scanIn();
                 // await this.scanOut();
                 await this.scanBus();
-                this.tickCount++;
             }
             catch (err) {
                 logger.error('error in timer tick');

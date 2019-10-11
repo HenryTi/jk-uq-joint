@@ -48,6 +48,19 @@ class CenterApi extends fetch_1.Fetch {
     async queueOut(start, page) {
         return await this.get('open/queue-out', { start: start, page: page });
     }
+    /**
+     * 根据id从中心服务器获取单个User的注册信息
+     * @param id 所要获取User的id
+     * @returns object: {"$queue":"0","$type":"$user","id":"10008","name":"xiari307","nick":"","icon":"","country":"","mobile":"18373184674","email":"794997443@qq.com","pwd":"32c4bc0dd66a0b9c780c9fa8acb26702"}
+     */
+    async queueOutOne(id) {
+        try {
+            return await this.get('open/user-from-id', { id: id });
+        }
+        catch (error) {
+            console.error(error);
+        }
+    }
     /*
     param:
     {

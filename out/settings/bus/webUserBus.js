@@ -8,6 +8,7 @@ const UserApiClient_1 = require("../../tools/UserApiClient");
 const map_1 = require("../../uq-joint/tool/map");
 const logger_1 = require("../../tools/logger");
 const lodash_1 = __importDefault(require("lodash"));
+const centerApi_1 = require("../../uq-joint/tool/centerApi");
 exports.faceUser = {
     face: '百灵威系统工程部/WebUser/User',
     from: 'center',
@@ -40,6 +41,7 @@ exports.faceUser = {
                 return false;
             }
         }
+        return true;
     }
 };
 exports.faceWebUser = {
@@ -60,10 +62,16 @@ exports.faceWebUser = {
         let { Id } = data;
         if (!Id || Id === 'n/a') {
             let no = await RegisterWebUser(data);
-            if (no < 0)
-                return false;
-            else
-                data.Id = no;
+            switch (no) {
+                case -3:
+                    return false;
+                case -2:
+                case -1:
+                    return true;
+                default:
+                    data.Id = no;
+                    break;
+            }
         }
         try {
             let { Name, FirstName, LastName } = data;
@@ -81,22 +89,36 @@ exports.faceWebUser = {
         }
     }
 };
-async function RegisterWebUser(data) {
+/**
+ * 将在新系统中注册的用户导入到旧系统中；
+ * @param user 从Bus中得到的User信息
+ * @returns >0：表示在旧系统注册后生成的id; -1：表示在旧系统中注册发生冲突（即已经注册过了）；-2：表示从新系统中未获取到相应的注册信息;
+ *  -3:表示调用中心服务器出现错误（需重试）；
+ */
+async function RegisterWebUser(user) {
     // 首先去获取到注册信息，去老系统中注册，怎么获取？需要Henry提供接口
-    let dataCenter; // = Henry提供新接口
+    let userInCenter;
+    try {
+        userInCenter = centerApi_1.centerApi.queueOutOne(user.id); // = Henry提供新接口
+    }
+    catch (error) {
+        return -3;
+    }
+    if (!userInCenter)
+        return -2;
     let ret;
     try {
-        ret = await UserApiClient_1.userApiClient.RegisterWebUser(dataCenter);
+        ret = await UserApiClient_1.userApiClient.RegisterWebUser(userInCenter);
     }
     catch (error) {
         let { code } = error;
-        logger_1.logger.error(error + ';data:' + dataCenter);
+        logger_1.logger.error(error + ';data:' + userInCenter);
         if (code !== 409) {
             return -1;
         }
     }
     if (ret !== undefined) {
-        await map_1.map('webuser', data.id, ret.Identity);
+        await map_1.map('webuser', user.id, ret.Identity);
         return ret.Identity;
     }
 }
@@ -132,10 +154,16 @@ exports.faceWebUserContact = {
         if (!Id || Id === 'n/a') {
             data.id = data.webUser;
             let no = await RegisterWebUser(data);
-            if (no < 0)
-                return false;
-            else
-                data.Id = no;
+            switch (no) {
+                case -3:
+                    return false;
+                case -2:
+                case -1:
+                    return true;
+                default:
+                    data.Id = no;
+                    break;
+            }
         }
         let webUserParam = lodash_1.default.clone(data);
         try {
@@ -183,10 +211,16 @@ exports.faceWebUserInvoice = {
         if (!Id || Id === 'n/a') {
             data.id = data.webUser;
             let no = await RegisterWebUser(data);
-            if (no < 0)
-                return false;
-            else
-                data.Id = no;
+            switch (no) {
+                case -3:
+                    return false;
+                case -2:
+                case -1:
+                    return true;
+                default:
+                    data.Id = no;
+                    break;
+            }
         }
         try {
             let param = lodash_1.default.clone(data);
@@ -237,10 +271,16 @@ exports.faceWebUserContacts = {
         let { Id } = data;
         if (!Id || Id === 'n/a') {
             let no = await RegisterWebUser(data);
-            if (no < 0)
-                return false;
-            else
-                data.Id = no;
+            switch (no) {
+                case -3:
+                    return false;
+                case -2:
+                case -1:
+                    return true;
+                default:
+                    data.Id = no;
+                    break;
+            }
         }
         try {
             let param = lodash_1.default.clone(data);
