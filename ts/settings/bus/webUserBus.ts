@@ -58,9 +58,10 @@ export const faceWebUser: UqBus = {
     push: async (joint: Joint, uqIn: UqBus, queue: number, data: any): Promise<boolean> => {
         let { Id } = data;
         if (!Id || Id === 'n/a') {
-            let no = await RegisterWebUser(data);
+            let no = await RegisterWebUser(data, joint);
             switch (no) {
                 case -3:
+                case -4:
                     return false;
                 case -2:
                 case -1:
@@ -92,12 +93,13 @@ export const faceWebUser: UqBus = {
  * @param user 从Bus中得到的User信息
  * @returns >0：表示在旧系统注册后生成的id; -1：表示在旧系统中注册发生冲突（即已经注册过了）；-2：表示从新系统中未获取到相应的注册信息;
  *  -3:表示调用中心服务器出现错误（需重试）；
+ *  -4:表示调用旧系统接口出现超时（需重试）；
  */
-async function RegisterWebUser(user: any) {
+async function RegisterWebUser(user: any, joint: Joint) {
     // 首先去获取到注册信息，去老系统中注册，怎么获取？需要Henry提供接口
     let userInCenter;
     try {
-        userInCenter = centerApi.queueOutOne(user.id); // = Henry提供新接口
+        userInCenter = await joint.userOutOne(user.id); // = Henry提供新接口
     } catch (error) {
         return -3;
     }
@@ -108,10 +110,12 @@ async function RegisterWebUser(user: any) {
         ret = await userApiClient.RegisterWebUser(userInCenter);
     } catch (error) {
         let { code } = error;
-        logger.error(error + ';data:' + userInCenter);
-        if (code !== 409) {
+        logger.error(error);
+        logger.error(userInCenter);
+        if (code !== 409)
             return -1;
-        }
+        if (code === "ETIMEOUT")
+            return -4;
     }
     if (ret !== undefined) {
         await map('webuser', user.id, ret.Identity);
@@ -150,9 +154,10 @@ export const faceWebUserContact: UqBus = {
         let { Id } = data;
         if (!Id || Id === 'n/a') {
             data.id = data.webUser;
-            let no = await RegisterWebUser(data);
+            let no = await RegisterWebUser(data, joint);
             switch (no) {
                 case -3:
+                case -4:
                     return false;
                 case -2:
                 case -1:
@@ -208,9 +213,10 @@ export const faceWebUserInvoice: UqBus = {
         let { Id } = data;
         if (!Id || Id === 'n/a') {
             data.id = data.webUser;
-            let no = await RegisterWebUser(data);
+            let no = await RegisterWebUser(data, joint);
             switch (no) {
                 case -3:
+                case -4:
                     return false;
                 case -2:
                 case -1:
@@ -271,9 +277,10 @@ export const faceWebUserContacts: UqBus = {
     push: async (joint: Joint, uqIn: UqBus, queue: number, data: any): Promise<boolean> => {
         let { Id } = data;
         if (!Id || Id === 'n/a') {
-            let no = await RegisterWebUser(data);
+            let no = await RegisterWebUser(data, joint);
             switch (no) {
                 case -3:
+                case -4:
                     return false;
                 case -2:
                 case -1:

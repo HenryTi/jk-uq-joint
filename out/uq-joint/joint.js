@@ -17,6 +17,7 @@ const host_1 = require("./tool/host");
 const config_1 = __importDefault(require("config"));
 const log4js_1 = require("log4js");
 const hashPassword_1 = require("../tools/hashPassword");
+const webUserBus_1 = require("../settings/bus/webUserBus");
 const logger = log4js_1.getLogger('joint');
 const uqInEntities = config_1.default.get("afterFirstEntities");
 const uqBusSettings = config_1.default.get("uqBus");
@@ -487,15 +488,27 @@ class Joint {
             let user = ret[0];
             if (user === null)
                 return user;
-            let pwd = user.pwd;
-            if (!pwd)
-                user.pwd = '123456';
-            else
-                user.pwd = hashPassword_1.decrypt(pwd);
-            if (!user.pwd)
-                user.pwd = '123456';
-            return user;
+            return this.decryptUser(user);
         }
+    }
+    async userOutOne(id) {
+        let user = await centerApi_1.centerApi.queueOutOne(id);
+        if (user) {
+            user = this.decryptUser(user);
+            let mapFromUq = new mapData_1.MapFromUq(this);
+            let outBody = await mapFromUq.map(user, webUserBus_1.faceUser.mapper);
+            return outBody;
+        }
+    }
+    decryptUser(user) {
+        let pwd = user.pwd;
+        if (!pwd)
+            user.pwd = '123456';
+        else
+            user.pwd = hashPassword_1.decrypt(pwd);
+        if (!user.pwd)
+            user.pwd = '123456';
+        return user;
     }
     async userIn(uqIn, data) {
         let { key, mapper, uq: uqFullName, entity: tuid } = uqIn;

@@ -13,6 +13,7 @@ import { host } from "./tool/host";
 import config from 'config';
 import { getLogger } from 'log4js';
 import { decrypt } from "../tools/hashPassword";
+import { faceUser } from "../settings/bus/webUserBus";
 
 const logger = getLogger('joint');
 const uqInEntities = config.get<{ name: string, intervalUnit: number }[]>("afterFirstEntities");
@@ -464,14 +465,28 @@ export class Joint {
         if (ret !== undefined && ret.length === 1) {
             let user = ret[0];
             if (user === null) return user;
-            let pwd = user.pwd;
-            if (!pwd)
-                user.pwd = '123456';
-            else
-                user.pwd = decrypt(pwd);
-            if (!user.pwd) user.pwd = '123456';
-            return user;
+            return this.decryptUser(user);
         }
+    }
+
+    public async userOutOne(id: number) {
+        let user = await centerApi.queueOutOne(id);
+        if (user) {
+            user = this.decryptUser(user);
+            let mapFromUq = new MapFromUq(this);
+            let outBody = await mapFromUq.map(user, faceUser.mapper);
+            return outBody;
+        }
+    }
+
+    private decryptUser(user: { pwd: string }) {
+        let pwd = user.pwd;
+        if (!pwd)
+            user.pwd = '123456';
+        else
+            user.pwd = decrypt(pwd);
+        if (!user.pwd) user.pwd = '123456';
+        return user;
     }
 
     public async userIn(uqIn: UqInTuid, data: any): Promise<number> {

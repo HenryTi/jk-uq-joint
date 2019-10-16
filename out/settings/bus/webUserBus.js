@@ -8,7 +8,6 @@ const UserApiClient_1 = require("../../tools/UserApiClient");
 const map_1 = require("../../uq-joint/tool/map");
 const logger_1 = require("../../tools/logger");
 const lodash_1 = __importDefault(require("lodash"));
-const centerApi_1 = require("../../uq-joint/tool/centerApi");
 exports.faceUser = {
     face: '百灵威系统工程部/WebUser/User',
     from: 'center',
@@ -61,9 +60,10 @@ exports.faceWebUser = {
     push: async (joint, uqIn, queue, data) => {
         let { Id } = data;
         if (!Id || Id === 'n/a') {
-            let no = await RegisterWebUser(data);
+            let no = await RegisterWebUser(data, joint);
             switch (no) {
                 case -3:
+                case -4:
                     return false;
                 case -2:
                 case -1:
@@ -94,12 +94,13 @@ exports.faceWebUser = {
  * @param user 从Bus中得到的User信息
  * @returns >0：表示在旧系统注册后生成的id; -1：表示在旧系统中注册发生冲突（即已经注册过了）；-2：表示从新系统中未获取到相应的注册信息;
  *  -3:表示调用中心服务器出现错误（需重试）；
+ *  -4:表示调用旧系统接口出现超时（需重试）；
  */
-async function RegisterWebUser(user) {
+async function RegisterWebUser(user, joint) {
     // 首先去获取到注册信息，去老系统中注册，怎么获取？需要Henry提供接口
     let userInCenter;
     try {
-        userInCenter = centerApi_1.centerApi.queueOutOne(user.id); // = Henry提供新接口
+        userInCenter = await joint.userOutOne(user.id); // = Henry提供新接口
     }
     catch (error) {
         return -3;
@@ -112,10 +113,12 @@ async function RegisterWebUser(user) {
     }
     catch (error) {
         let { code } = error;
-        logger_1.logger.error(error + ';data:' + userInCenter);
-        if (code !== 409) {
+        logger_1.logger.error(error);
+        logger_1.logger.error(userInCenter);
+        if (code !== 409)
             return -1;
-        }
+        if (code === "ETIMEOUT")
+            return -4;
     }
     if (ret !== undefined) {
         await map_1.map('webuser', user.id, ret.Identity);
@@ -153,9 +156,10 @@ exports.faceWebUserContact = {
         let { Id } = data;
         if (!Id || Id === 'n/a') {
             data.id = data.webUser;
-            let no = await RegisterWebUser(data);
+            let no = await RegisterWebUser(data, joint);
             switch (no) {
                 case -3:
+                case -4:
                     return false;
                 case -2:
                 case -1:
@@ -210,9 +214,10 @@ exports.faceWebUserInvoice = {
         let { Id } = data;
         if (!Id || Id === 'n/a') {
             data.id = data.webUser;
-            let no = await RegisterWebUser(data);
+            let no = await RegisterWebUser(data, joint);
             switch (no) {
                 case -3:
+                case -4:
                     return false;
                 case -2:
                 case -1:
@@ -270,9 +275,10 @@ exports.faceWebUserContacts = {
     push: async (joint, uqIn, queue, data) => {
         let { Id } = data;
         if (!Id || Id === 'n/a') {
-            let no = await RegisterWebUser(data);
+            let no = await RegisterWebUser(data, joint);
             switch (no) {
                 case -3:
+                case -4:
                     return false;
                 case -2:
                 case -1:
