@@ -130,7 +130,7 @@ class Joint {
             let uqIn = this.uqInDict[uqInName.name];
             if (uqIn === undefined)
                 continue;
-            let { uq, entity, pull, pullWrite } = uqIn;
+            let { uq, type, entity, pull, pullWrite } = uqIn;
             if (this.tickCount % (uqInName.intervalUnit || 1) !== 0)
                 continue;
             let queueName = uq + ':' + entity;
@@ -175,6 +175,22 @@ class Joint {
                     // message = JSON.parse(body);
                 }
                 let { lastPointer, data } = ret;
+                // data.sort((a, b) => { return a.ID - b.ID });
+                let dataCopy = [];
+                for (let i = data.length - 1; i >= 0; i--) {
+                    let message = data[i];
+                    if (type === "tuid" || type === "tuid-arr") {
+                        let no = message[uqIn.key];
+                        if (dataCopy.lastIndexOf(no) >= 0)
+                            continue;
+                        dataCopy.push(no);
+                    }
+                    if (pullWrite !== undefined)
+                        promises.push(pullWrite(this, message));
+                    else
+                        promises.push(this.uqIn(uqIn, message));
+                }
+                /*
                 data.forEach(message => {
                     if (pullWrite !== undefined) {
                         promises.push(pullWrite(this, message));
@@ -183,6 +199,7 @@ class Joint {
                         promises.push(this.uqIn(uqIn, message));
                     }
                 });
+                */
                 try {
                     await Promise.all(promises);
                     promises.splice(0);
