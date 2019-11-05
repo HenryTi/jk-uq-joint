@@ -32,7 +32,8 @@ export class OpenApi extends Fetch {
         return ret;
     }
     async readBus(face: string, queue: number): Promise<BusMessage> {
-        let ret = await this.post('open/joint-read-bus', {
+        //let ret = await this.post('open/joint-read-bus', {
+            let ret = await this.post('joint-read-bus', {
             unit: this.unit,
             face: face,
             queue: queue
@@ -40,7 +41,8 @@ export class OpenApi extends Fetch {
         return ret;
     }
     async writeBus(face: string, from: string, queue: number | string, body: string): Promise<BusMessage> {
-        let ret = await this.post('open/joint-write-bus', {
+        //let ret = await this.post('open/joint-write-bus', {
+        let ret = await this.post('joint-write-bus', {
             unit: this.unit,
             face: face,
             from: from,
