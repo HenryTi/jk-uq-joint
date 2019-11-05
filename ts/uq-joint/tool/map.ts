@@ -3,7 +3,7 @@ import { databaseName } from "../db/mysql/database";
 import { createMapTable } from "./createMapTable";
 
 /**
- * 建立实体在tonva和老系统内id的对应广西
+ * 建立实体在tonva和老系统内id的对应关系
  * @param moniker 实体名称
  * @param id 在tonva中的id
  * @param no 在老系统中的id

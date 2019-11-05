@@ -37,22 +37,22 @@ exports.sqls = {
                 where LanguageId > @iMaxId
                 order by LanguageID`,
     readCountry: `
-                select top ${promiseSize} code as ID, Countries, ChineseName
+                select top ${promiseSize} code as ID, Countries, ChineseName, Status as IsValid, [Order]
                 from dbs.dbo.CountryCode1
                 where code > @iMaxId and level = 1
                 order by code`,
     readProvince: `
-                select top ${promiseSize} code as ID, Countries, ChineseName, parentCode
+                select top ${promiseSize} code as ID, Countries, ChineseName, parentCode, Status as IsValid, [Order]
                 from dbs.dbo.CountryCode1
-                where code > @iMaxId and level = 2
+                where code > @iMaxId and level = 2 and ParentCode = 'CN'
                 order by code`,
     readCity: `
-                select top ${promiseSize} code as ID, Countries, ChineseName, parentCode
+                select top ${promiseSize} code as ID, Countries, ChineseName, parentCode, Status as IsValid, [Order]
                 from dbs.dbo.CountryCode1
                 where code > @iMaxId and level = 3
                 order by code`,
     readCounty: `
-                select top ${promiseSize} code as ID, Countries, ChineseName, parentCode
+                select top ${promiseSize} code as ID, Countries, ChineseName, parentCode, Status as IsValid, [Order]
                 from dbs.dbo.CountryCode1
                 where code > @iMaxId and level = 4
                 order by code`,

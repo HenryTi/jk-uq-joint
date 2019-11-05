@@ -33,6 +33,10 @@
     ],
     "afterFirstEntities": [
         {
+            "name": "Chemical",
+            "inervalUnit": 720
+        },
+        {
             "name": "JkTaskType",
             "inervalUnit": 1440
         },

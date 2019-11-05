@@ -4,7 +4,7 @@ const tool_1 = require("../db/mysql/tool");
 const database_1 = require("../db/mysql/database");
 const createMapTable_1 = require("./createMapTable");
 /**
- * 建立实体在tonva和老系统内id的对应广西
+ * 建立实体在tonva和老系统内id的对应关系
  * @param moniker 实体名称
  * @param id 在tonva中的id
  * @param no 在老系统中的id

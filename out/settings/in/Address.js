@@ -11,7 +11,9 @@ exports.Country = {
         no: "ID",
         code: "ID",
         englishName: "Countries",
-        chineseName: "ChineseName"
+        chineseName: "ChineseName",
+        isValid: 'IsValid',
+        order: 'Order',
     }
 };
 exports.Province = {
@@ -25,6 +27,8 @@ exports.Province = {
         englishName: "Countries",
         chineseName: "ChineseName",
         country: "parentCode@Country",
+        isValid: 'IsValid',
+        order: 'Order',
     }
 };
 exports.City = {
@@ -38,6 +42,8 @@ exports.City = {
         englishName: "Countries",
         chineseName: "ChineseName",
         province: "parentCode@Province",
+        isValid: 'IsValid',
+        order: 'Order',
     }
 };
 exports.County = {
@@ -51,6 +57,8 @@ exports.County = {
         englishName: "Countries",
         chineseName: "ChineseName",
         city: "parentCode@City",
+        isValid: 'IsValid',
+        order: 'Order',
     }
 };
 exports.Address = {

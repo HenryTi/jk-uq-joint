@@ -1,5 +1,4 @@
 import * as _ from 'lodash';
-import dateFormat from 'dateformat';
 import { UqInTuid, UqInMap, UqInTuidArr, Joint } from "../../uq-joint";
 import { uqs } from "../uqs";
 import { customerPullWrite, contactPullWrite } from '../../first/converter/customerPullWrite';
