@@ -4,3 +4,7 @@ npm-debug.log
 npm-debug.log.*
 /node_modules
 package-lock.json
+/ts/uq-joint
+/ts/uq-joint.old
+/out/uq-joint
+/out/uq-joint.old
