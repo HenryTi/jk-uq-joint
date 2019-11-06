@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import { UqInTuid, UqInMap, UqInTuidArr, Joint } from "../../uq-joint";
+import { UqInTuid, UqInMap, UqInTuidArr, Joint } from "uq-joint";
 import { uqs } from "../uqs";
 import { customerPullWrite, contactPullWrite } from '../../first/converter/customerPullWrite';
 import config from 'config';

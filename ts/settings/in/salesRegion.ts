@@ -1,4 +1,4 @@
-import { UqInTuid, UqInMap } from "../../uq-joint";
+import { UqInTuid, UqInMap } from "uq-joint";
 import { uqs } from "../uqs";
 
 export const SalesRegion: UqInTuid = {

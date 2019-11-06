@@ -1,5 +1,5 @@
 import { sqls } from './converter/sqls';
-import { UqIn, DataPullResult } from "../uq-joint";
+import { UqIn, DataPullResult } from "uq-joint";
 
 import { ProductCategory, ProductCategoryLanguage, ProductProductCategory } from "../settings/in/productCategory";
 import { Country, Province, City, County } from "../settings/in/Address";

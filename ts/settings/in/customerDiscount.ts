@@ -1,4 +1,4 @@
-import { UqInMap, Joint, DataPullResult } from "../../uq-joint";
+import { UqInMap, Joint, DataPullResult } from "uq-joint";
 import dateFormat from 'dateformat';
 import { uqs } from "../uqs";
 import { execSql } from "../../mssql/tools";

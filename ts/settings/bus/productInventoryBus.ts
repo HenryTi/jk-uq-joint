@@ -1,4 +1,4 @@
-import { UqBus, DataPull, Joint, DataPullResult } from "../../uq-joint";
+import { UqBus, DataPull, Joint, DataPullResult } from "uq-joint";
 import { uqPullRead, uqOutRead } from "../../first/converter/uqOutRead";
 
 const productInventoryPull: DataPull<UqBus> = async (joint: Joint, uqBus: UqBus, queue: string | number): Promise<DataPullResult> => {

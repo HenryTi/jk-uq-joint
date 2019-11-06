@@ -1,6 +1,6 @@
 import * as mssql from 'mssql';
 import { conn } from "./connection";
-import { init } from '../uq-joint/db/mysql/initDb';
+//import { init } from 'uq-joint/db/mysql/initDb';
 
 let __pool: mssql.ConnectionPool;
 

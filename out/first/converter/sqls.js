@@ -44,7 +44,7 @@ exports.sqls = {
     readProvince: `
                 select top ${promiseSize} code as ID, Countries, ChineseName, parentCode, Status as IsValid, [Order]
                 from dbs.dbo.CountryCode1
-                where code > @iMaxId and level = 2 and ParentCode = 'CN'
+                where code > @iMaxId and level = 2
                 order by code`,
     readCity: `
                 select top ${promiseSize} code as ID, Countries, ChineseName, parentCode, Status as IsValid, [Order]

@@ -1,4 +1,4 @@
-import { UqInTuid, UqInMap, UqInTuidArr, UqIn, Joint } from "../../uq-joint";
+import { UqInTuid, UqInMap, UqInTuidArr, UqIn, Joint } from "uq-joint";
 import { uqs } from "../uqs";
 import { productPullWrite, productFirstPullWrite, packFirstPullWrite, pushRecordset } from "../../first/converter/productPullWrite";
 import { execSql } from "../../mssql/tools";

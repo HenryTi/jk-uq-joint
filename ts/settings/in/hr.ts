@@ -1,4 +1,4 @@
-import { UqInTuid, Joint } from "../../uq-joint";
+import { UqInTuid, Joint } from "uq-joint";
 import { uqs } from "../uqs";
 import dateFormat from 'dateformat';
 

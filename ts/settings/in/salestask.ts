@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import { UqInTuid, UqInMap, UqInTuidArr, UqIn, Joint } from "../../uq-joint";
+import { UqInTuid, UqInMap, UqInTuidArr, UqIn, Joint } from "uq-joint";
 import dateFormat from 'dateformat';
 import { uqs } from "../uqs";
 import config from 'config';

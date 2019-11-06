@@ -93,6 +93,10 @@ export interface Settings {
     allowedIP: string[];
     uqIns: UqIn[];
     uqOuts: UqOut[];
+    uqInEntities: {name: string, intervalUnit: number }[],
+    uqBusSettings: string[];
+    scanInterval?: number;
+
     bus?: { [busName: string]: UqBus };
-    pullReadFromSql?: (sql: string, queue: number | string) => Promise<DataPullResult>;
+    pullReadFromSql?: (sql: string, queue: number | string) => Promise<DataPullResult>;    
 }

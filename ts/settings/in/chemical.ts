@@ -1,4 +1,4 @@
-import { UqInTuid } from "../../uq-joint";
+import { UqInTuid } from "uq-joint";
 import { uqs } from "../uqs";
 import config from 'config';
 

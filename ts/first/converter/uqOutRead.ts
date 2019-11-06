@@ -1,5 +1,5 @@
+import { DataPullResult } from 'uq-joint';
 import { execSql } from '../../mssql/tools';
-import { DataPullResult } from '../../uq-joint';
 
 export async function uqOutRead(sql: string, maxId: string | number): Promise<DataPullResult> {
     // let iMaxId = maxId === "" ? 0 : Number(maxId);

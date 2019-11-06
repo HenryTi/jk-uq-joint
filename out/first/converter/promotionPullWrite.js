@@ -1,13 +1,9 @@
 "use strict";
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const _ = __importStar(require("lodash"));
+const lodash_1 = __importDefault(require("lodash"));
 const tools_1 = require("../../mssql/tools");
 const promotion_1 = require("../../settings/in/promotion");
 const productPullWrite_1 = require("./productPullWrite");
@@ -17,9 +13,9 @@ async function promotionFirstPullWrite(joint, data) {
         data["StartDate"] = data["StartDate"] && data["StartDate"].getTime() / 1000; // dateFormat(data["StartDate"], "yyyy-mm-dd HH:MM:ss");
         data["EndDate"] = data["EndDate"] && data["EndDate"].getTime() / 1000; // dateFormat(data["EndDate"], "yyyy-mm-dd HH:MM:ss");
         data["CreateTime"] = data["CreateTime"] && data["CreateTime"].getTime() / 1000; // dateFormat(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
-        await joint.uqIn(promotion_1.Promotion, _.pick(data, ["ID", "MarketingID", "Name", "Type", "Status", "StartDate", "EndDate", "CreateTime"]));
+        await joint.uqIn(promotion_1.Promotion, lodash_1.default.pick(data, ["ID", "MarketingID", "Name", "Type", "Status", "StartDate", "EndDate", "CreateTime"]));
         let promises = [];
-        promises.push(joint.uqIn(promotion_1.PromotionSalesRegion, _.pick(data, ["MarketingID", "SalesRegionID"])));
+        promises.push(joint.uqIn(promotion_1.PromotionSalesRegion, lodash_1.default.pick(data, ["MarketingID", "SalesRegionID"])));
         let promotionID = data["ID"];
         let promisesSql = [];
         let promotionLanguageSql = `

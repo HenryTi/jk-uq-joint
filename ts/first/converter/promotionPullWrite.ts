@@ -1,6 +1,5 @@
-import { Joint, UqIn } from "../../uq-joint";
-import dateFormat from 'dateformat';
-import * as _ from 'lodash';
+import { Joint } from "uq-joint";
+import _ from 'lodash';
 import { execSql } from "../../mssql/tools";
 import { Promotion, PromotionSalesRegion, PromotionLanguage, PromotionPackDiscount } from "../../settings/in/promotion";
 import { pushRecordset } from "./productPullWrite";

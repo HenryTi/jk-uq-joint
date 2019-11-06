@@ -1,5 +1,5 @@
-import { Joint } from "../../uq-joint";
-import * as _ from 'lodash';
+import { Joint } from "uq-joint";
+import _ from 'lodash';
 import { PackType, PackTypeMapToStandard } from "../../settings/in/salesRegion";
 
 export async function PackTypePullWrite(joint: Joint, data: any): Promise<boolean> {

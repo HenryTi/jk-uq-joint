@@ -1,4 +1,4 @@
-import { Fetch } from "../uq-joint/tool/fetch";
+import { Fetch } from "uq-joint";
 import config from 'config';
 
 const userApiBaseUrl = config.get<string>("userApiBaseUrl");

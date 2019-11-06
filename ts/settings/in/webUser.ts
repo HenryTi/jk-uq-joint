@@ -1,12 +1,12 @@
-import { UqInTuid, UqInMap, Joint, DataPullResult } from "../../uq-joint";
-import * as _ from 'lodash';
+import { UqInTuid, UqInMap, Joint, DataPullResult,
+    getUserId,MapUserToUq,centerApi,map
+} from "uq-joint";
+import _ from 'lodash';
 import { uqs } from "../uqs";
 import config from 'config';
 import { logger } from "../../tools/logger";
 import { Contact, InvoiceInfo } from "./customer";
 import { Address } from "./Address";
-import { execSql } from "../../uq-joint/db/mysql/tool";
-import { databaseName } from "../../uq-joint/db/mysql/database";
 
 const promiseSize = config.get<number>("promiseSize");
 
@@ -46,7 +46,9 @@ export const WebUserTonva: UqInTuid = {
      */
     pullWrite: async (joint: Joint, data: any) => {
         try {
-            let userId = await joint.userIn(WebUserTonva,
+            //let userId = await joint.userIn(
+            let userId = await userIn(joint,
+                WebUserTonva,
                 _.pick(data,
                     ['Type', 'WebUserID', 'UserName', 'Password', 'Nick', 'Icon', 'Mobile', 'Email', 'WechatOpenID']));
             if (userId < 0)
@@ -75,6 +77,47 @@ export const WebUserTonva: UqInTuid = {
         }
     }
 };
+
+
+async function userIn(joint:Joint, uqIn: UqInTuid, data: any): Promise<number> {
+    let { key, mapper, uq: uqFullName, entity: tuid } = uqIn;
+    if (key === undefined) throw 'key is not defined';
+    if (uqFullName === undefined) throw 'tuid ' + tuid + ' not defined';
+    let keyVal = data[key];
+    let mapToUq = new MapUserToUq(joint);
+    try {
+        let body = await mapToUq.map(data, mapper);
+        if (body.id <= 0) {
+            delete body.id;
+        }
+        let ret = await centerApi.queueIn(body);
+        if (!body.id && (ret === undefined || typeof ret !== 'number')) {
+            console.error(body);
+            let { id: code, message } = ret as any;
+            switch (code) {
+                case -2:
+                    data.Email += '\t';
+                    ret = await userIn(joint, uqIn, data);
+                    break;
+                case -3:
+                    data.Mobile += '\t';
+                    ret = await userIn(joint, uqIn, data);
+                    break;
+                default:
+                    console.error(ret);
+                    ret = -5;
+                    break;
+            }
+        }
+        if (ret > 0) {
+            await map(tuid, ret, keyVal);
+        }
+        return body.id || ret;
+    } catch (error) {
+        throw error;
+    }
+}
+
 
 async function InvoiceInfoIn(joint: Joint, data: any, userId: number): Promise<any> {
     if (data['InvoiceTitle']) {
@@ -182,20 +225,6 @@ export const WebUserContacts: UqInMap = {
     }
 };
 
-
-async function getUserId(webUserID: string) {
-    let sql = `select id from \`${databaseName}\`.\`map_webuser\` where no='${webUserID}'`;
-    let ret: any[];
-    try {
-        ret = await execSql(sql);
-        if (ret.length === 1)
-            return ret[0]['id'];
-    }
-    catch (err) {
-        throw err;
-    }
-    return -1;
-}
 
 export const WebUserSetting: UqInMap = {
     uq: uqs.jkWebUser,

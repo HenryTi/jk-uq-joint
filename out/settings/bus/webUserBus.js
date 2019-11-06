@@ -3,9 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const uq_joint_1 = require("uq-joint");
 const uqs_1 = require("../uqs");
 const UserApiClient_1 = require("../../tools/UserApiClient");
-const map_1 = require("../../uq-joint/tool/map");
 const logger_1 = require("../../tools/logger");
 const lodash_1 = __importDefault(require("lodash"));
 exports.faceUser = {
@@ -89,6 +89,16 @@ exports.faceWebUser = {
         }
     }
 };
+function decryptUser(user) {
+    let pwd = user.pwd;
+    if (!pwd)
+        user.pwd = '123456';
+    else
+        user.pwd = uq_joint_1.decrypt(pwd);
+    if (!user.pwd)
+        user.pwd = '123456';
+    return user;
+}
 /**
  * 将在新系统中注册的用户导入到旧系统中；
  * @param user 从Bus中得到的User信息
@@ -96,11 +106,20 @@ exports.faceWebUser = {
  *  -3:表示调用中心服务器出现错误（需重试）；
  *  -4:表示调用旧系统接口出现超时（需重试）；
  */
-async function RegisterWebUser(user, joint) {
+async function RegisterWebUser(userIn, joint) {
     // 首先去获取到注册信息，去老系统中注册，怎么获取？需要Henry提供接口
     let userInCenter;
     try {
-        userInCenter = await joint.userOutOne(user.id); // = Henry提供新接口
+        //public async userOutOne(id: number) {
+        let user = await uq_joint_1.centerApi.queueOutOne(userIn.id);
+        if (user) {
+            user = decryptUser(user);
+            let mapFromUq = new uq_joint_1.MapFromUq(joint);
+            userInCenter = await mapFromUq.map(user, exports.faceUser.mapper);
+            //return outBody;
+        }
+        //}
+        //userInCenter = await joint.userOutOne(user.id); // = Henry提供新接口
     }
     catch (error) {
         return -3;
@@ -121,7 +140,7 @@ async function RegisterWebUser(user, joint) {
             return -4;
     }
     if (ret !== undefined) {
-        await map_1.map('webuser', user.id, ret.Identity);
+        await uq_joint_1.map('webuser', userIn.id, ret.Identity);
         return ret.Identity;
     }
 }

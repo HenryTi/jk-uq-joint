@@ -9,6 +9,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mssql = __importStar(require("mssql"));
 const connection_1 = require("./connection");
+//import { init } from 'uq-joint/db/mysql/initDb';
 let __pool;
 async function initMssqlPool() {
     __pool = await new mssql.ConnectionPool(connection_1.conn).connect();

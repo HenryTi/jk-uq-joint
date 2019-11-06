@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const config_1 = __importDefault(require("config"));
 const settings_1 = require("../settings");
-const uq_joint_1 = require("../uq-joint");
+const uq_joint_1 = require("uq-joint");
 const pulls_1 = require("./pulls");
 const uqOutRead_1 = require("./converter/uqOutRead");
 //import { host } from "../uq-joint/tool/host";

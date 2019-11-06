@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import dateFormat from 'dateformat';
-import { UqInTuid, UqInMap, Joint } from "../../uq-joint";
+import { UqInTuid, UqInMap, Joint } from "uq-joint";
 import { uqs } from "../uqs";
 import { promotionFirstPullWrite } from '../../first/converter/promotionPullWrite';
 import config from 'config';

@@ -1,8 +1,11 @@
 import { Router } from "express";
+import { getLogger } from 'log4js';
+
 import { Settings, UqIn, UqOut, DataPush, UqInTuid, UqInMap, UqInTuidArr, DataPullResult } from "./defines";
 import { tableFromProc, execProc, execSql } from "./db/mysql/tool";
 import { MapFromUq as MapFromUq, MapToUq as MapToUq, MapUserToUq } from "./tool/mapData";
-import { map } from "./tool/map"; import { createRouter } from './router';
+import { map } from "./tool/map"; 
+import { createRouter } from './router';
 import { databaseName } from "./db/mysql/database";
 import { createMapTable } from "./tool/createMapTable";
 import { faceSchemas } from "./tool/faceSchemas";
@@ -10,26 +13,30 @@ import { Uqs } from "./uq/uq";
 import { centerApi } from "./tool/centerApi";
 import { OpenApi } from "./tool/openApi";
 import { host } from "./tool/host";
-import config from 'config';
-import { getLogger } from 'log4js';
-import { decrypt } from "../tools/hashPassword";
-import { faceUser } from "../settings/bus/webUserBus";
+//import config from 'config';
+import { decrypt } from "./tool/hashPassword";
+//import { faceUser } from "../settings/bus/webUserBus";
 
 const logger = getLogger('joint');
+
+/*
 const uqInEntities = config.get<{ name: string, intervalUnit: number }[]>("afterFirstEntities");
 const uqBusSettings = config.get<string[]>("uqBus");
+*/
 
-const interval = config.get<number>("interval");
+//const interval = config.get<number>("interval");
 
 export class Joint {
     protected uqs: Uqs;
     protected settings: Settings;
     private tickCount: number = -1;
+    private scanInterval: number;
 
     constructor(settings: Settings) {
         this.settings = settings;
-        let { unit, uqIns: allUqIns } = settings;
+        let { unit, uqIns: allUqIns, scanInterval } = settings;
         this.unit = unit;
+        this.scanInterval = scanInterval || 3000;
         if (allUqIns === undefined) return;
         this.uqs = new Uqs(this, unit);
         for (let uqIn of allUqIns) {
@@ -54,7 +61,7 @@ export class Joint {
 
     async start() {
         await this.init();
-        setTimeout(this.tick, interval);
+        setTimeout(this.tick, this.scanInterval);
     }
 
     private tick = async () => {
@@ -71,7 +78,7 @@ export class Joint {
             logger.error(err);
         }
         finally {
-            setTimeout(this.tick, interval);
+            setTimeout(this.tick, this.scanInterval);
         }
     }
 
@@ -133,7 +140,9 @@ export class Joint {
      */
     private async scanIn() {
 
-        let { pullReadFromSql } = this.settings;
+        let { pullReadFromSql, uqInEntities } = this.settings;
+        if (uqInEntities === undefined) return;
+
         for (let uqInName of uqInEntities) {
 
             let uqIn = this.uqInDict[uqInName.name];
@@ -394,8 +403,10 @@ export class Joint {
      * 通过bus做双向数据同步（bus out和bus in)
      */
     protected async scanBus() {
-        let { name: joinName, bus } = this.settings;
+        let { name: joinName, bus, uqBusSettings } = this.settings;
         if (bus === undefined) return;
+        if (uqBusSettings === undefined) return;
+
         let monikerPrefix = '$bus/';
 
         for (let uqBusName of uqBusSettings) {
@@ -478,6 +489,10 @@ export class Joint {
         }
     }
 
+    protected async userOut(face: string, queue: number) {        
+    }
+
+/*
     protected async userOut(face: string, queue: number) {
         let ret = await centerApi.queueOut(queue, 1);
         if (ret !== undefined && ret.length === 1) {
@@ -497,7 +512,7 @@ export class Joint {
         }
     }
 
-    private decryptUser(user: { pwd: string }) {
+    protected decryptUser(user: { pwd: string }) {
         let pwd = user.pwd;
         if (!pwd)
             user.pwd = '123456';
@@ -545,4 +560,5 @@ export class Joint {
             throw error;
         }
     }
+*/
 }

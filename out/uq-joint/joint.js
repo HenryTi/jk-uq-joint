@@ -1,8 +1,6 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
+const log4js_1 = require("log4js");
 const tool_1 = require("./db/mysql/tool");
 const mapData_1 = require("./tool/mapData");
 const map_1 = require("./tool/map");
@@ -14,14 +12,13 @@ const uq_1 = require("./uq/uq");
 const centerApi_1 = require("./tool/centerApi");
 const openApi_1 = require("./tool/openApi");
 const host_1 = require("./tool/host");
-const config_1 = __importDefault(require("config"));
-const log4js_1 = require("log4js");
-const hashPassword_1 = require("../tools/hashPassword");
-const webUserBus_1 = require("../settings/bus/webUserBus");
+//import { faceUser } from "../settings/bus/webUserBus";
 const logger = log4js_1.getLogger('joint');
-const uqInEntities = config_1.default.get("afterFirstEntities");
-const uqBusSettings = config_1.default.get("uqBus");
-const interval = config_1.default.get("interval");
+/*
+const uqInEntities = config.get<{ name: string, intervalUnit: number }[]>("afterFirstEntities");
+const uqBusSettings = config.get<string[]>("uqBus");
+*/
+//const interval = config.get<number>("interval");
 class Joint {
     constructor(settings) {
         this.tickCount = -1;
@@ -40,13 +37,14 @@ class Joint {
                 logger.error(err);
             }
             finally {
-                setTimeout(this.tick, interval);
+                setTimeout(this.tick, this.scanInterval);
             }
         };
         this.uqOpenApis = {};
         this.settings = settings;
-        let { unit, uqIns: allUqIns } = settings;
+        let { unit, uqIns: allUqIns, scanInterval } = settings;
         this.unit = unit;
+        this.scanInterval = scanInterval || 3000;
         if (allUqIns === undefined)
             return;
         this.uqs = new uq_1.Uqs(this, unit);
@@ -67,7 +65,7 @@ class Joint {
     }
     async start() {
         await this.init();
-        setTimeout(this.tick, interval);
+        setTimeout(this.tick, this.scanInterval);
     }
     //async getOpenApi(uqFullName:string, unit:number):Promise<OpenApi> {
     async getOpenApi(uq) {
@@ -125,7 +123,9 @@ class Joint {
      * 从外部系统同步数据到Tonva
      */
     async scanIn() {
-        let { pullReadFromSql } = this.settings;
+        let { pullReadFromSql, uqInEntities } = this.settings;
+        if (uqInEntities === undefined)
+            return;
         for (let uqInName of uqInEntities) {
             let uqIn = this.uqInDict[uqInName.name];
             if (uqIn === undefined)
@@ -408,8 +408,10 @@ class Joint {
      * 通过bus做双向数据同步（bus out和bus in)
      */
     async scanBus() {
-        let { name: joinName, bus } = this.settings;
+        let { name: joinName, bus, uqBusSettings } = this.settings;
         if (bus === undefined)
+            return;
+        if (uqBusSettings === undefined)
             return;
         let monikerPrefix = '$bus/';
         for (let uqBusName of uqBusSettings) {
@@ -500,73 +502,6 @@ class Joint {
         }
     }
     async userOut(face, queue) {
-        let ret = await centerApi_1.centerApi.queueOut(queue, 1);
-        if (ret !== undefined && ret.length === 1) {
-            let user = ret[0];
-            if (user === null)
-                return user;
-            return this.decryptUser(user);
-        }
-    }
-    async userOutOne(id) {
-        let user = await centerApi_1.centerApi.queueOutOne(id);
-        if (user) {
-            user = this.decryptUser(user);
-            let mapFromUq = new mapData_1.MapFromUq(this);
-            let outBody = await mapFromUq.map(user, webUserBus_1.faceUser.mapper);
-            return outBody;
-        }
-    }
-    decryptUser(user) {
-        let pwd = user.pwd;
-        if (!pwd)
-            user.pwd = '123456';
-        else
-            user.pwd = hashPassword_1.decrypt(pwd);
-        if (!user.pwd)
-            user.pwd = '123456';
-        return user;
-    }
-    async userIn(uqIn, data) {
-        let { key, mapper, uq: uqFullName, entity: tuid } = uqIn;
-        if (key === undefined)
-            throw 'key is not defined';
-        if (uqFullName === undefined)
-            throw 'tuid ' + tuid + ' not defined';
-        let keyVal = data[key];
-        let mapToUq = new mapData_1.MapUserToUq(this);
-        try {
-            let body = await mapToUq.map(data, mapper);
-            if (body.id <= 0) {
-                delete body.id;
-            }
-            let ret = await centerApi_1.centerApi.queueIn(body);
-            if (!body.id && (ret === undefined || typeof ret !== 'number')) {
-                console.error(body);
-                let { id: code, message } = ret;
-                switch (code) {
-                    case -2:
-                        data.Email += '\t';
-                        ret = await this.userIn(uqIn, data);
-                        break;
-                    case -3:
-                        data.Mobile += '\t';
-                        ret = await this.userIn(uqIn, data);
-                        break;
-                    default:
-                        console.error(ret);
-                        ret = -5;
-                        break;
-                }
-            }
-            if (ret > 0) {
-                await map_1.map(tuid, ret, keyVal);
-            }
-            return body.id || ret;
-        }
-        catch (error) {
-            throw error;
-        }
     }
 }
 exports.Joint = Joint;

@@ -1,4 +1,4 @@
-import { UqOut } from "../../uq-joint";
+import { UqOut } from "uq-joint";
 import { uqs } from '../uqs';
 /*
 export const order: UqOut = {

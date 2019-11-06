@@ -1,4 +1,4 @@
-import { UqBus } from "../../uq-joint";
+import { UqBus } from "uq-joint";
 import { faceOrder } from "./orderUsqBus";
 import { faceProductInventory } from "./productInventoryBus";
 import { facePoint } from "./pointBus";

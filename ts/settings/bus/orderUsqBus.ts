@@ -1,4 +1,4 @@
-import { UqBus, DataPush, Joint } from "../../uq-joint";
+import { UqBus, DataPush, Joint } from "uq-joint";
 import { WebApiClient, httpClient } from "../../tools/webApiClient";
 import { uqs } from "../uqs";
 import _ from 'lodash';

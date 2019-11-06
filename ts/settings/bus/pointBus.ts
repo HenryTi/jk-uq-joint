@@ -1,4 +1,4 @@
-import { UqBus, DataPush, Joint, DataPull, DataPullResult } from "../../uq-joint";
+import { UqBus, DataPush, Joint, DataPull, DataPullResult } from "uq-joint";
 import { WebApiClient, httpClient } from "../../tools/webApiClient";
 import { uqPullRead, uqOutRead } from "../../first/converter/uqOutRead";
 

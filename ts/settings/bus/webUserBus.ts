@@ -1,10 +1,8 @@
-import { UqBus, Joint } from "../../uq-joint";
+import { UqBus, Joint, map, centerApi, MapFromUq, decrypt } from "uq-joint";
 import { uqs } from "../uqs";
 import { userApiClient } from "../../tools/UserApiClient";
-import { map } from "../../uq-joint/tool/map";
 import { logger } from "../../tools/logger";
 import _ from 'lodash';
-import { centerApi } from "../../uq-joint/tool/centerApi";
 
 export const faceUser: UqBus = {
     face: '百灵威系统工程部/WebUser/User',
@@ -88,6 +86,16 @@ export const faceWebUser: UqBus = {
     }
 };
 
+function decryptUser(user: { pwd: string }) {
+    let pwd = user.pwd;
+    if (!pwd)
+        user.pwd = '123456';
+    else
+        user.pwd = decrypt(pwd);
+    if (!user.pwd) user.pwd = '123456';
+    return user;
+}
+
 /**
  * 将在新系统中注册的用户导入到旧系统中；
  * @param user 从Bus中得到的User信息
@@ -95,11 +103,20 @@ export const faceWebUser: UqBus = {
  *  -3:表示调用中心服务器出现错误（需重试）；
  *  -4:表示调用旧系统接口出现超时（需重试）；
  */
-async function RegisterWebUser(user: any, joint: Joint) {
+async function RegisterWebUser(userIn: any, joint: Joint) {
     // 首先去获取到注册信息，去老系统中注册，怎么获取？需要Henry提供接口
     let userInCenter;
     try {
-        userInCenter = await joint.userOutOne(user.id); // = Henry提供新接口
+        //public async userOutOne(id: number) {
+            let user = await centerApi.queueOutOne(userIn.id);
+            if (user) {
+                user = decryptUser(user);
+                let mapFromUq = new MapFromUq(joint);
+                userInCenter = await mapFromUq.map(user, faceUser.mapper);
+                //return outBody;
+            }
+        //}
+            //userInCenter = await joint.userOutOne(user.id); // = Henry提供新接口
     } catch (error) {
         return -3;
     }
@@ -118,7 +135,7 @@ async function RegisterWebUser(user: any, joint: Joint) {
             return -4;
     }
     if (ret !== undefined) {
-        await map('webuser', user.id, ret.Identity);
+        await map('webuser', userIn.id, ret.Identity);
         return ret.Identity;
     }
 }

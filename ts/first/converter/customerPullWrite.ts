@@ -1,4 +1,4 @@
-import { Joint } from "../../uq-joint";
+import { Joint } from "uq-joint";
 import _ from 'lodash';
 import dateFormat from 'dateformat';
 import { Customer, OrganizationCustomer, CustomerContact, Contact, CustomerContacts, InvoiceInfo, CustomerSetting, CustomerHandler } from "../../settings/in/customer";

@@ -1,5 +1,5 @@
 import config from 'config';
-import { Fetch } from "../uq-joint/tool/fetch";
+import { Fetch } from "uq-joint";
 
 const webApiBaseUrl = config.get<string>("busOutUrl");
 

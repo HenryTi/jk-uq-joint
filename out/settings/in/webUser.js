@@ -1,23 +1,15 @@
 "use strict";
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const _ = __importStar(require("lodash"));
+const uq_joint_1 = require("uq-joint");
+const lodash_1 = __importDefault(require("lodash"));
 const uqs_1 = require("../uqs");
 const config_1 = __importDefault(require("config"));
 const logger_1 = require("../../tools/logger");
 const customer_1 = require("./customer");
 const Address_1 = require("./Address");
-const tool_1 = require("../../uq-joint/db/mysql/tool");
-const database_1 = require("../../uq-joint/db/mysql/database");
 const promiseSize = config_1.default.get("promiseSize");
 exports.WebUserTonva = {
     uq: uqs_1.uqs.jkWebUser,
@@ -55,16 +47,17 @@ exports.WebUserTonva = {
      */
     pullWrite: async (joint, data) => {
         try {
-            let userId = await joint.userIn(exports.WebUserTonva, _.pick(data, ['Type', 'WebUserID', 'UserName', 'Password', 'Nick', 'Icon', 'Mobile', 'Email', 'WechatOpenID']));
+            //let userId = await joint.userIn(
+            let userId = await userIn(joint, exports.WebUserTonva, lodash_1.default.pick(data, ['Type', 'WebUserID', 'UserName', 'Password', 'Nick', 'Icon', 'Mobile', 'Email', 'WechatOpenID']));
             if (userId < 0)
                 return true;
             data.UserID = userId;
             let promises = [];
-            promises.push(joint.uqIn(exports.WebUser, _.pick(data, ['UserID', 'WebUserID', 'FirstName', 'Salutation', 'OrganizationName', 'DepartmentName'])));
-            promises.push(joint.uqIn(exports.WebUserContact, _.pick(data, ['UserID', 'Mobile', 'Email', 'OrganizationName', 'DepartmentName',
+            promises.push(joint.uqIn(exports.WebUser, lodash_1.default.pick(data, ['UserID', 'WebUserID', 'FirstName', 'Salutation', 'OrganizationName', 'DepartmentName'])));
+            promises.push(joint.uqIn(exports.WebUserContact, lodash_1.default.pick(data, ['UserID', 'Mobile', 'Email', 'OrganizationName', 'DepartmentName',
                 'Telephone', 'Fax', 'ZipCode', 'WechatOpenID', 'Address'])));
             if (data['CustomerID'])
-                promises.push(joint.uqIn(exports.WebUserCustomer, _.pick(data, ['UserID', 'CustomerID'])));
+                promises.push(joint.uqIn(exports.WebUserCustomer, lodash_1.default.pick(data, ['UserID', 'CustomerID'])));
             if (data['InvoiceTitle']) {
                 promises.push(InvoiceInfoIn(joint, data, userId));
             }
@@ -82,6 +75,47 @@ exports.WebUserTonva = {
         }
     }
 };
+async function userIn(joint, uqIn, data) {
+    let { key, mapper, uq: uqFullName, entity: tuid } = uqIn;
+    if (key === undefined)
+        throw 'key is not defined';
+    if (uqFullName === undefined)
+        throw 'tuid ' + tuid + ' not defined';
+    let keyVal = data[key];
+    let mapToUq = new uq_joint_1.MapUserToUq(joint);
+    try {
+        let body = await mapToUq.map(data, mapper);
+        if (body.id <= 0) {
+            delete body.id;
+        }
+        let ret = await uq_joint_1.centerApi.queueIn(body);
+        if (!body.id && (ret === undefined || typeof ret !== 'number')) {
+            console.error(body);
+            let { id: code, message } = ret;
+            switch (code) {
+                case -2:
+                    data.Email += '\t';
+                    ret = await userIn(joint, uqIn, data);
+                    break;
+                case -3:
+                    data.Mobile += '\t';
+                    ret = await userIn(joint, uqIn, data);
+                    break;
+                default:
+                    console.error(ret);
+                    ret = -5;
+                    break;
+            }
+        }
+        if (ret > 0) {
+            await uq_joint_1.map(tuid, ret, keyVal);
+        }
+        return body.id || ret;
+    }
+    catch (error) {
+        throw error;
+    }
+}
 async function InvoiceInfoIn(joint, data, userId) {
     if (data['InvoiceTitle']) {
         await joint.uqIn(customer_1.InvoiceInfo, {
@@ -156,7 +190,7 @@ exports.WebUserContacts = {
         try {
             let userId = -1;
             try {
-                userId = await getUserId(data['WebUserID']);
+                userId = await uq_joint_1.getUserId(data['WebUserID']);
             }
             catch (error) {
             }
@@ -182,19 +216,6 @@ exports.WebUserContacts = {
         }
     }
 };
-async function getUserId(webUserID) {
-    let sql = `select id from \`${database_1.databaseName}\`.\`map_webuser\` where no='${webUserID}'`;
-    let ret;
-    try {
-        ret = await tool_1.execSql(sql);
-        if (ret.length === 1)
-            return ret[0]['id'];
-    }
-    catch (err) {
-        throw err;
-    }
-    return -1;
-}
 exports.WebUserSetting = {
     uq: uqs_1.uqs.jkWebUser,
     type: 'map',

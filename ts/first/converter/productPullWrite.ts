@@ -1,4 +1,4 @@
-import { Joint, UqIn } from "../../uq-joint";
+import { Joint, UqIn } from "uq-joint";
 import * as _ from 'lodash';
 import { ProductX, ProductChemical, ProductPackX, PriceX, ProductSalesRegion, ProductLegallyProhibited } from "../../settings/in/product";
 import { execSql } from "../../mssql/tools";

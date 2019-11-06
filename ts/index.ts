@@ -2,7 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import * as bodyParser from 'body-parser';
 import cors from 'cors';
 import config from 'config';
-import { Joint } from './uq-joint';
+import { Joint } from 'uq-joint';
 import { settings } from './settings';
 //import { host } from './uq-joint/tool/host';
 //import { centerApi } from './uq-joint/tool/centerApi';
