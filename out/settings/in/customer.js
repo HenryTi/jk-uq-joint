@@ -3,7 +3,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const dateformat_1 = __importDefault(require("dateformat"));
 const uqs_1 = require("../uqs");
 const customerPullWrite_1 = require("../../first/converter/customerPullWrite");
 const config_1 = __importDefault(require("config"));
@@ -49,7 +48,7 @@ exports.Organization = {
            from ProdData.dbo.Export_Organization where ID > @iMaxId order by ID`,
     pullWrite: async (joint, data) => {
         try {
-            data["CreateTime"] = data["CreateTime"] && dateformat_1.default(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
+            data["CreateTime"] = data["CreateTime"] && data["CreateTime"].getTime() / 1000; // dateFormat(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
             await joint.uqIn(exports.Organization, data);
             return true;
         }
@@ -98,9 +97,9 @@ exports.Contact = {
     uq: uqs_1.uqs.jkCustomer,
     type: 'tuid',
     entity: 'Contact',
-    key: 'ID',
+    key: 'ContactID',
     mapper: {
-        $id: 'ID@Contact',
+        $id: 'ContactID@Contact',
         name: 'Name',
         organizationName: 'OrganizationName',
         mobile: 'Mobile',
@@ -123,6 +122,7 @@ exports.InvoiceInfo = {
         telephone: 'RegisteredTelephone',
         bank: 'BankName',
         accountNo: 'BankAccountNumber',
+        invoiceType: 'InvoiceType',
     },
 };
 exports.CustomerSetting = {
@@ -131,12 +131,10 @@ exports.CustomerSetting = {
     entity: 'CustomerSetting',
     mapper: {
         customer: 'CustomerID@Customer',
-        arr1: {
-            shippingContact: '^ShippingContactID@Contact',
-            invoiceContact: '^InvoiceContactID@Contact',
-            invoiceType: '^InvoiceTypeID@InvoiceType',
-            invoiceInfo: '^InvoiceInfoID@InvoiceInfo',
-        }
+        shippingContact: 'ShippingContactID@Contact',
+        invoiceContact: 'InvoiceContactID@Contact',
+        invoiceType: 'InvoiceTypeID@InvoiceType',
+        invoiceInfo: 'InvoiceInfoID@InvoiceInfo',
     }
 };
 exports.CustomerHandler = {
@@ -150,5 +148,21 @@ exports.CustomerHandler = {
             customerServiceStuff: '^CustomerServiceStuffID@Employee',
         }
     }
+};
+/*
+ * 这个比较特殊：该映射用于将内部的CID导入到Tonva系统
+*/
+exports.CustomerContractor = {
+    uq: uqs_1.uqs.jkCustomer,
+    type: 'map',
+    entity: 'CustomerContractor',
+    mapper: {
+        customer: 'CustomerID@Customer',
+        arr1: {
+            contractor: '^ContractorID@Customer',
+        }
+    },
+    pull: `select top ${promiseSize} ID, CustomerID, ContractorID, CreateTime
+           from alidb.ProdData.dbo.Export_CustomerContractor where ID > @iMaxId order by ID`,
 };
 //# sourceMappingURL=customer.js.map

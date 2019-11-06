@@ -9,7 +9,10 @@ const customer_1 = require("../../settings/in/customer");
 const logger_1 = require("../../tools/logger");
 async function customerPullWrite(joint, data) {
     try {
-        data["CreateTime"] = data["CreateTime"] && dateformat_1.default(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
+        if (!data["Name"])
+            return true;
+        data["CreateTime"] = data["CreateTime"] && data['CreateTime'].getTime() / 1000; // dateFormat(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
+        data["BirthDate"] = data["BirthDate"] && dateformat_1.default(data["BirthDate"], "yyyy-mm-dd HH:MM:ss");
         await joint.uqIn(customer_1.Customer, lodash_1.default.pick(data, ["CustomerID", "Name", "FirstName", "LastName", "XYZ", "Gender", "BirthDate", 'CreateTime', 'IsValid']));
         let promises = [];
         promises.push(joint.uqIn(customer_1.OrganizationCustomer, lodash_1.default.pick(data, ["CustomerID", "OrganizationID"])));
@@ -34,9 +37,11 @@ async function customerPullWrite(joint, data) {
         if (data['InvoiceTitle']) {
             // CustomerID作为发票的no
             promises.push(joint.uqIn(customer_1.InvoiceInfo, lodash_1.default.pick(data, ['CustomerID', 'InvoiceTitle', 'TaxNo', 'RegisteredAddress', 'RegisteredTelephone', 'BankName', 'BankAccountNumber'])));
-            promises.push(joint.uqIn(customer_1.CustomerSetting, {
+            /*
+            promises.push(joint.uqIn(CustomerSetting, {
                 'CustomerID': customerId, 'InvoiceInfoID': customerId
             }));
+            */
         }
         await Promise.all(promises);
         return true;
@@ -50,7 +55,11 @@ exports.customerPullWrite = customerPullWrite;
 async function contactPullWrite(joint, contactData) {
     try {
         await joint.uqIn(customer_1.Contact, contactData);
-        await joint.uqIn(customer_1.CustomerContacts, lodash_1.default.pick(contactData, ["ID", "CustomerID"]));
+        if (contactData['isDefault'])
+            contactData['isDefault'] = 1;
+        else
+            contactData['isDefault'] = 0;
+        await joint.uqIn(customer_1.CustomerContacts, lodash_1.default.pick(contactData, ["ID", "CustomerID", "isDefault"]));
         return true;
     }
     catch (error) {

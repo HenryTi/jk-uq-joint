@@ -30,8 +30,8 @@ class Uqs {
     async readBus(face, queue) {
         return await this.unitx.readBus(face, queue);
     }
-    async writeBus(face, source, newQueue, body) {
-        await this.unitx.writeBus(face, source, newQueue, body);
+    async writeBus(face, source, newQueue, busVersion, body) {
+        await this.unitx.writeBus(face, source, newQueue, busVersion, body);
     }
 }
 exports.Uqs = Uqs;
@@ -303,8 +303,10 @@ class UqUnitx extends Uq {
     async readBus(face, queue) {
         return await this.openApi.readBus(face, queue);
     }
-    async writeBus(face, source, newQueue, body) {
-        await this.openApi.writeBus(face, source, newQueue, body);
+    async writeBus(face, source, newQueue, busVersion, body) {
+        await this.openApi.writeBus(face, source, newQueue, busVersion, body);
+    }
+    async loadEntities() {
     }
 }
 //# sourceMappingURL=uq.js.map

@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { Settings, UqIn, UqOut, DataPush, UqInTuid, UqInMap, UqInTuidArr, DataPullResult } from "./defines";
 import { tableFromProc, execProc, execSql } from "./db/mysql/tool";
-import { MapFromUq as MapFromUq, MapToUq as MapToUq } from "./tool/mapData";
+import { MapFromUq as MapFromUq, MapToUq as MapToUq, MapUserToUq } from "./tool/mapData";
 import { map } from "./tool/map"; import { createRouter } from './router';
 import { databaseName } from "./db/mysql/database";
 import { createMapTable } from "./tool/createMapTable";
@@ -12,15 +12,19 @@ import { OpenApi } from "./tool/openApi";
 import { host } from "./tool/host";
 import config from 'config';
 import { getLogger } from 'log4js';
+import { decrypt } from "../tools/hashPassword";
+import { faceUser } from "../settings/bus/webUserBus";
 
 const logger = getLogger('joint');
-const uqInEntities = config.get<string[]>("afterFirstEntities");
+const uqInEntities = config.get<{ name: string, intervalUnit: number }[]>("afterFirstEntities");
+const uqBusSettings = config.get<string[]>("uqBus");
 
-const interval = 3 * 1000;
+const interval = config.get<number>("interval");
 
 export class Joint {
     protected uqs: Uqs;
     protected settings: Settings;
+    private tickCount: number = -1;
 
     constructor(settings: Settings) {
         this.settings = settings;
@@ -55,11 +59,11 @@ export class Joint {
 
     private tick = async () => {
         try {
-            console.log('tick ' + new Date().toLocaleString());
+            this.tickCount++;
+            console.log('tick: ' + new Date().toLocaleString() + "; tickCount: " + this.tickCount);
             //await this.scanPull();
-            // await this.scanIn();
+            await this.scanIn();
             // await this.scanOut();
-            // bus还没有弄好，暂时屏蔽
             await this.scanBus();
         }
         catch (err) {
@@ -125,17 +129,18 @@ export class Joint {
     */
 
     /**
-     *
+     * 从外部系统同步数据到Tonva
      */
     private async scanIn() {
 
         let { pullReadFromSql } = this.settings;
         for (let uqInName of uqInEntities) {
 
-            let uqIn = this.uqInDict[uqInName];
+            let uqIn = this.uqInDict[uqInName.name];
             if (uqIn === undefined) continue;
 
-            let { uq, entity, pull, pullWrite } = uqIn;
+            let { uq, type, entity, pull, pullWrite } = uqIn;
+            if (this.tickCount % (uqInName.intervalUnit || 1) !== 0) continue;
             let queueName = uq + ':' + entity;
             console.log('scan in ' + queueName + ' at ' + new Date().toLocaleString());
             let promises: PromiseLike<any>[] = [];
@@ -176,6 +181,23 @@ export class Joint {
                 }
 
                 let { lastPointer, data } = ret;
+                // data.sort((a, b) => { return a.ID - b.ID });
+                let dataCopy = [];
+                for (let i = data.length - 1; i >= 0; i--) {
+                    let message = data[i];
+                    if (type === "tuid" || type === "tuid-arr") {
+                        let no = message[(uqIn as UqInTuid).key];
+                        if (dataCopy.lastIndexOf(no) >= 0)
+                            continue;
+                        dataCopy.push(no);
+                    }
+
+                    if (pullWrite !== undefined)
+                        promises.push(pullWrite(this, message));
+                    else
+                        promises.push(this.uqIn(uqIn, message));
+                }
+                /*
                 data.forEach(message => {
                     if (pullWrite !== undefined) {
                         promises.push(pullWrite(this, message));
@@ -184,6 +206,7 @@ export class Joint {
                         promises.push(this.uqIn(uqIn, message));
                     }
                 });
+                */
 
                 try {
                     await Promise.all(promises);
@@ -368,19 +391,21 @@ export class Joint {
     }
 
     /**
-     *
+     * 通过bus做双向数据同步（bus out和bus in)
      */
     protected async scanBus() {
         let { name: joinName, bus } = this.settings;
         if (bus === undefined) return;
         let monikerPrefix = '$bus/';
 
-        for (let uqBus of bus) {
+        for (let uqBusName of uqBusSettings) {
+            let uqBus = bus[uqBusName];
             let { face, from: busFrom, mapper, push, pull, uqIdProps } = uqBus;
             // bus out(从bus中读取消息，发送到外部系统)
             let moniker = monikerPrefix + face;
             for (; ;) {
                 if (push === undefined) break;
+                console.log('scan bus out ' + uqBusName + ' at ' + new Date().toLocaleString());
                 let queue: number;
                 let retp = await tableFromProc('read_queue_out_p', [moniker]);
                 if (retp.length > 0) {
@@ -392,7 +417,12 @@ export class Joint {
                 let newQueue, json;
                 if (busFrom === 'center') {
                     let message = await this.userOut(face, queue);
-                    if (message === undefined && message['$queue'] === undefined) break;
+                    if (message === null) {
+                        newQueue = queue + 1;
+                        await execProc('write_queue_out_p', [moniker, newQueue]);
+                        break;
+                    }
+                    if (message === undefined || message['$queue'] === undefined) break;
                     newQueue = message['$queue'];
                     json = message;
                 } else {
@@ -424,6 +454,7 @@ export class Joint {
             // bus in(从外部系统读入数据，写入bus)
             for (; ;) {
                 if (pull === undefined) break;
+                console.log('scan bus in ' + uqBusName + ' at ' + new Date().toLocaleString());
                 let queue: number;
                 let retp = await tableFromProc('read_queue_in_p', [moniker]);
                 if (retp.length > 0) {
@@ -438,8 +469,10 @@ export class Joint {
                 //if (newQueue === undefined) break;
                 let mapToUq = new MapToUq(this);
                 let inBody = await mapToUq.map(data[0], mapper);
+                // henry??? 暂时不处理bus version
+                let busVersion = 0;
                 let packed = await faceSchemas.packBusData(face, inBody);
-                await this.uqs.writeBus(face, joinName, newQueue, packed);
+                await this.uqs.writeBus(face, joinName, newQueue, busVersion, packed);
                 await execProc('write_queue_in_p', [moniker, newQueue]);
             }
         }
@@ -447,7 +480,31 @@ export class Joint {
 
     protected async userOut(face: string, queue: number) {
         let ret = await centerApi.queueOut(queue, 1);
-        return ret !== undefined && ret.length === 1 && ret[0];
+        if (ret !== undefined && ret.length === 1) {
+            let user = ret[0];
+            if (user === null) return user;
+            return this.decryptUser(user);
+        }
+    }
+
+    public async userOutOne(id: number) {
+        let user = await centerApi.queueOutOne(id);
+        if (user) {
+            user = this.decryptUser(user);
+            let mapFromUq = new MapFromUq(this);
+            let outBody = await mapFromUq.map(user, faceUser.mapper);
+            return outBody;
+        }
+    }
+
+    private decryptUser(user: { pwd: string }) {
+        let pwd = user.pwd;
+        if (!pwd)
+            user.pwd = '123456';
+        else
+            user.pwd = decrypt(pwd);
+        if (!user.pwd) user.pwd = '123456';
+        return user;
     }
 
     public async userIn(uqIn: UqInTuid, data: any): Promise<number> {
@@ -455,15 +512,35 @@ export class Joint {
         if (key === undefined) throw 'key is not defined';
         if (uqFullName === undefined) throw 'tuid ' + tuid + ' not defined';
         let keyVal = data[key];
-        let mapToUq = new MapToUq(this);
+        let mapToUq = new MapUserToUq(this);
         try {
             let body = await mapToUq.map(data, mapper);
+            if (body.id <= 0) {
+                delete body.id;
+            }
             let ret = await centerApi.queueIn(body);
-            if (ret === undefined || typeof ret !== 'number')
-                throw new Error('user in 返回值不正确。');
-            if (ret > 0)
+            if (!body.id && (ret === undefined || typeof ret !== 'number')) {
+                console.error(body);
+                let { id: code, message } = ret as any;
+                switch (code) {
+                    case -2:
+                        data.Email += '\t';
+                        ret = await this.userIn(uqIn, data);
+                        break;
+                    case -3:
+                        data.Mobile += '\t';
+                        ret = await this.userIn(uqIn, data);
+                        break;
+                    default:
+                        console.error(ret);
+                        ret = -5;
+                        break;
+                }
+            }
+            if (ret > 0) {
                 await map(tuid, ret, keyVal);
-            return ret;
+            }
+            return body.id || ret;
         } catch (error) {
             throw error;
         }

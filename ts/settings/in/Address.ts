@@ -11,7 +11,9 @@ export const Country: UqInTuid = {
         no: "ID",
         code: "ID",
         englishName: "Countries",
-        chineseName: "ChineseName"
+        chineseName: "ChineseName",
+        isValid: 'IsValid',
+        order: 'Order',
     }
 };
 
@@ -27,6 +29,8 @@ export const Province: UqInTuid = {
         englishName: "Countries",
         chineseName: "ChineseName",
         country: "parentCode@Country",
+        isValid: 'IsValid',
+        order: 'Order',
     }
 };
 
@@ -42,6 +46,8 @@ export const City: UqInTuid = {
         englishName: "Countries",
         chineseName: "ChineseName",
         province: "parentCode@Province",
+        isValid: 'IsValid',
+        order: 'Order',
     }
 };
 
@@ -56,6 +62,8 @@ export const County: UqInTuid = {
         englishName: "Countries",
         chineseName: "ChineseName",
         city: "parentCode@City",
+        isValid: 'IsValid',
+        order: 'Order',
     }
 };
 

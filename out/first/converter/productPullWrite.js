@@ -13,8 +13,7 @@ const tools_1 = require("../../mssql/tools");
 const logger_1 = require("../../tools/logger");
 async function productPullWrite(joint, data) {
     try {
-        // await joint.uqIn(Product, _.pick(data, ["ID", "BrandID", "ProductNumber", "Description", "DescriptionC"]));
-        await joint.uqIn(product_1.ProductX, _.pick(data, ["ID", "ProductID", "BrandID", "ProductNumber", "Description", "DescriptionC", "IsValid"]));
+        await joint.uqIn(product_1.ProductX, _.pick(data, ["ID", "ProductID", "BrandID", "ProductNumber", "Description", "DescriptionC", "ChemicalID", "IsValid"]));
         await joint.uqIn(product_1.ProductChemical, _.pick(data, ["ProductID", "ChemicalID", "Purity", "CAS", "MolecularFomula", "MolecularWeight"]));
         return true;
     }

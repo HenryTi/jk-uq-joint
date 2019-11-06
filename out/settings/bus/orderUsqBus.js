@@ -7,7 +7,7 @@ const webApiClient_1 = require("../../tools/webApiClient");
 const uqs_1 = require("../uqs");
 const lodash_1 = __importDefault(require("lodash"));
 const faceOrderPush = async (joint, uqBus, queue, orderIn) => {
-    console.log(orderIn);
+    // console.log(orderIn);
     let orderOut = lodash_1.default.pick(orderIn, ['id', 'Id', 'SaleOrderItems']);
     orderOut.Customer = { Id: orderIn.Customer };
     if (orderIn.shippingContact !== undefined) {
@@ -24,7 +24,7 @@ const faceOrderPush = async (joint, uqBus, queue, orderIn) => {
         element.TransportMethod = { Id: 'Y' };
         element.SalePrice = { Value: element.Price, Currency: element.Currency };
     });
-    console.log(orderOut);
+    // console.log(orderOut);
     // 调用7.253的web api
     try {
         let success = await webApiClient_1.httpClient.newOrder(orderOut);

@@ -6,7 +6,11 @@ import { logger } from "../../tools/logger";
 
 export async function customerPullWrite(joint: Joint, data: any): Promise<boolean> {
     try {
-        data["CreateTime"] = data["CreateTime"] && dateFormat(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
+        if (!data["Name"])
+            return true;
+
+        data["CreateTime"] = data["CreateTime"] && data['CreateTime'].getTime() / 1000; // dateFormat(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
+        data["BirthDate"] = data["BirthDate"] && dateFormat(data["BirthDate"], "yyyy-mm-dd HH:MM:ss");
         await joint.uqIn(Customer, _.pick(data, ["CustomerID", "Name", "FirstName", "LastName", "XYZ", "Gender", "BirthDate", 'CreateTime', 'IsValid']));
         let promises: PromiseLike<void>[] = [];
         promises.push(joint.uqIn(OrganizationCustomer, _.pick(data, ["CustomerID", "OrganizationID"])));
@@ -31,9 +35,11 @@ export async function customerPullWrite(joint: Joint, data: any): Promise<boolea
         if (data['InvoiceTitle']) {
             // CustomerID作为发票的no
             promises.push(joint.uqIn(InvoiceInfo, _.pick(data, ['CustomerID', 'InvoiceTitle', 'TaxNo', 'RegisteredAddress', 'RegisteredTelephone', 'BankName', 'BankAccountNumber'])));
+            /*
             promises.push(joint.uqIn(CustomerSetting, {
                 'CustomerID': customerId, 'InvoiceInfoID': customerId
             }));
+            */
         }
 
         await Promise.all(promises);
@@ -47,7 +53,11 @@ export async function customerPullWrite(joint: Joint, data: any): Promise<boolea
 export async function contactPullWrite(joint: Joint, contactData: any): Promise<boolean> {
     try {
         await joint.uqIn(Contact, contactData);
-        await joint.uqIn(CustomerContacts, _.pick(contactData, ["ID", "CustomerID"]));
+        if (contactData['isDefault'])
+            contactData['isDefault'] = 1;
+        else
+            contactData['isDefault'] = 0;
+        await joint.uqIn(CustomerContacts, _.pick(contactData, ["ID", "CustomerID", "isDefault"]));
         return true;
     } catch (error) {
         logger.error(error);

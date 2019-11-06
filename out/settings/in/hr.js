@@ -1,10 +1,6 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const uqs_1 = require("../uqs");
-const dateformat_1 = __importDefault(require("dateformat"));
 exports.Employee = {
     uq: uqs_1.uqs.jkHr,
     type: 'tuid',
@@ -22,7 +18,7 @@ exports.Employee = {
     },
     pullWrite: async (joint, data) => {
         try {
-            data["CreateTime"] = dateformat_1.default(data["CreateTime"], 'yyyy-mm-dd HH:MM:ss');
+            data["CreateTime"] = data["CreateTime"].getTime() / 1000; // dateFormat(data["CreateTime"], 'yyyy-mm-dd HH:MM:ss');
             await joint.uqIn(exports.Employee, data);
             return true;
         }

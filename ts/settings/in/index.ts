@@ -1,15 +1,15 @@
 import { Country, Province, City, County, Address } from "./Address";
 import { SalesRegion, Currency, PackType, PackTypeStandard, PackTypeMapToStandard, Language, InvoiceType } from "./salesRegion";
-import { Brand, ProductSalesRegion, ProductLegallyProhibited, ProductX, ProductPackX, PriceX, BrandSalesRegion, BrandDeliveryTime, ProductChemical, InvalidProduct } from "./product";
+import { Brand, ProductSalesRegion, ProductLegallyProhibited, ProductX, ProductPackX, PriceX, AgentPrice, BrandSalesRegion, BrandDeliveryTime, ProductChemical, InvalidProduct } from "./product";
 import { Warehouse, SalesRegionWarehouse } from "./warehouse";
 import { Chemical } from "./chemical";
 import { Promotion, PromotionSalesRegion, PromotionLanguage, PromotionPackDiscount, PromotionStatus, PromotionType } from "./promotion";
-import { Customer, Organization, OrganizationCustomer, CustomerContact, CustomerContacts, Contact, InvoiceInfo, CustomerHandler } from "./customer";
+import { Customer, Organization, OrganizationCustomer, CustomerContact, CustomerContacts, Contact, InvoiceInfo, CustomerHandler, CustomerContractor } from "./customer";
 import { ProductCategory, ProductCategoryLanguage, ProductProductCategory } from "./productCategory";
 import { Agreement, CustomerDiscount, OrganizationDiscount } from "./customerDiscount";
 import { Employee } from "./hr";
 import { JkTaskType, JkTask } from "./salestask";
-import { WebUser, WebUserTonva, WebUserContact, WebUserCustomer } from "./webUser";
+import { WebUser, WebUserTonva, WebUserContact, WebUserCustomer, WebUserSetting, WebUserSettingAlter, WebUserSettingType, WebUserContacts } from "./webUser";
 
 const uqIns = [
 
@@ -40,6 +40,7 @@ const uqIns = [
     ProductChemical,
     ProductPackX,
     PriceX,
+    AgentPrice,
     ProductSalesRegion,
     ProductLegallyProhibited,    // 还没有日常的数据交换
 
@@ -63,6 +64,7 @@ const uqIns = [
     CustomerContact,
     CustomerContacts,
     CustomerHandler,
+    CustomerContractor,
     Contact,
     InvoiceInfo,
 
@@ -73,7 +75,11 @@ const uqIns = [
     WebUserTonva,
     WebUser,
     WebUserContact,
+    WebUserContacts,
     WebUserCustomer,
+    WebUserSettingType,
+    WebUserSetting,
+    WebUserSettingAlter,
 
     JkTask,
 ]

@@ -1,5 +1,4 @@
 import * as _ from 'lodash';
-import dateFormat from 'dateformat';
 import { UqInTuid, UqInMap, UqInTuidArr, Joint } from "../../uq-joint";
 import { uqs } from "../uqs";
 import { customerPullWrite, contactPullWrite } from '../../first/converter/customerPullWrite';
@@ -49,7 +48,7 @@ export const Organization: UqInTuid = {
            from ProdData.dbo.Export_Organization where ID > @iMaxId order by ID`,
     pullWrite: async (joint: Joint, data: any) => {
         try {
-            data["CreateTime"] = data["CreateTime"] && dateFormat(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
+            data["CreateTime"] = data["CreateTime"] && data["CreateTime"].getTime() / 1000; // dateFormat(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
             await joint.uqIn(Organization, data);
             return true;
         } catch (error) {
@@ -101,9 +100,9 @@ export const Contact: UqInTuid = {
     uq: uqs.jkCustomer,
     type: 'tuid',
     entity: 'Contact',
-    key: 'ID',
+    key: 'ContactID',
     mapper: {
-        $id: 'ID@Contact',
+        $id: 'ContactID@Contact',
         name: 'Name',
         organizationName: 'OrganizationName',
         mobile: 'Mobile',
@@ -127,6 +126,7 @@ export const InvoiceInfo: UqInTuid = {
         telephone: 'RegisteredTelephone',
         bank: 'BankName',
         accountNo: 'BankAccountNumber',
+        invoiceType: 'InvoiceType',
     },
 };
 
@@ -136,12 +136,10 @@ export const CustomerSetting: UqInMap = {
     entity: 'CustomerSetting',
     mapper: {
         customer: 'CustomerID@Customer',
-        arr1: {
-            shippingContact: '^ShippingContactID@Contact',
-            invoiceContact: '^InvoiceContactID@Contact',
-            invoiceType: '^InvoiceTypeID@InvoiceType',
-            invoiceInfo: '^InvoiceInfoID@InvoiceInfo',
-        }
+        shippingContact: 'ShippingContactID@Contact',
+        invoiceContact: 'InvoiceContactID@Contact',
+        invoiceType: 'InvoiceTypeID@InvoiceType',
+        invoiceInfo: 'InvoiceInfoID@InvoiceInfo',
     }
 };
 
@@ -156,4 +154,21 @@ export const CustomerHandler: UqInMap = {
             customerServiceStuff: '^CustomerServiceStuffID@Employee',
         }
     }
+};
+
+/*
+ * 这个比较特殊：该映射用于将内部的CID导入到Tonva系统
+*/
+export const CustomerContractor: UqInMap = {
+    uq: uqs.jkCustomer,
+    type: 'map',
+    entity: 'CustomerContractor',
+    mapper: {
+        customer: 'CustomerID@Customer',
+        arr1: {
+            contractor: '^ContractorID@Customer',
+        }
+    },
+    pull: `select top ${promiseSize} ID, CustomerID, ContractorID, CreateTime
+           from alidb.ProdData.dbo.Export_CustomerContractor where ID > @iMaxId order by ID`,
 };

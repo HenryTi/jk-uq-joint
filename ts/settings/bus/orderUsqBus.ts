@@ -4,7 +4,7 @@ import { uqs } from "../uqs";
 import _ from 'lodash';
 
 const faceOrderPush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus, queue: number, orderIn: any): Promise<boolean> => {
-    console.log(orderIn);
+    // console.log(orderIn);
 
     let orderOut: any = _.pick(orderIn, ['id', 'Id', 'SaleOrderItems']);
     orderOut.Customer = { Id: orderIn.Customer };
@@ -24,7 +24,7 @@ const faceOrderPush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus, queue:
         element.TransportMethod = { Id: 'Y' };
         element.SalePrice = { Value: element.Price, Currency: element.Currency };
     });
-    console.log(orderOut);
+    // console.log(orderOut);
     // 调用7.253的web api
     try {
         let success = await httpClient.newOrder(orderOut);

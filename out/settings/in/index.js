@@ -36,6 +36,7 @@ const uqIns = [
     product_1.ProductChemical,
     product_1.ProductPackX,
     product_1.PriceX,
+    product_1.AgentPrice,
     product_1.ProductSalesRegion,
     product_1.ProductLegallyProhibited,
     productCategory_1.ProductCategory,
@@ -55,6 +56,7 @@ const uqIns = [
     customer_1.CustomerContact,
     customer_1.CustomerContacts,
     customer_1.CustomerHandler,
+    customer_1.CustomerContractor,
     customer_1.Contact,
     customer_1.InvoiceInfo,
     customerDiscount_1.Agreement,
@@ -63,7 +65,11 @@ const uqIns = [
     webUser_1.WebUserTonva,
     webUser_1.WebUser,
     webUser_1.WebUserContact,
+    webUser_1.WebUserContacts,
     webUser_1.WebUserCustomer,
+    webUser_1.WebUserSettingType,
+    webUser_1.WebUserSetting,
+    webUser_1.WebUserSettingAlter,
     salestask_1.JkTask,
 ];
 exports.default = uqIns;

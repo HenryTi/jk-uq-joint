@@ -158,7 +158,9 @@ class MapToUq extends MapData {
         if (ret.length === 0) {
             let vId = await this.getTuidVid(uq, entity);
             if (vId !== undefined) {
-                await map_1.map(entity, vId, value);
+                if (typeof vId === 'number' && vId > 0) {
+                    await map_1.map(entity, vId, value);
+                }
                 return vId;
             }
             else {
@@ -184,6 +186,15 @@ class MapToUq extends MapData {
 }
 exports.MapToUq = MapToUq;
 /**
+ * 根据外部系统的no从映射表中获取tonva中的id(映射表中不存在的话，调用getTuidVid生成一个，并写入映射表)
+ */
+class MapUserToUq extends MapToUq {
+    async getTuidVid(uq, entity) {
+        return -1;
+    }
+}
+exports.MapUserToUq = MapUserToUq;
+/**
  * 根据tonva中的id从映射表中获取no
  */
 class MapFromUq extends MapData {
@@ -194,8 +205,15 @@ class MapFromUq extends MapData {
         if (typeof uqIn !== 'object')
             throw `tuid ${tuid} is not defined in settings.in`;
         let { entity, uq } = uqIn;
-        let sql = `select no from \`${database_1.databaseName}\`.\`map_${entity}\` where id='${value}'`;
-        let ret = await tool_1.execSql(sql);
+        let sql = `select no from \`${database_1.databaseName}\`.\`map_${entity.toLowerCase()}\` where id='${value}'`;
+        let ret;
+        try {
+            ret = await tool_1.execSql(sql);
+        }
+        catch (error) {
+            await createMapTable_1.createMapTable(entity);
+            ret = await tool_1.execSql(sql);
+        }
         if (ret.length === 0)
             return 'n/a';
         return ret[0].no;

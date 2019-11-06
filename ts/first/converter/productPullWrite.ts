@@ -8,8 +8,7 @@ import { logger } from "../../tools/logger";
 export async function productPullWrite(joint: Joint, data: any) {
 
     try {
-        // await joint.uqIn(Product, _.pick(data, ["ID", "BrandID", "ProductNumber", "Description", "DescriptionC"]));
-        await joint.uqIn(ProductX, _.pick(data, ["ID", "ProductID", "BrandID", "ProductNumber", "Description", "DescriptionC", "IsValid"]));
+        await joint.uqIn(ProductX, _.pick(data, ["ID", "ProductID", "BrandID", "ProductNumber", "Description", "DescriptionC", "ChemicalID", "IsValid"]));
         await joint.uqIn(ProductChemical, _.pick(data, ["ProductID", "ChemicalID", "Purity", "CAS", "MolecularFomula", "MolecularWeight"]));
         return true;
     } catch (error) {

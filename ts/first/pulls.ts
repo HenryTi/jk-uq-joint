@@ -66,7 +66,7 @@ export const pulls: {
     "Organization": { read: sqls.readOrganization, uqIn: Organization },
     "Customer": { read: sqls.readCustomer, uqIn: Customer },
     "CustomerShippingAddress": { read: sqls.readCustomerShippingAddress, uqIn: Contact },
-    "CustomerInvoiceAddress": { read: sqls.readCustomerShippingAddress, uqIn: Contact },
+    "CustomerInvoiceAddress": { read: sqls.readCustomerInvoiceAddress, uqIn: Contact },
 
     "Agreement": { read: sqls.readAgreement, uqIn: Agreement },
 
