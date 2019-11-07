@@ -172,3 +172,43 @@ export const CustomerContractor: UqInMap = {
     pull: `select top ${promiseSize} ID, CustomerID, ContractorID, CreateTime
            from alidb.ProdData.dbo.Export_CustomerContractor where ID > @iMaxId order by ID`,
 };
+
+export const BuyerAccount: UqInTuid = {
+    uq: uqs.jkCustomer,
+    type: 'tuid',
+    entity: 'BuyerAccount',
+    key: 'BuyerAccountID',
+    mapper: {
+        $id: 'BuyerAccountID@BuyerAccount',
+        no: "BuyerAccountID",
+        organization: "OrganizationID@Organization",
+        description: 'Name',
+        createTime: 'CreateTime',
+        isValid: 'IsValid',
+    },
+    pull: `select top ${promiseSize} ID, CustomerID as BuyerAccountID, OrganizationID, Name, FirstName, LastName
+           , IsValid, CreateTime
+           from ProdData.dbo.Export_Customer
+           where ID > @iMaxId and CustomerID in (select CID from dbs.dbo.vw_sordersBJSH)
+           order by ID`,
+    pullWrite: async (joint: Joint, data: any) => {
+        data["CreateTime"] = data["CreateTime"] && data['CreateTime'].getTime() / 1000;
+        await joint.uqIn(BuyerAccount, data);
+        // 本人的BuyerAccount设置为本人
+        let buyerAccountID = data['BuyerAccountID'];
+        await joint.uqIn(CustomerBuyerAccount, { "CustomerID": buyerAccountID, 'BuyerAccountID': buyerAccountID });
+        return true;
+    }
+};
+
+export const CustomerBuyerAccount: UqInMap = {
+    uq: uqs.jkCustomer,
+    type: 'map',
+    entity: 'CustomerBuyerAccount',
+    mapper: {
+        customer: 'CustomerID@Customer',
+        arr1: {
+            buyerAccount: '^BuyerAccountID@BuyerAccount',
+        }
+    }
+};

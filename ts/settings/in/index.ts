@@ -4,12 +4,12 @@ import { Brand, ProductSalesRegion, ProductLegallyProhibited, ProductX, ProductP
 import { Warehouse, SalesRegionWarehouse } from "./warehouse";
 import { Chemical } from "./chemical";
 import { Promotion, PromotionSalesRegion, PromotionLanguage, PromotionPackDiscount, PromotionStatus, PromotionType } from "./promotion";
-import { Customer, Organization, OrganizationCustomer, CustomerContact, CustomerContacts, Contact, InvoiceInfo, CustomerHandler, CustomerContractor } from "./customer";
+import { Customer, Organization, OrganizationCustomer, CustomerContact, CustomerContacts, Contact, InvoiceInfo, CustomerHandler, CustomerContractor, BuyerAccount } from "./customer";
 import { ProductCategory, ProductCategoryLanguage, ProductProductCategory } from "./productCategory";
 import { Agreement, CustomerDiscount, OrganizationDiscount } from "./customerDiscount";
 import { Employee } from "./hr";
 import { JkTaskType, JkTask } from "./salestask";
-import { WebUser, WebUserTonva, WebUserContact, WebUserCustomer, WebUserSetting, WebUserSettingAlter, WebUserSettingType, WebUserContacts } from "./webUser";
+import { WebUser, WebUserTonva, WebUserContact, WebUserCustomer, WebUserSetting, WebUserSettingAlter, WebUserSettingType, WebUserContacts, WebUserBuyerAccount } from "./webUser";
 
 const uqIns = [
 
@@ -60,6 +60,7 @@ const uqIns = [
 
     Customer,
     Organization,
+    BuyerAccount,
     OrganizationCustomer,
     CustomerContact,
     CustomerContacts,
@@ -77,6 +78,7 @@ const uqIns = [
     WebUserContact,
     WebUserContacts,
     WebUserCustomer,
+    WebUserBuyerAccount,
     WebUserSettingType,
     WebUserSetting,
     WebUserSettingAlter,

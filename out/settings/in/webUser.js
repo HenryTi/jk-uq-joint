@@ -28,14 +28,15 @@ exports.WebUserTonva = {
         email: 'Email',
         wechat: 'WechatOpenID',
     },
-    pull: `select top ${promiseSize} ID, WebUserID, '$user' as Type, UserName, Password, null as Nick, null as Icon
-           , TrueName as FirstName, OrganizationName, DepartmentName, Salutation
-           , Mobile, Telephone, Email, Fax, WechatOpenID
-           , Country, Province, City, Address, ZipCode
-           , InvoiceType, InvoiceTitle, TaxNo, BankAccountName
-           , CustomerID, SalesRegionBelongsTo, SalesCompanyID
+    pull: `select top ${promiseSize} w.ID, w.WebUserID, '$user' as Type, w.UserName, w.Password, null as Nick, null as Icon
+           , w.TrueName as FirstName, w.OrganizationName, w.DepartmentName, w.Salutation
+           , w.Mobile, w.Telephone, w.Email, w.Fax, w.WechatOpenID
+           , w.Country, w.Province, w.City, w.Address, w.ZipCode
+           , w.InvoiceType, w.InvoiceTitle, w.TaxNo, w.BankAccountName
+           , w.CustomerID, w.SalesRegionBelongsTo, w.SalesCompanyID, r.Contractor as BuyerAccountID
            from alidb.ProdData.dbo.Export_WebUser w
-           where ID > @iMaxId and State in (1, 5) order by ID`,
+           inner join alidb.jk_eb.dbo.MakeOrderPersonAndContractorRelationship r on r.makeOrderCID = w.CustomerID
+        where ID > @iMaxId and State in (1, 5) order by ID`,
     /**
      * WebUser的导入步骤：
      * 1.导入tonva系统，生成id;
@@ -58,14 +59,16 @@ exports.WebUserTonva = {
                 'Telephone', 'Fax', 'ZipCode', 'WechatOpenID', 'Address'])));
             if (data['CustomerID'])
                 promises.push(joint.uqIn(exports.WebUserCustomer, lodash_1.default.pick(data, ['UserID', 'CustomerID'])));
-            if (data['InvoiceTitle']) {
+            if (data['InvoiceTitle'])
                 promises.push(InvoiceInfoIn(joint, data, userId));
-            }
             if (data['InvoiceType']) {
                 let invoiceTypeId = data['InvoiceType'] === '增值发票' ? 2 : 1;
                 exports.WebUserSettingAlter.mapper.arr1["contentId"] = "^contentID";
                 promises.push(joint.uqIn(exports.WebUserSettingAlter, { 'UserID': userId, 'Type': 'ivInvoiceType', 'contentID': invoiceTypeId }));
             }
+            // 仅账号是本人的情况下，才在此处导入Tonva系统，非本人的情况下，通过WebUserBuyerAccount的设置单独导入
+            if (!data['BuyerAccountID'])
+                promises.push(joint.uqIn(exports.WebUserBuyerAccount, { 'WebUserID': data['WebUserID'], 'BuyerAccountID': data['CustomerID'] }));
             await Promise.all(promises);
             return true;
         }
@@ -126,6 +129,8 @@ async function InvoiceInfoIn(joint, data, userId) {
         await joint.uqIn(exports.WebUserSettingAlter, { 'UserID': userId, 'Type': 'ivInvoiceInfo', 'contentID': data['WebUserID'] });
     }
 }
+/*
+*/
 exports.WebUser = {
     uq: uqs_1.uqs.jkWebUser,
     type: 'tuid',
@@ -249,5 +254,20 @@ exports.WebUserSettingType = {
         $id: 'WebUserSettingTypeID@WebUserSettingType',
         description: "Description",
     }
+};
+exports.WebUserBuyerAccount = {
+    uq: uqs_1.uqs.jkWebUser,
+    type: 'map',
+    entity: 'WebUserBuyerAccount',
+    mapper: {
+        webUser: 'WebUserID@WebUser',
+        arr1: {
+            buyerAccount: '^BuyerAccountID@BuyerAccount',
+        }
+    },
+    pull: `select top ${promiseSize} r.ID, ci.ID as WebUserID, r.ContractorID as BuyerAccountID, r.IsValid
+           from alidb.ProdData.dbo.Export_CustomerContractor r
+           inner join alidb.jk_eb.dbo.ClientInfo ci on r.CustomerID = ci.CID
+           where r.ID > @iMaxId order by r.ID`,
 };
 //# sourceMappingURL=webUser.js.map

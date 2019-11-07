@@ -94,6 +94,12 @@ exports.sqls = {
                         , saleRegionBelongsTo as SalesRegionBelongsTo
                         , convert(nvarchar(30), creaDate, 121) as CreateTime
                 from dbs.dbo.Customers where CID > @iMaxId and CID > '${idBrokened.CID}' and Name is not null order by CID`,
+    readBuyerAccount: `
+                select top ${promiseSize} CID as ID, CID as BuyerAccountID, UnitID as OrganizationID, Name, FirstName, LastName, XYZ, Sex as Gender
+                        , case C5 when 'xx' then 0 else 1 end as IsValid
+                        , creaDate as CreateTime
+                from dbs.dbo.Customers where CID > @iMaxId and CID in (select CID from dbs.dbo.vw_sordersBJSH)
+                and CID > '${idBrokened.CID}' and Name is not null order by CID`,
     readOrganization: `
                 select top ${promiseSize} UnitID as ID, UnitID as OrganizationID, unitName as Name, convert(nvarchar(30), creaDate, 121) as CreateTime
                 from dbs.dbo.CustUnits where UnitID > @iMaxId order by UnitID`,

@@ -7,7 +7,7 @@ import { Language, PackTypeStandard, Currency, SalesRegion, PackType, InvoiceTyp
 import { Chemical } from "../settings/in/chemical";
 import { Brand, BrandSalesRegion, BrandDeliveryTime, ProductPackX, PriceX, ProductSalesRegion, ProductLegallyProhibited, ProductX, ProductChemical } from "../settings/in/product";
 import { Warehouse, SalesRegionWarehouse } from "../settings/in/warehouse";
-import { Organization, Customer, Contact } from "../settings/in/customer";
+import { Organization, Customer, Contact, BuyerAccount } from "../settings/in/customer";
 import { Promotion, PromotionLanguage, PromotionPackDiscount, PromotionType, PromotionStatus } from '../settings/in/promotion';
 import { Agreement } from '../settings/in/customerDiscount';
 import { Employee } from '../settings/in/hr';
@@ -65,6 +65,7 @@ export const pulls: {
     // 客户和客户单位基本信息
     "Organization": { read: sqls.readOrganization, uqIn: Organization },
     "Customer": { read: sqls.readCustomer, uqIn: Customer },
+    "BuyerAccount": { read: sqls.readBuyerAccount, uqIn: BuyerAccount },
     "CustomerShippingAddress": { read: sqls.readCustomerShippingAddress, uqIn: Contact },
     "CustomerInvoiceAddress": { read: sqls.readCustomerInvoiceAddress, uqIn: Contact },
 
