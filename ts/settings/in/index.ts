@@ -10,6 +10,7 @@ import { Agreement, CustomerDiscount, OrganizationDiscount } from "./customerDis
 import { Employee } from "./hr";
 import { JkTaskType, JkTask } from "./salestask";
 import { WebUser, WebUserTonva, WebUserContact, WebUserCustomer, WebUserSetting, WebUserSettingAlter, WebUserSettingType, WebUserContacts, WebUserBuyerAccount } from "./webUser";
+import { PointProduct } from "./pointshop";
 
 const uqIns = [
 
@@ -84,6 +85,8 @@ const uqIns = [
     WebUserSettingAlter,
 
     JkTask,
+
+    PointProduct,
 ]
 
 export default uqIns;

@@ -10,19 +10,18 @@ const facePointPush = async (joint, uqBus, queue, data) => {
     return true;
 };
 const facePointPull = async (joint, uqBus, queue) => {
-    let sql = `select top 1 ID, CID, Years, AllScore, ScoreUsed from ProdData.dbo.Export_CustomerScoreBook where ID > @iMaxId order by ID`;
+    let sql = `select top 1 ID, CID as CustomerID, Years, AllScore, ScoreUsed from ProdData.dbo.Export_CustomerScoreBook where ID > @iMaxId order by ID`;
     return await uqOutRead_1.uqOutRead(sql, queue);
 };
 exports.facePoint = {
-    face: '百灵威系统工程部/point/point',
+    face: '百灵威系统工程部/point/customerPoint',
     from: 'local',
     mapper: {
-        member: 'CID@Customer',
-        years: 'Years',
+        customer: 'CustomerID@Customer',
+        pointYear: 'Years',
         point: "AllScore",
-        pointUsed: "ScoreUsed",
+        usedPoint: "ScoreUsed",
     },
-    push: facePointPush,
     pull: facePointPull
 };
 //# sourceMappingURL=pointBus.js.map

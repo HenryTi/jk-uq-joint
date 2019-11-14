@@ -8,7 +8,8 @@ const productInventoryPull = async (joint, uqBus, queue) => {
     return await uqOutRead_1.uqOutRead(sql, queue);
 };
 exports.faceProductInventory = {
-    face: '百灵威系统工程部/point/productInventory',
+    // face: '百灵威系统工程部/point/productInventory',
+    face: '百灵威系统工程部/warehouse/productInventory',
     from: 'local',
     mapper: {
         warehouse: 'WarehouseID@Warehouse',

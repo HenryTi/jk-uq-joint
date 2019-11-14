@@ -210,5 +210,5 @@ export const CustomerBuyerAccount: UqInMap = {
         arr1: {
             buyerAccount: '^BuyerAccountID@BuyerAccount',
         }
-    }
+    },
 };

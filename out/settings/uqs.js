@@ -13,5 +13,6 @@ exports.uqs = {
     jkWebUser: JKDev + '/webuser',
     jkOrder: JKDev + '/order',
     jkSalestask: JKDev + '/salestask',
+    jkPointShop: JKDev + '/积分商城',
 };
 //# sourceMappingURL=uqs.js.map

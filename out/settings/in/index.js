@@ -12,6 +12,7 @@ const customerDiscount_1 = require("./customerDiscount");
 const hr_1 = require("./hr");
 const salestask_1 = require("./salestask");
 const webUser_1 = require("./webUser");
+const pointshop_1 = require("./pointshop");
 const uqIns = [
     salestask_1.JkTaskType,
     salesRegion_1.Language,
@@ -73,6 +74,7 @@ const uqIns = [
     webUser_1.WebUserSetting,
     webUser_1.WebUserSettingAlter,
     salestask_1.JkTask,
+    pointshop_1.PointProduct,
 ];
 exports.default = uqIns;
 //# sourceMappingURL=index.js.map

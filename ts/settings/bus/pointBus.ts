@@ -11,19 +11,18 @@ const facePointPush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus, queue:
 }
 
 const facePointPull: DataPull<UqBus> = async (joint: Joint, uqBus: UqBus, queue: string | number): Promise<DataPullResult> => {
-    let sql = `select top 1 ID, CID, Years, AllScore, ScoreUsed from ProdData.dbo.Export_CustomerScoreBook where ID > @iMaxId order by ID`;
+    let sql = `select top 1 ID, CID as CustomerID, Years, AllScore, ScoreUsed from ProdData.dbo.Export_CustomerScoreBook where ID > @iMaxId order by ID`;
     return await uqOutRead(sql, queue);
 }
 
 export const facePoint: UqBus = {
-    face: '百灵威系统工程部/point/point',
+    face: '百灵威系统工程部/point/customerPoint',
     from: 'local',
     mapper: {
-        member: 'CID@Customer',
-        years: 'Years',
+        customer: 'CustomerID@Customer',
+        pointYear: 'Years',
         point: "AllScore",
-        pointUsed: "ScoreUsed",
+        usedPoint: "ScoreUsed",
     },
-    push: facePointPush,
     pull: facePointPull
 };

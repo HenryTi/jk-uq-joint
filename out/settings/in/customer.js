@@ -201,6 +201,6 @@ exports.CustomerBuyerAccount = {
         arr1: {
             buyerAccount: '^BuyerAccountID@BuyerAccount',
         }
-    }
+    },
 };
 //# sourceMappingURL=customer.js.map
