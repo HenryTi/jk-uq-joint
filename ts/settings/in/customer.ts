@@ -1,9 +1,10 @@
 import * as _ from 'lodash';
-import { UqInTuid, UqInMap, UqInTuidArr, Joint } from "uq-joint";
+import { UqInTuid, UqInMap, UqInTuidArr, Joint, UqIn, DataPullResult } from "uq-joint";
 import { uqs } from "../uqs";
 import { customerPullWrite, contactPullWrite } from '../../first/converter/customerPullWrite';
 import config from 'config';
 import { logger } from '../../tools/logger';
+import { uqOutRead } from "../../first/converter/uqOutRead";
 
 const promiseSize = config.get<number>("promiseSize");
 
@@ -186,11 +187,35 @@ export const BuyerAccount: UqInTuid = {
         createTime: 'CreateTime',
         isValid: 'IsValid',
     },
+    /*
     pull: `select top ${promiseSize} ID, CustomerID as BuyerAccountID, OrganizationID, Name, FirstName, LastName
            , IsValid, CreateTime
            from ProdData.dbo.Export_Customer
            where ID > @iMaxId and CustomerID in (select CID from dbs.dbo.vw_sordersBJSH)
            order by ID`,
+    */
+    pull: async (joint: Joint, uqIn: UqInTuid, queue: number): Promise<DataPullResult> => {
+        if ((queue - 8 * 60 * 60) * 1000 > Date.now())
+            return undefined;
+        let nextQueue = queue + 60;
+        let sql = `select DATEDIFF(s, '1970-01-01', a.SODDateB) + 1 as ID, b.CID as CustomerID, b.UnitID as OrganizationID
+            , b.Name, b.FirstName, b.LastName
+            , case b.C5 when 'xx' then 0 else 1 end as IsValid
+            , b.creaDate as CreateTime
+            from dbs.dbo.vw_TermsABJSH a inner join dbs.dbo.Customers b on a.CID_T = b.CID
+            where a.SODDateB >= DATEADD(s, @iMaxId, '1970-01-01') and a.SODDateB <= DATEADD(s, ${nextQueue}, '1970-01-01')
+            order by a.SODDateB`
+        try {
+            let ret = await uqOutRead(sql, queue);
+            if (ret === undefined) {
+                ret = { lastPointer: nextQueue, data: [] };
+            }
+            return ret;
+        } catch (error) {
+            logger.error(error);
+            throw error;
+        }
+    },
     pullWrite: async (joint: Joint, data: any) => {
         data["CreateTime"] = data["CreateTime"] && data['CreateTime'].getTime() / 1000;
         await joint.uqIn(BuyerAccount, data);

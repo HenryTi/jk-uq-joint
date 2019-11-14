@@ -129,6 +129,10 @@
             "inervalUnit": 1
         },
         {
+            "name": "BuyerAccount",
+            "inervalUnit": 1
+        },
+        {
             "name": "Agreement",
             "inervalUnit": 1
         },

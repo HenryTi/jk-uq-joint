@@ -7,6 +7,7 @@ const uqs_1 = require("../uqs");
 const customerPullWrite_1 = require("../../first/converter/customerPullWrite");
 const config_1 = __importDefault(require("config"));
 const logger_1 = require("../../tools/logger");
+const uqOutRead_1 = require("../../first/converter/uqOutRead");
 const promiseSize = config_1.default.get("promiseSize");
 exports.Customer = {
     uq: uqs_1.uqs.jkCustomer,
@@ -178,11 +179,36 @@ exports.BuyerAccount = {
         createTime: 'CreateTime',
         isValid: 'IsValid',
     },
+    /*
     pull: `select top ${promiseSize} ID, CustomerID as BuyerAccountID, OrganizationID, Name, FirstName, LastName
            , IsValid, CreateTime
            from ProdData.dbo.Export_Customer
            where ID > @iMaxId and CustomerID in (select CID from dbs.dbo.vw_sordersBJSH)
            order by ID`,
+    */
+    pull: async (joint, uqIn, queue) => {
+        if ((queue - 8 * 60 * 60) * 1000 > Date.now())
+            return undefined;
+        let nextQueue = queue + 60;
+        let sql = `select DATEDIFF(s, '1970-01-01', a.SODDateB) + 1 as ID, b.CID as CustomerID, b.UnitID as OrganizationID
+            , b.Name, b.FirstName, b.LastName
+            , case b.C5 when 'xx' then 0 else 1 end as IsValid
+            , b.creaDate as CreateTime
+            from dbs.dbo.vw_TermsABJSH a inner join dbs.dbo.Customers b on a.CID_T = b.CID
+            where a.SODDateB >= DATEADD(s, @iMaxId, '1970-01-01') and a.SODDateB <= DATEADD(s, ${nextQueue}, '1970-01-01')
+            order by a.SODDateB`;
+        try {
+            let ret = await uqOutRead_1.uqOutRead(sql, queue);
+            if (ret === undefined) {
+                ret = { lastPointer: nextQueue, data: [] };
+            }
+            return ret;
+        }
+        catch (error) {
+            logger_1.logger.error(error);
+            throw error;
+        }
+    },
     pullWrite: async (joint, data) => {
         data["CreateTime"] = data["CreateTime"] && data['CreateTime'].getTime() / 1000;
         await joint.uqIn(exports.BuyerAccount, data);
