@@ -85,7 +85,7 @@ export const faceOrder: UqBus = {
     mapper: {
         id: true,
         Id: "no",
-        Customer: "customer@Customer",
+        Customer: "customer@BuyerAccount",
         shippingContact: true,
         invoiceContact: true,
         /*
