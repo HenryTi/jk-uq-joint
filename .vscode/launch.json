@@ -8,11 +8,12 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            //"program": "${workspaceFolder}/out/first/index.js",
+            // "program": "${workspaceFolder}/out/uq-joint/db/upgrade.js",
+            // "program": "${workspaceFolder}/out/first/index.js",
             "program": "${workspaceFolder}/out/index.js",
             // "program": "${workspaceFolder}/out/log4jstest.js",
             "env": {
-                "NODE_ENV": "development"
+                "NODE_ENV": "production"
             },
             // "outputCapture": "std",
         }

@@ -187,10 +187,11 @@ exports.BuyerAccount = {
            order by ID`,
     */
     pull: async (joint, uqIn, queue) => {
-        if ((queue - 8 * 60 * 60) * 1000 > Date.now())
+        let step_seconds = 60;
+        if ((queue - 8 * 60 * 60 + step_seconds) * 1000 > Date.now())
             return undefined;
-        let nextQueue = queue + 60;
-        let sql = `select DATEDIFF(s, '1970-01-01', a.SODDateB) + 1 as ID, b.CID as CustomerID, b.UnitID as OrganizationID
+        let nextQueue = queue + step_seconds;
+        let sql = `select DATEDIFF(s, '1970-01-01', a.SODDateB) + 1 as ID, b.CID as BuyerAccountID, b.UnitID as OrganizationID
             , b.Name, b.FirstName, b.LastName
             , case b.C5 when 'xx' then 0 else 1 end as IsValid
             , b.creaDate as CreateTime
