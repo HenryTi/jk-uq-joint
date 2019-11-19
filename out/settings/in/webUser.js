@@ -68,7 +68,7 @@ exports.WebUserTonva = {
             }
             // 仅账号是本人的情况下，才在此处导入Tonva系统，非本人的情况下，通过WebUserBuyerAccount的设置单独导入
             if (!data['BuyerAccountID'])
-                promises.push(joint.uqIn(exports.WebUserBuyerAccount, { 'WebUserID': data['WebUserID'], 'BuyerAccountID': data['CustomerID'] }));
+                promises.push(joint.uqIn(exports.WebUserBuyerAccount, { 'WebUserID': data['WebUserID'], 'BuyerAccountID': data['BuyerAccountID'] }));
             await Promise.all(promises);
             return true;
         }

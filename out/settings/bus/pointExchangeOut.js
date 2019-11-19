@@ -4,7 +4,7 @@ const uqs_1 = require("settings/uqs");
 const facePointExchangePush = async (joint, uqBus, queue, orderIn) => {
     return true;
 };
-exports.faceOrder = {
+exports.facePointExchange = {
     face: '百灵威系统工程部/point/order',
     from: 'local',
     mapper: {
