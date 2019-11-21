@@ -110,6 +110,18 @@ export const sqls = {
                         , creaDate as CreateTime
                 from dbs.dbo.Customers where CID > @iMaxId and CID in (select CID from dbs.dbo.vw_sordersBJSH)
                 and CID > '${idBrokened.BuyerAccountID}' and Name is not null order by CID`,
+        /*
+        readBuyerAccount: `
+                select top ${promiseSize} c.ID as ID, isnull(r.Contractor, c.CID) as BuyerAccountID
+                        , cc.UnitID as OrganizationID, cc.Name, cc.FirstName, cc.LastName, cc.XYZ, cc.Sex as Gender
+                        , case cc.C5 when 'xx' then 0 else 1 end as IsValid
+                        , cc.creaDate as CreateTime
+                from alidb.jk_eb.dbo.ClientInfo c inner join alidb.jk_eb.dbo.ClientLogin cl on cl.CIID = c.ID
+                     inner join dbs.dbo.Customers cc on c.CID = cc.CID
+                     left join alidb.jk_eb.dbo.MakeOrderPersonAndContractorRelationship r on c.CID = r.MakeOrderCID
+                where c.ID > @iMaxId and cl.State in ( 1, 5 )
+                and c.ID > '${idBrokened.BuyerAccountID}' and c.CID is not null order by c.ID`,
+        */
 
         readOrganization: `
                 select top ${promiseSize} UnitID as ID, UnitID as OrganizationID, unitName as Name, convert(nvarchar(30), creaDate, 121) as CreateTime
@@ -124,6 +136,11 @@ export const sqls = {
                 select top ${promiseSize} ID, ID as ContactID, CID as CustomerID, Name, Unit as OrganizationName, isnull(Mobile, '') as Mobile, Tel as Telephone
                     , Email, Zip, Addr, isDefault, 1 as AddressType
                 from dbs.dbo.order_InvoiceInfo_txt where ID > @iMaxId and Name is not null order by ID`,
+
+        readCustomerBuyerAccount: `
+                select top ${promiseSize} MakeOrderCID as ID, MakeOrderCID as CustomerID, Contractor as BuyerAccountID, '-' as [$]
+                from dbs.dbo.MakeOrderPersonAndContractorRelationship
+                where MakeOrderCID > @iMaxId and inValid = 0 order by MakeOrderCID`,
 
         //==============================================================
         //=========================== Product ===========================

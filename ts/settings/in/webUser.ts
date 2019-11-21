@@ -282,8 +282,10 @@ export const WebUserBuyerAccount: UqInMap = {
             buyerAccount: '^BuyerAccountID@BuyerAccount',
         }
     },
+    /*
     pull: `select top ${promiseSize} r.ID, ci.ID as WebUserID, r.ContractorID as BuyerAccountID, r.IsValid
            from alidb.ProdData.dbo.Export_CustomerContractor r
            inner join alidb.jk_eb.dbo.ClientInfo ci on r.CustomerID = ci.CID
            where r.ID > @iMaxId order by r.ID`,
+    */
 };

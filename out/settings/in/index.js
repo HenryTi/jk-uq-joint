@@ -59,6 +59,7 @@ const uqIns = [
     customer_1.CustomerContacts,
     customer_1.CustomerHandler,
     customer_1.CustomerContractor,
+    customer_1.CustomerBuyerAccount,
     customer_1.Contact,
     customer_1.InvoiceInfo,
     customerDiscount_1.Agreement,

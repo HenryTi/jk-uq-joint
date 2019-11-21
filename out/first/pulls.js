@@ -44,6 +44,7 @@ exports.pulls = {
     "BuyerAccount": { read: sqls_1.sqls.readBuyerAccount, uqIn: customer_1.BuyerAccount },
     "CustomerShippingAddress": { read: sqls_1.sqls.readCustomerShippingAddress, uqIn: customer_1.Contact },
     "CustomerInvoiceAddress": { read: sqls_1.sqls.readCustomerInvoiceAddress, uqIn: customer_1.Contact },
+    "CustomerBuyerAccount": { read: sqls_1.sqls.readCustomerBuyerAccount, uqIn: customer_1.CustomerBuyerAccount },
     "Agreement": { read: sqls_1.sqls.readAgreement, uqIn: customerDiscount_1.Agreement },
     // 市场活动
     "PromotionType": { read: sqls_1.sqls.readPromotionType, uqIn: promotion_1.PromotionType },

@@ -237,4 +237,25 @@ export const CustomerBuyerAccount: UqInMap = {
             buyerAccount: '^BuyerAccountID@BuyerAccount',
         }
     },
+    pull: async (joint: Joint, uqIn: UqInMap, queue: number): Promise<DataPullResult> => {
+        let step_seconds = 10 * 60;
+        if ((queue - 8 * 60 * 60 + step_seconds) * 1000 > Date.now())
+            return undefined;
+        let nextQueue = queue + step_seconds;
+        let sql = `select DATEDIFF(s, '1970-01-01', a.Update__time) + 1 as ID, a.MakeOrderCID as CustomerID, a.Contractor as BuyerAccountID
+            , case when a.Invalid = 0 then '-' else '' end as [$]
+            from dbs.dbo.MakeOrderPersonAndContractorRelationship a
+            where a.Update__time >= DATEADD(s, @iMaxId, '1970-01-01') and a.Update__time <= DATEADD(s, ${nextQueue}, '1970-01-01')
+            order by a.Update__time`
+        try {
+            let ret = await uqOutRead(sql, queue);
+            if (ret === undefined) {
+                ret = { lastPointer: nextQueue, data: [] };
+            }
+            return ret;
+        } catch (error) {
+            logger.error(error);
+            throw error;
+        }
+    }
 };
