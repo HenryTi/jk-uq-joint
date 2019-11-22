@@ -33,9 +33,8 @@ export const WebUserTonva: UqInTuid = {
            , w.Mobile, w.Telephone, w.Email, w.Fax, w.WechatOpenID
            , w.Country, w.Province, w.City, w.Address, w.ZipCode
            , w.InvoiceType, w.InvoiceTitle, w.TaxNo, w.BankAccountName
-           , w.CustomerID, w.SalesRegionBelongsTo, w.SalesCompanyID, r.Contractor as BuyerAccountID
+           , w.CustomerID, w.SalesRegionBelongsTo, w.SalesCompanyID
            from alidb.ProdData.dbo.Export_WebUser w
-           left join alidb.jk_eb.dbo.MakeOrderPersonAndContractorRelationship r on r.makeOrderCID = w.CustomerID
         where w.ID > @iMaxId and w.State in (1, 5) order by w.ID`,
     /**
      * WebUser的导入步骤：

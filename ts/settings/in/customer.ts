@@ -193,7 +193,6 @@ export const BuyerAccount: UqInTuid = {
            from ProdData.dbo.Export_Customer
            where ID > @iMaxId and CustomerID in (select CID from dbs.dbo.vw_sordersBJSH)
            order by ID`,
-    */
     pull: async (joint: Joint, uqIn: UqInTuid, queue: number): Promise<DataPullResult> => {
         let step_seconds = 60;
         if ((queue - 8 * 60 * 60 + step_seconds) * 1000 > Date.now())
@@ -225,6 +224,7 @@ export const BuyerAccount: UqInTuid = {
         await joint.uqIn(CustomerBuyerAccount, { "CustomerID": buyerAccountID, 'BuyerAccountID': buyerAccountID });
         return true;
     }
+    */
 };
 
 export const CustomerBuyerAccount: UqInMap = {
@@ -244,7 +244,11 @@ export const CustomerBuyerAccount: UqInMap = {
         let nextQueue = queue + step_seconds;
         let sql = `select DATEDIFF(s, '1970-01-01', a.Update__time) + 1 as ID, a.MakeOrderCID as CustomerID, a.Contractor as BuyerAccountID
             , case when a.Invalid = 0 then '-' else '' end as [$]
+            , c.UnitID as Organization, c.Name, c.FirstName, c.LastName
+            , case c.C5 when 'xx' then 0 else 1 end as IsValid
+            , c.creaDate as CreateTime
             from dbs.dbo.MakeOrderPersonAndContractorRelationship a
+                 inner join dbs.dbo.Customers c on a.Contractor = c.CID
             where a.Update__time >= DATEADD(s, @iMaxId, '1970-01-01') and a.Update__time <= DATEADD(s, ${nextQueue}, '1970-01-01')
             order by a.Update__time`
         try {
@@ -257,5 +261,11 @@ export const CustomerBuyerAccount: UqInMap = {
             logger.error(error);
             throw error;
         }
+    },
+    pullWrite: async (joint: Joint, data: any) => {
+        data["CreateTime"] = data["CreateTime"] && data['CreateTime'].getTime() / 1000;
+        await joint.uqIn(BuyerAccount, data);
+        await joint.uqIn(CustomerBuyerAccount, data);
+        return true;
     }
 };
