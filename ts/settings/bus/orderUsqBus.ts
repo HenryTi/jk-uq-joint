@@ -1,11 +1,16 @@
 import { UqBus, DataPush, Joint } from "uq-joint";
-import { WebApiClient, httpClient } from "../../tools/webApiClient";
+import { httpClient } from "../../tools/webApiClient";
 import { uqs } from "../uqs";
 import _ from 'lodash';
 
 const faceOrderPush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus, queue: number, orderIn: any): Promise<boolean> => {
     // console.log(orderIn);
 
+    let busType = orderIn.type;
+    if (busType !== 1 && busType !== 3) {
+        // 非目标bus数据，放弃不处理
+        return true;
+    }
     let orderOut: any = _.pick(orderIn, ['id', 'Id', 'SaleOrderItems']);
     orderOut.Customer = { Id: orderIn.Customer };
     if (orderIn.shippingContact !== undefined) {
@@ -80,10 +85,12 @@ function getInvoiceReceiver(invoiceContact: any): any {
 }
 
 export const faceOrder: UqBus = {
-    face: '百灵威系统工程部/point/order',
+    // face: '百灵威系统工程部/point/order',
+    face: '百灵威系统工程部/order/order',
     from: 'local',
     mapper: {
         id: true,
+        type: true,
         Id: "no",
         Customer: "customer@BuyerAccount",
         shippingContact: true,

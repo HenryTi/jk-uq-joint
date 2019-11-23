@@ -8,6 +8,11 @@ const uqs_1 = require("../uqs");
 const lodash_1 = __importDefault(require("lodash"));
 const faceOrderPush = async (joint, uqBus, queue, orderIn) => {
     // console.log(orderIn);
+    let busType = orderIn.type;
+    if (busType !== 1 && busType !== 3) {
+        // 非目标bus数据，放弃不处理
+        return true;
+    }
     let orderOut = lodash_1.default.pick(orderIn, ['id', 'Id', 'SaleOrderItems']);
     orderOut.Customer = { Id: orderIn.Customer };
     if (orderIn.shippingContact !== undefined) {
@@ -78,10 +83,12 @@ function getInvoiceReceiver(invoiceContact) {
     }
 }
 exports.faceOrder = {
-    face: '百灵威系统工程部/point/order',
+    // face: '百灵威系统工程部/point/order',
+    face: '百灵威系统工程部/order/order',
     from: 'local',
     mapper: {
         id: true,
+        type: true,
         Id: "no",
         Customer: "customer@BuyerAccount",
         shippingContact: true,
