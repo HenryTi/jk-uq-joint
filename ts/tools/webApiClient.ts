@@ -9,14 +9,24 @@ export class WebApiClient extends Fetch {
         super(webApiBaseUrl);
     }
 
-    async newOrder(order: any): Promise<boolean> {
+    async newOrder(order: any): Promise<any> {
         try {
             // order = { Id: 'N20190201JKA', Customer: { Id: 'A250001' }, Maker: 'L38', SaleOrderItems: [{ Id: 'xxuigeuiiwege', PackageId: 'A250011_100g', Qty: 1, SalePrice: { Value: 100, Currency: 'RMB' } }] };
-            await this.post("SaleOrder/CreateNewSaleOrder", order);
+            let result = await this.post("SaleOrder/CreateNewSaleOrder", order);
+            return result;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+
+    async ExchangePoint(orderId: string): Promise<boolean> {
+        try {
+            await this.post(`PointShop/Exchange?saleOrderId=${orderId}`, undefined);
             return true;
         } catch (error) {
             console.log(error);
-            return false;
+            throw error;
         }
     }
 

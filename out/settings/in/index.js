@@ -76,6 +76,7 @@ const uqIns = [
     webUser_1.WebUserSettingAlter,
     salestask_1.JkTask,
     pointshop_1.PointProduct,
+    pointshop_1.PlatformOrder,
 ];
 exports.default = uqIns;
 //# sourceMappingURL=index.js.map

@@ -7,7 +7,7 @@ const faceOrderPush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus, queue:
     // console.log(orderIn);
 
     let busType = orderIn.type;
-    if (busType !== 1 && busType !== 3) {
+    if (busType && busType !== 1 && busType !== 3) {
         // 非目标bus数据，放弃不处理
         return true;
     }
@@ -32,15 +32,15 @@ const faceOrderPush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus, queue:
     // console.log(orderOut);
     // 调用7.253的web api
     try {
-        let success = await httpClient.newOrder(orderOut);
-        return success;
+        await httpClient.newOrder(orderOut);
+        return true;
     } catch (error) {
         console.error(error);
         return false;
     }
 }
 
-function getConsignee(shippingContact: any): any {
+export function getConsignee(shippingContact: any): any {
     let { name, organizationName, telephone, mobile, email, address, addressString } = shippingContact;
     let Consignee: any = {
         ConsigneeName: name,
@@ -64,7 +64,7 @@ function getConsignee(shippingContact: any): any {
     return Consignee;
 }
 
-function getInvoiceReceiver(invoiceContact: any): any {
+export function getInvoiceReceiver(invoiceContact: any): any {
     if (invoiceContact !== undefined) {
         let InvoiceReceiver: any = {
             InvoiceReceiverUserName: invoiceContact.name,

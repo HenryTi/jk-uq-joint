@@ -13,12 +13,22 @@ class WebApiClient extends uq_joint_1.Fetch {
     async newOrder(order) {
         try {
             // order = { Id: 'N20190201JKA', Customer: { Id: 'A250001' }, Maker: 'L38', SaleOrderItems: [{ Id: 'xxuigeuiiwege', PackageId: 'A250011_100g', Qty: 1, SalePrice: { Value: 100, Currency: 'RMB' } }] };
-            await this.post("SaleOrder/CreateNewSaleOrder", order);
+            let result = await this.post("SaleOrder/CreateNewSaleOrder", order);
+            return result;
+        }
+        catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+    async ExchangePoint(orderId) {
+        try {
+            await this.post(`PointShop/Exchange?saleOrderId=${orderId}`, undefined);
             return true;
         }
         catch (error) {
             console.log(error);
-            return false;
+            throw error;
         }
     }
     async test(data) {
