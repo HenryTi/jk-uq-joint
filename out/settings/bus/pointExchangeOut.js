@@ -8,7 +8,8 @@ const uqs_1 = require("../uqs");
 const orderUsqBus_1 = require("./orderUsqBus");
 const webApiClient_1 = require("../../tools/webApiClient");
 const facePointExchangePush = async (joint, uqBus, queue, orderIn) => {
-    let orderOut = lodash_1.default.pick(orderIn, ['id', 'Id']);
+    let orderOut = lodash_1.default.pick(orderIn, ['id']);
+    orderOut.Id = 'PointX' + orderIn.Id;
     orderOut.Customer = { Id: orderIn.Customer };
     if (orderIn.shippingContact !== undefined) {
         orderOut.Consignee = orderUsqBus_1.getConsignee(orderIn.shippingContact);

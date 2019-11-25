@@ -7,7 +7,8 @@ import { httpClient } from "../../tools/webApiClient";
 
 const facePointExchangePush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus, queue: number, orderIn: any): Promise<boolean> => {
 
-    let orderOut: any = _.pick(orderIn, ['id', 'Id']);
+    let orderOut: any = _.pick(orderIn, ['id']);
+    orderOut.Id = 'PointX' + orderIn.Id;
     orderOut.Customer = { Id: orderIn.Customer };
     if (orderIn.shippingContact !== undefined) {
         orderOut.Consignee = getConsignee(orderIn.shippingContact);
