@@ -3,6 +3,7 @@ import { UqBus, DataPush, Joint } from "uq-joint";
 import { uqs } from "../uqs";
 import { getConsignee, getInvoiceReceiver } from "./orderUsqBus";
 import { httpClient } from "../../tools/webApiClient";
+import { execSql } from '../../mssql/tools';
 
 
 const facePointExchangePush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus, queue: number, orderIn: any): Promise<boolean> => {
@@ -78,3 +79,33 @@ export const facePointExchange: UqBus = {
         },
     }
 };
+
+export const facePointOut: UqBus = {
+    face: '百灵威系统工程部/pointShop/couponUsed',
+    from: 'local',
+    mapper: {
+        orderId: true,
+        Customer: "customer@Customer",
+        amount: true,
+        currency: "currency@Currency",
+        point: true,
+        coupon: true
+    },
+    push: async (joint: Joint, uqBus: UqBus, queue: number, data: any): Promise<boolean> => {
+        let { orderId, Customer, point, coupon } = data;
+        let title = 'tonva积分';
+        let remark = orderId + ', coupon:' + coupon;
+        let now = new Date();
+        await execSql(
+            `insert into dbs.dbo.MScoreAlter(CID, MScore, MSYear, title, Note, EPID)
+            values(@customer, @point, @year, @title, @note, @employee)`, [
+            { 'name': 'customer', 'value': Customer },
+            { 'name': 'point', 'value': point },
+            { 'name': 'year', 'value': now.getFullYear() },
+            { 'name': 'title', 'value': title },
+            { 'name': 'note', 'value': remark },
+            { 'name': 'employee', 'value': 'LCT' },
+        ]);
+        return true;
+    }
+}

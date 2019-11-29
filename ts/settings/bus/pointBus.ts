@@ -11,7 +11,9 @@ const facePointPush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus, queue:
 }
 
 const facePointPull: DataPull<UqBus> = async (joint: Joint, uqBus: UqBus, queue: string | number): Promise<DataPullResult> => {
-    let sql = `select top 1 ID, CID as CustomerID, Years, AllScore, ScoreUsed from ProdData.dbo.Export_CustomerScoreBook where ID > @iMaxId order by ID`;
+    let sql = `select top 1 ID, CID as CustomerID, Years, AllScore, ScoreUsed
+        from ProdData.dbo.Export_CustomerScoreBook
+        where ID > @iMaxId order by ID`;
     return await uqOutRead(sql, queue);
 }
 

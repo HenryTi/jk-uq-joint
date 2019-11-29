@@ -17,5 +17,6 @@ exports.bus = {
     "facePoint": pointBus_1.facePoint,
     "faceProductInventory": productInventoryBus_1.faceProductInventory,
     "facePointExchange": pointExchangeOut_1.facePointExchange,
+    "facePointOut": pointExchangeOut_1.facePointOut,
 };
 //# sourceMappingURL=index.js.map

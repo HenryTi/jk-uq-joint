@@ -268,3 +268,21 @@ export const ProductLegallyProhibited: UqInMap = {
         }
     }
 };
+
+export const ProductExtensionProperty: UqInMap = {
+    uq: uqs.jkProduct,
+    type: 'map',
+    entity: 'ProductExtensionProperty',
+    mapper: {
+        product: "ProductID@ProductX",
+        englishAlias: "Synonymity",
+        chineseAlias: "SynonymityC",
+        MDL: true,
+        EINECS: true,
+        Beilstein: true,
+        FlashPoint: "FP",
+        MeltingPoint: "MP",
+        BolingPoint: "BP",
+        density: "Density",
+    }
+}

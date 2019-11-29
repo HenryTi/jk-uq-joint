@@ -38,6 +38,7 @@ exports.pulls = {
     // 产品
     "ProductX": { read: sqls_1.sqls.readProduct, uqIn: product_1.ProductX },
     "ProductLegallyProhibited": { read: sqls_1.sqls.readProductLegallyProhibited, uqIn: product_1.ProductLegallyProhibited },
+    "ProductExtensionProperty": { read: sqls_1.sqls.readProductExtensionProperty, uqIn: product_1.ProductExtensionProperty },
     // 客户和客户单位基本信息
     "Organization": { read: sqls_1.sqls.readOrganization, uqIn: customer_1.Organization },
     "Customer": { read: sqls_1.sqls.readCustomer, uqIn: customer_1.Customer },

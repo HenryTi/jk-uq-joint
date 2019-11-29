@@ -258,4 +258,21 @@ exports.ProductLegallyProhibited = {
         }
     }
 };
+exports.ProductExtensionProperty = {
+    uq: uqs_1.uqs.jkProduct,
+    type: 'map',
+    entity: 'ProductExtensionProperty',
+    mapper: {
+        product: "ProductID@ProductX",
+        englishAlias: "Synonymity",
+        chineseAlias: "SynonymityC",
+        MDL: true,
+        EINECS: true,
+        Beilstein: true,
+        FlashPoint: "FP",
+        MeltingPoint: "MP",
+        BolingPoint: "BP",
+        density: "Density",
+    }
+};
 //# sourceMappingURL=product.js.map

@@ -144,6 +144,13 @@ exports.sqls = {
     readProductLegallyProhibited: `
                 select top ${promiseSize} jkid + market_code as ID, jkid as ProductID, market_code as SalesRegionID, left(description, 20) as Reason
                 from zcl_mess.dbo.sc_safe_ProdCache where jkid + market_code > @iMaxId order by jkid + market_code`,
+    readProductExtensionProperty: `
+                select top ${promiseSize} p.JKID as ID, p.jkid as ProductID, pp.Synonymity, pp.SynonymityC, pp.MDL, pp.EINECS, pp.Beilstein
+                        , pp.FP, pp.MP, pp.BP, pp.Density
+                from opdata.dbo.pproducts pp inner join opdata.dbo.JKProdIDinout oi on oi.jkidin = pp.originalID
+                inner join zcl_mess.dbo.Products p on p.OriginalID = oi.JKIDOut and p.Manufactory in ( 'A01', 'A10' )
+                where p.jkid > @iMaxId
+                and p.jkid not in ( select jkid from zcl_mess.dbo.Invalid_products ) order by p.jkid`,
     //==============================================================
     //=========================== ProductCategory ===========================
     //==============================================================

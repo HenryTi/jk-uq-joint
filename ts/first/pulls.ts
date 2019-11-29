@@ -5,7 +5,7 @@ import { ProductCategory, ProductCategoryLanguage, ProductProductCategory } from
 import { Country, Province, City, County } from "../settings/in/Address";
 import { Language, PackTypeStandard, Currency, SalesRegion, PackType, InvoiceType } from "../settings/in/salesRegion";
 import { Chemical } from "../settings/in/chemical";
-import { Brand, BrandSalesRegion, BrandDeliveryTime, ProductPackX, PriceX, ProductSalesRegion, ProductLegallyProhibited, ProductX, ProductChemical } from "../settings/in/product";
+import { Brand, BrandSalesRegion, BrandDeliveryTime, ProductPackX, PriceX, ProductSalesRegion, ProductLegallyProhibited, ProductX, ProductChemical, ProductExtensionProperty } from "../settings/in/product";
 import { Warehouse, SalesRegionWarehouse } from "../settings/in/warehouse";
 import { Organization, Customer, Contact, BuyerAccount, CustomerBuyerAccount } from "../settings/in/customer";
 import { Promotion, PromotionLanguage, PromotionPackDiscount, PromotionType, PromotionStatus } from '../settings/in/promotion';
@@ -61,6 +61,7 @@ export const pulls: {
     // 产品
     "ProductX": { read: sqls.readProduct, uqIn: ProductX },
     "ProductLegallyProhibited": { read: sqls.readProductLegallyProhibited, uqIn: ProductLegallyProhibited },
+    "ProductExtensionProperty": { read: sqls.readProductExtensionProperty, uqIn: ProductExtensionProperty },
 
     // 客户和客户单位基本信息
     "Organization": { read: sqls.readOrganization, uqIn: Organization },

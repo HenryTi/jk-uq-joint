@@ -7,6 +7,7 @@ const lodash_1 = __importDefault(require("lodash"));
 const uqs_1 = require("../uqs");
 const orderUsqBus_1 = require("./orderUsqBus");
 const webApiClient_1 = require("../../tools/webApiClient");
+const tools_1 = require("../../mssql/tools");
 const facePointExchangePush = async (joint, uqBus, queue, orderIn) => {
     let orderOut = lodash_1.default.pick(orderIn, ['id']);
     orderOut.Id = 'PointX' + orderIn.Id;
@@ -72,6 +73,34 @@ exports.facePointExchange = {
                 }
             }
         },
+    }
+};
+exports.facePointOut = {
+    face: '百灵威系统工程部/pointShop/couponUsed',
+    from: 'local',
+    mapper: {
+        orderId: true,
+        Customer: "customer@Customer",
+        amount: true,
+        currency: "currency@Currency",
+        point: true,
+        coupon: true
+    },
+    push: async (joint, uqBus, queue, data) => {
+        let { orderId, Customer, point, coupon } = data;
+        let title = 'tonva积分';
+        let remark = orderId + ', coupon:' + coupon;
+        let now = new Date();
+        await tools_1.execSql(`insert into dbs.dbo.MScoreAlter(CID, MScore, MSYear, title, Note, EPID)
+            values(@customer, @point, @year, @title, @note, @employee)`, [
+            { 'name': 'customer', 'value': Customer },
+            { 'name': 'point', 'value': point },
+            { 'name': 'year', 'value': now.getFullYear() },
+            { 'name': 'title', 'value': title },
+            { 'name': 'note', 'value': remark },
+            { 'name': 'employee', 'value': 'LCT' },
+        ]);
+        return true;
     }
 };
 //# sourceMappingURL=pointExchangeOut.js.map
