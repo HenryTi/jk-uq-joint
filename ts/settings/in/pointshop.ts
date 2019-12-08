@@ -36,10 +36,19 @@ export const PlatformOrder: UqInMap = {
     mapper: {
         orderItemId: 'OrderItemID',
         orderId: 'OrderID',
-        customer: "CustomerID@Customer",
+        customer: "CustomerID@BuyerAccount",
+        orderMaker: 'OrderMaker@Customer',
         platformOrderId: 'PlatformOrderID',
+        description: 'Description',
+        descriptionC: 'DescriptionC',
+        radiox: 'PackNo',
+        radioy: 'Packing',
+        unit: 'Unit',
+        quantity: 'Qty',
+        price: 'Price',
         subAmount: 'SubAmount',
-        currency: "CurrencyID@Currency"
+        currency: "CurrencyID@Currency",
+        mark: 'Mark',
     },
     pull: async (joint: Joint, uqIn: UqInMap, queue: number): Promise<DataPullResult> => {
         let step_seconds = 10 * 60;
@@ -47,10 +56,11 @@ export const PlatformOrder: UqInMap = {
             return undefined;
         let nextQueue = queue + step_seconds;
         let sql = `select DATEDIFF(s, '1970-01-01', p.RecordTime) + 1 as ID, p.orderid as OrderItemID, p.SorderID as OrderID, p.CID as CustomerID
-           , p.WorkingColumn2 as PlatformOrderID, p.Qty * p.UnitPriceRMB as SubAmount, p.UnitPriceRMBCurrency as CurrencyID
+           , p.WorkingColumn2 as PlatformOrderID, p.Description, p.DescriptionC, p.PackNo, p.Packing, p.Unit, p.Qty, p.UnitPriceRMB as Price
+           , p.Qty * p.UnitPriceRMB as SubAmount, p.UnitPriceRMBCurrency as CurrencyID, p.Mark, p.UserID as OrderMaker
            from dbs.dbo.vw_SOrdersBJSH p
            where p.RecordTime >= DATEADD(s, @iMaxId, '1970-01-01') and p.RecordTime <= DATEADD(s, ${nextQueue}, '1970-01-01')
-           and p.WorkingColumn2 is not null
+           and p.WorkingColumn2 is not null and p.userid is not null
            order by p.RecordTime`;
         try {
             let ret = await uqOutRead(sql, queue);
