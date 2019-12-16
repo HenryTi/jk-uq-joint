@@ -1,5 +1,5 @@
 import { UqBus, Joint, DataPull, DataPullResult } from "uq-joint";
-import { uqOutRead } from "first/converter/uqOutRead";
+import { uqOutRead } from "../../first/converter/uqOutRead";
 
 const faceOrderPaymentPull: DataPull<UqBus> = async (joint: Joint, uqBus: UqBus, queue: string | number): Promise<DataPullResult> => {
     let sql = `
