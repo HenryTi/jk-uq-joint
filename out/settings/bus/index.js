@@ -5,6 +5,7 @@ const productInventoryBus_1 = require("./productInventoryBus");
 const pointBus_1 = require("./pointBus");
 const webUserBus_1 = require("./webUserBus");
 const pointExchangeOut_1 = require("./pointExchangeOut");
+const orderPayment_1 = require("./orderPayment");
 exports.bus = {
     "faceOrder": orderUsqBus_1.faceOrder,
     "faceUser": webUserBus_1.faceUser,
@@ -18,5 +19,6 @@ exports.bus = {
     "faceProductInventory": productInventoryBus_1.faceProductInventory,
     "facePointExchange": pointExchangeOut_1.facePointExchange,
     "facePointOut": pointExchangeOut_1.facePointOut,
+    "faceOrderPayment": orderPayment_1.faceOrderPayment,
 };
 //# sourceMappingURL=index.js.map

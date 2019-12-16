@@ -167,6 +167,7 @@
         "faceWebUserCustomer",
         "faceCustomerContractor",
         "facePoint",
-        "faceProductInventory"
+        "faceProductInventory",
+        "faceOrderPayment"
     ]
 }
