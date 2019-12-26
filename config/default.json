@@ -168,6 +168,8 @@
         "faceCustomerContractor",
         "facePoint",
         "faceProductInventory",
-        "faceOrderPayment"
+        "faceOrderPayment",
+        "faceOrderAudit",
+        "faceDeliveryConfirm"
     ]
 }
