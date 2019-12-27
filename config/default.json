@@ -167,6 +167,8 @@
         "faceWebUserCustomer",
         "faceCustomerContractor",
         "facePoint",
+        "facePointOUt",
+        "facePointExchange",
         "faceProductInventory",
         "faceOrderPayment",
         "faceOrderAudit",
