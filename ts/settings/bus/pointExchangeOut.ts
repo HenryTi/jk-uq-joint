@@ -9,7 +9,7 @@ import { execSql } from '../../mssql/tools';
 const facePointExchangePush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus, queue: number, orderIn: any): Promise<boolean> => {
 
     let orderOut: any = _.pick(orderIn, ['id']);
-    orderOut.Id = 'PointX' + orderIn.Id;
+    orderOut.Id = 'POINTX' + orderIn.Id;
     orderOut.Customer = { Id: orderIn.Customer };
     if (orderIn.shippingContact !== undefined) {
         orderOut.Consignee = getConsignee(orderIn.shippingContact);
@@ -96,9 +96,10 @@ export const facePointOut: UqBus = {
         let title = 'tonva积分';
         let remark = orderId + ', coupon:' + coupon;
         let now = new Date();
+        // 从tonva导来的积分，全部是未生效的积分
         await execSql(
-            `insert into dbs.dbo.MScoreAlter(CID, MScore, MSYear, title, Note, EPID)
-            values(@customer, @point, @year, @title, @note, @employee)`, [
+            `insert into dbs.dbo.MScoreAlter(CID, MScore, MSYear, title, Note, EPID, IsEffective)
+            values(@customer, @point, @year, @title, @note, @employee, 0)`, [
             { 'name': 'customer', 'value': Customer },
             { 'name': 'point', 'value': point },
             { 'name': 'year', 'value': now.getFullYear() },

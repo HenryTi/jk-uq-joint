@@ -10,7 +10,7 @@ const webApiClient_1 = require("../../tools/webApiClient");
 const tools_1 = require("../../mssql/tools");
 const facePointExchangePush = async (joint, uqBus, queue, orderIn) => {
     let orderOut = lodash_1.default.pick(orderIn, ['id']);
-    orderOut.Id = 'PointX' + orderIn.Id;
+    orderOut.Id = 'POINTX' + orderIn.Id;
     orderOut.Customer = { Id: orderIn.Customer };
     if (orderIn.shippingContact !== undefined) {
         orderOut.Consignee = orderUsqBus_1.getConsignee(orderIn.shippingContact);
@@ -91,8 +91,9 @@ exports.facePointOut = {
         let title = 'tonva积分';
         let remark = orderId + ', coupon:' + coupon;
         let now = new Date();
-        await tools_1.execSql(`insert into dbs.dbo.MScoreAlter(CID, MScore, MSYear, title, Note, EPID)
-            values(@customer, @point, @year, @title, @note, @employee)`, [
+        // 从tonva导来的积分，全部是未生效的积分
+        await tools_1.execSql(`insert into dbs.dbo.MScoreAlter(CID, MScore, MSYear, title, Note, EPID, IsEffective)
+            values(@customer, @point, @year, @title, @note, @employee, 0)`, [
             { 'name': 'customer', 'value': Customer },
             { 'name': 'point', 'value': point },
             { 'name': 'year', 'value': now.getFullYear() },

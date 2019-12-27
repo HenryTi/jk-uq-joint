@@ -13,7 +13,7 @@
             "program": "${workspaceFolder}/out/index.js",
             // "program": "${workspaceFolder}/out/log4jstest.js",
             "env": {
-                "NODE_ENV": "production"
+                "NODE_ENV": "development"
             },
             // "outputCapture": "std",
         }
