@@ -27,12 +27,13 @@
     "dateformat": "^3.0.3",
     "express": "^4.16.4",
     "gh-pages": "^2.0.1",
+    "jwt-decode": "^2.2.0",
     "lodash": "^4.17.11",
     "log4js": "^4.5.1",
     "mssql": "^4.3.0",
     "mysql": "^2.16.0",
     "node-fetch": "^2.3.0",
-    "typescript": "^3.2.1",
-    "uq-joint": "^1.0.12"
+    "typescript": "^3.7.4",
+    "uq-joint": "^1.0.19"
   }
 }
