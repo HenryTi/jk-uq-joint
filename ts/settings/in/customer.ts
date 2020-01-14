@@ -238,6 +238,7 @@ export const CustomerBuyerAccount: UqInMap = {
         }
     },
     pull: async (joint: Joint, uqIn: UqInMap, queue: number): Promise<DataPullResult> => {
+        // queue是当前时间举例1970-01-01的秒数
         let step_seconds = 10 * 60;
         if ((queue - 8 * 60 * 60 + step_seconds) * 1000 > Date.now())
             return undefined;

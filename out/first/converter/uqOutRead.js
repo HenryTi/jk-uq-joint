@@ -1,9 +1,38 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const tools_1 = require("../../mssql/tools");
-async function uqOutRead(sql, maxId) {
+/**
+ * 按照时间范围读取要导出的数据（仅适用时间是分散发布的情况）
+ * @param sql
+ * @param queue
+ * @param interval
+ */
+async function uqOutReadTimeScope(sql, queue, interval) {
+    // queue是当前时间举例1970-01-01的秒数
+    let step_seconds = interval * 60;
+    if ((queue - 8 * 60 * 60 + step_seconds) * 1000 > Date.now())
+        return undefined;
+    let nextQueue = queue + step_seconds;
+    try {
+        let ret = await uqOutRead(sql, queue);
+        if (ret === undefined) {
+            ret = { lastPointer: nextQueue, data: [] };
+        }
+        return ret;
+    }
+    catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+exports.uqOutReadTimeScope = uqOutReadTimeScope;
+async function uqOutRead(sql, maxId, endPoint) {
     // let iMaxId = maxId === "" ? 0 : Number(maxId);
-    return await readMany(sql, [{ name: 'iMaxId', value: maxId }]);
+    let param = [{ name: 'iMaxId', value: maxId }];
+    if (endPoint) {
+        param.push({ name: 'endPoint', value: endPoint });
+    }
+    return await readMany(sql, param);
 }
 exports.uqOutRead = uqOutRead;
 async function uqPullRead(sql, queue) {

@@ -50,6 +50,7 @@ exports.PlatformOrder = {
         subAmount: 'SubAmount',
         currency: "CurrencyID@Currency",
         mark: 'Mark',
+        createDate: 'RecordTime',
     },
     pull: async (joint, uqIn, queue) => {
         let step_seconds = 10 * 60;
@@ -58,7 +59,7 @@ exports.PlatformOrder = {
         let nextQueue = queue + step_seconds;
         let sql = `select DATEDIFF(s, '1970-01-01', p.RecordTime) + 1 as ID, p.orderid as OrderItemID, p.SorderID as OrderID, p.CID as CustomerID
            , p.WorkingColumn2 as PlatformOrderID, p.Description, p.DescriptionC, p.PackNo, p.Packing, p.PUnit as Unit, p.Qty, p.UnitPriceRMB as Price
-           , p.Qty * p.UnitPriceRMB as SubAmount, p.UnitPriceRMBCurrency as CurrencyID, p.Mark, p.UserID as OrderMaker
+           , p.Qty * p.UnitPriceRMB as SubAmount, p.UnitPriceRMBCurrency as CurrencyID, p.Mark, p.UserID as OrderMaker, p.RecordTime
            from dbs.dbo.vw_SOrdersBJSH p
            where p.RecordTime >= DATEADD(s, @iMaxId, '1970-01-01') and p.RecordTime <= DATEADD(s, ${nextQueue}, '1970-01-01')
            and p.WorkingColumn2 is not null and p.userid is not null
