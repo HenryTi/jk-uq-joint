@@ -34,11 +34,12 @@ export const JkTask: UqInTuid = {
         employee: "EmployeeID@Employee",
         sourceNo: 'LinkObjectID',
         priorty: 'TimeLimit',
+        type:'WorkTaskTypeID', 
         deadline: 'RequireCompletionTime',
         createTime: 'CreateTime',
         completeTime: 'CompleteTime',
     },
-    pull: `select   top ${promiseSize} a.ID, a.WorkTaskID, a.WorkTaskSource, a.CustomerID, a.EmployeeID,
+    pull: `select   top ${promiseSize} a.ID, a.WorkTaskID, a.WorkTaskSource, a.CustomerID, a.EmployeeID, a.WorkTaskTypeID
                     a.LinkObjectID, isnull(a.TimeLimit,0) as TimeLimit, a.RequireCompletionTime, a.CreateTime, a.CompleteTime
             from    ProdData.dbo.Export_WorkTask as a
             where a.ID > @iMaxId order by a.ID`,
