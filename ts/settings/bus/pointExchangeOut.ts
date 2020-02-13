@@ -30,11 +30,11 @@ const facePointExchangePush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus
     // 调用7.253的web api
     try {
         let saleOrder = await httpClient.newOrder(orderOut);
-        await httpClient.ExchangePoint(saleOrder.Id);
+        await httpClient.ExchangePoint(orderOut.Id);
         return true;
     } catch (error) {
-        console.error(error);
-        return false;
+        console.error(orderOut.Id + ":" + error);
+        return true;
     }
 
     return true;

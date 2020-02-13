@@ -218,5 +218,6 @@ export const sqls = {
         //==============================================================
         readAgreement:
                 `select top ${promiseSize} AgreementId as ID, AgreementID, ObjType
-                from dbs.dbo.Agreement where AgreementID > @iMaxId and objType in ('C', 'U')  order by AgreementId`,
+                from dbs.dbo.Agreement where AgreementID > @iMaxId and objType in ('C', 'U')
+                and StartDate < GETDATE() and ISNULL(EndDate, '2030-01-01') > GETDATE() and Status = 1 order by AgreementId`,
 }

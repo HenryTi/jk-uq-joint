@@ -29,12 +29,12 @@ const facePointExchangePush = async (joint, uqBus, queue, orderIn) => {
     // 调用7.253的web api
     try {
         let saleOrder = await webApiClient_1.httpClient.newOrder(orderOut);
-        await webApiClient_1.httpClient.ExchangePoint(saleOrder.Id);
+        await webApiClient_1.httpClient.ExchangePoint(orderOut.Id);
         return true;
     }
     catch (error) {
-        console.error(error);
-        return false;
+        console.error(orderOut.Id + ":" + error);
+        return true;
     }
     return true;
 };
