@@ -34,7 +34,7 @@ const facePointExchangePush = async (joint, uqBus, queue, orderIn) => {
     }
     catch (error) {
         console.error(orderOut.Id + ":" + error);
-        return true;
+        return false;
     }
     return true;
 };

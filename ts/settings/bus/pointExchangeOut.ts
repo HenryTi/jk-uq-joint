@@ -34,7 +34,7 @@ const facePointExchangePush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus
         return true;
     } catch (error) {
         console.error(orderOut.Id + ":" + error);
-        return true;
+        return false;
     }
 
     return true;
