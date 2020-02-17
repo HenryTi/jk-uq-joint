@@ -163,6 +163,14 @@
         {
             "name": "CustomerDepartment",
             "inervalUnit": 1
+        },
+        {
+            "name": "Research",
+            "inervalUnit": 1
+        },
+        {
+            "name": "Position",
+            "inervalUnit": 1
         }
     ],
     "uqBus": [
