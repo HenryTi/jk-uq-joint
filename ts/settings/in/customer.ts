@@ -287,3 +287,19 @@ export const Department: UqInTuid = {
             from    ProdData.dbo.Export_Department  
             where   ID > @iMaxId order by ID`
 };
+
+export const CustomerDepartment: UqInMap = {
+    uq: uqs.jkCustomer,
+    type: 'map',
+    entity: 'CustomerDepartment',
+    mapper: {
+        customer: 'custoemr@Customer',
+        arr1: {
+            department: '^deptid@Department',
+        }
+    },
+    pull: ` select top ${promiseSize} custoemr, deptid 
+            from    ProdData.dbo.Export_CustomerDepartment  
+            where   ID > @iMaxId order by ID`
+};
+

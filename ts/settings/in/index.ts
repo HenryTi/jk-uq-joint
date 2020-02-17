@@ -4,7 +4,7 @@ import { Brand, ProductSalesRegion, ProductLegallyProhibited, ProductX, ProductP
 import { Warehouse, SalesRegionWarehouse } from "./warehouse";
 import { Chemical } from "./chemical";
 import { Promotion, PromotionSalesRegion, PromotionLanguage, PromotionPackDiscount, PromotionStatus, PromotionType } from "./promotion";
-import { Customer, Organization, OrganizationCustomer, CustomerContact, CustomerContacts, Contact, InvoiceInfo, CustomerHandler, CustomerContractor, BuyerAccount, CustomerBuyerAccount, Department } from "./customer";
+import { Customer, Organization, OrganizationCustomer, CustomerContact, CustomerContacts, Contact, InvoiceInfo, CustomerHandler, CustomerContractor, BuyerAccount, CustomerBuyerAccount, Department, CustomerDepartment } from "./customer";
 import { ProductCategory, ProductCategoryLanguage, ProductProductCategory } from "./productCategory";
 import { Agreement, CustomerDiscount, OrganizationDiscount } from "./customerDiscount";
 import { Employee } from "./hr";
@@ -71,6 +71,7 @@ const uqIns = [
     Contact,
     InvoiceInfo,
     Department,
+    CustomerDepartment,
 
     Agreement,
     CustomerDiscount,

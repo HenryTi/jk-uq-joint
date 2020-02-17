@@ -239,4 +239,18 @@ exports.Department = {
             from    ProdData.dbo.Export_Department  
             where   ID > @iMaxId order by ID`
 };
+exports.CustomerDepartment = {
+    uq: uqs_1.uqs.jkCustomer,
+    type: 'map',
+    entity: 'CustomerDepartment',
+    mapper: {
+        customer: 'custoemr@Customer',
+        arr1: {
+            department: '^deptid@Department',
+        }
+    },
+    pull: ` select top ${promiseSize} custoemr, deptid 
+            from    ProdData.dbo.Export_CustomerDepartment  
+            where   ID > @iMaxId order by ID`
+};
 //# sourceMappingURL=customer.js.map

@@ -29,8 +29,7 @@
         "Agreement",
         "PromotionType",
         "PromotionStatus",
-        "Promotion",
-        "Department"
+        "Promotion"
     ],
     "afterFirstEntities": [
         {
@@ -159,6 +158,10 @@
         },
         {
             "name": "Department",
+            "inervalUnit": 1
+        },
+        {
+            "name": "CustomerDepartment",
             "inervalUnit": 1
         }
     ],
