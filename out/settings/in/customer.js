@@ -27,7 +27,7 @@ exports.Customer = {
         isValid: 'IsValid',
         XYZ: 'XYZ',
     },
-    pull: `select top ${promiseSize} ID, CustomerID, OrganizationID, Name, FirstName, LastName, XYZ, Gender, BirthDate, Tel1, Tel2, Mobile, Email, Email2
+    pull: `select top ${promiseSize} ID, CustomerID, OrganizationID, Name, FirstName, LastName, XYZ, Gender, BirthDate, Tel1, Tel2, Mobile, Email as Email1, Email2
            , Fax1, Fax2, Zip, InvoiceTitle, TaxNo, RegisteredAddress, RegisteredTelephone, BankName, BankAccountNumber
            , SalesmanID, CustomerServiceStuffID, IsValid, SalesComanyID as SalesCompanyID, SalesRegionBelongsTo, CreateTime
            from ProdData.dbo.Export_Customer where ID > @iMaxId order by ID`,
@@ -235,8 +235,8 @@ exports.Department = {
         name: "deptname",
         organization: "unitid@Organization"
     },
-    pull: ` select top ${promiseSize} unitid, deptid, deptname 
-            from    ProdData.dbo.Export_Department  
+    pull: ` select top ${promiseSize} unitid, deptid, deptname
+            from    ProdData.dbo.Export_Department
             where   ID > @iMaxId order by ID`
 };
 //# sourceMappingURL=customer.js.map

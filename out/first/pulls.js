@@ -42,6 +42,7 @@ exports.pulls = {
     // 客户和客户单位基本信息
     "Organization": { read: sqls_1.sqls.readOrganization, uqIn: customer_1.Organization },
     "Customer": { read: sqls_1.sqls.readCustomer, uqIn: customer_1.Customer },
+    "CustomerContactEmail1": { read: sqls_1.sqls.readCustomerContactEmail1, uqIn: customer_1.CustomerContact },
     "BuyerAccount": { read: sqls_1.sqls.readBuyerAccount, uqIn: customer_1.BuyerAccount },
     "CustomerShippingAddress": { read: sqls_1.sqls.readCustomerShippingAddress, uqIn: customer_1.Contact },
     "CustomerInvoiceAddress": { read: sqls_1.sqls.readCustomerInvoiceAddress, uqIn: customer_1.Contact },

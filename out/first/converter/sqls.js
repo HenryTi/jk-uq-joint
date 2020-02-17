@@ -85,7 +85,7 @@ exports.sqls = {
     readCustomer: `
                 select top ${promiseSize} CID as ID, CID as CustomerID, UnitID as OrganizationID, Name, FirstName, LastName, XYZ, Sex as Gender
                         , convert(nvarchar(30), BirthDate, 121) as BirthDate
-                        , Tel1, Tel2, Mobile, Email, Email2, Fax1, Fax2, Zip
+                        , Tel1, Tel2, Mobile, Email as Email1, Email2, Fax1, Fax2, Zip
                         , BuyersAcName as InvoiceTitle, BuyersTaxNo as TaxNo, CompanyRegisteredAddress as RegisteredAddress
                         , CompanyTelephone as RegisteredTelephone, BankName, BankAccountNumber
                         , EPR as SalesmanID, CustomerServiceEPR as CustomerServiceStuffID
@@ -94,6 +94,9 @@ exports.sqls = {
                         , saleRegionBelongsTo as SalesRegionBelongsTo
                         , convert(nvarchar(30), creaDate, 121) as CreateTime
                 from dbs.dbo.Customers where CID > @iMaxId and CID > '${idBrokened.CID}' and Name is not null order by CID`,
+    readCustomerContactEmail1: `
+                select  top ${promiseSize} CID + '-Email1' as ID, CID as CustomerID, 'Email1' as TypeID, email as Content
+                from dbs.dbo.Customers where CID > @iMaxId and isnull(email, '') not in ('') order by CID`,
     readBuyerAccount: `
                 select top ${promiseSize} CID as ID, CID as BuyerAccountID, UnitID as OrganizationID, Name, FirstName, LastName, XYZ, Sex as Gender
                         , case C5 when 'xx' then 0 else 1 end as IsValid
