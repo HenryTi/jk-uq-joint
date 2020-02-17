@@ -270,3 +270,20 @@ export const CustomerBuyerAccount: UqInMap = {
         return true;
     }
 };
+
+
+export const Department: UqInTuid = {
+    uq: uqs.jkCustomer,
+    type: "tuid",
+    entity: "Department",
+    key: "deptid",
+    mapper: {
+        $id: "deptid@Department",
+        no: "deptid",
+        name: "deptname",
+        organization: "unitid@Organization"
+    },
+    pull: ` select top ${promiseSize} unitid, deptid, deptname 
+            from    ProdData.dbo.Export_Department  
+            where   ID > @iMaxId order by ID`
+};

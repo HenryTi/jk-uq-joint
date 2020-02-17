@@ -29,7 +29,8 @@
         "Agreement",
         "PromotionType",
         "PromotionStatus",
-        "Promotion"
+        "Promotion",
+        "Department"
     ],
     "afterFirstEntities": [
         {
@@ -155,6 +156,10 @@
         {
             "name": "JkTask",
             "intervalUnit": 1
+        },
+        {
+            "name": "Department",
+            "inervalUnit": 1
         }
     ],
     "uqBus": [
