@@ -63,6 +63,7 @@ const uqIns = [
     customer_1.Contact,
     customer_1.InvoiceInfo,
     customer_1.Department,
+    customer_1.CustomerDepartment,
     customerDiscount_1.Agreement,
     customerDiscount_1.CustomerDiscount,
     customerDiscount_1.OrganizationDiscount,
