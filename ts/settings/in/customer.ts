@@ -298,7 +298,7 @@ export const CustomerDepartment: UqInMap = {
             department: '^deptid@Department',
         }
     },
-    pull: ` select top ${promiseSize} custoemr, deptid 
+    pull: ` select top ${promiseSize} customer, deptid 
             from    ProdData.dbo.Export_CustomerDepartment  
             where   ID > @iMaxId order by ID`
 };

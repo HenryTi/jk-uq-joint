@@ -171,6 +171,14 @@
         {
             "name": "Position",
             "inervalUnit": 1
+        },
+        {
+            "name": "CustomerResearch",
+            "inervalUnit": 1
+        },
+        {
+            "name": "CustomerPosition",
+            "inervalUnit": 1
         }
     ],
     "uqBus": [
