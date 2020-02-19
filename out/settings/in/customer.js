@@ -235,7 +235,7 @@ exports.Department = {
         name: "deptname",
         organization: "unitid@Organization"
     },
-    pull: ` select top ${promiseSize} unitid, deptid, deptname
+    pull: ` select top ${promiseSize} ID,  unitid, deptid, deptname
             from    ProdData.dbo.Export_Department
             where   ID > @iMaxId order by ID`
 };
@@ -244,13 +244,69 @@ exports.CustomerDepartment = {
     type: 'map',
     entity: 'CustomerDepartment',
     mapper: {
-        customer: 'custoemr@Customer',
+        customer: 'customer@Customer',
         arr1: {
             department: '^deptid@Department',
         }
     },
-    pull: ` select top ${promiseSize} custoemr, deptid 
-            from    ProdData.dbo.Export_CustomerDepartment  
+    pull: ` select top ${promiseSize} ID, customer, deptid
+            from    ProdData.dbo.Export_CustomerDepartment
             where   ID > @iMaxId order by ID`
+};
+exports.Research = {
+    uq: uqs_1.uqs.jkCustomer,
+    type: "tuid",
+    entity: "Research",
+    key: "research",
+    mapper: {
+        $id: "research@Research",
+        no: "research",
+        name: "researchname"
+    },
+    pull: ` select top ${promiseSize} ID, research, researchname
+            from    ProdData.dbo.Export_Research
+            where   type = 'C' and  ID > @iMaxId order by ID`
+};
+exports.CustomerResearch = {
+    uq: uqs_1.uqs.jkCustomer,
+    type: 'map',
+    entity: 'CustomerResearch',
+    mapper: {
+        customer: 'customer@Customer',
+        arr1: {
+            research: '^research@Research',
+        }
+    },
+    pull: ` select top ${promiseSize} ID, customer,research
+            from    ProdData.dbo.Export_ResearchDetail
+            where   type = 'C' and ID > @iMaxId order by ID`
+};
+exports.Position = {
+    uq: uqs_1.uqs.jkCustomer,
+    type: "tuid",
+    entity: "Position",
+    key: "research",
+    mapper: {
+        $id: "research@Position",
+        no: "research",
+        name: "researchname"
+    },
+    pull: ` select top ${promiseSize} ID, research, researchname
+            from    ProdData.dbo.Export_Research
+            where   type = 'B' and ID > @iMaxId order by ID`
+};
+exports.CustomerPosition = {
+    uq: uqs_1.uqs.jkCustomer,
+    type: 'map',
+    entity: 'CustomerPosition',
+    mapper: {
+        customer: 'customer@Customer',
+        arr1: {
+            research: '^research@Research',
+        }
+    },
+    pull: ` select top ${promiseSize}ID,  customer,research
+            from    ProdData.dbo.Export_ResearchDetail
+            where   type = 'B' and ID > @iMaxId order by ID`
 };
 //# sourceMappingURL=customer.js.map

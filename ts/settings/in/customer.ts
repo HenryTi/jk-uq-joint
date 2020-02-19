@@ -26,7 +26,7 @@ export const Customer: UqInTuid = {
         isValid: 'IsValid',
         XYZ: 'XYZ',
     },
-    pull: `select top ${promiseSize} ID, CustomerID, OrganizationID, Name, FirstName, LastName, XYZ, Gender, BirthDate, Tel1, Tel2, Mobile, Email, Email2
+    pull: `select top ${promiseSize} ID, CustomerID, OrganizationID, Name, FirstName, LastName, XYZ, Gender, BirthDate, Tel1, Tel2, Mobile, Email as Email1, Email2
            , Fax1, Fax2, Zip, InvoiceTitle, TaxNo, RegisteredAddress, RegisteredTelephone, BankName, BankAccountNumber
            , SalesmanID, CustomerServiceStuffID, IsValid, SalesComanyID as SalesCompanyID, SalesRegionBelongsTo, CreateTime
            from ProdData.dbo.Export_Customer where ID > @iMaxId order by ID`,
@@ -283,8 +283,8 @@ export const Department: UqInTuid = {
         name: "deptname",
         organization: "unitid@Organization"
     },
-    pull: ` select top ${promiseSize} unitid, deptid, deptname 
-            from    ProdData.dbo.Export_Department  
+    pull: ` select top ${promiseSize} ID,  unitid, deptid, deptname
+            from    ProdData.dbo.Export_Department
             where   ID > @iMaxId order by ID`
 };
 
@@ -293,13 +293,73 @@ export const CustomerDepartment: UqInMap = {
     type: 'map',
     entity: 'CustomerDepartment',
     mapper: {
-        customer: 'custoemr@Customer',
+        customer: 'customer@Customer',
         arr1: {
             department: '^deptid@Department',
         }
     },
-    pull: ` select top ${promiseSize} custoemr, deptid 
-            from    ProdData.dbo.Export_CustomerDepartment  
+    pull: ` select top ${promiseSize} ID, customer, deptid
+            from    ProdData.dbo.Export_CustomerDepartment
             where   ID > @iMaxId order by ID`
 };
 
+
+export const Research: UqInTuid = {
+    uq: uqs.jkCustomer,
+    type: "tuid",
+    entity: "Research",
+    key: "research",
+    mapper: {
+        $id: "research@Research",
+        no: "research",
+        name: "researchname"
+    },
+    pull: ` select top ${promiseSize} ID, research, researchname
+            from    ProdData.dbo.Export_Research
+            where   type = 'C' and  ID > @iMaxId order by ID`
+};
+
+export const CustomerResearch: UqInMap = {
+    uq: uqs.jkCustomer,
+    type: 'map',
+    entity: 'CustomerResearch',
+    mapper: {
+        customer: 'customer@Customer',
+        arr1: {
+            research: '^research@Research',
+        }
+    },
+    pull: ` select top ${promiseSize} ID, customer,research
+            from    ProdData.dbo.Export_ResearchDetail
+            where   type = 'C' and ID > @iMaxId order by ID`
+};
+
+export const Position: UqInTuid = {
+    uq: uqs.jkCustomer,
+    type: "tuid",
+    entity: "Position",
+    key: "research",
+    mapper: {
+        $id: "research@Position",
+        no: "research",
+        name: "researchname"
+    },
+    pull: ` select top ${promiseSize} ID, research, researchname
+            from    ProdData.dbo.Export_Research
+            where   type = 'B' and ID > @iMaxId order by ID`
+};
+
+export const CustomerPosition: UqInMap = {
+    uq: uqs.jkCustomer,
+    type: 'map',
+    entity: 'CustomerPosition',
+    mapper: {
+        customer: 'customer@Customer',
+        arr1: {
+            research: '^research@Research',
+        }
+    },
+    pull: ` select top ${promiseSize}ID,  customer,research
+            from    ProdData.dbo.Export_ResearchDetail
+            where   type = 'B' and ID > @iMaxId order by ID`
+};
