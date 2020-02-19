@@ -283,7 +283,7 @@ export const Department: UqInTuid = {
         name: "deptname",
         organization: "unitid@Organization"
     },
-    pull: ` select top ${promiseSize} unitid, deptid, deptname 
+    pull: ` select top ${promiseSize} ID,  unitid, deptid, deptname 
             from    ProdData.dbo.Export_Department  
             where   ID > @iMaxId order by ID`
 };
@@ -293,12 +293,12 @@ export const CustomerDepartment: UqInMap = {
     type: 'map',
     entity: 'CustomerDepartment',
     mapper: {
-        customer: 'custoemr@Customer',
+        customer: 'customer@Customer',
         arr1: {
             department: '^deptid@Department',
         }
     },
-    pull: ` select top ${promiseSize} customer, deptid 
+    pull: ` select top ${promiseSize} ID, customer, deptid 
             from    ProdData.dbo.Export_CustomerDepartment  
             where   ID > @iMaxId order by ID`
 };
@@ -314,7 +314,7 @@ export const Research: UqInTuid = {
         no: "research",
         name: "researchname"
     },
-    pull: ` select top ${promiseSize} research, researchname
+    pull: ` select top ${promiseSize} ID, research, researchname
             from    ProdData.dbo.Export_Research  
             where   type = 'C' and  ID > @iMaxId order by ID`
 };
@@ -324,12 +324,12 @@ export const CustomerResearch: UqInMap = {
     type: 'map',
     entity: 'CustomerResearch',
     mapper: {
-        customer: 'custoemr@Customer',
+        customer: 'customer@Customer',
         arr1: {
             research: '^research@Research',
         }
     },
-    pull: ` select top ${promiseSize} customer,research
+    pull: ` select top ${promiseSize} ID, customer,research
             from    ProdData.dbo.Export_ResearchDetail  
             where   type = 'C' and ID > @iMaxId order by ID`
 };
@@ -344,7 +344,7 @@ export const Position: UqInTuid = {
         no: "research",
         name: "researchname"
     },
-    pull: ` select top ${promiseSize} research, researchname
+    pull: ` select top ${promiseSize} ID, research, researchname
             from    ProdData.dbo.Export_Research  
             where   type = 'B' and ID > @iMaxId order by ID`
 };
@@ -354,12 +354,12 @@ export const CustomerPosition: UqInMap = {
     type: 'map',
     entity: 'CustomerPosition',
     mapper: {
-        customer: 'custoemr@Customer',
+        customer: 'customer@Customer',
         arr1: {
             research: '^research@Research',
         }
     },
-    pull: ` select top ${promiseSize} customer,research
+    pull: ` select top ${promiseSize}ID,  customer,research
             from    ProdData.dbo.Export_ResearchDetail  
             where   type = 'B' and ID > @iMaxId order by ID`
 };
