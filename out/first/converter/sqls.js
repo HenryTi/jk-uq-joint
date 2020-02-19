@@ -96,7 +96,7 @@ exports.sqls = {
                 from dbs.dbo.Customers where CID > @iMaxId and CID > '${idBrokened.CID}' and Name is not null order by CID`,
     readCustomerContactEmail1: `
                 select  top ${promiseSize} CID + '-Email1' as ID, CID as CustomerID, 'Email1' as TypeID, email as Content
-                from dbs.dbo.Customers where CID > @iMaxId and isnull(email, '') not in ('') order by CID`,
+                from dbs.dbo.Customers where CID > @iMaxId and isnull(email, '') not in ('') and CID > '${idBrokened.CID}' order by CID`,
     readBuyerAccount: `
                 select top ${promiseSize} CID as ID, CID as BuyerAccountID, UnitID as OrganizationID, Name, FirstName, LastName, XYZ, Sex as Gender
                         , case C5 when 'xx' then 0 else 1 end as IsValid
