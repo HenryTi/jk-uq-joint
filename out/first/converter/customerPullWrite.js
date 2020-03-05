@@ -7,7 +7,7 @@ const lodash_1 = __importDefault(require("lodash"));
 const dateformat_1 = __importDefault(require("dateformat"));
 const customer_1 = require("../../settings/in/customer");
 const logger_1 = require("../../tools/logger");
-async function customerPullWrite(joint, data) {
+async function customerPullWrite(joint, uqIn, data) {
     try {
         if (!data["Name"])
             return true;
@@ -52,7 +52,7 @@ async function customerPullWrite(joint, data) {
     }
 }
 exports.customerPullWrite = customerPullWrite;
-async function contactPullWrite(joint, contactData) {
+async function contactPullWrite(joint, uqIn, contactData) {
     try {
         await joint.uqIn(customer_1.Contact, contactData);
         if (contactData['isDefault'])

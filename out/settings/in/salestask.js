@@ -51,7 +51,7 @@ exports.JkTask = {
                     a.LinkObjectID, isnull(a.TimeLimit,0) as TimeLimit, a.RequireCompletionTime, a.CreateTime, a.CompleteTime
             from    ProdData.dbo.Export_WorkTask as a
             where a.ID > @iMaxId order by a.ID`,
-    pullWrite: async (joint, data) => {
+    pullWrite: async (joint, uqin, data) => {
         try {
             data["RequireCompletionTime"] = data["RequireCompletionTime"] && dateformat_1.default(data["RequireCompletionTime"], "yyyy-mm-dd"); //转换日期格式（存在日期才转换）
             data["CreateTime"] = data["CreateTime"] && dateformat_1.default(data["CreateTime"], "yyyy-mm-dd");

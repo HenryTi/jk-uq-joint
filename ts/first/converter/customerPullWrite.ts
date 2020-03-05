@@ -3,8 +3,9 @@ import _ from 'lodash';
 import dateFormat from 'dateformat';
 import { Customer, OrganizationCustomer, CustomerContact, Contact, CustomerContacts, InvoiceInfo, CustomerSetting, CustomerHandler } from "../../settings/in/customer";
 import { logger } from "../../tools/logger";
+import { UqIn } from "uq-joint";
 
-export async function customerPullWrite(joint: Joint, data: any): Promise<boolean> {
+export async function customerPullWrite(joint: Joint, uqIn: UqIn, data: any): Promise<boolean> {
     try {
         if (!data["Name"])
             return true;
@@ -50,7 +51,7 @@ export async function customerPullWrite(joint: Joint, data: any): Promise<boolea
     }
 }
 
-export async function contactPullWrite(joint: Joint, contactData: any): Promise<boolean> {
+export async function contactPullWrite(joint: Joint, uqIn: UqIn, contactData: any): Promise<boolean> {
     try {
         await joint.uqIn(Contact, contactData);
         if (contactData['isDefault'])

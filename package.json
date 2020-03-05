@@ -34,6 +34,6 @@
         "mysql": "^2.16.0",
         "node-fetch": "^2.3.0",
         "typescript": "^3.7.4",
-        "uq-joint": "^1.0.29"
+        "uq-joint": "^1.0.34"
     }
 }

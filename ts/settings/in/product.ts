@@ -20,7 +20,7 @@ export const Brand: UqInTuid = {
     },
     pull: `select top ${promiseSize} ID, BrandID, BrandName
         from ProdData.dbo.Export_Brand where ID > @iMaxId order by ID`,
-    firstPullWrite: async (joint: Joint, data: any): Promise<boolean> => {
+    firstPullWrite: async (joint: Joint, uqIn: UqIn, data: any): Promise<boolean> => {
         try {
             await joint.uqIn(Brand, data);
             let brandId = data['BrandID'];
@@ -184,7 +184,7 @@ export const PriceX: UqInMap = {
         , jp.Currency, jp.ExpireDate as Expire_Date, cast(jp.Discontinued as int) as Discontinued
         from ProdData.dbo.Export_PackagingSalesRegion jp inner join zcl_mess.dbo.jkcat j on jp.PackagingID = j.jkcat
         where jp.ID > @iMaxId order by jp.ID`,
-    pullWrite: async (joint: Joint, data: any) => {
+    pullWrite: async (joint: Joint, uqin: UqIn, data: any) => {
         try {
             data["Expire_Date"] = data["Expire_Date"] && dateFormat(data["Expire_Date"], "yyyy-mm-dd HH:MM:ss");
             await joint.uqIn(PriceX, data);
@@ -213,7 +213,7 @@ export const AgentPrice: UqInMap = {
     pull: `select   top ${promiseSize}  ID, ProductId, PackageId, SalesRegion,AgencyPrice, Expiredate, Discontinued
             from    ProdData.dbo.Export_ProductAgencyPrice as a
             where  ID > @iMaxId order by  ID`,
-    pullWrite: async (joint: Joint, data: any) => {
+    pullWrite: async (joint: Joint, uqin: UqIn, data: any) => {
         try {
             data["Expiredate"] = data["Expiredate"] && dateFormat(data["Expiredate"], "yyyy-mm-dd HH:MM:ss");
             await joint.uqIn(AgentPrice, data);

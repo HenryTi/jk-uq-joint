@@ -4,6 +4,7 @@ import { UqInTuid, UqInMap, Joint } from "uq-joint";
 import { uqs } from "../uqs";
 import { promotionFirstPullWrite } from '../../first/converter/promotionPullWrite';
 import config from 'config';
+import { UqIn } from 'uq-joint';
 
 const promiseSize = config.get<number>("promiseSize");
 
@@ -54,7 +55,7 @@ export const Promotion: UqInTuid = {
     pull: `select top ${promiseSize} ID, MarketingID, Name, MarketingType as Type, MarketingStatus as Status, StartTime as StartDate
         , EndTime as EndDate, SalesRegionID, CreateTime
         from ProdData.dbo.Export_Marketing where ID > @iMaxId order by ID`,
-    pullWrite: async (joint: Joint, data: any) => {
+    pullWrite: async (joint: Joint, uqin: UqIn, data: any) => {
 
         try {
             data["StartDate"] = data["StartDate"] && data['StartDate'].getTime() / 1000; // dateFormat(data["StartDate"], "yyyy-mm-dd HH:MM:ss");

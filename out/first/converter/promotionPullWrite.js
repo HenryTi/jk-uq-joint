@@ -8,7 +8,7 @@ const tools_1 = require("../../mssql/tools");
 const promotion_1 = require("../../settings/in/promotion");
 const productPullWrite_1 = require("./productPullWrite");
 const logger_1 = require("../../tools/logger");
-async function promotionFirstPullWrite(joint, data) {
+async function promotionFirstPullWrite(joint, uqin, data) {
     try {
         data["StartDate"] = data["StartDate"] && data["StartDate"].getTime() / 1000; // dateFormat(data["StartDate"], "yyyy-mm-dd HH:MM:ss");
         data["EndDate"] = data["EndDate"] && data["EndDate"].getTime() / 1000; // dateFormat(data["EndDate"], "yyyy-mm-dd HH:MM:ss");

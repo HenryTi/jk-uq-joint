@@ -22,7 +22,7 @@ exports.Brand = {
     },
     pull: `select top ${promiseSize} ID, BrandID, BrandName
         from ProdData.dbo.Export_Brand where ID > @iMaxId order by ID`,
-    firstPullWrite: async (joint, data) => {
+    firstPullWrite: async (joint, uqIn, data) => {
         try {
             await joint.uqIn(exports.Brand, data);
             let brandId = data['BrandID'];
@@ -176,7 +176,7 @@ exports.PriceX = {
         , jp.Currency, jp.ExpireDate as Expire_Date, cast(jp.Discontinued as int) as Discontinued
         from ProdData.dbo.Export_PackagingSalesRegion jp inner join zcl_mess.dbo.jkcat j on jp.PackagingID = j.jkcat
         where jp.ID > @iMaxId order by jp.ID`,
-    pullWrite: async (joint, data) => {
+    pullWrite: async (joint, uqin, data) => {
         try {
             data["Expire_Date"] = data["Expire_Date"] && dateformat_1.default(data["Expire_Date"], "yyyy-mm-dd HH:MM:ss");
             await joint.uqIn(exports.PriceX, data);
@@ -205,7 +205,7 @@ exports.AgentPrice = {
     pull: `select   top ${promiseSize}  ID, ProductId, PackageId, SalesRegion,AgencyPrice, Expiredate, Discontinued
             from    ProdData.dbo.Export_ProductAgencyPrice as a
             where  ID > @iMaxId order by  ID`,
-    pullWrite: async (joint, data) => {
+    pullWrite: async (joint, uqin, data) => {
         try {
             data["Expiredate"] = data["Expiredate"] && dateformat_1.default(data["Expiredate"], "yyyy-mm-dd HH:MM:ss");
             await joint.uqIn(exports.AgentPrice, data);

@@ -47,7 +47,7 @@ exports.Organization = {
     },
     pull: `select top ${promiseSize} ID, OrganizationID, UnitName as Name, CreateTime
            from ProdData.dbo.Export_Organization where ID > @iMaxId order by ID`,
-    pullWrite: async (joint, data) => {
+    pullWrite: async (joint, uqIn, data) => {
         try {
             data["CreateTime"] = data["CreateTime"] && data["CreateTime"].getTime() / 1000; // dateFormat(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
             await joint.uqIn(exports.Organization, data);
@@ -217,7 +217,7 @@ exports.CustomerBuyerAccount = {
             throw error;
         }
     },
-    pullWrite: async (joint, data) => {
+    pullWrite: async (joint, uqIn, data) => {
         data["CreateTime"] = data["CreateTime"] && data['CreateTime'].getTime() / 1000;
         await joint.uqIn(exports.BuyerAccount, data);
         await joint.uqIn(exports.CustomerBuyerAccount, data);

@@ -5,6 +5,7 @@ import { execSql } from "../../mssql/tools";
 import { uqOutRead } from "../../first/converter/uqOutRead";
 import config from 'config';
 import { logger } from "../../tools/logger";
+import { UqIn } from "uq-joint";
 
 const promiseSize = config.get<number>("promiseSize");
 
@@ -88,7 +89,7 @@ export const Agreement: UqInMap = {
         endDate: 'EndDate',
     },
     pull: `select top ${promiseSize} ID, AgreementID, CID, ObjType, StartDate, EndDate from ProdData.dbo.Export_Agreement where ID > @iMaxId and objType in ( 'C', 'U' ) order by ID`,
-    pullWrite: async (joint: Joint, data: any) => {
+    pullWrite: async (joint: Joint, uqIn: UqIn, data: any) => {
         let sql = `select a.CID, md.Manu as BrandID, md.DiscountValue as Discount, a.StartDate, a.EndDate
                 from dbs.dbo.Agreement a
                 inner join dbs.dbo.AgreementManuDiscount md on md.AgreementID = a.AgreementID

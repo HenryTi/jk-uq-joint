@@ -8,6 +8,7 @@ import config from 'config';
 import { logger } from "../../tools/logger";
 import { Contact, InvoiceInfo } from "./customer";
 import { Address } from "./Address";
+import { UqIn } from "uq-joint";
 
 const promiseSize = config.get<number>("promiseSize");
 
@@ -45,7 +46,7 @@ export const WebUserTonva: UqInTuid = {
      *      为此目的，使用了webusersettingalter表，数据先导入此表，在手动导入到webusersetting表中；
      * 5.invoicetype的导入同invoiceinfo;
      */
-    pullWrite: async (joint: Joint, data: any) => {
+    pullWrite: async (joint: Joint, uqin: UqIn, data: any) => {
         try {
             //let userId = await joint.userIn(
             let userId = await userIn(joint,
@@ -201,7 +202,7 @@ export const WebUserContacts: UqInMap = {
     /**
      *
      */
-    pullWrite: async (joint: Joint, data: any) => {
+    pullWrite: async (joint: Joint, uqin: UqIn, data: any) => {
         try {
             let userId = -1;
             try {

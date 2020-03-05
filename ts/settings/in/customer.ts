@@ -47,7 +47,7 @@ export const Organization: UqInTuid = {
     },
     pull: `select top ${promiseSize} ID, OrganizationID, UnitName as Name, CreateTime
            from ProdData.dbo.Export_Organization where ID > @iMaxId order by ID`,
-    pullWrite: async (joint: Joint, data: any) => {
+    pullWrite: async (joint: Joint, uqIn: UqIn, data: any) => {
         try {
             data["CreateTime"] = data["CreateTime"] && data["CreateTime"].getTime() / 1000; // dateFormat(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
             await joint.uqIn(Organization, data);
@@ -237,7 +237,7 @@ export const CustomerBuyerAccount: UqInMap = {
             buyerAccount: '^BuyerAccountID@BuyerAccount',
         }
     },
-    pull: async (joint: Joint, uqIn: UqInMap, queue: number): Promise<DataPullResult> => {
+    pull: async (joint: Joint, uqIn: UqIn, queue: number): Promise<DataPullResult> => {
         // queue是当前时间举例1970-01-01的秒数
         let step_seconds = 10 * 60;
         if ((queue - 8 * 60 * 60 + step_seconds) * 1000 > Date.now())
@@ -263,7 +263,7 @@ export const CustomerBuyerAccount: UqInMap = {
             throw error;
         }
     },
-    pullWrite: async (joint: Joint, data: any) => {
+    pullWrite: async (joint: Joint, uqIn: UqIn, data: any) => {
         data["CreateTime"] = data["CreateTime"] && data['CreateTime'].getTime() / 1000;
         await joint.uqIn(BuyerAccount, data);
         await joint.uqIn(CustomerBuyerAccount, data);

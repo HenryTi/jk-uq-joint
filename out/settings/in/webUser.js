@@ -45,7 +45,7 @@ exports.WebUserTonva = {
      *      为此目的，使用了webusersettingalter表，数据先导入此表，在手动导入到webusersetting表中；
      * 5.invoicetype的导入同invoiceinfo;
      */
-    pullWrite: async (joint, data) => {
+    pullWrite: async (joint, uqin, data) => {
         try {
             //let userId = await joint.userIn(
             let userId = await userIn(joint, exports.WebUserTonva, lodash_1.default.pick(data, ['Type', 'WebUserID', 'UserName', 'Password', 'Nick', 'Icon', 'Mobile', 'Email', 'WechatOpenID']));
@@ -192,7 +192,7 @@ exports.WebUserContacts = {
     /**
      *
      */
-    pullWrite: async (joint, data) => {
+    pullWrite: async (joint, uqin, data) => {
         try {
             let userId = -1;
             try {

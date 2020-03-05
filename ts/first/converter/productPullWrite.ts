@@ -5,7 +5,7 @@ import { execSql } from "../../mssql/tools";
 import { ProductProductCategory } from "../../settings/in/productCategory";
 import { logger } from "../../tools/logger";
 
-export async function productPullWrite(joint: Joint, data: any) {
+export async function productPullWrite(joint: Joint, uqin: UqIn, data: any) {
 
     try {
         await joint.uqIn(ProductX, _.pick(data, ["ID", "ProductID", "BrandID", "ProductNumber", "Description", "DescriptionC", "ChemicalID", "IsValid"]));
@@ -17,7 +17,7 @@ export async function productPullWrite(joint: Joint, data: any) {
     }
 }
 
-export async function productFirstPullWrite(joint: Joint, data: any) {
+export async function productFirstPullWrite(joint: Joint, uqin: UqIn, data: any) {
 
     try {
         await joint.uqIn(ProductX, _.pick(data, ["ID", "ProductID", "BrandID", "ProductNumber", "Description", "DescriptionC", "IsValid"]));
@@ -64,7 +64,7 @@ export async function productFirstPullWrite(joint: Joint, data: any) {
     }
 }
 
-export async function packFirstPullWrite(joint: Joint, data: any) {
+export async function packFirstPullWrite(joint: Joint, uqin: UqIn, data: any) {
 
     try {
         await joint.uqIn(ProductPackX, data);
@@ -92,10 +92,10 @@ export function pushRecordset(joint: Joint, result: any, uqIn: UqIn) {
         for (var i = 0; i < recordset.length; i++) {
             let row = recordset[i];
             if (firstPullWrite) {
-                promises.push(firstPullWrite(joint, row));
+                promises.push(firstPullWrite(joint, uqIn, row));
                 // await firstPullWrite(joint, row);
             } else if (pullWrite) {
-                promises.push(pullWrite(joint, row));
+                promises.push(pullWrite(joint, uqIn, row));
                 // await pullWrite(joint, row);
             } else {
                 promises.push(joint.uqIn(uqIn, row));

@@ -90,7 +90,7 @@ exports.Agreement = {
         endDate: 'EndDate',
     },
     pull: `select top ${promiseSize} ID, AgreementID, CID, ObjType, StartDate, EndDate from ProdData.dbo.Export_Agreement where ID > @iMaxId and objType in ( 'C', 'U' ) order by ID`,
-    pullWrite: async (joint, data) => {
+    pullWrite: async (joint, uqIn, data) => {
         let sql = `select a.CID, md.Manu as BrandID, md.DiscountValue as Discount, a.StartDate, a.EndDate
                 from dbs.dbo.Agreement a
                 inner join dbs.dbo.AgreementManuDiscount md on md.AgreementID = a.AgreementID
