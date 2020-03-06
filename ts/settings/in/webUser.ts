@@ -116,7 +116,7 @@ async function userIn(joint: Joint, uqIn: UqInTuid, data: any): Promise<number> 
                     break;
             }
         }
-        if (ret > 0) {
+        if (!body.id && ret > 0) {
             await map(tuid, ret, keyVal);
         }
         return body.id || ret;

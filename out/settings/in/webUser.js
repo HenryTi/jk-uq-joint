@@ -111,7 +111,7 @@ async function userIn(joint, uqIn, data) {
                     break;
             }
         }
-        if (ret > 0) {
+        if (!body.id && ret > 0) {
             await uq_joint_1.map(tuid, ret, keyVal);
         }
         return body.id || ret;
