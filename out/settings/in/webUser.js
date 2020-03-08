@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const uq_joint_1 = require("uq-joint");
-const uq_joint_2 = require("../../uq-joint");
+const uq_joint_2 = require("uq-joint");
 const lodash_1 = __importDefault(require("lodash"));
 const uqs_1 = require("../uqs");
 const config_1 = __importDefault(require("config"));

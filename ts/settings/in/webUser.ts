@@ -2,7 +2,7 @@ import {
     UqInTuid, UqInMap, Joint, DataPullResult,
     getUserId, centerApi, map
 } from "uq-joint";
-import { MapUserToUq } from '../../uq-joint';
+import { MapUserToUq } from 'uq-joint';
 import _ from 'lodash';
 import { uqs } from "../uqs";
 import config from 'config';
