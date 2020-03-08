@@ -4,12 +4,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const uq_joint_1 = require("uq-joint");
+const uq_joint_2 = require("../../uq-joint");
 const lodash_1 = __importDefault(require("lodash"));
 const uqs_1 = require("../uqs");
 const config_1 = __importDefault(require("config"));
 const logger_1 = require("../../tools/logger");
 const customer_1 = require("./customer");
 const Address_1 = require("./Address");
+const uqOutRead_1 = require("first/converter/uqOutRead");
 const promiseSize = config_1.default.get("promiseSize");
 exports.WebUserTonva = {
     uq: uqs_1.uqs.jkWebUser,
@@ -79,31 +81,20 @@ exports.WebUserTonva = {
         }
     }
 };
-async function userIn(joint, uqIn, data) {
-    let { key, mapper, uq: uqFullName, entity: tuid } = uqIn;
-    if (key === undefined)
-        throw 'key is not defined';
-    if (uqFullName === undefined)
-        throw 'tuid ' + tuid + ' not defined';
-    let keyVal = data[key];
-    let mapToUq = new uq_joint_1.MapUserToUq(joint);
+async function tryUserIn(body, mapUserToUq) {
     try {
-        let body = await mapToUq.map(data, mapper);
-        if (body.id <= 0) {
-            delete body.id;
-        }
         let ret = await uq_joint_1.centerApi.queueIn(body);
-        if (!body.id && (ret === undefined || typeof ret !== 'number')) {
+        if (ret === undefined || typeof ret !== 'number') {
             console.error(body);
             let { id: code, message } = ret;
             switch (code) {
                 case -2:
-                    data.Email += '\t';
-                    ret = await userIn(joint, uqIn, data);
+                    body.email += '\t';
+                    ret = await tryUserIn(body, mapUserToUq);
                     break;
                 case -3:
-                    data.Mobile += '\t';
-                    ret = await userIn(joint, uqIn, data);
+                    body.mobile += '\t';
+                    ret = await tryUserIn(body, mapUserToUq);
                     break;
                 default:
                     console.error(ret);
@@ -111,8 +102,30 @@ async function userIn(joint, uqIn, data) {
                     break;
             }
         }
+        return ret;
+    }
+    catch (error) {
+        console.error(error);
+        return -1;
+    }
+}
+async function userIn(joint, uqIn, data) {
+    let { key, mapper, uq: uqFullName, entity: tuid } = uqIn;
+    if (key === undefined)
+        throw 'key is not defined';
+    if (uqFullName === undefined)
+        throw 'tuid ' + tuid + ' not defined';
+    let keyVal = data[key];
+    let mapToUq = new uq_joint_2.MapUserToUq(joint);
+    try {
+        let body = await mapToUq.map(data, mapper);
+        if (body.id <= 0) {
+            delete body.id;
+        }
+        let ret = await tryUserIn(body, mapToUq);
         if (!body.id && ret > 0) {
-            await uq_joint_1.map(tuid, ret, keyVal);
+            // await map(tuid, ret, keyVal);
+            await uq_joint_1.map(exports.WebUser.entity, ret, keyVal);
         }
         return body.id || ret;
     }
@@ -184,11 +197,25 @@ exports.WebUserContacts = {
             contact: '^ID@Contact',
         }
     },
-    pull: `select top ${promiseSize} wa.ID, wa.AddressID as ContactID, wa.WebUserID, wa.Name, wa.OrganizationName, wa.Mobile, wa.Telephone
+    pull: async (joint, uqMap, queue) => {
+        let sql = `select top ${promiseSize} wa.ID, wa.AddressID as ContactID, wa.WebUserID, wa.Name, wa.OrganizationName, wa.Mobile, wa.Telephone
            , wa.CountryID, wa.ProvinceID, wa.CityID, wa.[Address] as Addr, wa.ZipCode, wa.Email, wa.IsDefault, wa.AddressType
            from alidb.ProdData.dbo.Export_WebUserAddress wa
            inner join alidb.jk_eb.dbo.ClientLogin cl on cl.CIID = wa.WebUserID
-           where wa.ID > @iMaxId and cl.State in (0, 1, 5) order by wa.ID`,
+           where wa.ID > @iMaxId and cl.State in (0, 1, 5) order by wa.ID`;
+        let ret = await uqOutRead_1.uqOutRead(sql, queue);
+        let { data } = ret;
+        let dataCopy = [];
+        for (let i = data.length - 1; i >= 0; i--) {
+            const element = data[i];
+            // if (dataCopy.lastIndexOf(element["AddressID"]) >= 0)
+            if (dataCopy.findIndex(e => e.AddressID === element.AddressID) > 0)
+                continue;
+            dataCopy.push(element);
+        }
+        ret.data = dataCopy;
+        return ret;
+    },
     /**
      *
      */

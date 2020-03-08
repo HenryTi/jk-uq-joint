@@ -1,7 +1,8 @@
 import {
     UqInTuid, UqInMap, Joint, DataPullResult,
-    getUserId, MapUserToUq, centerApi, map
+    getUserId, centerApi, map
 } from "uq-joint";
+import { MapUserToUq } from '../../uq-joint';
 import _ from 'lodash';
 import { uqs } from "../uqs";
 import config from 'config';
@@ -9,6 +10,7 @@ import { logger } from "../../tools/logger";
 import { Contact, InvoiceInfo } from "./customer";
 import { Address } from "./Address";
 import { UqIn } from "uq-joint";
+import { uqOutRead } from "first/converter/uqOutRead";
 
 const promiseSize = config.get<number>("promiseSize");
 
@@ -85,6 +87,34 @@ export const WebUserTonva: UqInTuid = {
     }
 };
 
+async function tryUserIn(body: any, mapUserToUq: MapUserToUq): Promise<number> {
+
+    try {
+        let ret = await centerApi.queueIn(body);
+        if (ret === undefined || typeof ret !== 'number') {
+            console.error(body);
+            let { id: code, message } = ret as any;
+            switch (code) {
+                case -2:
+                    body.email += '\t';
+                    ret = await tryUserIn(body, mapUserToUq);
+                    break;
+                case -3:
+                    body.mobile += '\t';
+                    ret = await tryUserIn(body, mapUserToUq);
+                    break;
+                default:
+                    console.error(ret);
+                    ret = -5;
+                    break;
+            }
+        }
+        return ret;
+    } catch (error) {
+        console.error(error);
+        return -1;
+    }
+}
 
 async function userIn(joint: Joint, uqIn: UqInTuid, data: any): Promise<number> {
     let { key, mapper, uq: uqFullName, entity: tuid } = uqIn;
@@ -97,33 +127,18 @@ async function userIn(joint: Joint, uqIn: UqInTuid, data: any): Promise<number> 
         if (body.id <= 0) {
             delete body.id;
         }
-        let ret = await centerApi.queueIn(body);
-        if (!body.id && (ret === undefined || typeof ret !== 'number')) {
-            console.error(body);
-            let { id: code, message } = ret as any;
-            switch (code) {
-                case -2:
-                    data.Email += '\t';
-                    ret = await userIn(joint, uqIn, data);
-                    break;
-                case -3:
-                    data.Mobile += '\t';
-                    ret = await userIn(joint, uqIn, data);
-                    break;
-                default:
-                    console.error(ret);
-                    ret = -5;
-                    break;
-            }
-        }
+        let ret = await tryUserIn(body, mapToUq);
         if (!body.id && ret > 0) {
-            await map(tuid, ret, keyVal);
+            // await map(tuid, ret, keyVal);
+            await map(WebUser.entity, ret, keyVal);
         }
         return body.id || ret;
     } catch (error) {
         throw error;
     }
 }
+
+
 
 
 async function InvoiceInfoIn(joint: Joint, data: any, userId: number): Promise<any> {
@@ -194,11 +209,25 @@ export const WebUserContacts: UqInMap = {
             contact: '^ID@Contact',
         }
     },
-    pull: `select top ${promiseSize} wa.ID, wa.AddressID as ContactID, wa.WebUserID, wa.Name, wa.OrganizationName, wa.Mobile, wa.Telephone
+    pull: async (joint: Joint, uqMap: UqInMap, queue: number) => {
+        let sql = `select top ${promiseSize} wa.ID, wa.AddressID as ContactID, wa.WebUserID, wa.Name, wa.OrganizationName, wa.Mobile, wa.Telephone
            , wa.CountryID, wa.ProvinceID, wa.CityID, wa.[Address] as Addr, wa.ZipCode, wa.Email, wa.IsDefault, wa.AddressType
            from alidb.ProdData.dbo.Export_WebUserAddress wa
            inner join alidb.jk_eb.dbo.ClientLogin cl on cl.CIID = wa.WebUserID
-           where wa.ID > @iMaxId and cl.State in (0, 1, 5) order by wa.ID`,
+           where wa.ID > @iMaxId and cl.State in (0, 1, 5) order by wa.ID`;
+        let ret: DataPullResult = await uqOutRead(sql, queue);
+        let { data } = ret;
+        let dataCopy = [];
+        for (let i = data.length - 1; i >= 0; i--) {
+            const element = data[i];
+            // if (dataCopy.lastIndexOf(element["AddressID"]) >= 0)
+            if (dataCopy.findIndex(e => e.AddressID === element.AddressID) > 0)
+                continue;
+            dataCopy.push(element);
+        }
+        ret.data = dataCopy;
+        return ret;
+    },
     /**
      *
      */
@@ -271,6 +300,7 @@ export const WebUserSettingType: UqInTuid = {
         description: "Description",
     }
 }
+
 
 export const WebUserBuyerAccount: UqInMap = {
     uq: uqs.jkWebUser,
