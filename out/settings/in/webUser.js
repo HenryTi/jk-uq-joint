@@ -11,7 +11,7 @@ const config_1 = __importDefault(require("config"));
 const logger_1 = require("../../tools/logger");
 const customer_1 = require("./customer");
 const Address_1 = require("./Address");
-const uqOutRead_1 = require("first/converter/uqOutRead");
+const uqOutRead_1 = require("../../first/converter/uqOutRead");
 const promiseSize = config_1.default.get("promiseSize");
 exports.WebUserTonva = {
     uq: uqs_1.uqs.jkWebUser,

@@ -10,7 +10,7 @@ import { logger } from "../../tools/logger";
 import { Contact, InvoiceInfo } from "./customer";
 import { Address } from "./Address";
 import { UqIn } from "uq-joint";
-import { uqOutRead } from "first/converter/uqOutRead";
+import { uqOutRead } from "../../first/converter/uqOutRead";
 
 const promiseSize = config.get<number>("promiseSize");
 
