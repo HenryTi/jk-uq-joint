@@ -3,7 +3,7 @@ import { uqs } from "../uqs";
 import { userApiClient } from "../../tools/UserApiClient";
 import { logger } from "../../tools/logger";
 import _ from 'lodash';
-import { WebUser } from "settings/in/webUser";
+import { WebUser } from "../in/webUser";
 
 export const faceUser: UqBus = {
     face: '百灵威系统工程部/WebUser/User',

@@ -8,7 +8,7 @@ const uqs_1 = require("../uqs");
 const UserApiClient_1 = require("../../tools/UserApiClient");
 const logger_1 = require("../../tools/logger");
 const lodash_1 = __importDefault(require("lodash"));
-const webUser_1 = require("settings/in/webUser");
+const webUser_1 = require("../in/webUser");
 exports.faceUser = {
     face: '百灵威系统工程部/WebUser/User',
     from: 'center',
