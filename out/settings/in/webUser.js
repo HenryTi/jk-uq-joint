@@ -125,7 +125,7 @@ async function userIn(joint, uqIn, data) {
         let ret = await tryUserIn(body, mapToUq);
         if (!body.id && ret > 0) {
             // await map(tuid, ret, keyVal);
-            await uq_joint_1.map(exports.WebUser.entity, ret, keyVal);
+            await uq_joint_1.map(uq_joint_1.getMapName(exports.WebUser), ret, keyVal);
         }
         return body.id || ret;
     }

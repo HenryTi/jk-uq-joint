@@ -1,6 +1,6 @@
 import {
     UqInTuid, UqInMap, Joint, DataPullResult,
-    getUserId, centerApi, map
+    getUserId, centerApi, map, getMapName
 } from "uq-joint";
 import { MapUserToUq } from 'uq-joint';
 import _ from 'lodash';
@@ -130,7 +130,7 @@ async function userIn(joint: Joint, uqIn: UqInTuid, data: any): Promise<number> 
         let ret = await tryUserIn(body, mapToUq);
         if (!body.id && ret > 0) {
             // await map(tuid, ret, keyVal);
-            await map(WebUser.entity, ret, keyVal);
+            await map(getMapName(WebUser), ret, keyVal);
         }
         return body.id || ret;
     } catch (error) {
