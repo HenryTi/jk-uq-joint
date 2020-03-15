@@ -5,7 +5,7 @@ import { execSql } from "../../mssql/tools";
 import config from 'config';
 import dateFormat from 'dateformat';
 import { logger } from "../../tools/logger";
-import { uqOutRead } from "first/converter/uqOutRead";
+import { uqOutRead } from "../../first/converter/uqOutRead";
 
 const promiseSize = config.get<number>("promiseSize");
 const interval = config.get<number>("interval");
