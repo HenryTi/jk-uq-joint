@@ -43,6 +43,8 @@ const uqIns = [
     productCategory_1.ProductCategory,
     productCategory_1.ProductCategoryLanguage,
     productCategory_1.ProductProductCategory,
+    product_1.ProductMSDSFile,
+    product_1.ProductSpecFile,
     warehouse_1.Warehouse,
     warehouse_1.SalesRegionWarehouse,
     promotion_1.PromotionType,

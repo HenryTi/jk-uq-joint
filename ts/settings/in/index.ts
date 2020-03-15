@@ -1,11 +1,16 @@
 import { Country, Province, City, County, Address } from "./Address";
 import { SalesRegion, Currency, PackType, PackTypeStandard, PackTypeMapToStandard, Language, InvoiceType } from "./salesRegion";
-import { Brand, ProductSalesRegion, ProductLegallyProhibited, ProductX, ProductPackX, PriceX, AgentPrice, BrandSalesRegion, BrandDeliveryTime, ProductChemical, InvalidProduct } from "./product";
+import {
+    Brand, ProductSalesRegion, ProductLegallyProhibited, ProductX, ProductPackX,
+    PriceX, AgentPrice, BrandSalesRegion, BrandDeliveryTime, ProductChemical, InvalidProduct,
+    ProductMSDSFile, ProductSpecFile
+} from "./product";
 import { Warehouse, SalesRegionWarehouse } from "./warehouse";
 import { Chemical } from "./chemical";
 import { Promotion, PromotionSalesRegion, PromotionLanguage, PromotionPackDiscount, PromotionStatus, PromotionType } from "./promotion";
 import {
-    Customer, Organization, OrganizationCustomer, CustomerContact, CustomerContacts, Contact, InvoiceInfo, CustomerHandler, CustomerContractor, BuyerAccount, CustomerBuyerAccount, Department, CustomerDepartment, Research,
+    Customer, Organization, OrganizationCustomer, CustomerContact, CustomerContacts, Contact, InvoiceInfo,
+    CustomerHandler, CustomerContractor, BuyerAccount, CustomerBuyerAccount, Department, CustomerDepartment, Research,
     Position, CustomerResearch, CustomerPosition
 } from "./customer";
 import { ProductCategory, ProductCategoryLanguage, ProductProductCategory } from "./productCategory";
@@ -51,6 +56,9 @@ const uqIns = [
     ProductCategory,
     ProductCategoryLanguage,
     ProductProductCategory,
+
+    ProductMSDSFile,
+    ProductSpecFile,
 
     Warehouse,                  // 还没有日常的数据交换，变化较小，不必有？
     SalesRegionWarehouse,       // 还没有日常的数据交换，变化较小，不必有？
