@@ -295,12 +295,14 @@ exports.ProductMSDSFile = {
         let nextQueue = queue + step_seconds;
         let sql = `select DATEDIFF(s, '1970-01-01', a.InputTime) + 1 as ID, c.jkid as ProductID
             , case a.LanguageID when 'CN' then 'zh-CN' when 'EN' then 'en' 
-                when 'DE' then 'de' when 'EN-US' then 'en-US' end as LanguageID
+                when 'DE' then 'de' when 'EN-US' then 'en-US' 
+                when 'FR' then 'fr' end as LanguageID
             , a.fileName + '.pdf' as FileName 
             from opdata.dbo.PProducts_MSDSInfo a inner join opdata.dbo.JKProdIDInOut b on a.OriginalID = b.JKIDIn
-            inner join zcl_mess.dbo.Products c on c.OriginalID = b.JKIDOut and c.manufactory in ( 'A01', 'A10' )
+                inner join zcl_mess.dbo.Products c on c.OriginalID = b.JKIDOut and c.manufactory in ( 'A01', 'A10' )
             where a.InputTime >= DATEADD(s, @iMaxId, '1970-01-01') and a.InputTime <= DATEADD(s, ${nextQueue}, '1970-01-01')
                 and a.FileType = 'PDF'
+                and c.jkid not in ( select jkid from zcl_mess.dbo.Invalid_products )
             order by a.InputTime`;
         try {
             let ret = await uqOutRead_1.uqOutRead(sql, queue);

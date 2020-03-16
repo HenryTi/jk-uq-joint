@@ -174,6 +174,26 @@ export const sqls = {
                 where p.jkid > @iMaxId
                 and p.jkid not in ( select jkid from zcl_mess.dbo.Invalid_products ) order by p.jkid`,
 
+        readProductMSDSFile: `
+                select top ${promiseSize} a.PMSID as ID, c.jkid as ProductID
+                        , case a.LanguageID when 'CN' then 'zh-CN' when 'EN' then 'en' 
+                                when 'DE' then 'de' when 'EN-US' then 'en-US'
+                                when 'FR' then 'fr' end as LanguageID
+                        , a.fileName + '.pdf' as FileName 
+                from opdata.dbo.PProducts_MSDSInfo a inner join opdata.dbo.JKProdIDInOut b on a.OriginalID = b.JKIDIn
+                        inner join zcl_mess.dbo.Products c on c.OriginalID = b.JKIDOut and c.manufactory in ( 'A01', 'A10' )
+                where   a.PMSID > @iMaxId 
+                        and a.PMSID > '${idBrokened.ProductMSDS}'
+                        and a.FileType = 'PDF'
+                        and c.jkid not in ( select jkid from zcl_mess.dbo.Invalid_products )
+                order by a.PMSID`,
+
+        readProductSpecFile: `
+                select top ${promiseSize} ID, a.jkid as ProductID, a.filePath as FileName 
+                from opdata.dbo.FileResource a
+                where a.ID > @iMaxId and a.FileType = 0 and a.FillState = 1
+                order by a.ID`,
+
         //==============================================================
         //=========================== ProductCategory ===========================
         //==============================================================
