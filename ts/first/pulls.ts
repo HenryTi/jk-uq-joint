@@ -11,6 +11,7 @@ import { Organization, Customer, Contact, BuyerAccount, CustomerBuyerAccount, Cu
 import { Promotion, PromotionLanguage, PromotionPackDiscount, PromotionType, PromotionStatus } from '../settings/in/promotion';
 import { Agreement } from '../settings/in/customerDiscount';
 import { Employee } from '../settings/in/hr';
+import { PlatformOrder } from 'settings/in/pointshop';
 
 /**
  * joint的思路是：joint一直在运行，每隔一段时间执行一次数据交换，数据交换分为3种，
@@ -81,4 +82,6 @@ export const pulls: {
     "PromotionType": { read: sqls.readPromotionType, uqIn: PromotionType },
     "PromotionStatus": { read: sqls.readPromotionStatus, uqIn: PromotionStatus },
     "Promotion": { read: sqls.readPromotion, uqIn: Promotion },
+
+    "PlatformOrder": { read: sqls.readPlatformOrder, uqIn: PlatformOrder },
 }

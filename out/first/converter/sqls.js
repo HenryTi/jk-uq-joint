@@ -210,5 +210,12 @@ exports.sqls = {
     readAgreement: `select top ${promiseSize} AgreementId as ID, AgreementID, ObjType
                 from dbs.dbo.Agreement where AgreementID > @iMaxId and objType in ('C', 'U')
                 and StartDate < GETDATE() and ISNULL(EndDate, '2030-01-01') > GETDATE() and Status = 1 order by AgreementId`,
+    readPlatformOrder: `select p.orderid as ID, p.orderid as OrderItemID, p.SorderID as OrderID, p.CID as CustomerID
+                , p.WorkingColumn2 as PlatformOrderID, p.Description, p.DescriptionC, p.PackNo, p.Packing, p.PUnit as Unit, p.Qty, p.UnitPriceRMB as Price
+                , p.Qty * p.UnitPriceRMB as SubAmount, p.UnitPriceRMBCurrency as CurrencyID, p.Mark, p.UserID as OrderMaker, p.RecordTime
+                from dbs.dbo.vw_SOrdersBJSH p
+                where p.RecordTime >= DATEADD(d, -8, getdate())
+                and p.userid is not null and p.workingColumn2 is null
+                order by p.orderid`,
 };
 //# sourceMappingURL=sqls.js.map
