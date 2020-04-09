@@ -5,6 +5,9 @@ import { logger } from "../../tools/logger";
 import _ from 'lodash';
 import { WebUser } from "../in/webUser";
 
+/**
+ * 用于将中心服务器上客户注册信息发生的变化导入到官网系统中
+ */
 export const faceUser: UqBus = {
     face: '百灵威系统工程部/WebUser/User',
     from: 'center',
@@ -26,6 +29,7 @@ export const faceUser: UqBus = {
         let { Id } = data;
         if (Id && Id !== 'n/a') {
             try {
+                data.Password = decrypt(data.Password);
                 await userApiClient.ChangeRegisterInfo(data);
             } catch (error) {
                 let { code, message } = error;
@@ -87,7 +91,7 @@ export const faceWebUser: UqBus = {
     }
 };
 
-function decryptUser(user: { pwd: string }) {
+export function decryptUser(user: { pwd: string }) {
     let pwd = user.pwd;
     if (!pwd)
         user.pwd = '123456';
@@ -253,7 +257,12 @@ export const faceWebUserInvoice: UqBus = {
                 let { title, taxNo, address, telephone, bank, accountNo } = invoiceInfo;
                 param.AccountName = title;
                 param.TaxNo = taxNo + " " + address + " " + telephone;
+                param.TaxNumber = taxNo;
+                param.RegisterAddress = address;
+                param.RegisterTelephone = telephone;
                 param.AccountBank = bank + " " + accountNo;
+                param.Bank = bank;
+                param.AccountNo = accountNo;
             }
             console.log(param);
             let success = await userApiClient.UpdateWebUserInvoice(param);
