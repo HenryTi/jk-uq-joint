@@ -32,8 +32,15 @@ exports.faceUser = {
     push: async (joint, uqIn, queue, data) => {
         let { Id } = data;
         if (Id && Id !== 'n/a') {
+            if (data.Password) {
+                try {
+                    data.Password = uq_joint_1.decrypt(data.Password);
+                }
+                catch (error) {
+                    return true;
+                }
+            }
             try {
-                data.Password = uq_joint_1.decrypt(data.Password);
                 await UserApiClient_1.userApiClient.ChangeRegisterInfo(data);
             }
             catch (error) {

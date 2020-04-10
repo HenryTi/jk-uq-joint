@@ -28,8 +28,14 @@ export const faceUser: UqBus = {
     push: async (joint: Joint, uqIn: UqBus, queue: number, data: any): Promise<boolean> => {
         let { Id } = data;
         if (Id && Id !== 'n/a') {
+            if (data.Password) {
+                try {
+                    data.Password = decrypt(data.Password);
+                } catch (error) {
+                    return true;
+                }
+            }
             try {
-                data.Password = decrypt(data.Password);
                 await userApiClient.ChangeRegisterInfo(data);
             } catch (error) {
                 let { code, message } = error;
