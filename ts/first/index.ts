@@ -55,9 +55,9 @@ const pullEntities = config.get<string[]>("firstEntities");
 
             rows.forEach(e => {
                 if (firstPullWrite !== undefined) {
-                    promises.push(firstPullWrite(joint, e));
+                    promises.push(firstPullWrite(joint, uqIn, e));
                 } else if (pullWrite !== undefined) {
-                    promises.push(pullWrite(joint, e));
+                    promises.push(pullWrite(joint, uqIn, e));
                 } else {
                     promises.push(joint.uqIn(uqIn, e));
                 }

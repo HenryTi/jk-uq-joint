@@ -59,7 +59,7 @@ exports.Promotion = {
     pull: `select top ${promiseSize} ID, MarketingID, Name, MarketingType as Type, MarketingStatus as Status, StartTime as StartDate
         , EndTime as EndDate, SalesRegionID, CreateTime
         from ProdData.dbo.Export_Marketing where ID > @iMaxId order by ID`,
-    pullWrite: async (joint, data) => {
+    pullWrite: async (joint, uqin, data) => {
         try {
             data["StartDate"] = data["StartDate"] && data['StartDate'].getTime() / 1000; // dateFormat(data["StartDate"], "yyyy-mm-dd HH:MM:ss");
             data["EndDate"] = data["EndDate"] && data['EndDate'].getTime() / 1000; // dateFormat(data["EndDate"], "yyyy-mm-dd HH:MM:ss");

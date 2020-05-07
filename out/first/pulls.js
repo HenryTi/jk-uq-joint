@@ -11,6 +11,7 @@ const customer_1 = require("../settings/in/customer");
 const promotion_1 = require("../settings/in/promotion");
 const customerDiscount_1 = require("../settings/in/customerDiscount");
 const hr_1 = require("../settings/in/hr");
+const pointshop_1 = require("settings/in/pointshop");
 /** */
 exports.pulls = {
     "Language": { read: sqls_1.sqls.readLanguage, uqIn: salesRegion_1.Language },
@@ -39,6 +40,8 @@ exports.pulls = {
     "ProductX": { read: sqls_1.sqls.readProduct, uqIn: product_1.ProductX },
     "ProductLegallyProhibited": { read: sqls_1.sqls.readProductLegallyProhibited, uqIn: product_1.ProductLegallyProhibited },
     "ProductExtensionProperty": { read: sqls_1.sqls.readProductExtensionProperty, uqIn: product_1.ProductExtensionProperty },
+    "ProductMSDSFile": { read: sqls_1.sqls.readProductMSDSFile, uqIn: product_1.ProductMSDSFile },
+    "ProductSpecFile": { read: sqls_1.sqls.readProductSpecFile, uqIn: product_1.ProductSpecFile },
     // 客户和客户单位基本信息
     "Organization": { read: sqls_1.sqls.readOrganization, uqIn: customer_1.Organization },
     "Customer": { read: sqls_1.sqls.readCustomer, uqIn: customer_1.Customer },
@@ -52,5 +55,6 @@ exports.pulls = {
     "PromotionType": { read: sqls_1.sqls.readPromotionType, uqIn: promotion_1.PromotionType },
     "PromotionStatus": { read: sqls_1.sqls.readPromotionStatus, uqIn: promotion_1.PromotionStatus },
     "Promotion": { read: sqls_1.sqls.readPromotion, uqIn: promotion_1.Promotion },
+    "PlatformOrder": { read: sqls_1.sqls.readPlatformOrder, uqIn: pointshop_1.PlatformOrder },
 };
 //# sourceMappingURL=pulls.js.map

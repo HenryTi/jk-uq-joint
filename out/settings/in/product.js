@@ -9,7 +9,9 @@ const tools_1 = require("../../mssql/tools");
 const config_1 = __importDefault(require("config"));
 const dateformat_1 = __importDefault(require("dateformat"));
 const logger_1 = require("../../tools/logger");
+const uqOutRead_1 = require("../../first/converter/uqOutRead");
 const promiseSize = config_1.default.get("promiseSize");
+const interval = config_1.default.get("interval");
 exports.Brand = {
     uq: uqs_1.uqs.jkProduct,
     type: 'tuid',
@@ -22,7 +24,7 @@ exports.Brand = {
     },
     pull: `select top ${promiseSize} ID, BrandID, BrandName
         from ProdData.dbo.Export_Brand where ID > @iMaxId order by ID`,
-    firstPullWrite: async (joint, data) => {
+    firstPullWrite: async (joint, uqIn, data) => {
         try {
             await joint.uqIn(exports.Brand, data);
             let brandId = data['BrandID'];
@@ -176,7 +178,7 @@ exports.PriceX = {
         , jp.Currency, jp.ExpireDate as Expire_Date, cast(jp.Discontinued as int) as Discontinued
         from ProdData.dbo.Export_PackagingSalesRegion jp inner join zcl_mess.dbo.jkcat j on jp.PackagingID = j.jkcat
         where jp.ID > @iMaxId order by jp.ID`,
-    pullWrite: async (joint, data) => {
+    pullWrite: async (joint, uqin, data) => {
         try {
             data["Expire_Date"] = data["Expire_Date"] && dateformat_1.default(data["Expire_Date"], "yyyy-mm-dd HH:MM:ss");
             await joint.uqIn(exports.PriceX, data);
@@ -205,7 +207,7 @@ exports.AgentPrice = {
     pull: `select   top ${promiseSize}  ID, ProductId, PackageId, SalesRegion,AgencyPrice, Expiredate, Discontinued
             from    ProdData.dbo.Export_ProductAgencyPrice as a
             where  ID > @iMaxId order by  ID`,
-    pullWrite: async (joint, data) => {
+    pullWrite: async (joint, uqin, data) => {
         try {
             data["Expiredate"] = data["Expiredate"] && dateformat_1.default(data["Expiredate"], "yyyy-mm-dd HH:MM:ss");
             await joint.uqIn(exports.AgentPrice, data);
@@ -273,6 +275,78 @@ exports.ProductExtensionProperty = {
         MeltingPoint: "MP",
         BolingPoint: "BP",
         density: "Density",
+    }
+};
+exports.ProductMSDSFile = {
+    uq: uqs_1.uqs.jkProduct,
+    type: 'map',
+    entity: 'ProductMSDSFile',
+    mapper: {
+        product: "ProductID@ProductX",
+        arr1: {
+            language: "^LanguageID@Language",
+            fileName: "^FileName"
+        }
+    },
+    pull: async (joint, uqIn, queue) => {
+        let step_seconds = Math.max(interval * 10 / 1000, 300);
+        if ((queue - 8 * 60 * 60 + step_seconds) * 1000 > Date.now())
+            return undefined;
+        let nextQueue = queue + step_seconds;
+        let sql = `select DATEDIFF(s, '1970-01-01', a.InputTime) + 1 as ID, c.jkid as ProductID
+            , case a.LanguageID when 'CN' then 'zh-CN' when 'EN' then 'en' 
+                when 'DE' then 'de' when 'EN-US' then 'en-US' 
+                when 'FR' then 'fr' end as LanguageID
+            , a.fileName + '.pdf' as FileName 
+            from opdata.dbo.PProducts_MSDSInfo a inner join opdata.dbo.JKProdIDInOut b on a.OriginalID = b.JKIDIn
+                inner join zcl_mess.dbo.Products c on c.OriginalID = b.JKIDOut and c.manufactory in ( 'A01', 'A10' )
+            where a.InputTime >= DATEADD(s, @iMaxId, '1970-01-01') and a.InputTime <= DATEADD(s, ${nextQueue}, '1970-01-01')
+                and a.FileType = 'PDF'
+                and c.jkid not in ( select jkid from zcl_mess.dbo.Invalid_products )
+            order by a.InputTime`;
+        try {
+            let ret = await uqOutRead_1.uqOutRead(sql, queue);
+            if (ret === undefined) {
+                ret = { lastPointer: nextQueue, data: [] };
+            }
+            return ret;
+        }
+        catch (error) {
+            logger_1.logger.error(error);
+            throw error;
+        }
+    }
+};
+exports.ProductSpecFile = {
+    uq: uqs_1.uqs.jkProduct,
+    type: 'map',
+    entity: 'ProductSpecFile',
+    mapper: {
+        product: "ProductID@ProductX",
+        fileName: "FileName"
+    },
+    pull: async (joint, uqIn, queue) => {
+        let step_seconds = Math.max(interval * 10 / 1000, 300);
+        if ((queue - 8 * 60 * 60 + step_seconds) * 1000 > Date.now())
+            return undefined;
+        let nextQueue = queue + step_seconds;
+        let sql = `select DATEDIFF(s, '1970-01-01', a.UpdateDatetime) + 1 as ID, a.jkid as ProductID
+            , a.filePath as FileName 
+            from opdata.dbo.FileResource a
+            where a.UpdateDatetime >= DATEADD(s, @iMaxId, '1970-01-01') and a.UpdateDatetime <= DATEADD(s, ${nextQueue}, '1970-01-01')
+                and a.FileType = 0 and a.FillState = 1
+            order by a.UpdateDatetime`;
+        try {
+            let ret = await uqOutRead_1.uqOutRead(sql, queue);
+            if (ret === undefined) {
+                ret = { lastPointer: nextQueue, data: [] };
+            }
+            return ret;
+        }
+        catch (error) {
+            logger_1.logger.error(error);
+            throw error;
+        }
     }
 };
 //# sourceMappingURL=product.js.map

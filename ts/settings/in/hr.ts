@@ -1,6 +1,7 @@
 import { UqInTuid, Joint } from "uq-joint";
 import { uqs } from "../uqs";
 import dateFormat from 'dateformat';
+import { UqIn } from "uq-joint";
 
 export const Employee: UqInTuid = {
     uq: uqs.jkHr,
@@ -17,7 +18,7 @@ export const Employee: UqInTuid = {
         status: "Status",
         CreateTime: "CreateTime",
     },
-    pullWrite: async (joint: Joint, data: any) => {
+    pullWrite: async (joint: Joint, uqIn: UqIn, data: any) => {
         try {
             data["CreateTime"] = data["CreateTime"].getTime() / 1000; // dateFormat(data["CreateTime"], 'yyyy-mm-dd HH:MM:ss');
             await joint.uqIn(Employee, data);

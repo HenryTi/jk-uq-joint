@@ -11,7 +11,7 @@ const _ = __importStar(require("lodash"));
 const product_1 = require("../../settings/in/product");
 const tools_1 = require("../../mssql/tools");
 const logger_1 = require("../../tools/logger");
-async function productPullWrite(joint, data) {
+async function productPullWrite(joint, uqin, data) {
     try {
         await joint.uqIn(product_1.ProductX, _.pick(data, ["ID", "ProductID", "BrandID", "ProductNumber", "Description", "DescriptionC", "ChemicalID", "IsValid"]));
         await joint.uqIn(product_1.ProductChemical, _.pick(data, ["ProductID", "ChemicalID", "Purity", "CAS", "MolecularFomula", "MolecularWeight"]));
@@ -23,7 +23,7 @@ async function productPullWrite(joint, data) {
     }
 }
 exports.productPullWrite = productPullWrite;
-async function productFirstPullWrite(joint, data) {
+async function productFirstPullWrite(joint, uqin, data) {
     try {
         await joint.uqIn(product_1.ProductX, _.pick(data, ["ID", "ProductID", "BrandID", "ProductNumber", "Description", "DescriptionC", "IsValid"]));
         let promises = [];
@@ -65,7 +65,7 @@ async function productFirstPullWrite(joint, data) {
     }
 }
 exports.productFirstPullWrite = productFirstPullWrite;
-async function packFirstPullWrite(joint, data) {
+async function packFirstPullWrite(joint, uqin, data) {
     try {
         await joint.uqIn(product_1.ProductPackX, data);
         let packId = data["PackingID"];
@@ -92,11 +92,11 @@ function pushRecordset(joint, result, uqIn) {
         for (var i = 0; i < recordset.length; i++) {
             let row = recordset[i];
             if (firstPullWrite) {
-                promises.push(firstPullWrite(joint, row));
+                promises.push(firstPullWrite(joint, uqIn, row));
                 // await firstPullWrite(joint, row);
             }
             else if (pullWrite) {
-                promises.push(pullWrite(joint, row));
+                promises.push(pullWrite(joint, uqIn, row));
                 // await pullWrite(joint, row);
             }
             else {

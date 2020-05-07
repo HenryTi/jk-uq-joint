@@ -5,12 +5,13 @@ import { ProductCategory, ProductCategoryLanguage, ProductProductCategory } from
 import { Country, Province, City, County } from "../settings/in/Address";
 import { Language, PackTypeStandard, Currency, SalesRegion, PackType, InvoiceType } from "../settings/in/salesRegion";
 import { Chemical } from "../settings/in/chemical";
-import { Brand, BrandSalesRegion, BrandDeliveryTime, ProductPackX, PriceX, ProductSalesRegion, ProductLegallyProhibited, ProductX, ProductChemical, ProductExtensionProperty } from "../settings/in/product";
+import { Brand, BrandSalesRegion, BrandDeliveryTime, ProductPackX, PriceX, ProductSalesRegion, ProductLegallyProhibited, ProductX, ProductChemical, ProductExtensionProperty, ProductMSDSFile, ProductSpecFile } from "../settings/in/product";
 import { Warehouse, SalesRegionWarehouse } from "../settings/in/warehouse";
 import { Organization, Customer, Contact, BuyerAccount, CustomerBuyerAccount, CustomerContact } from "../settings/in/customer";
 import { Promotion, PromotionLanguage, PromotionPackDiscount, PromotionType, PromotionStatus } from '../settings/in/promotion';
 import { Agreement } from '../settings/in/customerDiscount';
 import { Employee } from '../settings/in/hr';
+import { PlatformOrder } from 'settings/in/pointshop';
 
 /**
  * joint的思路是：joint一直在运行，每隔一段时间执行一次数据交换，数据交换分为3种，
@@ -63,6 +64,9 @@ export const pulls: {
     "ProductLegallyProhibited": { read: sqls.readProductLegallyProhibited, uqIn: ProductLegallyProhibited },
     "ProductExtensionProperty": { read: sqls.readProductExtensionProperty, uqIn: ProductExtensionProperty },
 
+    "ProductMSDSFile": { read: sqls.readProductMSDSFile, uqIn: ProductMSDSFile },
+    "ProductSpecFile": { read: sqls.readProductSpecFile, uqIn: ProductSpecFile },
+
     // 客户和客户单位基本信息
     "Organization": { read: sqls.readOrganization, uqIn: Organization },
     "Customer": { read: sqls.readCustomer, uqIn: Customer },
@@ -78,4 +82,6 @@ export const pulls: {
     "PromotionType": { read: sqls.readPromotionType, uqIn: PromotionType },
     "PromotionStatus": { read: sqls.readPromotionStatus, uqIn: PromotionStatus },
     "Promotion": { read: sqls.readPromotion, uqIn: Promotion },
+
+    "PlatformOrder": { read: sqls.readPlatformOrder, uqIn: PlatformOrder },
 }

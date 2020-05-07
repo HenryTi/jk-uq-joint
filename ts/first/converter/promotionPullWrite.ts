@@ -4,8 +4,9 @@ import { execSql } from "../../mssql/tools";
 import { Promotion, PromotionSalesRegion, PromotionLanguage, PromotionPackDiscount } from "../../settings/in/promotion";
 import { pushRecordset } from "./productPullWrite";
 import { logger } from "../../tools/logger";
+import { UqIn } from "uq-joint";
 
-export async function promotionFirstPullWrite(joint: Joint, data: any) {
+export async function promotionFirstPullWrite(joint: Joint, uqin: UqIn, data: any) {
 
     try {
         data["StartDate"] = data["StartDate"] && data["StartDate"].getTime() / 1000; // dateFormat(data["StartDate"], "yyyy-mm-dd HH:MM:ss");

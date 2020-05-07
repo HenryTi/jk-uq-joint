@@ -154,6 +154,24 @@ exports.sqls = {
                 inner join zcl_mess.dbo.Products p on p.OriginalID = oi.JKIDOut and p.Manufactory in ( 'A01', 'A10' )
                 where p.jkid > @iMaxId
                 and p.jkid not in ( select jkid from zcl_mess.dbo.Invalid_products ) order by p.jkid`,
+    readProductMSDSFile: `
+                select top ${promiseSize} a.PMSID as ID, c.jkid as ProductID
+                        , case a.LanguageID when 'CN' then 'zh-CN' when 'EN' then 'en' 
+                                when 'DE' then 'de' when 'EN-US' then 'en-US'
+                                when 'FR' then 'fr' end as LanguageID
+                        , a.fileName + '.pdf' as FileName 
+                from opdata.dbo.PProducts_MSDSInfo a inner join opdata.dbo.JKProdIDInOut b on a.OriginalID = b.JKIDIn
+                        inner join zcl_mess.dbo.Products c on c.OriginalID = b.JKIDOut and c.manufactory in ( 'A01', 'A10' )
+                where   a.PMSID > @iMaxId 
+                        and a.PMSID > '${idBrokened.ProductMSDS}'
+                        and a.FileType = 'PDF'
+                        and c.jkid not in ( select jkid from zcl_mess.dbo.Invalid_products )
+                order by a.PMSID`,
+    readProductSpecFile: `
+                select top ${promiseSize} ID, a.jkid as ProductID, a.filePath as FileName 
+                from opdata.dbo.FileResource a
+                where a.ID > @iMaxId and a.FileType = 0 and a.FillState = 1
+                order by a.ID`,
     //==============================================================
     //=========================== ProductCategory ===========================
     //==============================================================
@@ -192,5 +210,12 @@ exports.sqls = {
     readAgreement: `select top ${promiseSize} AgreementId as ID, AgreementID, ObjType
                 from dbs.dbo.Agreement where AgreementID > @iMaxId and objType in ('C', 'U')
                 and StartDate < GETDATE() and ISNULL(EndDate, '2030-01-01') > GETDATE() and Status = 1 order by AgreementId`,
+    readPlatformOrder: `select p.orderid as ID, p.orderid as OrderItemID, p.SorderID as OrderID, p.CID as CustomerID
+                , p.WorkingColumn2 as PlatformOrderID, p.Description, p.DescriptionC, p.PackNo, p.Packing, p.PUnit as Unit, p.Qty, p.UnitPriceRMB as Price
+                , p.Qty * p.UnitPriceRMB as SubAmount, p.UnitPriceRMBCurrency as CurrencyID, p.Mark, p.UserID as OrderMaker, p.RecordTime
+                from dbs.dbo.vw_SOrdersBJSH p
+                where p.RecordTime >= DATEADD(d, -8, getdate())
+                and p.userid is not null and p.workingColumn2 is null
+                order by p.orderid`,
 };
 //# sourceMappingURL=sqls.js.map

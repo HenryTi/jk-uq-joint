@@ -3,6 +3,7 @@ import dateFormat from 'dateformat';
 import config from 'config';
 import { uqs } from "../uqs";
 import { uqOutRead } from "../../first/converter/uqOutRead";
+import { UqIn } from "uq-joint";
 
 const promiseSize = config.get<number>("promiseSize");
 
@@ -21,7 +22,7 @@ export const PointProduct: UqInMap = {
     },
     pull: `select top ${promiseSize} p.ID, p.PackageID, j.jkid as ProductID, p.Point, p.StartDate, p.EndDate, p.Comments from ProdData.dbo.Export_PointProduct p
     inner join zcl_mess.dbo.jkcat j on j.jkcat = p.PackageID where p.ID > @iMaxId order by ID`,
-    pullWrite: async (joint: Joint, data: any) => {
+    pullWrite: async (joint: Joint, uqIn: UqIn, data: any) => {
         data["StartDate"] = data["StartDate"] && dateFormat(data["StartDate"], "yyyy-mm-dd HH:MM:ss");
         data["EndDate"] = data["EndDate"] && dateFormat(data["EndDate"], "yyyy-mm-dd HH:MM:ss");
         await joint.uqIn(PointProduct, data);

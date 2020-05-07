@@ -8,6 +8,10 @@ const uqs_1 = require("../uqs");
 const UserApiClient_1 = require("../../tools/UserApiClient");
 const logger_1 = require("../../tools/logger");
 const lodash_1 = __importDefault(require("lodash"));
+const webUser_1 = require("../in/webUser");
+/**
+ * 用于将中心服务器上客户注册信息发生的变化导入到官网系统中
+ */
 exports.faceUser = {
     face: '百灵威系统工程部/WebUser/User',
     from: 'center',
@@ -28,6 +32,14 @@ exports.faceUser = {
     push: async (joint, uqIn, queue, data) => {
         let { Id } = data;
         if (Id && Id !== 'n/a') {
+            if (data.Password) {
+                try {
+                    data.Password = uq_joint_1.decrypt(data.Password);
+                }
+                catch (error) {
+                    return true;
+                }
+            }
             try {
                 await UserApiClient_1.userApiClient.ChangeRegisterInfo(data);
             }
@@ -99,6 +111,7 @@ function decryptUser(user) {
         user.pwd = '123456';
     return user;
 }
+exports.decryptUser = decryptUser;
 /**
  * 将在新系统中注册的用户导入到旧系统中；
  * @param user 从Bus中得到的User信息
@@ -140,7 +153,7 @@ async function RegisterWebUser(userIn, joint) {
             return -4;
     }
     if (ret !== undefined) {
-        await uq_joint_1.map('webuser', userIn.id, ret.Identity);
+        await uq_joint_1.map(uq_joint_1.getMapName(webUser_1.WebUser), userIn.id, ret.Identity);
         return ret.Identity;
     }
 }
@@ -253,7 +266,12 @@ exports.faceWebUserInvoice = {
                 let { title, taxNo, address, telephone, bank, accountNo } = invoiceInfo;
                 param.AccountName = title;
                 param.TaxNo = taxNo + " " + address + " " + telephone;
+                param.TaxNumber = taxNo;
+                param.RegisterAddress = address;
+                param.RegisterTelephone = telephone;
                 param.AccountBank = bank + " " + accountNo;
+                param.Bank = bank;
+                param.AccountNo = accountNo;
             }
             console.log(param);
             let success = await UserApiClient_1.userApiClient.UpdateWebUserInvoice(param);

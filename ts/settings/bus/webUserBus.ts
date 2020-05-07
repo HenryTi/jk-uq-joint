@@ -1,9 +1,13 @@
-import { UqBus, Joint, map, centerApi, MapFromUq, decrypt } from "uq-joint";
+import { UqBus, Joint, map, centerApi, MapFromUq, decrypt, getMapName } from "uq-joint";
 import { uqs } from "../uqs";
 import { userApiClient } from "../../tools/UserApiClient";
 import { logger } from "../../tools/logger";
 import _ from 'lodash';
+import { WebUser } from "../in/webUser";
 
+/**
+ * 用于将中心服务器上客户注册信息发生的变化导入到官网系统中
+ */
 export const faceUser: UqBus = {
     face: '百灵威系统工程部/WebUser/User',
     from: 'center',
@@ -24,6 +28,13 @@ export const faceUser: UqBus = {
     push: async (joint: Joint, uqIn: UqBus, queue: number, data: any): Promise<boolean> => {
         let { Id } = data;
         if (Id && Id !== 'n/a') {
+            if (data.Password) {
+                try {
+                    data.Password = decrypt(data.Password);
+                } catch (error) {
+                    return true;
+                }
+            }
             try {
                 await userApiClient.ChangeRegisterInfo(data);
             } catch (error) {
@@ -86,7 +97,7 @@ export const faceWebUser: UqBus = {
     }
 };
 
-function decryptUser(user: { pwd: string }) {
+export function decryptUser(user: { pwd: string }) {
     let pwd = user.pwd;
     if (!pwd)
         user.pwd = '123456';
@@ -108,15 +119,15 @@ async function RegisterWebUser(userIn: any, joint: Joint) {
     let userInCenter;
     try {
         //public async userOutOne(id: number) {
-            let user = await centerApi.queueOutOne(userIn.id);
-            if (user) {
-                user = decryptUser(user);
-                let mapFromUq = new MapFromUq(joint);
-                userInCenter = await mapFromUq.map(user, faceUser.mapper);
-                //return outBody;
-            }
+        let user = await centerApi.queueOutOne(userIn.id);
+        if (user) {
+            user = decryptUser(user);
+            let mapFromUq = new MapFromUq(joint);
+            userInCenter = await mapFromUq.map(user, faceUser.mapper);
+            //return outBody;
+        }
         //}
-            //userInCenter = await joint.userOutOne(user.id); // = Henry提供新接口
+        //userInCenter = await joint.userOutOne(user.id); // = Henry提供新接口
     } catch (error) {
         return -3;
     }
@@ -135,7 +146,7 @@ async function RegisterWebUser(userIn: any, joint: Joint) {
             return -4;
     }
     if (ret !== undefined) {
-        await map('webuser', userIn.id, ret.Identity);
+        await map(getMapName(WebUser), userIn.id, ret.Identity);
         return ret.Identity;
     }
 }
@@ -252,7 +263,12 @@ export const faceWebUserInvoice: UqBus = {
                 let { title, taxNo, address, telephone, bank, accountNo } = invoiceInfo;
                 param.AccountName = title;
                 param.TaxNo = taxNo + " " + address + " " + telephone;
+                param.TaxNumber = taxNo;
+                param.RegisterAddress = address;
+                param.RegisterTelephone = telephone;
                 param.AccountBank = bank + " " + accountNo;
+                param.Bank = bank;
+                param.AccountNo = accountNo;
             }
             console.log(param);
             let success = await userApiClient.UpdateWebUserInvoice(param);

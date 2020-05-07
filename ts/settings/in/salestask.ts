@@ -43,7 +43,7 @@ export const JkTask: UqInTuid = {
                     a.LinkObjectID, isnull(a.TimeLimit,0) as TimeLimit, a.RequireCompletionTime, a.CreateTime, a.CompleteTime
             from    ProdData.dbo.Export_WorkTask as a
             where a.ID > @iMaxId order by a.ID`,
-    pullWrite: async (joint: Joint, data: any) => {
+    pullWrite: async (joint: Joint, uqin: UqIn, data: any) => {
 
         try {
             data["RequireCompletionTime"] = data["RequireCompletionTime"] && dateFormat(data["RequireCompletionTime"], "yyyy-mm-dd"); //转换日期格式（存在日期才转换）
