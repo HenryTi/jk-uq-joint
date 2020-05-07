@@ -64,4 +64,20 @@ exports.JkTask = {
         }
     },
 };
+exports.Importcustomerdata = {
+    uq: uqs_1.uqs.jkSalestask,
+    type: 'map',
+    entity: 'Importcustomerdata',
+    mapper: {
+        customer: 'customerid@Customer',
+        arr1: {
+            organization: '^organizationid@Organization',
+            sales: '^webuser',
+            note: '^note'
+        }
+    },
+    pull: ` select top ${promiseSize} ID, customerid,organizationid,webuser,note
+            from   ProdData.dbo.Export_Sales_Customer
+            where  ID > @iMaxId order by ID`
+};
 //# sourceMappingURL=salestask.js.map

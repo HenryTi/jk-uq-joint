@@ -83,6 +83,7 @@ const uqIns = [
     salestask_1.JkTask,
     pointshop_1.PointProduct,
     pointshop_1.PlatformOrder,
+    salestask_1.Importcustomerdata
 ];
 exports.default = uqIns;
 //# sourceMappingURL=index.js.map

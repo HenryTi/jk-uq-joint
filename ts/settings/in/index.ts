@@ -11,7 +11,7 @@ import {
 import { ProductCategory, ProductCategoryLanguage, ProductProductCategory } from "./productCategory";
 import { Agreement, CustomerDiscount, OrganizationDiscount } from "./customerDiscount";
 import { Employee } from "./hr";
-import { JkTaskType, JkTask } from "./salestask";
+import { JkTaskType, JkTask, Importcustomerdata } from "./salestask";
 import { WebUser, WebUserTonva, WebUserContact, WebUserCustomer, WebUserSetting, WebUserSettingAlter, WebUserSettingType, WebUserContacts, WebUserBuyerAccount } from "./webUser";
 import { PointProduct, PlatformOrder } from "./pointshop";
 
@@ -98,6 +98,7 @@ const uqIns = [
 
     PointProduct,
     PlatformOrder,
+    Importcustomerdata
 ]
 
 export default uqIns;

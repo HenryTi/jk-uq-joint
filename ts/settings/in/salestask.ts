@@ -34,7 +34,7 @@ export const JkTask: UqInTuid = {
         employee: "EmployeeID@Employee",
         sourceNo: 'LinkObjectID',
         priorty: 'TimeLimit',
-        type:'WorkTaskTypeID', 
+        type: 'WorkTaskTypeID',
         deadline: 'RequireCompletionTime',
         createTime: 'CreateTime',
         completeTime: 'CompleteTime',
@@ -56,4 +56,21 @@ export const JkTask: UqInTuid = {
         }
     },
 
+};
+
+export const Importcustomerdata: UqInMap = {
+    uq: uqs.jkSalestask,
+    type: 'map',
+    entity: 'Importcustomerdata',
+    mapper: {
+        customer: 'customerid@Customer',
+        arr1: {
+            organization: '^organizationid@Organization',
+            sales: '^webuser',
+            note: '^note'
+        }
+    },
+    pull: ` select top ${promiseSize} ID, customerid,organizationid,webuser,note
+            from   ProdData.dbo.Export_Sales_Customer
+            where  ID > @iMaxId order by ID`
 };
