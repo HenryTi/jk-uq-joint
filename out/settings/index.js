@@ -14,7 +14,7 @@ const uqInEntities = config_1.default.get("afterFirstEntities");
 const uqBusSettings = config_1.default.get("uqBus");
 const interval = config_1.default.get("interval");
 exports.settings = {
-    name: 'j&k_uq_joint',
+    name: 'sales_uq_joint',
     unit: 24,
     allowedIP: [
         '218.249.142.140',

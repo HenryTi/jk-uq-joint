@@ -10,7 +10,28 @@ class WebApiClient extends uq_joint_1.Fetch {
     constructor() {
         super(webApiBaseUrl);
     }
+    async addSaleOrderCoupon(order) {
+        try {
+            let result = await this.get("SaleOrder/AddSaleOrderCoupon", order);
+            return result;
+        }
+        catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
     async newOrder(order) {
+        try {
+            // order = { Id: 'N20190201JKA', Customer: { Id: 'A250001' }, Maker: 'L38', SaleOrderItems: [{ Id: 'xxuigeuiiwege', PackageId: 'A250011_100g', Qty: 1, SalePrice: { Value: 100, Currency: 'RMB' } }] };
+            let result = await this.post("SaleOrder/CreateNewSaleOrder", order);
+            return result;
+        }
+        catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+    async addUseCouponOrder(order) {
         try {
             // order = { Id: 'N20190201JKA', Customer: { Id: 'A250001' }, Maker: 'L38', SaleOrderItems: [{ Id: 'xxuigeuiiwege', PackageId: 'A250011_100g', Qty: 1, SalePrice: { Value: 100, Currency: 'RMB' } }] };
             let result = await this.post("SaleOrder/CreateNewSaleOrder", order);

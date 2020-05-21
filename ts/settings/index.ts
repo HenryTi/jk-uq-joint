@@ -14,7 +14,7 @@ const interval = config.get<number>("interval");
 
 
 export const settings: Settings = {
-    name: 'j&k_uq_joint',
+    name: 'sales_uq_joint',
     unit: 24,
     allowedIP: [
         '218.249.142.140',

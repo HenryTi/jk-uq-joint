@@ -8,6 +8,8 @@ const pointExchangeOut_1 = require("./pointExchangeOut");
 const orderPayment_1 = require("./orderPayment");
 const orderAuditBus_1 = require("./orderAuditBus");
 const deliveryConfirmBus_1 = require("./deliveryConfirmBus");
+const orderCouponUsqBus_1 = require("./orderCouponUsqBus");
+const assistAchievementsBus_1 = require("./assistAchievementsBus");
 exports.bus = {
     "faceOrder": orderUsqBus_1.faceOrder,
     "faceUser": webUserBus_1.faceUser,
@@ -23,6 +25,8 @@ exports.bus = {
     "facePointOut": pointExchangeOut_1.facePointOut,
     "faceOrderPayment": orderPayment_1.faceOrderPayment,
     "faceOrderAudit": orderAuditBus_1.faceOrderAudit,
-    "faceDeliveryConfirm": deliveryConfirmBus_1.faceDeliveryConfirm
+    "faceDeliveryConfirm": deliveryConfirmBus_1.faceDeliveryConfirm,
+    "faceOrderCoupon": orderCouponUsqBus_1.faceOrderCoupon,
+    "faceAssistAchievementsBus": assistAchievementsBus_1.faceAssistAchievementsBus
 };
 //# sourceMappingURL=index.js.map

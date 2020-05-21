@@ -10,8 +10,8 @@ import { Chemical } from "./chemical";
 import { Promotion, PromotionSalesRegion, PromotionLanguage, PromotionPackDiscount, PromotionStatus, PromotionType } from "./promotion";
 import {
     Customer, Organization, OrganizationCustomer, CustomerContact, CustomerContacts, Contact, InvoiceInfo,
-    CustomerHandler, CustomerContractor, BuyerAccount, CustomerBuyerAccount, Department, CustomerDepartment, Research,
-    Position, CustomerResearch, CustomerPosition
+    CustomerHandler, CustomerContractor, BuyerAccount, CustomerBuyerAccount, Department, CustomerDepartment,
+    Position, CustomerDomain, CustomerPosition
 } from "./customer";
 import { ProductCategory, ProductCategoryLanguage, ProductProductCategory } from "./productCategory";
 import { Agreement, CustomerDiscount, OrganizationDiscount } from "./customerDiscount";
@@ -83,8 +83,7 @@ const uqIns = [
     InvoiceInfo,
     Department,
     CustomerDepartment,
-    Research,
-    CustomerResearch,
+    CustomerDomain,
     Position,
     CustomerPosition,
 

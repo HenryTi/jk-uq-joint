@@ -7,6 +7,8 @@ import { facePointExchange, facePointOut } from "./pointExchangeOut";
 import { faceOrderPayment } from "./orderPayment";
 import { faceOrderAudit } from "./orderAuditBus";
 import { faceDeliveryConfirm } from "./deliveryConfirmBus";
+import { faceOrderCoupon } from "./orderCouponUsqBus";
+import { faceAssistAchievementsBus } from "./assistAchievementsBus";
 
 export const bus: { [busName: string]: UqBus } = {
     "faceOrder": faceOrder,
@@ -23,5 +25,7 @@ export const bus: { [busName: string]: UqBus } = {
     "facePointOut": facePointOut,
     "faceOrderPayment": faceOrderPayment,
     "faceOrderAudit": faceOrderAudit,
-    "faceDeliveryConfirm": faceDeliveryConfirm
+    "faceDeliveryConfirm": faceDeliveryConfirm,
+    "faceOrderCoupon": faceOrderCoupon,
+    "faceAssistAchievementsBus": faceAssistAchievementsBus
 };

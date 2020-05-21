@@ -9,7 +9,29 @@ export class WebApiClient extends Fetch {
         super(webApiBaseUrl);
     }
 
+    async addSaleOrderCoupon(order: any): Promise<any> {
+        try {
+
+            let result = await this.get("SaleOrder/AddSaleOrderCoupon", order);
+            return result;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+
     async newOrder(order: any): Promise<any> {
+        try {
+            // order = { Id: 'N20190201JKA', Customer: { Id: 'A250001' }, Maker: 'L38', SaleOrderItems: [{ Id: 'xxuigeuiiwege', PackageId: 'A250011_100g', Qty: 1, SalePrice: { Value: 100, Currency: 'RMB' } }] };
+            let result = await this.post("SaleOrder/CreateNewSaleOrder", order);
+            return result;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+
+    async addUseCouponOrder(order: any): Promise<any> {
         try {
             // order = { Id: 'N20190201JKA', Customer: { Id: 'A250001' }, Maker: 'L38', SaleOrderItems: [{ Id: 'xxuigeuiiwege', PackageId: 'A250011_100g', Qty: 1, SalePrice: { Value: 100, Currency: 'RMB' } }] };
             let result = await this.post("SaleOrder/CreateNewSaleOrder", order);
