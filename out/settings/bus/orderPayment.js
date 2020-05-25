@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.faceOrderPayment = void 0;
 const uqOutRead_1 = require("../../first/converter/uqOutRead");
 const faceOrderPaymentPull = async (joint, uqBus, queue) => {
     let sql = `

@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.contactPullWrite = exports.customerPullWrite = void 0;
 const lodash_1 = __importDefault(require("lodash"));
 const dateformat_1 = __importDefault(require("dateformat"));
 const customer_1 = require("../../settings/in/customer");

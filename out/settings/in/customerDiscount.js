@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Agreement = exports.OrganizationDiscount = exports.CustomerDiscount = void 0;
 const dateformat_1 = __importDefault(require("dateformat"));
 const uqs_1 = require("../uqs");
 const tools_1 = require("../../mssql/tools");

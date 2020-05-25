@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.faceDeliveryConfirm = void 0;
 //import { UqBus, DataPull, DataPush, Joint, DataPullResult } from "../../uq-joint";
 const uqOutRead_1 = require("../../first/converter/uqOutRead");
 const deliveryConfirmPull = async (joint, uqBus, queue) => {

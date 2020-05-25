@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.faceProductInventory = void 0;
 const uqOutRead_1 = require("../../first/converter/uqOutRead");
 const productInventoryPull = async (joint, uqBus, queue) => {
     let sql = `select top 1 wi.ID, wi.WarehouseID, j.jkid as ProductID, wi.PackagingID as PackingID, wi.Inventory

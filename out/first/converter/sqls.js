@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.sqls = void 0;
 const config_1 = __importDefault(require("config"));
 const idBrokened = config_1.default.get("idBrokened");
 const promiseSize = config_1.default.get("promiseSize");
@@ -217,5 +218,11 @@ exports.sqls = {
                 where p.RecordTime >= DATEADD(d, -8, getdate())
                 and p.userid is not null and p.workingColumn2 is null
                 order by p.orderid`,
+    //==============================================================
+    //=========================== OrganizationVIPLevel ===========================
+    //==============================================================
+    readOrganizationVIPLevel: `select top ${promiseSize} ID, OrganizationID, VIPLevel
+                from sales.dbo.OrganizationVIPLevel where ID > @iMaxId
+                order by ID`,
 };
 //# sourceMappingURL=sqls.js.map

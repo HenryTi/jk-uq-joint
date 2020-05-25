@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.readMany = exports.uqPullRead = exports.uqOutRead = exports.uqOutReadTimeScope = void 0;
 const tools_1 = require("../../mssql/tools");
 /**
  * 按照时间范围读取要导出的数据（仅适用时间是分散发布的情况）

@@ -253,4 +253,12 @@ export const sqls = {
                 where p.RecordTime >= DATEADD(d, -8, getdate())
                 and p.userid is not null and p.workingColumn2 is null
                 order by p.orderid`,
+
+        //==============================================================
+        //=========================== OrganizationVIPLevel ===========================
+        //==============================================================
+        readOrganizationVIPLevel:
+                `select top ${promiseSize} ID, OrganizationID, VIPLevel
+                from sales.dbo.OrganizationVIPLevel where ID > @iMaxId
+                order by ID`,
 }

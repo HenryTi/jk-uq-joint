@@ -13,4 +13,5 @@ export const uqs = {
     jkOrder: JKDev + '/order',
     jkSalestask: JKDev + '/salestask',
     jkPointShop: JKDev + '/积分商城',
+    jkVIPCardType: JKDev + '/vipCardType',
 }

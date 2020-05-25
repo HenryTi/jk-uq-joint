@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ProductSpecFile = exports.ProductMSDSFile = exports.ProductExtensionProperty = exports.ProductLegallyProhibited = exports.ProductSalesRegion = exports.ProductChemical = exports.AgentPrice = exports.PriceX = exports.ProductPackX = exports.InvalidProduct = exports.ProductX = exports.BrandDeliveryTime = exports.BrandSalesRegion = exports.Brand = void 0;
 const uqs_1 = require("../uqs");
 const productPullWrite_1 = require("../../first/converter/productPullWrite");
 const tools_1 = require("../../mssql/tools");

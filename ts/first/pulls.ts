@@ -12,6 +12,7 @@ import { Promotion, PromotionLanguage, PromotionPackDiscount, PromotionType, Pro
 import { Agreement } from '../settings/in/customerDiscount';
 import { Employee } from '../settings/in/hr';
 import { PlatformOrder } from 'settings/in/pointshop';
+import { OrganizationVIPLevel } from 'settings/in/VIPCardLevel';
 
 /**
  * joint的思路是：joint一直在运行，每隔一段时间执行一次数据交换，数据交换分为3种，
@@ -84,4 +85,7 @@ export const pulls: {
     "Promotion": { read: sqls.readPromotion, uqIn: Promotion },
 
     "PlatformOrder": { read: sqls.readPlatformOrder, uqIn: PlatformOrder },
+
+    // 
+    "OrganizationVIPLevel": { read: sqls.readOrganizationVIPLevel, uqIn: OrganizationVIPLevel },
 }

@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.userApiClient = void 0;
 const uq_joint_1 = require("uq-joint");
 const config_1 = __importDefault(require("config"));
 const userApiBaseUrl = config_1.default.get("userApiBaseUrl");

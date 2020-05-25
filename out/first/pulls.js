@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.pulls = void 0;
 const sqls_1 = require("./converter/sqls");
 const productCategory_1 = require("../settings/in/productCategory");
 const Address_1 = require("../settings/in/Address");
@@ -12,6 +13,7 @@ const promotion_1 = require("../settings/in/promotion");
 const customerDiscount_1 = require("../settings/in/customerDiscount");
 const hr_1 = require("../settings/in/hr");
 const pointshop_1 = require("settings/in/pointshop");
+const VIPCardLevel_1 = require("settings/in/VIPCardLevel");
 /** */
 exports.pulls = {
     "Language": { read: sqls_1.sqls.readLanguage, uqIn: salesRegion_1.Language },
@@ -56,5 +58,7 @@ exports.pulls = {
     "PromotionStatus": { read: sqls_1.sqls.readPromotionStatus, uqIn: promotion_1.PromotionStatus },
     "Promotion": { read: sqls_1.sqls.readPromotion, uqIn: promotion_1.Promotion },
     "PlatformOrder": { read: sqls_1.sqls.readPlatformOrder, uqIn: pointshop_1.PlatformOrder },
+    // 
+    "OrganizationVIPLevel": { read: sqls_1.sqls.readOrganizationVIPLevel, uqIn: VIPCardLevel_1.OrganizationVIPLevel },
 };
 //# sourceMappingURL=pulls.js.map

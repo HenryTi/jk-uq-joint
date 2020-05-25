@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Address = exports.County = exports.City = exports.Province = exports.Country = void 0;
 const uqs_1 = require("../uqs");
 exports.Country = {
     uq: uqs_1.uqs.jkCommon,

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Employee = void 0;
 const uqs_1 = require("../uqs");
 exports.Employee = {
     uq: uqs_1.uqs.jkHr,

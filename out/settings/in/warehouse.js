@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.SalesRegionWarehouse = exports.Warehouse = void 0;
 const uqs_1 = require("../uqs");
 exports.Warehouse = {
     uq: uqs_1.uqs.jkWarehouse,

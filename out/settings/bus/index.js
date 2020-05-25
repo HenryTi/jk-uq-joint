@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.bus = void 0;
 const orderUsqBus_1 = require("./orderUsqBus");
 const productInventoryBus_1 = require("./productInventoryBus");
 const pointBus_1 = require("./pointBus");

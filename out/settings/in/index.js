@@ -13,6 +13,7 @@ const hr_1 = require("./hr");
 const salestask_1 = require("./salestask");
 const webUser_1 = require("./webUser");
 const pointshop_1 = require("./pointshop");
+const VIPCardLevel_1 = require("./VIPCardLevel");
 const uqIns = [
     salestask_1.JkTaskType,
     salesRegion_1.Language,
@@ -85,7 +86,8 @@ const uqIns = [
     salestask_1.JkTask,
     pointshop_1.PointProduct,
     pointshop_1.PlatformOrder,
-    salestask_1.Importcustomerdata
+    salestask_1.Importcustomerdata,
+    VIPCardLevel_1.OrganizationVIPLevel,
 ];
 exports.default = uqIns;
 //# sourceMappingURL=index.js.map

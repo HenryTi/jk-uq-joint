@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.facePoint = void 0;
 const webApiClient_1 = require("../../tools/webApiClient");
 const uqOutRead_1 = require("../../first/converter/uqOutRead");
 const facePointPush = async (joint, uqBus, queue, data) => {
