@@ -9,11 +9,11 @@
             "request": "launch",
             "name": "Launch Program",
             // "program": "${workspaceFolder}/out/uq-joint/db/upgrade.js",
-            // "program": "${workspaceFolder}/out/first/index.js",
-            "program": "${workspaceFolder}/out/index.js",
+            "program": "${workspaceFolder}/out/first/index.js",
+            // "program": "${workspaceFolder}/out/index.js",
             // "program": "${workspaceFolder}/out/log4jstest.js",
             "env": {
-                "NODE_ENV": "development",
+                "NODE_ENV": "production",
                 "NODE_PATH": "./out"
             },
             // "outputCapture": "std",

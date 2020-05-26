@@ -165,15 +165,11 @@
             "inervalUnit": 1
         },
         {
-            "name": "Research",
-            "inervalUnit": 1
-        },
-        {
             "name": "Position",
             "inervalUnit": 1
         },
         {
-            "name": "CustomerResearch",
+            "name": "CustomerDomain",
             "inervalUnit": 1
         },
         {
@@ -196,6 +192,8 @@
         "faceProductInventory",
         "faceOrderPayment",
         "faceOrderAudit",
-        "faceDeliveryConfirm"
+        "faceDeliveryConfirm",
+        "faceOrderCoupon",
+        "faceAssistAchievementsBus"
     ]
 }

@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CustomerPosition = exports.Position = exports.CustomerResearch = exports.Research = exports.CustomerDepartment = exports.Department = exports.CustomerBuyerAccount = exports.BuyerAccount = exports.CustomerContractor = exports.CustomerHandler = exports.CustomerSetting = exports.InvoiceInfo = exports.Contact = exports.CustomerContacts = exports.CustomerContact = exports.OrganizationCustomer = exports.Organization = exports.Customer = void 0;
+exports.CustomerPosition = exports.Position = exports.CustomerDomain = exports.CustomerDepartment = exports.Department = exports.CustomerBuyerAccount = exports.BuyerAccount = exports.CustomerContractor = exports.CustomerHandler = exports.CustomerSetting = exports.InvoiceInfo = exports.Contact = exports.CustomerContacts = exports.CustomerContact = exports.OrganizationCustomer = exports.Organization = exports.Customer = void 0;
 const uqs_1 = require("../uqs");
 const customerPullWrite_1 = require("../../first/converter/customerPullWrite");
 const config_1 = __importDefault(require("config"));
@@ -254,31 +254,17 @@ exports.CustomerDepartment = {
             from    ProdData.dbo.Export_CustomerDepartment
             where   ID > @iMaxId order by ID`
 };
-exports.Research = {
-    uq: uqs_1.uqs.jkCustomer,
-    type: "tuid",
-    entity: "Research",
-    key: "research",
-    mapper: {
-        $id: "research@Research",
-        no: "research",
-        name: "researchname"
-    },
-    pull: ` select top ${promiseSize} ID, research, researchname
-            from    ProdData.dbo.Export_Research
-            where   type = 'C' and  ID > @iMaxId order by ID`
-};
-exports.CustomerResearch = {
+exports.CustomerDomain = {
     uq: uqs_1.uqs.jkCustomer,
     type: 'map',
-    entity: 'CustomerResearch',
+    entity: 'CustomerDomain',
     mapper: {
         customer: 'customer@Customer',
         arr1: {
-            research: '^research@Research',
+            domain: '^domain',
         }
     },
-    pull: ` select top ${promiseSize} ID, customer,research
+    pull: ` select top ${promiseSize} ID, customer,research as domain
             from    ProdData.dbo.Export_ResearchDetail
             where   type = 'C' and ID > @iMaxId order by ID`
 };
