@@ -11,6 +11,7 @@ const orderAuditBus_1 = require("./orderAuditBus");
 const deliveryConfirmBus_1 = require("./deliveryConfirmBus");
 const orderCouponUsqBus_1 = require("./orderCouponUsqBus");
 const assistAchievementsBus_1 = require("./assistAchievementsBus");
+const orderHistory_1 = require("./orderHistory");
 exports.bus = {
     "faceOrder": orderUsqBus_1.faceOrder,
     "faceUser": webUserBus_1.faceUser,
@@ -28,6 +29,7 @@ exports.bus = {
     "faceOrderAudit": orderAuditBus_1.faceOrderAudit,
     "faceDeliveryConfirm": deliveryConfirmBus_1.faceDeliveryConfirm,
     "faceOrderCoupon": orderCouponUsqBus_1.faceOrderCoupon,
-    "faceAssistAchievementsBus": assistAchievementsBus_1.faceAssistAchievementsBus
+    "faceAssistAchievementsBus": assistAchievementsBus_1.faceAssistAchievementsBus,
+    "faceOrderHistory": orderHistory_1.faceOrderHistory,
 };
 //# sourceMappingURL=index.js.map

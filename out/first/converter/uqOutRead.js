@@ -33,7 +33,13 @@ async function uqOutRead(sql, maxId, endPoint) {
     if (endPoint) {
         param.push({ name: 'endPoint', value: endPoint });
     }
-    return await readMany(sql, param);
+    try {
+        return await readMany(sql, param);
+    }
+    catch (error) {
+        console.error(error);
+        console.error('读取来源数据库出现错误');
+    }
 }
 exports.uqOutRead = uqOutRead;
 async function uqPullRead(sql, queue) {

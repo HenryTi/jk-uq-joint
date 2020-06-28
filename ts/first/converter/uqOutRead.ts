@@ -31,7 +31,12 @@ export async function uqOutRead(sql: string, maxId: string | number, endPoint?: 
     if (endPoint) {
         param.push({ name: 'endPoint', value: endPoint });
     }
-    return await readMany(sql, param);
+    try {
+        return await readMany(sql, param);
+    } catch (error) {
+        console.error(error);
+        console.error('读取来源数据库出现错误');
+    }
 }
 
 export async function uqPullRead(sql: string, queue: number): Promise<{ queue: number, data: any }> {

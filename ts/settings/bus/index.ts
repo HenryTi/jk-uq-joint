@@ -9,6 +9,7 @@ import { faceOrderAudit } from "./orderAuditBus";
 import { faceDeliveryConfirm } from "./deliveryConfirmBus";
 import { faceOrderCoupon } from "./orderCouponUsqBus";
 import { faceAssistAchievementsBus } from "./assistAchievementsBus";
+import { faceOrderHistory } from "./orderHistory";
 
 export const bus: { [busName: string]: UqBus } = {
     "faceOrder": faceOrder,
@@ -27,5 +28,6 @@ export const bus: { [busName: string]: UqBus } = {
     "faceOrderAudit": faceOrderAudit,
     "faceDeliveryConfirm": faceDeliveryConfirm,
     "faceOrderCoupon": faceOrderCoupon,
-    "faceAssistAchievementsBus": faceAssistAchievementsBus
+    "faceAssistAchievementsBus": faceAssistAchievementsBus,
+    "faceOrderHistory": faceOrderHistory,
 };
