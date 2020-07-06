@@ -51,6 +51,10 @@ exports.WebUserTonva = {
     pullWrite: async (joint, uqin, data) => {
         try {
             //let userId = await joint.userIn(
+            if (data["Mobile"] === "请补充")
+                data["Mobile"] = null;
+            if (data["Email"] === "请补充")
+                data["Email"] = null;
             let userId = await userIn(joint, exports.WebUserTonva, lodash_1.default.pick(data, ['Type', 'WebUserID', 'UserName', 'Password', 'Nick', 'Icon', 'Mobile', 'Email', 'WechatOpenID']));
             if (userId < 0)
                 return true;
@@ -88,6 +92,8 @@ async function tryUserIn(body, mapUserToUq) {
         if (ret === undefined || typeof ret !== 'number') {
             console.error(body);
             let { id: code, message } = ret;
+            // 在tonva系统中，email和mobile都是不可重复的，但在老系统中，不同loginname的账号可能具有相同的email或mobile
+            // 这样，在第二个loginname导入时，会在其Email或mobile后添加\t
             switch (code) {
                 case -2:
                     body.email += '\t';
