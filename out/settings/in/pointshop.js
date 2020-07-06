@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PlatformOrder = exports.PointProduct = void 0;
+exports.PointShopOrder = exports.PointProduct = void 0;
 const dateformat_1 = __importDefault(require("dateformat"));
 const config_1 = __importDefault(require("config"));
 const uqs_1 = require("../uqs");
@@ -31,16 +31,15 @@ exports.PointProduct = {
         return true;
     }
 };
-exports.PlatformOrder = {
+exports.PointShopOrder = {
     uq: uqs_1.uqs.jkPointShop,
     type: 'map',
-    entity: 'PlatformOrder',
+    entity: 'PointShopOrder',
     mapper: {
         orderItemId: 'OrderItemID',
         orderId: 'OrderID',
         customer: "CustomerID@BuyerAccount",
         orderMaker: 'OrderMaker@Customer',
-        platformOrderId: 'PlatformOrderID',
         description: 'Description',
         descriptionC: 'DescriptionC',
         radiox: 'PackNo',
@@ -58,13 +57,14 @@ exports.PlatformOrder = {
         if ((queue - 8 * 60 * 60 + step_seconds) * 1000 > Date.now())
             return undefined;
         let nextQueue = queue + step_seconds;
-        let sql = `select DATEDIFF(s, '1970-01-01', p.RecordTime) + 1 as ID, p.orderid as OrderItemID, p.SorderID as OrderID, p.CID as CustomerID
-           , p.WorkingColumn2 as PlatformOrderID, p.Description, p.DescriptionC, p.PackNo, p.Packing, p.PUnit as Unit, p.Qty, p.UnitPriceRMB as Price
-           , p.Qty * p.UnitPriceRMB as SubAmount, p.UnitPriceRMBCurrency as CurrencyID, p.Mark, p.UserID as OrderMaker, p.RecordTime
-           from dbs.dbo.vw_SOrdersBJSH p
-           where p.RecordTime >= DATEADD(s, @iMaxId, '1970-01-01') and p.RecordTime <= DATEADD(s, ${nextQueue}, '1970-01-01')
-           and p.WorkingColumn2 is not null and p.userid is not null
-           order by p.RecordTime`;
+        let sql = `
+            select DATEDIFF(s, '1970-01-01', p.RecordTime) + 1 as ID, p.orderid as OrderItemID, p.SorderID as OrderID, p.CID as CustomerID
+                    , p.Description, p.DescriptionC, p.PackNo, p.Packing, p.PUnit as Unit, p.Qty, p.UnitPriceRMB as Price
+                    , p.Qty * p.UnitPriceRMB as SubAmount, p.UnitPriceRMBCurrency as CurrencyID, p.Mark, p.UserID as OrderMaker, p.RecordTime
+            from dbs.dbo.vw_SOrdersBJSH p
+            where p.RecordTime >= DATEADD(s, @iMaxId, '1970-01-01') and p.RecordTime <= DATEADD(s, ${nextQueue}, '1970-01-01')
+            order by p.RecordTime
+           `;
         try {
             let ret = await uqOutRead_1.uqOutRead(sql, queue);
             if (ret === undefined) {

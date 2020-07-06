@@ -175,6 +175,10 @@
         {
             "name": "CustomerPosition",
             "inervalUnit": 1
+        },
+        {
+            "name": "PointShopOrder",
+            "inervalUnit": 1
         }
     ],
     "uqBus": [

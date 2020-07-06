@@ -12,7 +12,7 @@ const customer_1 = require("../settings/in/customer");
 const promotion_1 = require("../settings/in/promotion");
 const customerDiscount_1 = require("../settings/in/customerDiscount");
 const hr_1 = require("../settings/in/hr");
-const pointshop_1 = require("settings/in/pointshop");
+//import { PointShopOrder } from 'settings/in/pointshop';
 const VIPCardLevel_1 = require("settings/in/VIPCardLevel");
 /** */
 exports.pulls = {
@@ -57,7 +57,7 @@ exports.pulls = {
     "PromotionType": { read: sqls_1.sqls.readPromotionType, uqIn: promotion_1.PromotionType },
     "PromotionStatus": { read: sqls_1.sqls.readPromotionStatus, uqIn: promotion_1.PromotionStatus },
     "Promotion": { read: sqls_1.sqls.readPromotion, uqIn: promotion_1.Promotion },
-    "PlatformOrder": { read: sqls_1.sqls.readPlatformOrder, uqIn: pointshop_1.PlatformOrder },
+    //"SaleOrder": { read: sqls.readSaleOrder, uqIn: PointShopOrder },
     // 
     "OrganizationVIPLevel": { read: sqls_1.sqls.readOrganizationVIPLevel, uqIn: VIPCardLevel_1.OrganizationVIPLevel },
 };

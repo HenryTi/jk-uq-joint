@@ -18,7 +18,7 @@ import { Agreement, CustomerDiscount, OrganizationDiscount } from "./customerDis
 import { Employee } from "./hr";
 import { JkTaskType, JkTask, Importcustomerdata } from "./salestask";
 import { WebUser, WebUserTonva, WebUserContact, WebUserCustomer, WebUserSetting, WebUserSettingAlter, WebUserSettingType, WebUserContacts, WebUserBuyerAccount } from "./webUser";
-import { PointProduct, PlatformOrder } from "./pointshop";
+import { PointProduct, PointShopOrder } from "./pointshop";
 import { OrganizationVIPLevel } from "./VIPCardLevel";
 
 const uqIns = [
@@ -105,7 +105,7 @@ const uqIns = [
     JkTask,
 
     PointProduct,
-    PlatformOrder,
+    PointShopOrder,
     Importcustomerdata,
 
     OrganizationVIPLevel,

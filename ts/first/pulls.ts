@@ -11,7 +11,7 @@ import { Organization, Customer, Contact, BuyerAccount, CustomerBuyerAccount, Cu
 import { Promotion, PromotionLanguage, PromotionPackDiscount, PromotionType, PromotionStatus } from '../settings/in/promotion';
 import { Agreement } from '../settings/in/customerDiscount';
 import { Employee } from '../settings/in/hr';
-import { PlatformOrder } from 'settings/in/pointshop';
+//import { PointShopOrder } from 'settings/in/pointshop';
 import { OrganizationVIPLevel } from 'settings/in/VIPCardLevel';
 
 /**
@@ -84,7 +84,7 @@ export const pulls: {
     "PromotionStatus": { read: sqls.readPromotionStatus, uqIn: PromotionStatus },
     "Promotion": { read: sqls.readPromotion, uqIn: Promotion },
 
-    "PlatformOrder": { read: sqls.readPlatformOrder, uqIn: PlatformOrder },
+    //"SaleOrder": { read: sqls.readSaleOrder, uqIn: PointShopOrder },
 
     // 
     "OrganizationVIPLevel": { read: sqls.readOrganizationVIPLevel, uqIn: OrganizationVIPLevel },
