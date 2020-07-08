@@ -60,7 +60,7 @@ exports.PointShopOrder = {
         let sql = `
             select DATEDIFF(s, '1970-01-01', p.RecordTime) + 1 as ID, p.orderid as OrderItemID, p.SorderID as OrderID, p.CID as CustomerID
                     , p.Description, p.DescriptionC, p.PackNo, p.Packing, p.PUnit as Unit, p.Qty, p.UnitPriceRMB as Price
-                    , p.Qty * p.UnitPriceRMB as SubAmount, p.UnitPriceRMBCurrency as CurrencyID, p.Mark, p.UserID as OrderMaker, p.RecordTime
+                    , p.Qty * p.UnitPriceRMB as SubAmount, p.UnitPriceRMBCurrency as CurrencyID, p.Mark, isnull(p.UserID, p.cid) as OrderMaker, p.RecordTime
             from dbs.dbo.vw_SOrdersBJSH p
             where p.RecordTime >= DATEADD(s, @iMaxId, '1970-01-01') and p.RecordTime <= DATEADD(s, ${nextQueue}, '1970-01-01')
             order by p.RecordTime
