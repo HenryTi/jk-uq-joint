@@ -102,6 +102,7 @@ export const faceOrder: UqBus = {
         */
         freightFee: true,
         freeghtFeeRemitted: true,
+        Comments: 'comments',
         CreateDate: 'createDate',
         SaleOrderItems: {
             $name: "orderItems",

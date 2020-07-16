@@ -103,6 +103,7 @@ exports.faceOrder = {
         */
         freightFee: true,
         freeghtFeeRemitted: true,
+        Comments: 'comments',
         CreateDate: 'createDate',
         SaleOrderItems: {
             $name: "orderItems",
