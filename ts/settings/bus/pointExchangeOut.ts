@@ -80,6 +80,9 @@ export const facePointExchange: UqBus = {
     }
 };
 
+/**
+ * 用于将tonva订单积分导入到内部系统
+ */
 export const facePointOut: UqBus = {
     face: '百灵威系统工程部/pointShop/couponUsed',
     from: 'local',
@@ -110,3 +113,36 @@ export const facePointOut: UqBus = {
         return true;
     }
 }
+
+/*
+export const faceSignInPointOut: UqBus = {
+    face: '百灵威系统工程部/pointShop/signIn',
+    from: 'local',
+    mapper: {
+        orderId: true,
+        Customer: "customer@Customer",
+        amount: true,
+        currency: "currency@Currency",
+        point: true,
+        coupon: true
+    },
+    push: async (joint: Joint, uqBus: UqBus, queue: number, data: any): Promise<boolean> => {
+        let { Customer, point } = data;
+        let title = 'tonva积分';
+        let remark = '签到等立即生效的积分';
+        let now = new Date();
+        // 从tonva导来的积分，全部是未生效的积分
+        await execSql(
+            `insert into dbs.dbo.MScoreAlter(CID, MScore, MSYear, title, Note, EPID, IsEffective)
+            values(@customer, @point, @year, @title, @note, @employee, 1)`, [
+            { 'name': 'customer', 'value': Customer },
+            { 'name': 'point', 'value': point },
+            { 'name': 'year', 'value': now.getFullYear() },
+            { 'name': 'title', 'value': title },
+            { 'name': 'note', 'value': remark },
+            { 'name': 'employee', 'value': 'LCT' },
+        ]);
+        return true;
+    }
+}
+*/

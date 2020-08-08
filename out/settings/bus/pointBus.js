@@ -10,6 +10,12 @@ const facePointPush = async (joint, uqBus, queue, data) => {
     let ret = await webApiClient_1.httpClient.test({});
     return true;
 };
+/**
+ * 客户积分导入tonva系统所需的数据源，export_customerScoreBook来自job: 1H-把订单关联市场活动积分。
+ * @param joint
+ * @param uqBus
+ * @param queue
+ */
 const facePointPull = async (joint, uqBus, queue) => {
     let sql = `select top 1 ID, CID as CustomerID, Years, AllScore, ScoreEffective, ScoreUsed
         from ProdData.dbo.Export_CustomerScoreBook

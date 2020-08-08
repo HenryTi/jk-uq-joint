@@ -22,6 +22,9 @@ exports.PointProduct = {
             endDate: "^EndDate"
         }
     },
+    /*
+     * Export_PointProduct中的数据通过dbs.dbo.MGift上的Trigger写入，起开始时间结束时间为活动A08-20160422A的开始时间和结束时间
+    */
     pull: `select top ${promiseSize} p.ID, p.PackageID, j.jkid as ProductID, p.Point, p.StartDate, p.EndDate, p.Comments from ProdData.dbo.Export_PointProduct p
     inner join zcl_mess.dbo.jkcat j on j.jkcat = p.PackageID where p.ID > @iMaxId order by ID`,
     pullWrite: async (joint, uqIn, data) => {
