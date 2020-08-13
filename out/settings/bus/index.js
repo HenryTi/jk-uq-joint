@@ -26,6 +26,8 @@ exports.bus = {
     "faceProductInventory": productInventoryBus_1.faceProductInventory,
     "facePointExchange": pointExchangeOut_1.facePointExchange,
     "facePointOut": pointExchangeOut_1.facePointOut,
+    "faceCreditsUsedByCustomer": pointExchangeOut_1.faceCreditsUsedByCustomer,
+    "faceCreditsDrawedByCustomer": pointExchangeOut_1.faceCreditsDrawedByCustomer,
     "faceOrderPayment": orderPayment_1.faceOrderPayment,
     "faceOrderAudit": orderAuditBus_1.faceOrderAudit,
     "faceDeliveryConfirm": deliveryConfirmBus_1.faceDeliveryConfirm,

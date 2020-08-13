@@ -114,6 +114,56 @@ export const facePointOut: UqBus = {
     }
 }
 
+/**
+ * 用于将客户领用的积分码导入内部系统（后续会据此匹配内部订单给双倍积分） 
+ */
+export const faceCreditsDrawedByCustomer: UqBus = {
+    face: '百灵威系统工程部/coupon/creditsDrawedByCustomer',
+    from: 'local',
+    mapper: {
+        Customer: "customer@Customer",
+        coupon: true
+    },
+    push: async (joint: Joint, uqBus: UqBus, queue: number, data: any): Promise<boolean> => {
+        let { Customer, coupon } = data;
+        await execSql(
+            `insert into dbs.dbo.tonvaCreditsDrawed (CustomerID, CreditsID, CreateDate, IsUsed)
+            values(@Customer, @CreditsId, getdate(), 0)`, [
+            { 'name': 'Customer', 'value': Customer },
+            { 'name': 'CreditsID', 'value': coupon },
+        ]);
+        return true;
+    }
+}
+
+/**
+ * 用于将tonva订单使用的coupon导入到内部系统(后续据此计算内部系统的积分)
+ */
+export const faceCreditsUsedByCustomer: UqBus = {
+    face: '百灵威系统工程部/coupon/creditsUsedByCustomer',
+    from: 'local',
+    mapper: {
+        orderId: true,
+        Customer: "customer@Customer",
+        amount: true,
+        currency: "currency@Currency",
+        point: true,
+        coupon: true
+    },
+    push: async (joint: Joint, uqBus: UqBus, queue: number, data: any): Promise<boolean> => {
+        let { orderId, Customer, point, coupon } = data;
+        await execSql(`exec dbs.dbo.tv_SalesOrderCredits @SOrderID, @CustomerID, @CreditsID, @Point, @Rate;
+            delete from dbs.dbo.tonvaCreditsDrawed where CustomerID = @CustomerID and CreditsID = @CreditsID `, [
+            { 'name': 'SOrderID', 'value': orderId },
+            { 'name': 'CustomerID', 'value': Customer },
+            { 'name': 'CreditsID', 'value': coupon },
+            { 'name': 'Point', 'value': point },
+            { 'name': 'Rate', 'value': 2 },
+        ])
+        return true;
+    }
+}
+
 /*
 export const faceSignInPointOut: UqBus = {
     face: '百灵威系统工程部/pointShop/signIn',
