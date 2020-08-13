@@ -347,3 +347,20 @@ export const CustomerPosition: UqInMap = {
             from    ProdData.dbo.Export_ResearchDetail
             where   type = 'B' and ID > @iMaxId order by ID`
 };
+
+
+export const CustomerRelatedProducts: UqInMap = {
+    uq: uqs.jkCustomer,
+    type: 'map',
+    entity: 'CustomerRelatedProducts',
+    mapper: {
+        customer: 'customer@Customer',
+        arr1: {
+            product: '^product@ProductX',
+            sort: 'ID',
+        }
+    },
+    pull: ` select  top ${promiseSize}ID,  customer, product
+            from    ProdData.dbo.Export_CustomerProduct
+            where   ID > @iMaxId order by ID`
+};

@@ -3,7 +3,7 @@ import { SalesRegion, Currency, PackType, PackTypeStandard, PackTypeMapToStandar
 import {
     Brand, ProductSalesRegion, ProductLegallyProhibited, ProductX, ProductPackX,
     PriceX, AgentPrice, BrandSalesRegion, BrandDeliveryTime, ProductChemical, InvalidProduct,
-    ProductMSDSFile, ProductSpecFile
+    ProductMSDSFile, ProductSpecFile, ProductSalesRank
 } from "./product";
 import { Warehouse, SalesRegionWarehouse } from "./warehouse";
 import { Chemical } from "./chemical";
@@ -11,7 +11,7 @@ import { Promotion, PromotionSalesRegion, PromotionLanguage, PromotionPackDiscou
 import {
     Customer, Organization, OrganizationCustomer, CustomerContact, CustomerContacts, Contact, InvoiceInfo,
     CustomerHandler, CustomerContractor, BuyerAccount, CustomerBuyerAccount, Department, CustomerDepartment,
-    Position, CustomerDomain, CustomerPosition
+    Position, CustomerDomain, CustomerPosition, CustomerRelatedProducts
 } from "./customer";
 import { ProductCategory, ProductCategoryLanguage, ProductProductCategory } from "./productCategory";
 import { Agreement, CustomerDiscount, OrganizationDiscount } from "./customerDiscount";
@@ -60,6 +60,8 @@ const uqIns = [
 
     ProductMSDSFile,
     ProductSpecFile,
+    ProductSalesRank,
+
 
     Warehouse,                  // 还没有日常的数据交换，变化较小，不必有？
     SalesRegionWarehouse,       // 还没有日常的数据交换，变化较小，不必有？
@@ -108,7 +110,7 @@ const uqIns = [
     PointShopOrder,
     Importcustomerdata,
 
-    OrganizationVIPLevel,
+    OrganizationVIPLevel
 ]
 
 export default uqIns;

@@ -360,3 +360,20 @@ export const ProductSpecFile: UqInMap = {
         }
     }
 }
+
+
+
+export const ProductSalesRank: UqInMap = {
+    uq: uqs.jkProduct,
+    type: 'map',
+    entity: 'ProductSalesRank',
+    mapper: {
+        product: "ProductID@ProductX",
+        rank: "Rank"
+    },
+    pull: ` select top ${promiseSize}  ID, ProductID, Rank
+            from    ProdData.dbo.Export_ProductSalesRank AS a
+            where   a.ID >= @iMaxId
+            order by a.ID;`,
+
+}

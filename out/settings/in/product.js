@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ProductSpecFile = exports.ProductMSDSFile = exports.ProductExtensionProperty = exports.ProductLegallyProhibited = exports.ProductSalesRegion = exports.ProductChemical = exports.AgentPrice = exports.PriceX = exports.ProductPackX = exports.InvalidProduct = exports.ProductX = exports.BrandDeliveryTime = exports.BrandSalesRegion = exports.Brand = void 0;
+exports.ProductSalesRank = exports.ProductSpecFile = exports.ProductMSDSFile = exports.ProductExtensionProperty = exports.ProductLegallyProhibited = exports.ProductSalesRegion = exports.ProductChemical = exports.AgentPrice = exports.PriceX = exports.ProductPackX = exports.InvalidProduct = exports.ProductX = exports.BrandDeliveryTime = exports.BrandSalesRegion = exports.Brand = void 0;
 const uqs_1 = require("../uqs");
 const productPullWrite_1 = require("../../first/converter/productPullWrite");
 const tools_1 = require("../../mssql/tools");
@@ -349,5 +349,18 @@ exports.ProductSpecFile = {
             throw error;
         }
     }
+};
+exports.ProductSalesRank = {
+    uq: uqs_1.uqs.jkProduct,
+    type: 'map',
+    entity: 'ProductSalesRank',
+    mapper: {
+        product: "ProductID@ProductX",
+        rank: "Rank"
+    },
+    pull: ` select top ${promiseSize}  ID, ProductID, Rank
+            from    ProdData.dbo.Export_ProductSalesRank AS a
+            where   a.ID >= @iMaxId
+            order by a.ID;`,
 };
 //# sourceMappingURL=product.js.map

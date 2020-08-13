@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CustomerPosition = exports.Position = exports.CustomerDomain = exports.CustomerDepartment = exports.Department = exports.CustomerBuyerAccount = exports.BuyerAccount = exports.CustomerContractor = exports.CustomerHandler = exports.CustomerSetting = exports.InvoiceInfo = exports.Contact = exports.CustomerContacts = exports.CustomerContact = exports.OrganizationCustomer = exports.Organization = exports.Customer = void 0;
+exports.CustomerRelatedProducts = exports.CustomerPosition = exports.Position = exports.CustomerDomain = exports.CustomerDepartment = exports.Department = exports.CustomerBuyerAccount = exports.BuyerAccount = exports.CustomerContractor = exports.CustomerHandler = exports.CustomerSetting = exports.InvoiceInfo = exports.Contact = exports.CustomerContacts = exports.CustomerContact = exports.OrganizationCustomer = exports.Organization = exports.Customer = void 0;
 const uqs_1 = require("../uqs");
 const customerPullWrite_1 = require("../../first/converter/customerPullWrite");
 const config_1 = __importDefault(require("config"));
@@ -295,5 +295,20 @@ exports.CustomerPosition = {
     pull: ` select top ${promiseSize}ID,  customer,research
             from    ProdData.dbo.Export_ResearchDetail
             where   type = 'B' and ID > @iMaxId order by ID`
+};
+exports.CustomerRelatedProducts = {
+    uq: uqs_1.uqs.jkCustomer,
+    type: 'map',
+    entity: 'CustomerRelatedProducts',
+    mapper: {
+        customer: 'customer@Customer',
+        arr1: {
+            product: '^product@ProductX',
+            sort: 'ID',
+        }
+    },
+    pull: ` select  top ${promiseSize}ID,  customer, product
+            from    ProdData.dbo.Export_CustomerProduct
+            where   ID > @iMaxId order by ID`
 };
 //# sourceMappingURL=customer.js.map

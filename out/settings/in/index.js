@@ -46,6 +46,7 @@ const uqIns = [
     productCategory_1.ProductProductCategory,
     product_1.ProductMSDSFile,
     product_1.ProductSpecFile,
+    product_1.ProductSalesRank,
     warehouse_1.Warehouse,
     warehouse_1.SalesRegionWarehouse,
     promotion_1.PromotionType,
@@ -86,7 +87,7 @@ const uqIns = [
     pointshop_1.PointProduct,
     pointshop_1.PointShopOrder,
     salestask_1.Importcustomerdata,
-    VIPCardLevel_1.OrganizationVIPLevel,
+    VIPCardLevel_1.OrganizationVIPLevel
 ];
 exports.default = uqIns;
 //# sourceMappingURL=index.js.map
