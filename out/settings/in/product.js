@@ -360,7 +360,7 @@ exports.ProductSalesRank = {
     },
     pull: ` select top ${promiseSize}  ID, ProductID, Rank
             from    ProdData.dbo.Export_ProductSalesRank AS a
-            where   a.ID >= @iMaxId
+            where   a.ID > @iMaxId
             order by a.ID;`,
 };
 //# sourceMappingURL=product.js.map
