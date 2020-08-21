@@ -1,6 +1,6 @@
-import { UqBus, DataPush, Joint, DataPull, DataPullResult } from "uq-joint";
-import { uqPullRead, uqOutRead } from "../../first/converter/uqOutRead";
-import { execSql } from "mssql/tools";
+import { UqBus, Joint, DataPullResult } from "uq-joint";
+import { uqOutRead } from "../../first/converter/uqOutRead";
+import { execSql } from "../../mssql/tools";
 
 /**
  * 客户积分导入tonva系统所需的数据源，export_customerScoreBook来自job: 1H-把订单关联市场活动积分。

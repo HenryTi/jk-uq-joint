@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.faceCreditsInnerMatched = exports.facePoint = void 0;
 const uqOutRead_1 = require("../../first/converter/uqOutRead");
-const tools_1 = require("mssql/tools");
+const tools_1 = require("../../mssql/tools");
 /**
  * 客户积分导入tonva系统所需的数据源，export_customerScoreBook来自job: 1H-把订单关联市场活动积分。
  */
