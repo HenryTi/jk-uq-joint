@@ -7,6 +7,9 @@ import { UqIn } from "uq-joint";
 
 const promiseSize = config.get<number>("promiseSize");
 
+/**
+ * TODO: 积分产品导入到tonva系统
+ */
 export const PointProduct: UqInMap = {
     uq: uqs.jkPointShop,
     type: 'map',
@@ -33,6 +36,9 @@ export const PointProduct: UqInMap = {
     }
 }
 
+/**
+ * TODO: 删除 —— 订单导入PointShop，用来进行积分券匹配
+ */
 export const PointShopOrder: UqInMap = {
     uq: uqs.jkPointShop,
     type: 'map',

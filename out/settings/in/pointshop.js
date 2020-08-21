@@ -9,6 +9,9 @@ const config_1 = __importDefault(require("config"));
 const uqs_1 = require("../uqs");
 const uqOutRead_1 = require("../../first/converter/uqOutRead");
 const promiseSize = config_1.default.get("promiseSize");
+/**
+ * TODO: 积分产品导入到tonva系统
+ */
 exports.PointProduct = {
     uq: uqs_1.uqs.jkPointShop,
     type: 'map',
@@ -34,6 +37,9 @@ exports.PointProduct = {
         return true;
     }
 };
+/**
+ * TODO: 删除 —— 订单导入PointShop，用来进行积分券匹配
+ */
 exports.PointShopOrder = {
     uq: uqs_1.uqs.jkPointShop,
     type: 'map',

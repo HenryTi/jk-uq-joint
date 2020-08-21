@@ -39,6 +39,9 @@ const facePointExchangePush = async (joint, uqBus, queue, orderIn) => {
     }
     return true;
 };
+/**
+ * 积分兑换单导入到内部系统
+ */
 exports.facePointExchange = {
     face: '百灵威系统工程部/pointShop/pointExchangeSheet',
     from: 'local',
@@ -77,7 +80,7 @@ exports.facePointExchange = {
     }
 };
 /**
- * 用于将tonva订单积分导入到内部系统
+ * TODO:删除——由CreditsUsedByCustomer替换——用于将tonva订单积分导入到内部系统
  */
 exports.facePointOut = {
     face: '百灵威系统工程部/pointShop/couponUsed',
@@ -116,15 +119,24 @@ exports.faceCreditsDrawedByCustomer = {
     from: 'local',
     mapper: {
         Customer: "customer@Customer",
-        coupon: true
+        coupons: {
+            coupon: true,
+            createDate: true,
+            expiredDate: true,
+        },
     },
     push: async (joint, uqBus, queue, data) => {
-        let { Customer, coupon } = data;
-        await tools_1.execSql(`insert into dbs.dbo.tonvaCreditsDrawed (CustomerID, CreditsID, CreateDate, IsUsed)
-            values(@Customer, @CreditsId, getdate(), 0)`, [
-            { 'name': 'Customer', 'value': Customer },
-            { 'name': 'CreditsID', 'value': coupon },
-        ]);
+        let { Customer, coupons } = data;
+        for (let i = 0; i < coupons.length; i++) {
+            let { coupon, createDate, expiredDate } = coupons[i];
+            await tools_1.execSql(`insert into dbs.dbo.tonvaCreditsDrawed (CustomerID, CreditsID, CreateDate, ExpiredDate, IsUsed)
+                values(@Customer, @CreditsId, @CreateDate, @ExpiredDate, 0)`, [
+                { 'name': 'Customer', 'value': Customer },
+                { 'name': 'CreditsID', 'value': coupon },
+                { 'name': 'CreateDate', 'value': createDate },
+                { 'name': 'ExpiredDate', 'value': expiredDate },
+            ]);
+        }
         return true;
     }
 };
@@ -140,17 +152,34 @@ exports.faceCreditsUsedByCustomer = {
         amount: true,
         currency: "currency@Currency",
         point: true,
-        coupon: true
+        coupon: true,
+        orderItems: {
+            row: "row",
+            orderItemId: true,
+            point: true,
+        }
     },
     push: async (joint, uqBus, queue, data) => {
-        let { orderId, Customer, point, coupon } = data;
-        await tools_1.execSql(`exec dbs.dbo.tv_SalesOrderCredits @SOrderID, @CustomerID, @CreditsID, @Point, @Rate;
-            delete from dbs.dbo.tonvaCreditsDrawed where CustomerID = @CustomerID and CreditsID = @CreditsID `, [
-            { 'name': 'SOrderID', 'value': orderId },
+        let { orderId, Customer, coupon, orderItems } = data;
+        if (orderItems && orderItems.length > 0) {
+            for (let i = 0; i < orderItems.length; i++) {
+                let { row, orderItemId, point } = orderItems[i];
+                if (!orderItemId)
+                    orderItemId = orderId + (i + 1).toString().padStart(5, '0');
+                await tools_1.execSql(`exec dbs.dbo.lp_tonvaCreditsUsed @OrderID, @SOrderID, @CustomerID, @CreditsID, @Point;`, [
+                    { 'name': 'OrderID', 'value': orderItemId },
+                    { 'name': 'SOrderID', 'value': orderId },
+                    { 'name': 'CustomerID', 'value': Customer },
+                    { 'name': 'CreditsID', 'value': coupon },
+                    { 'name': 'Point', 'value': point }
+                ]);
+            }
+        }
+        else {
+        }
+        await tools_1.execSql(`delete from dbs.dbo.tonvaCreditsDrawed where CustomerID = @CustomerID and CreditsID = @CreditsID`, [
             { 'name': 'CustomerID', 'value': Customer },
             { 'name': 'CreditsID', 'value': coupon },
-            { 'name': 'Point', 'value': point },
-            { 'name': 'Rate', 'value': 2 },
         ]);
         return true;
     }
@@ -175,7 +204,7 @@ export const faceSignInPointOut: UqBus = {
         // 从tonva导来的积分，全部是未生效的积分
         await execSql(
             `insert into dbs.dbo.MScoreAlter(CID, MScore, MSYear, title, Note, EPID, IsEffective)
-            values(@customer, @point, @year, @title, @note, @employee, 1)`, [
+        values(@customer, @point, @year, @title, @note, @employee, 1)`, [
             { 'name': 'customer', 'value': Customer },
             { 'name': 'point', 'value': point },
             { 'name': 'year', 'value': now.getFullYear() },
