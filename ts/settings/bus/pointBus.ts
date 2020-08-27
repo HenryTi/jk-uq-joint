@@ -52,7 +52,7 @@ export const faceCreditsInnerMatched: UqBus = {
                 let { SOrderID, CustomerID } = data[i];
                 data[i].orderItems = [];
                 let ret = await execSql(`select orderId as orderItemID, qty * unitPriceRMB * 2 as point 
-                from dbs.dbo.vw_sordersbjsh where sorderid = @SOrderID and isnull(UserId, CID) = @CustomerID`,
+                from dbs.dbo.vw_sordersbjsh where sorderid = @SOrderID and isnull(UserId, CID) = @CustomerID and Mark <> 'C'`,
                     [
                         { 'name': 'SOrderID', 'value': SOrderID },
                         { 'name': 'CustomerID', 'value': CustomerID },
