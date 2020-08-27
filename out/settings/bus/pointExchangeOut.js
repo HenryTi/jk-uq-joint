@@ -119,6 +119,7 @@ exports.faceCreditsDrawedByCustomer = {
     from: 'local',
     mapper: {
         Customer: "customer@Customer",
+        WebUser: "webUser",
         coupons: {
             coupon: true,
             createDate: true,
@@ -126,12 +127,13 @@ exports.faceCreditsDrawedByCustomer = {
         },
     },
     push: async (joint, uqBus, queue, data) => {
-        let { Customer, coupons } = data;
+        let { Customer, WebUser, coupons } = data;
         for (let i = 0; i < coupons.length; i++) {
             let { coupon, createDate, expiredDate } = coupons[i];
-            await tools_1.execSql(`insert into dbs.dbo.tonvaCreditsDrawed (CustomerID, CreditsID, CreateDate, ExpiredDate, IsUsed)
-                values(@Customer, @CreditsId, @CreateDate, @ExpiredDate, 0)`, [
+            await tools_1.execSql(`insert into dbs.dbo.tonvaCreditsDrawed (CustomerID, WebUserID, CreditsID, CreateDate, ExpiredDate, IsUsed)
+                values(@Customer, @WebUser, @CreditsId, @CreateDate, @ExpiredDate, 0)`, [
                 { 'name': 'Customer', 'value': Customer },
+                { 'name': 'WebUser', 'value': WebUser },
                 { 'name': 'CreditsID', 'value': coupon },
                 { 'name': 'CreateDate', 'value': createDate },
                 { 'name': 'ExpiredDate', 'value': expiredDate },
