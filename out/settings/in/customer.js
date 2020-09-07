@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CustomerRelatedProducts = exports.CustomerPosition = exports.Position = exports.CustomerDomain = exports.CustomerDepartment = exports.Department = exports.CustomerBuyerAccount = exports.BuyerAccount = exports.CustomerContractor = exports.CustomerHandler = exports.CustomerSetting = exports.InvoiceInfo = exports.Contact = exports.CustomerContacts = exports.CustomerContact = exports.OrganizationCustomer = exports.Organization = exports.Customer = void 0;
+exports.CustomerRelatedProducts = exports.CustomerPosition = exports.Position = exports.Research = exports.CustomerResearch = exports.CustomerDepartment = exports.Department = exports.CustomerBuyerAccount = exports.BuyerAccount = exports.CustomerContractor = exports.CustomerHandler = exports.CustomerSetting = exports.InvoiceInfo = exports.Contact = exports.CustomerContacts = exports.CustomerContact = exports.OrganizationCustomer = exports.Organization = exports.Customer = void 0;
 const uqs_1 = require("../uqs");
 const customerPullWrite_1 = require("../../first/converter/customerPullWrite");
 const config_1 = __importDefault(require("config"));
@@ -254,18 +254,37 @@ exports.CustomerDepartment = {
             from    ProdData.dbo.Export_CustomerDepartment
             where   ID > @iMaxId order by ID`
 };
-exports.CustomerDomain = {
+exports.CustomerResearch = {
     uq: uqs_1.uqs.jkCustomer,
     type: 'map',
-    entity: 'CustomerDomain',
+    entity: 'CustomerResearch',
     mapper: {
         customer: 'customer@Customer',
         arr1: {
-            domain: '^domain',
+            research: '^research@Research',
+            createTime: '^createdate',
         }
     },
-    pull: ` select top ${promiseSize} ID, customer,research as domain
+    pull: ` select top ${promiseSize} ID, customer,research, createdate
             from    ProdData.dbo.Export_ResearchDetail
+            where   type = 'C' and ID > @iMaxId order by ID`
+};
+exports.Research = {
+    uq: uqs_1.uqs.jkCustomer,
+    type: "tuid",
+    entity: "Research",
+    key: "research",
+    mapper: {
+        customer: 'customer@Customer',
+        mapper: {
+            $id: "research@Research",
+            no: "research",
+            name: "researchname",
+            createTime: "createdate"
+        },
+    },
+    pull: ` select top ${promiseSize} ID, research, researchname, createdate
+            from    ProdData.dbo.Export_Research
             where   type = 'C' and ID > @iMaxId order by ID`
 };
 exports.Position = {

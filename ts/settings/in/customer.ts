@@ -303,20 +303,41 @@ export const CustomerDepartment: UqInMap = {
             where   ID > @iMaxId order by ID`
 };
 
-export const CustomerDomain: UqInMap = {
+export const CustomerResearch: UqInMap = {
     uq: uqs.jkCustomer,
     type: 'map',
-    entity: 'CustomerDomain',
+    entity: 'CustomerResearch',
     mapper: {
         customer: 'customer@Customer',
         arr1: {
-            domain: '^domain',
+            research: '^research@Research',
+            createTime: '^createdate',
         }
     },
-    pull: ` select top ${promiseSize} ID, customer,research as domain
+    pull: ` select top ${promiseSize} ID, customer,research, createdate
             from    ProdData.dbo.Export_ResearchDetail
             where   type = 'C' and ID > @iMaxId order by ID`
 };
+
+export const Research: UqInTuid = {
+    uq: uqs.jkCustomer,
+    type: "tuid",
+    entity: "Research",
+    key: "research",
+    mapper: {
+        customer: 'customer@Customer',
+        mapper: {
+            $id: "research@Research",
+            no: "research",
+            name: "researchname",
+            createTime: "createdate"
+        },
+    },
+    pull: ` select top ${promiseSize} ID, research, researchname, createdate
+            from    ProdData.dbo.Export_Research
+            where   type = 'C' and ID > @iMaxId order by ID`
+};
+
 
 export const Position: UqInTuid = {
     uq: uqs.jkCustomer,

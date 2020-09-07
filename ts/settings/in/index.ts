@@ -11,7 +11,7 @@ import { Promotion, PromotionSalesRegion, PromotionLanguage, PromotionPackDiscou
 import {
     Customer, Organization, OrganizationCustomer, CustomerContact, CustomerContacts, Contact, InvoiceInfo,
     CustomerHandler, CustomerContractor, BuyerAccount, CustomerBuyerAccount, Department, CustomerDepartment,
-    Position, CustomerDomain, CustomerPosition, CustomerRelatedProducts
+    Position, CustomerResearch, CustomerPosition, CustomerRelatedProducts, Research
 } from "./customer";
 import { ProductCategory, ProductCategoryLanguage, ProductProductCategory } from "./productCategory";
 import { Agreement, CustomerDiscount, OrganizationDiscount } from "./customerDiscount";
@@ -86,9 +86,11 @@ const uqIns = [
     InvoiceInfo,
     Department,
     CustomerDepartment,
-    CustomerDomain,
+    Research,
+    CustomerResearch,
     Position,
     CustomerPosition,
+
 
     Agreement,
     CustomerDiscount,
