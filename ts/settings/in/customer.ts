@@ -314,7 +314,7 @@ export const CustomerResearch: UqInMap = {
             createTime: '^createdate',
         }
     },
-    pull: ` select top ${promiseSize} ID, customer,research, createdate
+    pull: ` select top ${promiseSize} ID, customer, research, createdate, case IsDeleted when 1 then '-' else '' end as [$]
             from    ProdData.dbo.Export_ResearchDetail
             where   type = 'C' and ID > @iMaxId order by ID`
 };
