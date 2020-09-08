@@ -48,7 +48,7 @@ exports.ProductProductCategory = {
             category: "^ProductCategoryID@ProductCategory"
         },
     },
-    pull: `select top ${promiseSize} ID, SaleProductProductCategoryID, SaleProductID, ProductCategoryID, IsValid
+    pull: `select top 1 ID, SaleProductProductCategoryID, SaleProductID, ProductCategoryID, IsValid
         from ProdData.dbo.Export_SaleProductProductCategory where ID > @iMaxId order by ID`,
 };
 //# sourceMappingURL=productCategory.js.map
