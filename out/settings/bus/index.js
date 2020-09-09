@@ -13,6 +13,7 @@ const orderCouponUsqBus_1 = require("./orderCouponUsqBus");
 const assistAchievementsBus_1 = require("./assistAchievementsBus");
 const orderHistory_1 = require("./orderHistory");
 const bulkInquiryBook_1 = require("./bulkInquiryBook");
+const assistCustomerNowSales_1 = require("./assistCustomerNowSales");
 exports.bus = {
     "faceOrder": orderUsqBus_1.faceOrder,
     "faceUser": webUserBus_1.faceUser,
@@ -34,6 +35,7 @@ exports.bus = {
     "faceDeliveryConfirm": deliveryConfirmBus_1.faceDeliveryConfirm,
     "faceOrderCoupon": orderCouponUsqBus_1.faceOrderCoupon,
     "faceAssistAchievementsBus": assistAchievementsBus_1.faceAssistAchievementsBus,
+    "faceAssistCustomerNowSales": assistCustomerNowSales_1.faceAssistCustomerNowSales,
     "faceOrderHistory": orderHistory_1.faceOrderHistory,
     "faceBulkInquiryBook": bulkInquiryBook_1.faceBulkInquiryBook,
 };

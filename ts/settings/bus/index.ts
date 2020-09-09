@@ -11,6 +11,7 @@ import { faceOrderCoupon } from "./orderCouponUsqBus";
 import { faceAssistAchievementsBus } from "./assistAchievementsBus";
 import { faceOrderHistory } from "./orderHistory";
 import { faceBulkInquiryBook } from "./bulkInquiryBook";
+import { faceAssistCustomerNowSales } from "./assistCustomerNowSales";
 
 export const bus: { [busName: string]: UqBus } = {
     "faceOrder": faceOrder,
@@ -35,6 +36,7 @@ export const bus: { [busName: string]: UqBus } = {
     "faceDeliveryConfirm": faceDeliveryConfirm,
     "faceOrderCoupon": faceOrderCoupon,
     "faceAssistAchievementsBus": faceAssistAchievementsBus,
+    "faceAssistCustomerNowSales": faceAssistCustomerNowSales,
     "faceOrderHistory": faceOrderHistory,
     "faceBulkInquiryBook": faceBulkInquiryBook,
 };

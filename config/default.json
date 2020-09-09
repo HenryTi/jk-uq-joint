@@ -221,6 +221,7 @@
         "faceOrderAudit",
         "faceDeliveryConfirm",
         "faceOrderCoupon",
-        "faceAssistAchievementsBus"
+        "faceAssistAchievementsBus",
+        "faceAssistCustomerNowSales"
     ]
 }
