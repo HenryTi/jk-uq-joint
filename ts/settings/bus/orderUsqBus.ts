@@ -28,6 +28,7 @@ const faceOrderPush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus, queue:
         element.Id = orderOut.Id + (index + 1).toString().padStart(5, '0');
         element.TransportMethod = { Id: 'Y' };
         element.SalePrice = { Value: element.Price, Currency: element.Currency };
+        element.EndUserId = orderIn.endUserId;
     });
     // console.log(orderOut);
     // 调用7.253的web api
@@ -92,7 +93,8 @@ export const faceOrder: UqBus = {
         id: true,
         type: true,
         Id: "no",
-        Customer: "customer@BuyerAccount",
+        Customer: "buyerAccount@BuyerAccount",
+        endUserId: "customer@Customer",
         shippingContact: true,
         invoiceContact: true,
         /*
