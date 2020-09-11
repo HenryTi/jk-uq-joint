@@ -86,7 +86,6 @@ const uqIns = [
     webUser_1.WebUserSettingAlter,
     salestask_1.JkTask,
     pointshop_1.PointProduct,
-    pointshop_1.PointShopOrder,
     salestask_1.Importcustomerdata,
     VIPCardLevel_1.OrganizationVIPLevel
 ];
