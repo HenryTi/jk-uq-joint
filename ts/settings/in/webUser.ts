@@ -51,8 +51,8 @@ export const WebUserTonva: UqInTuid = {
     pullWrite: async (joint: Joint, uqin: UqIn, data: any) => {
         try {
             //let userId = await joint.userIn(
-            if (data["Mobile"] === "请补充") data["Mobile"] = null;
-            if (data["Email"] === "请补充") data["Email"] = null;
+            if (data["Mobile"] === "请补充" || data["Mobile"] === '') data["Mobile"] = null;
+            if (data["Email"] === "请补充" || data["Email"] === "") data["Email"] = null;
             let userId = await userIn(joint,
                 WebUserTonva,
                 _.pick(data,
