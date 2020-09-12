@@ -89,14 +89,16 @@ exports.facePointProduct = {
             inner join zcl_mess.dbo.products ps on j.jkid = ps.jkid
             where p.ID > @iMaxId order by ID`;
         let result = await uqOutRead_1.uqOutRead(sql, queue);
-        let { data } = result;
-        if (data) {
-            data.forEach(v => {
-                if (v.StartDate)
-                    v.StartDate = v.StartDate / 1000;
-                if (v.EndDate)
-                    v.EndDate = v.EndDate / 1000;
-            });
+        if (result) {
+            let { data } = result;
+            if (data) {
+                data.forEach(v => {
+                    if (v.StartDate)
+                        v.StartDate = v.StartDate / 1000;
+                    if (v.EndDate)
+                        v.EndDate = v.EndDate / 1000;
+                });
+            }
         }
         return result;
     }
