@@ -84,6 +84,7 @@
         "faceWebUserInvoice",
         "faceWebUserCustomer",
         "faceCustomerContractor",
+        "facePointProduct",
         "facePoint",
         "facePointOut",
         "facePointExchange",

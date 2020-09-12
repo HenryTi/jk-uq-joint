@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.faceCreditsInnerMatched = exports.facePoint = void 0;
+exports.facePointProduct = exports.faceCreditsInnerMatched = exports.facePoint = void 0;
 const uqOutRead_1 = require("../../first/converter/uqOutRead");
 const tools_1 = require("../../mssql/tools");
 /**
@@ -63,6 +63,40 @@ exports.faceCreditsInnerMatched = {
                 if (recordset.length > 0)
                     data[i].orderItems = recordset;
             }
+        }
+        return result;
+    }
+};
+exports.facePointProduct = {
+    face: '百灵威系统工程部/pointShop/pointProductBus',
+    from: 'local',
+    mapper: {
+        pack: 'PackageID@ProductX_PackX',
+        description: 'Description',
+        descriptionC: "DescriptionC",
+        grade: "Grade",
+        point: "Point",
+        startDate: "StartDate",
+        endDate: "EndDate",
+        imageUrl: "ImageUrl",
+        isValid: "IsValid",
+    },
+    pull: async (joint, uqBus, queue) => {
+        let sql = `select top 1 p.ID, p.PackageID, j.jkid as ProductID, ps.Description, ps.DescriptionC
+            , zcl_mess.dbo.fn_mi_pack_toString(j.packnr, j.quantity, j.unit, 'abstract') as Grade, p.Point, p.StartDate, p.EndDate, 1 as IsValid
+            from ProdData.dbo.Export_PointProduct p
+            inner join zcl_mess.dbo.jkcat j on j.jkcat = p.PackageID 
+            inner join zcl_mess.dbo.products ps on j.jkid = ps.jkid
+            where p.ID > @iMaxId order by ID`;
+        let result = await uqOutRead_1.uqOutRead(sql, queue);
+        let { data } = result;
+        if (data) {
+            data.forEach(v => {
+                if (v.StartDate)
+                    v.StartDate = v.StartDate / 1000;
+                if (v.EndDate)
+                    v.EndDate = v.EndDate / 1000;
+            });
         }
         return result;
     }

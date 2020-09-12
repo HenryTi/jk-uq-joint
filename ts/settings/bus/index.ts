@@ -1,7 +1,7 @@
 import { UqBus } from "uq-joint";
 import { faceOrder } from "./orderUsqBus";
 import { faceProductInventory } from "./productInventoryBus";
-import { facePoint, faceCreditsInnerMatched } from "./pointBus";
+import { facePoint, faceCreditsInnerMatched, facePointProduct } from "./pointBus";
 import { faceUser, faceWebUser, faceWebUserContact, faceWebUserContacts, faceWebUserInvoice, faceWebUserCustomer, faceCustomerContractor } from "./webUserBus";
 import { facePointExchange, faceCreditsUsedByCustomer, faceCreditsDrawedByCustomer } from "./pointExchangeOut";
 import { faceOrderPayment } from "./orderPayment";
@@ -25,7 +25,10 @@ export const bus: { [busName: string]: UqBus } = {
     "faceProductInventory": faceProductInventory,
 
     "facePoint": facePoint,
+
+    "facePointProduct": facePointProduct,
     "facePointExchange": facePointExchange,
+
     "faceCreditsUsedByCustomer": faceCreditsUsedByCustomer,
     "faceCreditsDrawedByCustomer": faceCreditsDrawedByCustomer,
     "faceCreditsInnerMatched": faceCreditsInnerMatched,
