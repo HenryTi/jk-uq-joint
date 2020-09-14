@@ -20,22 +20,24 @@ const facePointExchangePush = async (joint, uqBus, queue, orderIn) => {
     orderOut.PaymentRule = { Id: '1' };
     orderOut.InvoiceService = { id: '正常开票' };
     orderOut.TransportMethodId = 'Y';
-    orderOut.SaleOrderItems = orderIn.exchangeItems.map((element, index) => {
+    orderOut.SaleOrderItems = orderIn.exchangeItems.filter(e => e.source === 'self').map((element, index) => {
         element.Id = orderOut.Id + (index + 1).toString().padStart(5, '0');
         element.TransportMethod = { Id: 'Y' };
         element.SalePrice = { Value: 0, Currency: "RMB" };
         return element;
     });
     // console.log(orderOut);
-    // 调用7.253的web api
-    try {
-        let saleOrder = await webApiClient_1.httpClient.newOrder(orderOut);
-        await webApiClient_1.httpClient.ExchangePoint(orderOut.Id);
-        return true;
-    }
-    catch (error) {
-        console.error(orderOut.Id + ":" + error);
-        return false;
+    if (orderIn.Customer && orderOut.SaleOrderItems.length > 0) {
+        // 调用7.253的web api
+        try {
+            await webApiClient_1.httpClient.newOrder(orderOut);
+            await webApiClient_1.httpClient.ExchangePoint(orderOut.Id);
+            return true;
+        }
+        catch (error) {
+            console.error(orderOut.Id + ":" + error);
+            return false;
+        }
     }
     return true;
 };
@@ -56,7 +58,8 @@ exports.facePointExchange = {
         exchangeItems: {
             $name: "exchangeItems",
             Row: "$Row",
-            PackageId: "pack@ProductX_PackX",
+            PackageId: "sourceId@ProductX_PackX",
+            source: true,
             Qty: "quantity",
         }
     },
