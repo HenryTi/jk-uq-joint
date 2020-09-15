@@ -8,7 +8,7 @@ import { faceOrderPayment } from "./orderPayment";
 import { faceOrderAudit } from "./orderAuditBus";
 import { faceDeliveryConfirm } from "./deliveryConfirmBus";
 import { faceOrderCoupon } from "./orderCouponUsqBus";
-import { faceAssistAchievementBus, faceAssistAchievementDetailBus } from "./assistAchievementsBus";
+import { faceAssistAchievementBus, faceAssistAchievementHistoryBus } from "./assistAchievementsBus";
 import { faceOrderHistory } from "./orderHistory";
 import { faceBulkInquiryBook } from "./bulkInquiryBook";
 import { faceAssistCustomerNowSales } from "./assistCustomerNowSales";
@@ -38,7 +38,7 @@ export const bus: { [busName: string]: UqBus } = {
     "faceDeliveryConfirm": faceDeliveryConfirm,
     "faceOrderCoupon": faceOrderCoupon,
     "faceAssistAchievementBus": faceAssistAchievementBus,
-    "faceAssistAchievementDetailBus": faceAssistAchievementDetailBus,
+    "faceAssistAchievementHistoryBus": faceAssistAchievementHistoryBus,
     "faceAssistCustomerNowSales": faceAssistCustomerNowSales,
     "faceOrderHistory": faceOrderHistory,
     "faceBulkInquiryBook": faceBulkInquiryBook,

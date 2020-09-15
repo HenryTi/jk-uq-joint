@@ -35,7 +35,7 @@ exports.bus = {
     "faceDeliveryConfirm": deliveryConfirmBus_1.faceDeliveryConfirm,
     "faceOrderCoupon": orderCouponUsqBus_1.faceOrderCoupon,
     "faceAssistAchievementBus": assistAchievementsBus_1.faceAssistAchievementBus,
-    "faceAssistAchievementDetailBus": assistAchievementsBus_1.faceAssistAchievementDetailBus,
+    "faceAssistAchievementHistoryBus": assistAchievementsBus_1.faceAssistAchievementHistoryBus,
     "faceAssistCustomerNowSales": assistCustomerNowSales_1.faceAssistCustomerNowSales,
     "faceOrderHistory": orderHistory_1.faceOrderHistory,
     "faceBulkInquiryBook": bulkInquiryBook_1.faceBulkInquiryBook,
