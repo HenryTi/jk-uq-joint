@@ -3,11 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PointShopOrder = exports.PointProduct = void 0;
+exports.PointProduct = void 0;
 const dateformat_1 = __importDefault(require("dateformat"));
 const config_1 = __importDefault(require("config"));
 const uqs_1 = require("../uqs");
-const uqOutRead_1 = require("../../first/converter/uqOutRead");
 const promiseSize = config_1.default.get("promiseSize");
 /**
  * TODO: 积分产品导入到tonva系统
@@ -28,7 +27,8 @@ exports.PointProduct = {
     /*
      * Export_PointProduct中的数据通过dbs.dbo.MGift上的Trigger写入，起开始时间结束时间为活动A08-20160422A的开始时间和结束时间
     */
-    pull: `select top ${promiseSize} p.ID, p.PackageID, j.jkid as ProductID, p.Point, p.StartDate, p.EndDate, p.Comments from ProdData.dbo.Export_PointProduct p
+    pull: `select top ${promiseSize} p.ID, p.PackageID, j.jkid as ProductID, p.Point, p.StartDate, p.EndDate, p.Comments 
+    from ProdData.dbo.Export_PointProduct p
     inner join zcl_mess.dbo.jkcat j on j.jkcat = p.PackageID where p.ID > @iMaxId order by ID`,
     pullWrite: async (joint, uqIn, data) => {
         data["StartDate"] = data["StartDate"] && dateformat_1.default(data["StartDate"], "yyyy-mm-dd HH:MM:ss");
@@ -38,10 +38,9 @@ exports.PointProduct = {
     }
 };
 /**
- * TODO: 删除 —— 订单导入PointShop，用来进行积分券匹配
- */
-exports.PointShopOrder = {
-    uq: uqs_1.uqs.jkPointShop,
+ * 删除 —— 订单导入PointShop，用来进行积分券匹配
+export const PointShopOrder: UqInMap = {
+    uq: uqs.jkPointShop,
     type: 'map',
     entity: 'PointShopOrder',
     mapper: {
@@ -61,7 +60,7 @@ exports.PointShopOrder = {
         mark: 'Mark',
         createDate: 'RecordTime',
     },
-    pull: async (joint, uqIn, queue) => {
+    pull: async (joint: Joint, uqIn: UqInMap, queue: number): Promise<DataPullResult> => {
         let step_seconds = 10 * 60;
         if ((queue - 8 * 60 * 60 + step_seconds) * 1000 > Date.now())
             return undefined;
@@ -75,16 +74,16 @@ exports.PointShopOrder = {
             order by p.RecordTime
            `;
         try {
-            let ret = await uqOutRead_1.uqOutRead(sql, queue);
+            let ret = await uqOutRead(sql, queue);
             if (ret === undefined) {
                 ret = { lastPointer: nextQueue, data: [] };
             }
             return ret;
-        }
-        catch (error) {
+        } catch (error) {
             console.log(error);
             throw error;
         }
     }
-};
+}
+*/ 
 //# sourceMappingURL=pointshop.js.map

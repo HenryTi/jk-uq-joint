@@ -32,174 +32,48 @@
         "Promotion"
     ],
     "afterFirstEntities": [
-        {
-            "name": "Chemical",
-            "inervalUnit": 720
-        },
-        {
-            "name": "JkTaskType",
-            "inervalUnit": 1440
-        },
-        {
-            "name": "Employee",
-            "inervalUnit": 60
-        },
-        {
-            "name": "Brand",
-            "inervalUnit": 1440
-        },
-        {
-            "name": "BrandSalesRegion",
-            "inervalUnit": 360
-        },
-        {
-            "name": "BrandDeliveryTime",
-            "inervalUnit": 360
-        },
-        {
-            "name": "ProductX",
-            "inervalUnit": 5
-        },
-        {
-            "name": "InvalidProduct",
-            "inervalUnit": 5
-        },
-        {
-            "name": "ProductChemical",
-            "inervalUnit": 5
-        },
-        {
-            "name": "ProductX_PackX",
-            "inervalUnit": 5
-        },
-        {
-            "name": "PriceX",
-            "inervalUnit": 5
-        },
-        {
-            "name": "ProductSalesRegion",
-            "inervalUnit": 5
-        },
-        {
-            "name": "ProductCategory",
-            "inervalUnit": 1440
-        },
-        {
-            "name": "ProductCategory_ProductCategoryLanguage",
-            "inervalUnit": 1440
-        },
-        {
-            "name": "ProductProductCategory",
-            "inervalUnit": 1440
-        },
-        {
-            "name": "ProductMSDSFile",
-            "inervalUnit": 1440
-        },
-        {
-            "name": "ProductSpecFile",
-            "inervalUnit": 1440
-        },
-        {
-            "name": "PromotionType",
-            "inervalUnit": 360
-        },
-        {
-            "name": "PromotionStatus",
-            "inervalUnit": 360
-        },
-        {
-            "name": "Promotion",
-            "inervalUnit": 360
-        },
-        {
-            "name": "PromotionLanguage",
-            "inervalUnit": 360
-        },
-        {
-            "name": "PromotionPackDiscount",
-            "inervalUnit": 360
-        },
-        {
-            "name": "Customer",
-            "inervalUnit": 1
-        },
-        {
-            "name": "Organization",
-            "inervalUnit": 1
-        },
-        {
-            "name": "CustomerContractor",
-            "inervalUnit": 1
-        },
-        {
-            "name": "BuyerAccount",
-            "inervalUnit": 1
-        },
-        {
-            "name": "CustomerBuyerAccount",
-            "inervalUnit": 1
-        },
-        {
-            "name": "Department",
-            "inervalUnit": 1
-        },
-        {
-            "name": "CustomerDepartment",
-            "inervalUnit": 1
-        },
-        {
-            "name": "Research",
-            "inervalUnit": 1
-        },
-        {
-            "name": "CustomerResearch",
-            "inervalUnit": 1
-        },
-        {
-            "name": "CustomerPosition",
-            "inervalUnit": 1
-        },
-        {
-            "name": "Agreement",
-            "inervalUnit": 1
-        },
-        {
-            "name": "CustomerDiscount",
-            "inervalUnit": 1
-        },
-        {
-            "name": "OrganizationDiscount",
-            "inervalUnit": 1
-        },
-        {
-            "name": "WebUserTonva",
-            "inervalUnit": 1
-        },
-        {
-            "name": "WebUserContacts",
-            "inervalUnit": 1
-        },
-        {
-            "name": "JkTask",
-            "intervalUnit": 1
-        },
-        {
-            "name": "Position",
-            "inervalUnit": 1
-        },
-        {
-            "name": "PointProduct",
-            "inervalUnit": 1
-        },
-        {
-            "name": "PointShopOrder",
-            "inervalUnit": 1
-        },
-        {
-            "name": "ProductSalesRank",
-            "inervalUnit": 1
-        }
+        { "name": "Chemical", "inervalUnit": 720 },
+        { "name": "JkTaskType", "inervalUnit": 1440 },
+        { "name": "Employee", "inervalUnit": 60 },
+        { "name": "Brand", "inervalUnit": 1440 },
+        { "name": "BrandSalesRegion", "inervalUnit": 360 },
+        { "name": "BrandDeliveryTime", "inervalUnit": 360 },
+        { "name": "ProductX", "inervalUnit": 5 },
+        { "name": "InvalidProduct", "inervalUnit": 5 },
+        { "name": "ProductChemical", "inervalUnit": 5 },
+        { "name": "ProductX_PackX", "inervalUnit": 5 },
+        { "name": "PriceX", "inervalUnit": 5 },
+        { "name": "ProductSalesRegion", "inervalUnit": 5 },
+        { "name": "ProductCategory", "inervalUnit": 1440 },
+        { "name": "ProductCategory_ProductCategoryLanguage", "inervalUnit": 1440 },
+        { "name": "ProductProductCategory", "inervalUnit": 1440 },
+        { "name": "ProductMSDSFile", "inervalUnit": 1440 },
+        { "name": "ProductSpecFile", "inervalUnit": 1440 },
+        { "name": "PromotionType", "inervalUnit": 360 },
+        { "name": "PromotionStatus", "inervalUnit": 360 },
+        { "name": "Promotion", "inervalUnit": 360 },
+        { "name": "PromotionLanguage", "inervalUnit": 360 },
+        { "name": "PromotionPackDiscount", "inervalUnit": 360 },
+        { "name": "Customer", "inervalUnit": 1 },
+        { "name": "Organization", "inervalUnit": 1 },
+        { "name": "CustomerContractor", "inervalUnit": 1 },
+        { "name": "BuyerAccount", "inervalUnit": 1 },
+        { "name": "CustomerBuyerAccount", "inervalUnit": 1 },
+        { "name": "Department", "inervalUnit": 1 },
+        { "name": "CustomerDepartment", "inervalUnit": 1 },
+        { "name": "Research", "inervalUnit": 1 },
+        { "name": "CustomerResearch", "inervalUnit": 1 },
+        { "name": "CustomerPosition", "inervalUnit": 1 },
+        { "name": "Agreement", "inervalUnit": 1 },
+        { "name": "CustomerDiscount", "inervalUnit": 1 },
+        { "name": "OrganizationDiscount", "inervalUnit": 1 },
+        { "name": "WebUserTonva", "inervalUnit": 1 },
+        { "name": "WebUserContacts", "inervalUnit": 1 },
+        { "name": "JkTask", "intervalUnit": 1 },
+        { "name": "Position", "inervalUnit": 1 },
+        { "name": "PointProduct", "inervalUnit": 1 },
+        { "name": "PointShopOrder", "inervalUnit": 1 },
+        { "name": "ProductSalesRank", "inervalUnit": 1 }
     ],
     "uqBus": [
         "faceOrder",
@@ -210,6 +84,7 @@
         "faceWebUserInvoice",
         "faceWebUserCustomer",
         "faceCustomerContractor",
+        "facePointProduct",
         "facePoint",
         "facePointOut",
         "facePointExchange",

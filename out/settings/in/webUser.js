@@ -51,9 +51,9 @@ exports.WebUserTonva = {
     pullWrite: async (joint, uqin, data) => {
         try {
             //let userId = await joint.userIn(
-            if (data["Mobile"] === "请补充")
+            if (data["Mobile"] === "请补充" || data["Mobile"] === '')
                 data["Mobile"] = null;
-            if (data["Email"] === "请补充")
+            if (data["Email"] === "请补充" || data["Email"] === "")
                 data["Email"] = null;
             let userId = await userIn(joint, exports.WebUserTonva, lodash_1.default.pick(data, ['Type', 'WebUserID', 'UserName', 'Password', 'Nick', 'Icon', 'Mobile', 'Email', 'WechatOpenID']));
             if (userId < 0)

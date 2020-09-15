@@ -20,21 +20,24 @@ const facePointExchangePush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus
     orderOut.InvoiceService = { id: '正常开票' };
     orderOut.TransportMethodId = 'Y';
 
-    orderOut.SaleOrderItems = orderIn.exchangeItems.map((element, index) => {
+    orderOut.SaleOrderItems = orderIn.exchangeItems.filter(e => e.source === 'self').map((element, index) => {
         element.Id = orderOut.Id + (index + 1).toString().padStart(5, '0');
         element.TransportMethod = { Id: 'Y' };
         element.SalePrice = { Value: 0, Currency: "RMB" };
         return element;
     });
     // console.log(orderOut);
-    // 调用7.253的web api
-    try {
-        let saleOrder = await httpClient.newOrder(orderOut);
-        await httpClient.ExchangePoint(orderOut.Id);
-        return true;
-    } catch (error) {
-        console.error(orderOut.Id + ":" + error);
-        return false;
+
+    if (orderIn.Customer && orderOut.SaleOrderItems.length > 0) {
+        // 调用7.253的web api
+        try {
+            await httpClient.newOrder(orderOut);
+            await httpClient.ExchangePoint(orderOut.Id);
+            return true;
+        } catch (error) {
+            console.error(orderOut.Id + ":" + error);
+            return false;
+        }
     }
 
     return true;
@@ -57,7 +60,8 @@ export const facePointExchange: UqBus = {
         exchangeItems: {
             $name: "exchangeItems",
             Row: "$Row",
-            PackageId: "pack@ProductX_PackX",
+            PackageId: "sourceId@ProductX_PackX",
+            source: true,
             Qty: "quantity",
             // Price: "price",
             // Currency: "^currency@Currency"
@@ -82,40 +86,6 @@ export const facePointExchange: UqBus = {
         },
     }
 };
-
-/**
- * TODO:删除——由CreditsUsedByCustomer替换——用于将tonva订单积分导入到内部系统
- */
-export const facePointOut: UqBus = {
-    face: '百灵威系统工程部/pointShop/couponUsed',
-    from: 'local',
-    mapper: {
-        orderId: true,
-        Customer: "customer@Customer",
-        amount: true,
-        currency: "currency@Currency",
-        point: true,
-        coupon: true
-    },
-    push: async (joint: Joint, uqBus: UqBus, queue: number, data: any): Promise<boolean> => {
-        let { orderId, Customer, point, coupon } = data;
-        let title = 'tonva积分';
-        let remark = orderId + ', coupon:' + coupon;
-        let now = new Date();
-        // 从tonva导来的积分，全部是未生效的积分
-        await execSql(
-            `insert into dbs.dbo.MScoreAlter(CID, MScore, MSYear, title, Note, EPID, IsEffective)
-            values(@customer, @point, @year, @title, @note, @employee, 0)`, [
-            { 'name': 'customer', 'value': Customer },
-            { 'name': 'point', 'value': point },
-            { 'name': 'year', 'value': now.getFullYear() },
-            { 'name': 'title', 'value': title },
-            { 'name': 'note', 'value': remark },
-            { 'name': 'employee', 'value': 'LCT' },
-        ]);
-        return true;
-    }
-}
 
 /**
  * 用于将客户领用的积分码导入内部系统（后续会据此匹配内部订单给双倍积分） 
@@ -217,6 +187,38 @@ export const faceSignInPointOut: UqBus = {
         await execSql(
             `insert into dbs.dbo.MScoreAlter(CID, MScore, MSYear, title, Note, EPID, IsEffective)
         values(@customer, @point, @year, @title, @note, @employee, 1)`, [
+            { 'name': 'customer', 'value': Customer },
+            { 'name': 'point', 'value': point },
+            { 'name': 'year', 'value': now.getFullYear() },
+            { 'name': 'title', 'value': title },
+            { 'name': 'note', 'value': remark },
+            { 'name': 'employee', 'value': 'LCT' },
+        ]);
+        return true;
+    }
+}
+
+// 删除——由CreditsUsedByCustomer替换——用于将tonva订单积分导入到内部系统
+export const facePointOut: UqBus = {
+    face: '百灵威系统工程部/pointShop/couponUsed',
+    from: 'local',
+    mapper: {
+        orderId: true,
+        Customer: "customer@Customer",
+        amount: true,
+        currency: "currency@Currency",
+        point: true,
+        coupon: true
+    },
+    push: async (joint: Joint, uqBus: UqBus, queue: number, data: any): Promise<boolean> => {
+        let { orderId, Customer, point, coupon } = data;
+        let title = 'tonva积分';
+        let remark = orderId + ', coupon:' + coupon;
+        let now = new Date();
+        // 从tonva导来的积分，全部是未生效的积分
+        await execSql(
+            `insert into dbs.dbo.MScoreAlter(CID, MScore, MSYear, title, Note, EPID, IsEffective)
+            values(@customer, @point, @year, @title, @note, @employee, 0)`, [
             { 'name': 'customer', 'value': Customer },
             { 'name': 'point', 'value': point },
             { 'name': 'year', 'value': now.getFullYear() },
