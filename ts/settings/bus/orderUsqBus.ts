@@ -6,18 +6,19 @@ import _ from 'lodash';
 const faceOrderPush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus, queue: number, orderIn: any): Promise<boolean> => {
     // console.log(orderIn);
 
-    let busType = orderIn.type;
+    let { busType, Customer: CustomerID, shippingContact, invoiceContact,
+        freightFee, freightFeeRemitted, endUserId } = orderIn;
     if (busType && busType !== 1 && busType !== 3) {
         // 非目标bus数据，放弃不处理
         return true;
     }
     let orderOut: any = _.pick(orderIn, ['id', 'Id', 'SaleOrderItems']);
-    orderOut.Customer = { Id: orderIn.Customer };
-    if (orderIn.shippingContact !== undefined) {
-        orderOut.Consignee = getConsignee(orderIn.shippingContact);
+    orderOut.Customer = { Id: CustomerID };
+    if (shippingContact !== undefined) {
+        orderOut.Consignee = getConsignee(shippingContact);
     }
-    if (orderIn.invoiceContact !== undefined) {
-        orderOut.InvoiceReceiver = getInvoiceReceiver(orderIn.invoiceContact);
+    if (invoiceContact !== undefined) {
+        orderOut.InvoiceReceiver = getInvoiceReceiver(invoiceContact);
     }
 
     orderOut.PaymentRule = { Id: '1' };
@@ -28,8 +29,23 @@ const faceOrderPush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus, queue:
         element.Id = orderOut.Id + (index + 1).toString().padStart(5, '0');
         element.TransportMethod = { Id: 'Y' };
         element.SalePrice = { Value: element.Price, Currency: element.Currency };
-        element.EndUserId = orderIn.endUserId;
+        element.EndUserId = endUserId;
     });
+
+    let realFreightFee = freightFee + (freightFeeRemitted || 0);
+    if (realFreightFee > 0) {
+        orderOut.SaleOrderItems.push({
+            Id: orderOut.Id + (orderOut.SaleOrderItems.length + 1).toString().padStart(5, '0'),
+            PackageId: "J00Z-EXPRESS",
+            Qty: 1,
+            TransportMethod: { Id: 'Y' },
+            SalePrice: { Value: realFreightFee, Currency: "RMB" },
+            EndUserId: endUserId,
+            Mark: "PR",
+            PurchaseOrderId: "ready",
+        })
+    }
+
     // console.log(orderOut);
     // 调用7.253的web api
     try {
@@ -103,7 +119,7 @@ export const faceOrder: UqBus = {
         invoiceService: 1,
         */
         freightFee: true,
-        freeghtFeeRemitted: true,
+        freightFeeRemitted: true,
         Comments: 'comments',
         CreateDate: 'createDate',
         SaleOrderItems: {
