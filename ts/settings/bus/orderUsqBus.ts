@@ -6,7 +6,7 @@ import _ from 'lodash';
 const faceOrderPush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus, queue: number, orderIn: any): Promise<boolean> => {
     // console.log(orderIn);
 
-    let { busType, Customer: CustomerID, shippingContact, invoiceContact,
+    let { type: busType, Customer: CustomerID, shippingContact, invoiceContact,
         freightFee, freightFeeRemitted, endUserId } = orderIn;
     if (busType && busType !== 1 && busType !== 3) {
         // 非目标bus数据，放弃不处理

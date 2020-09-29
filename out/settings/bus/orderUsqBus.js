@@ -9,7 +9,7 @@ const uqs_1 = require("../uqs");
 const lodash_1 = __importDefault(require("lodash"));
 const faceOrderPush = async (joint, uqBus, queue, orderIn) => {
     // console.log(orderIn);
-    let { busType, Customer: CustomerID, shippingContact, invoiceContact, freightFee, freightFeeRemitted, endUserId } = orderIn;
+    let { type: busType, Customer: CustomerID, shippingContact, invoiceContact, freightFee, freightFeeRemitted, endUserId } = orderIn;
     if (busType && busType !== 1 && busType !== 3) {
         // 非目标bus数据，放弃不处理
         return true;
