@@ -7,8 +7,7 @@ import { execSql } from "mssql/tools";
 const faceOrderPush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus, queue: number, orderIn: any): Promise<boolean> => {
     // console.log(orderIn);
 
-    let { type: busType, Customer: CustomerID, shippingContact, invoiceContact,
-        freightFee, freightFeeRemitted, endUserId } = orderIn;
+    let { type: busType } = orderIn;
     if (busType && busType !== 1 && busType !== 3) {
         // 非目标bus数据，放弃不处理
         return true;
@@ -26,6 +25,8 @@ const faceOrderPush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus, queue:
 }
 
 export async function newSorder(orderIn: any) {
+    let { Customer: CustomerID, shippingContact, invoiceContact,
+        freightFee, freightFeeRemitted, endUserId } = orderIn;
 
     let orderOut: any = _.pick(orderIn, ['id', 'Id', 'SaleOrderItems']);
     orderOut.Customer = { Id: CustomerID };
@@ -78,6 +79,7 @@ export async function newTonvaSorderCustomer(orderIn: any) {
             { 'name': 'SorderId', 'value': orderIn.Id },
             { 'name': 'Customer', 'value': orderIn.endUserId },
         ])
+        return true;
     } catch (error) {
         console.error(error);
         return false;

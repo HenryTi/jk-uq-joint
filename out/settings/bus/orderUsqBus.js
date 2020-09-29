@@ -10,7 +10,7 @@ const lodash_1 = __importDefault(require("lodash"));
 const tools_1 = require("mssql/tools");
 const faceOrderPush = async (joint, uqBus, queue, orderIn) => {
     // console.log(orderIn);
-    let { type: busType, Customer: CustomerID, shippingContact, invoiceContact, freightFee, freightFeeRemitted, endUserId } = orderIn;
+    let { type: busType } = orderIn;
     if (busType && busType !== 1 && busType !== 3) {
         // 非目标bus数据，放弃不处理
         return true;
@@ -28,6 +28,7 @@ const faceOrderPush = async (joint, uqBus, queue, orderIn) => {
     }
 };
 async function newSorder(orderIn) {
+    let { Customer: CustomerID, shippingContact, invoiceContact, freightFee, freightFeeRemitted, endUserId } = orderIn;
     let orderOut = lodash_1.default.pick(orderIn, ['id', 'Id', 'SaleOrderItems']);
     orderOut.Customer = { Id: CustomerID };
     if (shippingContact !== undefined) {
@@ -76,6 +77,7 @@ async function newTonvaSorderCustomer(orderIn) {
             { 'name': 'SorderId', 'value': orderIn.Id },
             { 'name': 'Customer', 'value': orderIn.endUserId },
         ]);
+        return true;
     }
     catch (error) {
         console.error(error);
