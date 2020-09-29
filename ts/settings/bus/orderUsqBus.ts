@@ -2,6 +2,7 @@ import { UqBus, DataPush, Joint } from "uq-joint";
 import { httpClient } from "../../tools/webApiClient";
 import { uqs } from "../uqs";
 import _ from 'lodash';
+import { execSql } from "mssql/tools";
 
 const faceOrderPush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus, queue: number, orderIn: any): Promise<boolean> => {
     // console.log(orderIn);
@@ -11,6 +12,20 @@ const faceOrderPush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus, queue:
         // 非目标bus数据，放弃不处理
         return true;
     }
+    // console.log(orderOut);
+    // 调用7.253的web api
+    try {
+        await newSorder(orderIn);
+        await newTonvaSorderCustomer(orderIn);
+        return true;
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+}
+
+export async function newSorder(orderIn: any) {
+
     let orderOut: any = _.pick(orderIn, ['id', 'Id', 'SaleOrderItems']);
     orderOut.Customer = { Id: orderIn.Customer };
     if (orderIn.shippingContact !== undefined) {
@@ -35,6 +50,18 @@ const faceOrderPush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus, queue:
     try {
         await httpClient.newOrder(orderOut);
         return true;
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+}
+
+export async function newTonvaSorderCustomer(orderIn: any) {
+    try {
+        await execSql(`insert into dbs.dbo.tonvaSorderCustomer( SorderId, Customer ) values( @SorderId, @Customer );`, [
+            { 'name': 'SorderId', 'value': orderIn.Id },
+            { 'name': 'Customer', 'value': orderIn.endUserId },
+        ])
     } catch (error) {
         console.error(error);
         return false;

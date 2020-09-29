@@ -3,10 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.faceOrder = exports.getInvoiceReceiver = exports.getConsignee = void 0;
+exports.faceOrder = exports.getInvoiceReceiver = exports.getConsignee = exports.newTonvaSorderCustomer = exports.newSorder = void 0;
 const webApiClient_1 = require("../../tools/webApiClient");
 const uqs_1 = require("../uqs");
 const lodash_1 = __importDefault(require("lodash"));
+const tools_1 = require("mssql/tools");
 const faceOrderPush = async (joint, uqBus, queue, orderIn) => {
     // console.log(orderIn);
     let busType = orderIn.type;
@@ -14,6 +15,19 @@ const faceOrderPush = async (joint, uqBus, queue, orderIn) => {
         // 非目标bus数据，放弃不处理
         return true;
     }
+    // console.log(orderOut);
+    // 调用7.253的web api
+    try {
+        await newSorder(orderIn);
+        await newTonvaSorderCustomer(orderIn);
+        return true;
+    }
+    catch (error) {
+        console.error(error);
+        return false;
+    }
+};
+async function newSorder(orderIn) {
     let orderOut = lodash_1.default.pick(orderIn, ['id', 'Id', 'SaleOrderItems']);
     orderOut.Customer = { Id: orderIn.Customer };
     if (orderIn.shippingContact !== undefined) {
@@ -41,7 +55,21 @@ const faceOrderPush = async (joint, uqBus, queue, orderIn) => {
         console.error(error);
         return false;
     }
-};
+}
+exports.newSorder = newSorder;
+async function newTonvaSorderCustomer(orderIn) {
+    try {
+        await tools_1.execSql(`insert into dbs.dbo.tonvaSorderCustomer( SorderId, Customer ) values( @SorderId, @Customer );`, [
+            { 'name': 'SorderId', 'value': orderIn.Id },
+            { 'name': 'Customer', 'value': orderIn.endUserId },
+        ]);
+    }
+    catch (error) {
+        console.error(error);
+        return false;
+    }
+}
+exports.newTonvaSorderCustomer = newTonvaSorderCustomer;
 function getConsignee(shippingContact) {
     let { name, organizationName, telephone, mobile, email, address, addressString } = shippingContact;
     let Consignee = {
