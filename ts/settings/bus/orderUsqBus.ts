@@ -2,7 +2,7 @@ import { UqBus, DataPush, Joint } from "uq-joint";
 import { httpClient } from "../../tools/webApiClient";
 import { uqs } from "../uqs";
 import _ from 'lodash';
-import { execSql } from "mssql/tools";
+import { execSql } from "../../mssql/tools";
 
 const faceOrderPush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus, queue: number, orderIn: any): Promise<boolean> => {
     // console.log(orderIn);

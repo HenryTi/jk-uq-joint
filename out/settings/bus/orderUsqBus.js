@@ -7,7 +7,7 @@ exports.faceOrder = exports.getInvoiceReceiver = exports.getConsignee = exports.
 const webApiClient_1 = require("../../tools/webApiClient");
 const uqs_1 = require("../uqs");
 const lodash_1 = __importDefault(require("lodash"));
-const tools_1 = require("mssql/tools");
+const tools_1 = require("../../mssql/tools");
 const faceOrderPush = async (joint, uqBus, queue, orderIn) => {
     // console.log(orderIn);
     let { type: busType } = orderIn;
