@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.faceCreditsUsedByCustomer = exports.faceCreditsDrawedByCustomer = exports.facePointExchange = void 0;
+exports.faceSignInPointOut = exports.faceCreditsUsedByCustomer = exports.faceCreditsDrawedByCustomer = exports.facePointExchange = void 0;
 const lodash_1 = __importDefault(require("lodash"));
 const uqs_1 = require("../uqs");
 const orderUsqBus_1 = require("./orderUsqBus");
@@ -157,38 +157,37 @@ exports.faceCreditsUsedByCustomer = {
         return true;
     }
 };
-/*
-export const faceSignInPointOut: UqBus = {
-    face: '百灵威系统工程部/pointShop/signIn',
+/**
+ * 用于将签到积分导入到内部系统
+ */
+exports.faceSignInPointOut = {
+    face: '百灵威系统工程部/pointShop2/customerSignIn',
     from: 'local',
     mapper: {
-        orderId: true,
-        Customer: "customer@Customer",
-        amount: true,
-        currency: "currency@Currency",
+        customer: "customer@Customer",
+        webUser: true,
+        pointYear: true,
         point: true,
-        coupon: true
+        comments: true
     },
-    push: async (joint: Joint, uqBus: UqBus, queue: number, data: any): Promise<boolean> => {
-        let { Customer, point } = data;
-        let title = 'tonva积分';
-        let remark = '签到等立即生效的积分';
-        let now = new Date();
-        // 从tonva导来的积分，全部是未生效的积分
-        await execSql(
-            `insert into dbs.dbo.MScoreAlter(CID, MScore, MSYear, title, Note, EPID, IsEffective)
-        values(@customer, @point, @year, @title, @note, @employee, 1)`, [
-            { 'name': 'customer', 'value': Customer },
+    push: async (joint, uqBus, queue, data) => {
+        let { customer, pointYear, point, comments } = data;
+        let title = '签到积分';
+        await tools_1.execSql(`if exists( select 1 from dbs.dbo.MScoreAlter where CID = @customer and MSYear = @year and title = @title)
+                update dbs.dbo.MScoreAlter set MScore += @point where CID = @customer and MSYear = @year and title = @title
+            else 
+                insert into dbs.dbo.MScoreAlter(CID, MScore, MSYear, title, Note, EPID, IsEffective)
+                values(@customer, @point, @year, @title, @note, 'LCT', 1)`, [
+            { 'name': 'customer', 'value': customer },
             { 'name': 'point', 'value': point },
-            { 'name': 'year', 'value': now.getFullYear() },
+            { 'name': 'year', 'value': pointYear },
             { 'name': 'title', 'value': title },
-            { 'name': 'note', 'value': remark },
-            { 'name': 'employee', 'value': 'LCT' },
+            { 'name': 'note', 'value': comments },
         ]);
         return true;
     }
-}
-
+};
+/*
 // 删除——由CreditsUsedByCustomer替换——用于将tonva订单积分导入到内部系统
 export const facePointOut: UqBus = {
     face: '百灵威系统工程部/pointShop/couponUsed',
