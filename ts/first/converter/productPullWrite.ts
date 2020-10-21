@@ -1,8 +1,7 @@
 import { Joint, UqIn } from "uq-joint";
 import * as _ from 'lodash';
-import { ProductX, ProductChemical, ProductPackX, PriceX, ProductSalesRegion, ProductLegallyProhibited } from "../../settings/in/product";
+import { ProductX, ProductChemical, ProductPackX, PriceX, ProductSalesRegion } from "../../settings/in/product";
 import { execSql } from "../../mssql/tools";
-import { ProductProductCategory } from "../../settings/in/productCategory";
 import { logger } from "../../tools/logger";
 
 export async function productPullWrite(joint: Joint, uqin: UqIn, data: any) {

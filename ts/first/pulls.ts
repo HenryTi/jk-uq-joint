@@ -5,10 +5,10 @@ import { ProductCategory, ProductCategoryLanguage, ProductProductCategory } from
 import { Country, Province, City, County } from "../settings/in/Address";
 import { Language, PackTypeStandard, Currency, SalesRegion, PackType, InvoiceType } from "../settings/in/salesRegion";
 import { Chemical } from "../settings/in/chemical";
-import { Brand, BrandSalesRegion, BrandDeliveryTime, ProductPackX, PriceX, ProductSalesRegion, ProductLegallyProhibited, ProductX, ProductChemical, ProductExtensionProperty, ProductMSDSFile, ProductSpecFile } from "../settings/in/product";
+import { Brand, ProductLegallyProhibited, ProductX, ProductExtensionProperty, ProductMSDSFile, ProductSpecFile } from "../settings/in/product";
 import { Warehouse, SalesRegionWarehouse } from "../settings/in/warehouse";
 import { Organization, Customer, Contact, BuyerAccount, CustomerBuyerAccount, CustomerContact } from "../settings/in/customer";
-import { Promotion, PromotionLanguage, PromotionPackDiscount, PromotionType, PromotionStatus } from '../settings/in/promotion';
+import { Promotion, PromotionType, PromotionStatus } from '../settings/in/promotion';
 import { Agreement } from '../settings/in/customerDiscount';
 import { Employee } from '../settings/in/hr';
 //import { PointShopOrder } from 'settings/in/pointshop';
