@@ -18,9 +18,9 @@ const faceOrderPush = async (joint, uqBus, queue, orderIn) => {
     // console.log(orderOut);
     // 调用7.253的web api
     try {
-        await newSorder(orderIn);
-        await newTonvaSorderCustomer(orderIn);
-        return true;
+        let success = await newSorder(orderIn);
+        success = success && await newTonvaSorderCustomer(orderIn);
+        return success;
     }
     catch (error) {
         console.error(error);
