@@ -9,7 +9,28 @@ const uqs_1 = require("../uqs");
 const orderUsqBus_1 = require("./orderUsqBus");
 const webApiClient_1 = require("../../tools/webApiClient");
 const tools_1 = require("../../mssql/tools");
+const node_fetch_1 = __importDefault(require("node-fetch"));
 const facePointExchangePush = async (joint, uqBus, queue, orderIn) => {
+    let result = false;
+    let selfItems = orderIn.exchangeItems.filter(e => e.source === 'self');
+    if (selfItems.length > 0) {
+        result = await createSelfOrder(orderIn);
+    }
+    /*
+    if (result) {
+        let jdItems = orderIn.exchangeItems.filter(e => e.source === 'jd');
+        if (jdItems.length > 0) {
+            result = await createJDOrder(orderIn);
+        }
+    }
+    */
+    return result;
+};
+/**
+ *
+ * @param orderIn
+ */
+async function createSelfOrder(orderIn) {
     let orderOut = lodash_1.default.pick(orderIn, ['id']);
     orderOut.Id = 'POINTX' + orderIn.Id;
     orderOut.Customer = { Id: orderIn.Customer };
@@ -26,7 +47,6 @@ const facePointExchangePush = async (joint, uqBus, queue, orderIn) => {
         element.SalePrice = { Value: 0, Currency: "RMB" };
         return element;
     });
-    // console.log(orderOut);
     if (orderIn.Customer && orderOut.SaleOrderItems.length > 0) {
         // 调用7.253的web api
         try {
@@ -39,8 +59,27 @@ const facePointExchangePush = async (joint, uqBus, queue, orderIn) => {
             return false;
         }
     }
-    return true;
-};
+}
+/**
+ *
+ * @param orderIn
+ */
+async function createJDOrder(orderIn) {
+    let result = false;
+    let orderOut = {};
+    orderOut.sku = orderIn.exchangeItems.filter(e => e.source === 'jd').map((element, index) => {
+        element.Id = orderOut.Id + (index + 1).toString().padStart(5, '0');
+        return element;
+    });
+    let res = await node_fetch_1.default("http://localhost:3016/jd/submitOrder", {
+        method: 'post',
+        body: JSON.stringify(orderOut),
+        headers: { 'content-type': 'application/json' }
+    });
+    if (res.ok) {
+    }
+    return result;
+}
 /**
  * 积分兑换单导入到内部系统
  */
@@ -59,6 +98,7 @@ exports.facePointExchange = {
             $name: "exchangeItems",
             Row: "$Row",
             PackageId: "sourceId@ProductX_PackX",
+            JDSkuId: "sourceId",
             source: true,
             Qty: "quantity",
         }

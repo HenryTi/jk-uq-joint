@@ -4,9 +4,33 @@ import { uqs } from "../uqs";
 import { getConsignee, getInvoiceReceiver } from "./orderUsqBus";
 import { httpClient } from "../../tools/webApiClient";
 import { execSql } from '../../mssql/tools';
+import fetch from 'node-fetch';
 
 
 const facePointExchangePush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus, queue: number, orderIn: any): Promise<boolean> => {
+
+    let result: boolean = false;
+    let selfItems = orderIn.exchangeItems.filter(e => e.source === 'self');
+    if (selfItems.length > 0) {
+        result = await createSelfOrder(orderIn);
+    }
+
+    /*
+    if (result) {
+        let jdItems = orderIn.exchangeItems.filter(e => e.source === 'jd');
+        if (jdItems.length > 0) {
+            result = await createJDOrder(orderIn);
+        }
+    }
+    */
+    return result;
+}
+
+/**
+ * 
+ * @param orderIn 
+ */
+async function createSelfOrder(orderIn: any) {
 
     let orderOut: any = _.pick(orderIn, ['id']);
     orderOut.Id = 'POINTX' + orderIn.Id;
@@ -26,7 +50,6 @@ const facePointExchangePush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus
         element.SalePrice = { Value: 0, Currency: "RMB" };
         return element;
     });
-    // console.log(orderOut);
 
     if (orderIn.Customer && orderOut.SaleOrderItems.length > 0) {
         // 调用7.253的web api
@@ -39,9 +62,31 @@ const facePointExchangePush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus
             return false;
         }
     }
-
-    return true;
 }
+
+/**
+ * 
+ * @param orderIn 
+ */
+async function createJDOrder(orderIn: any) {
+
+    let result: boolean = false;
+    let orderOut: any = {};
+    orderOut.sku = orderIn.exchangeItems.filter(e => e.source === 'jd').map((element, index) => {
+        element.Id = orderOut.Id + (index + 1).toString().padStart(5, '0');
+        return element;
+    });
+    let res = await fetch("http://localhost:3016/jd/submitOrder", {
+        method: 'post',
+        body: JSON.stringify(orderOut),
+        headers: { 'content-type': 'application/json' }
+    });
+    if (res.ok) {
+
+    }
+    return result;
+}
+
 
 /**
  * 积分兑换单导入到内部系统
@@ -61,6 +106,7 @@ export const facePointExchange: UqBus = {
             $name: "exchangeItems",
             Row: "$Row",
             PackageId: "sourceId@ProductX_PackX",
+            JDSkuId: "sourceId",
             source: true,
             Qty: "quantity",
             // Price: "price",
