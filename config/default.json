@@ -1,7 +1,48 @@
 {
     "name": "joint-uq-jk",
     "port": 3017,
+    "database": "joint-uq-jk$test",
+    "mysqlConn": {
+        "host": "",
+        "user": "",
+        "password": "",
+        "multipleStatements": true
+    },
+    "mssqlJkConn": {
+        "user": "",
+        "password": "",
+        "server": "",
+        "database": "",
+        "port": 1433,
+        "parseJSON": true,
+        "pool.max": 10
+    },
+    "centerhost": "",
+    "uqPath": "uq/test/",
+    "uqUnitxPath": "uq/unitx-test/",
+    "busOutUrl": "",
+    "userApiBaseUrl": "",
+    "jdInnerBaseUrl": "",
     "interval": 3000,
+    "firstMaxRows": 100000,
+    "promiseSize": 1,
+    "idBrokened": {
+        "jkid": "A01Y29008",
+        "chemid": 0,
+        "CID": "",
+        "PPCID": 0,
+        "BuyerAccountID": 6762,
+        "ProductMSDS": "031E9CCE-6383-432C-B8A1-DCAF205A1B61"
+    },
+    "smsServer":{
+        "baseUrl": "",
+        "un": "",
+        "pw": "",
+        "mobile": "",
+        "dc": "",
+        "tf": "",
+        "messageHeader": ""
+    },
     "firstEntities": [
         "Language",
         "Country",
