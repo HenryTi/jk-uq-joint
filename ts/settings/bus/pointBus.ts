@@ -69,6 +69,9 @@ export const faceCreditsInnerMatched: UqBus = {
     }
 };
 
+/**
+ * 积分兑换产品导入到tonva
+ * 2020/11/10, ligsh, 删除，积分兑换产品转移到tonva系统中维护，不再需要从旧系统导入到tonva
 export const facePointProduct: UqBus = {
     face: '百灵威系统工程部/pointShop/pointProductBus',
     from: 'local',
@@ -87,7 +90,7 @@ export const facePointProduct: UqBus = {
         let sql = `select top 1 p.ID, p.PackageID, j.jkid as ProductID, ps.Description, ps.DescriptionC
             , zcl_mess.dbo.fn_mi_pack_toString(j.packnr, j.quantity, j.unit, 'abstract') as Grade, p.Point, p.StartDate, p.EndDate, 1 as IsValid
             from ProdData.dbo.Export_PointProduct p
-            inner join zcl_mess.dbo.jkcat j on j.jkcat = p.PackageID 
+            inner join zcl_mess.dbo.jkcat j on j.jkcat = p.PackageID
             inner join zcl_mess.dbo.products ps on j.jkid = ps.jkid
             where p.ID > @iMaxId order by ID`;
         let result = await uqOutRead(sql, queue);
@@ -103,3 +106,4 @@ export const facePointProduct: UqBus = {
         return result;
     }
 };
+*/

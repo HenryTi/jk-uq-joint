@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.facePointProduct = exports.faceCreditsInnerMatched = exports.facePoint = void 0;
+exports.faceCreditsInnerMatched = exports.facePoint = void 0;
 const uqOutRead_1 = require("../../first/converter/uqOutRead");
 const tools_1 = require("../../mssql/tools");
 /**
@@ -67,7 +67,10 @@ exports.faceCreditsInnerMatched = {
         return result;
     }
 };
-exports.facePointProduct = {
+/**
+ * 积分兑换产品导入到tonva
+ * 2020/11/10, ligsh, 删除，积分兑换产品转移到tonva系统中维护，不再需要从旧系统导入到tonva
+export const facePointProduct: UqBus = {
     face: '百灵威系统工程部/pointShop/pointProductBus',
     from: 'local',
     mapper: {
@@ -81,26 +84,25 @@ exports.facePointProduct = {
         imageUrl: "ImageUrl",
         isValid: "IsValid",
     },
-    pull: async (joint, uqBus, queue) => {
+    pull: async (joint: Joint, uqBus: UqBus, queue: string | number): Promise<DataPullResult> => {
         let sql = `select top 1 p.ID, p.PackageID, j.jkid as ProductID, ps.Description, ps.DescriptionC
             , zcl_mess.dbo.fn_mi_pack_toString(j.packnr, j.quantity, j.unit, 'abstract') as Grade, p.Point, p.StartDate, p.EndDate, 1 as IsValid
             from ProdData.dbo.Export_PointProduct p
-            inner join zcl_mess.dbo.jkcat j on j.jkcat = p.PackageID 
+            inner join zcl_mess.dbo.jkcat j on j.jkcat = p.PackageID
             inner join zcl_mess.dbo.products ps on j.jkid = ps.jkid
             where p.ID > @iMaxId order by ID`;
-        let result = await uqOutRead_1.uqOutRead(sql, queue);
+        let result = await uqOutRead(sql, queue);
         if (result) {
             let { data } = result;
             if (data) {
                 data.forEach(v => {
-                    if (v.StartDate)
-                        v.StartDate = v.StartDate / 1000;
-                    if (v.EndDate)
-                        v.EndDate = v.EndDate / 1000;
-                });
+                    if (v.StartDate) v.StartDate = v.StartDate / 1000;
+                    if (v.EndDate) v.EndDate = v.EndDate / 1000;
+                })
             }
         }
         return result;
     }
 };
+*/ 
 //# sourceMappingURL=pointBus.js.map
