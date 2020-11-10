@@ -1,4 +1,4 @@
-import { execSql } from "mssql/tools";
+import { execSql } from "../../../mssql/tools";
 import { Joint, UqBus } from "uq-joint";
 
 export const facePointProductOut: UqBus = {

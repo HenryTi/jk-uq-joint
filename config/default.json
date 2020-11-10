@@ -71,7 +71,6 @@
         { "name": "WebUserContacts", "inervalUnit": 1 },
         { "name": "JkTask", "intervalUnit": 1 },
         { "name": "Position", "inervalUnit": 1 },
-        { "name": "PointProduct", "inervalUnit": 1 }, 
         { "name": "PointShopOrder", "inervalUnit": 1 },
         { "name": "ProductSalesRank", "inervalUnit": 1 }
     ],
@@ -84,7 +83,7 @@
         "faceWebUserInvoice",
         "faceWebUserCustomer",
         "faceCustomerContractor",
-        "facePointProduct",
+        "facePointProductOut",
         "facePoint",
         "faceSignInPointOut",
         "facePointExchange",

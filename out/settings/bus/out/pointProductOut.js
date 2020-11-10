@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.facePointProductOut = void 0;
-const tools_1 = require("mssql/tools");
+const tools_1 = require("../../../mssql/tools");
 exports.facePointProductOut = {
     face: '百灵威系统工程部/pointShop/pointProductBusOut',
     from: 'local',
