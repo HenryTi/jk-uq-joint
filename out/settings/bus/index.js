@@ -14,6 +14,7 @@ const assistAchievementsBus_1 = require("./assistAchievementsBus");
 const orderHistory_1 = require("./orderHistory");
 const bulkInquiryBook_1 = require("./bulkInquiryBook");
 const assistCustomerNowSales_1 = require("./assistCustomerNowSales");
+const pointProductOut_1 = require("./out/pointProductOut");
 exports.bus = {
     "faceOrder": orderUsqBus_1.faceOrder,
     "faceUser": webUserBus_1.faceUser,
@@ -27,6 +28,7 @@ exports.bus = {
     "facePoint": pointBus_1.facePoint,
     "faceSignInPointOut": pointExchangeOut_1.faceSignInPointOut,
     "facePointProduct": pointBus_1.facePointProduct,
+    "facePointProductOut": pointProductOut_1.facePointProductOut,
     "facePointExchange": pointExchangeOut_1.facePointExchange,
     "faceCreditsUsedByCustomer": pointExchangeOut_1.faceCreditsUsedByCustomer,
     "faceCreditsDrawedByCustomer": pointExchangeOut_1.faceCreditsDrawedByCustomer,

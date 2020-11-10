@@ -12,6 +12,7 @@ import { faceAssistAchievementBus, faceAssistAchievementHistoryBus } from "./ass
 import { faceOrderHistory } from "./orderHistory";
 import { faceBulkInquiryBook } from "./bulkInquiryBook";
 import { faceAssistCustomerNowSales } from "./assistCustomerNowSales";
+import { facePointProductOut } from "./out/pointProductOut";
 
 export const bus: { [busName: string]: UqBus } = {
     "faceOrder": faceOrder,
@@ -28,6 +29,7 @@ export const bus: { [busName: string]: UqBus } = {
     "faceSignInPointOut": faceSignInPointOut,
 
     "facePointProduct": facePointProduct,
+    "facePointProductOut": facePointProductOut,
     "facePointExchange": facePointExchange,
 
     "faceCreditsUsedByCustomer": faceCreditsUsedByCustomer,

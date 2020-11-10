@@ -3,16 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PointProduct = void 0;
-const dateformat_1 = __importDefault(require("dateformat"));
 const config_1 = __importDefault(require("config"));
-const uqs_1 = require("../uqs");
 const promiseSize = config_1.default.get("promiseSize");
 /**
  * TODO: 积分产品导入到tonva系统
- */
-exports.PointProduct = {
-    uq: uqs_1.uqs.jkPointShop,
+export const PointProduct: UqInMap = {
+    uq: uqs.jkPointShop,
     type: 'map',
     entity: 'PointProduct',
     mapper: {
@@ -24,19 +20,18 @@ exports.PointProduct = {
             endDate: "^EndDate"
         }
     },
-    /*
-     * Export_PointProduct中的数据通过dbs.dbo.MGift上的Trigger写入，起开始时间结束时间为活动A08-20160422A的开始时间和结束时间
-    */
-    pull: `select top ${promiseSize} p.ID, p.PackageID, j.jkid as ProductID, p.Point, p.StartDate, p.EndDate, p.Comments 
+    // Export_PointProduct中的数据通过dbs.dbo.MGift上的Trigger写入，起开始时间结束时间为活动A08-20160422A的开始时间和结束时间
+    pull: `select top ${promiseSize} p.ID, p.PackageID, j.jkid as ProductID, p.Point, p.StartDate, p.EndDate, p.Comments
     from ProdData.dbo.Export_PointProduct p
     inner join zcl_mess.dbo.jkcat j on j.jkcat = p.PackageID where p.ID > @iMaxId order by ID`,
-    pullWrite: async (joint, uqIn, data) => {
-        data["StartDate"] = data["StartDate"] && dateformat_1.default(data["StartDate"], "yyyy-mm-dd HH:MM:ss");
-        data["EndDate"] = data["EndDate"] && dateformat_1.default(data["EndDate"], "yyyy-mm-dd HH:MM:ss");
-        await joint.uqIn(exports.PointProduct, data);
+    pullWrite: async (joint: Joint, uqIn: UqIn, data: any) => {
+        data["StartDate"] = data["StartDate"] && dateFormat(data["StartDate"], "yyyy-mm-dd HH:MM:ss");
+        data["EndDate"] = data["EndDate"] && dateFormat(data["EndDate"], "yyyy-mm-dd HH:MM:ss");
+        await joint.uqIn(PointProduct, data);
         return true;
     }
-};
+}
+*/
 /**
  * 删除 —— 订单导入PointShop，用来进行积分券匹配
 export const PointShopOrder: UqInMap = {

@@ -10,6 +10,7 @@ const orderUsqBus_1 = require("./orderUsqBus");
 const webApiClient_1 = require("../../tools/webApiClient");
 const tools_1 = require("../../mssql/tools");
 const node_fetch_1 = __importDefault(require("node-fetch"));
+const config_1 = __importDefault(require("config"));
 const facePointExchangePush = async (joint, uqBus, queue, orderIn) => {
     let result = false;
     let selfItems = orderIn.exchangeItems.filter(e => e.source === 'self');
@@ -65,20 +66,24 @@ async function createSelfOrder(orderIn) {
  * @param orderIn
  */
 async function createJDOrder(orderIn) {
-    let result = false;
-    let orderOut = {};
-    orderOut.sku = orderIn.exchangeItems.filter(e => e.source === 'jd').map((element, index) => {
-        element.Id = orderOut.Id + (index + 1).toString().padStart(5, '0');
+    orderIn.exchangeItems = orderIn.exchangeItems.filter(e => e.source === 'jd').map((element, index) => {
+        element.Id = orderIn.Id + (index + 1).toString().padStart(5, '0');
         return element;
     });
-    let res = await node_fetch_1.default("http://localhost:3016/jd/submitOrder", {
-        method: 'post',
-        body: JSON.stringify(orderOut),
-        headers: { 'content-type': 'application/json' }
-    });
-    if (res.ok) {
+    try {
+        let res = await node_fetch_1.default(config_1.default.get('jdInnerBaseUrl') + "/submitOrder", {
+            method: 'post',
+            body: JSON.stringify(orderIn),
+            headers: { 'content-type': 'application/json' }
+        });
+        if (res.ok) {
+            return true;
+        }
     }
-    return result;
+    catch (error) {
+        console.error(error);
+        return false;
+    }
 }
 /**
  * 积分兑换单导入到内部系统

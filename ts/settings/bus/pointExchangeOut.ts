@@ -5,7 +5,7 @@ import { getConsignee, getInvoiceReceiver } from "./orderUsqBus";
 import { httpClient } from "../../tools/webApiClient";
 import { execSql } from '../../mssql/tools';
 import fetch from 'node-fetch';
-
+import config from 'config';
 
 const facePointExchangePush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus, queue: number, orderIn: any): Promise<boolean> => {
 
@@ -70,21 +70,24 @@ async function createSelfOrder(orderIn: any) {
  */
 async function createJDOrder(orderIn: any) {
 
-    let result: boolean = false;
-    let orderOut: any = {};
-    orderOut.sku = orderIn.exchangeItems.filter(e => e.source === 'jd').map((element, index) => {
-        element.Id = orderOut.Id + (index + 1).toString().padStart(5, '0');
+    orderIn.exchangeItems = orderIn.exchangeItems.filter(e => e.source === 'jd').map((element, index) => {
+        element.Id = orderIn.Id + (index + 1).toString().padStart(5, '0');
         return element;
     });
-    let res = await fetch("http://localhost:3016/jd/submitOrder", {
-        method: 'post',
-        body: JSON.stringify(orderOut),
-        headers: { 'content-type': 'application/json' }
-    });
-    if (res.ok) {
 
+    try {
+        let res = await fetch(config.get<string>('jdInnerBaseUrl') + "/submitOrder", {
+            method: 'post',
+            body: JSON.stringify(orderIn),
+            headers: { 'content-type': 'application/json' }
+        });
+        if (res.ok) {
+            return true;
+        }
+    } catch (error) {
+        console.error(error);
+        return false;
     }
-    return result;
 }
 
 
