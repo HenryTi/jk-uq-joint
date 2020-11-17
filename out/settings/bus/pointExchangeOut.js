@@ -11,20 +11,20 @@ const webApiClient_1 = require("../../tools/webApiClient");
 const tools_1 = require("../../mssql/tools");
 const node_fetch_1 = __importDefault(require("node-fetch"));
 const config_1 = __importDefault(require("config"));
+const JD = 'jd.com';
+const SELF = 'self';
 const facePointExchangePush = async (joint, uqBus, queue, orderIn) => {
-    let result = false;
-    let selfItems = orderIn.exchangeItems.filter(e => e.source === 'self');
+    let result = true;
+    let selfItems = orderIn.exchangeItems.filter(e => e.source === SELF);
     if (selfItems.length > 0) {
         result = await createSelfOrder(orderIn);
     }
-    /*
     if (result) {
-        let jdItems = orderIn.exchangeItems.filter(e => e.source === 'jd');
+        let jdItems = orderIn.exchangeItems.filter(e => e.source === JD);
         if (jdItems.length > 0) {
             result = await createJDOrder(orderIn);
         }
     }
-    */
     return result;
 };
 /**
@@ -42,7 +42,7 @@ async function createSelfOrder(orderIn) {
     orderOut.PaymentRule = { Id: '1' };
     orderOut.InvoiceService = { id: '正常开票' };
     orderOut.TransportMethodId = 'Y';
-    orderOut.SaleOrderItems = orderIn.exchangeItems.filter(e => e.source === 'self').map((element, index) => {
+    orderOut.SaleOrderItems = orderIn.exchangeItems.filter(e => e.source === SELF).map((element, index) => {
         element.Id = orderOut.Id + (index + 1).toString().padStart(5, '0');
         element.TransportMethod = { Id: 'Y' };
         element.SalePrice = { Value: 0, Currency: "RMB" };
@@ -66,7 +66,7 @@ async function createSelfOrder(orderIn) {
  * @param orderIn
  */
 async function createJDOrder(orderIn) {
-    orderIn.exchangeItems = orderIn.exchangeItems.filter(e => e.source === 'jd').map((element, index) => {
+    orderIn.exchangeItems = orderIn.exchangeItems.filter(e => e.source === JD).map((element, index) => {
         element.Id = orderIn.Id + (index + 1).toString().padStart(5, '0');
         return element;
     });
@@ -79,6 +79,7 @@ async function createJDOrder(orderIn) {
         if (res.ok) {
             return true;
         }
+        return false;
     }
     catch (error) {
         console.error(error);
