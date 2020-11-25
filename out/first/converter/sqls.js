@@ -66,11 +66,11 @@ exports.sqls = {
                 ) t where ID > @iMaxId
                 order by ID`,
     //==============================================================
-    //=========================== chemical ===========================
+    //=========================== Employee ===========================
     //==============================================================
     readEmployee: `
                 select top ${promiseSize} epid as ID, ChineseName, EpName1, EpName2, Title, Status, Creadate as CreateTime
-                from dbs.dbo.Employee where epid > @iMaxId and ChineseName is not null order by epid`,
+                from dbs.dbo.Employee where epid > @iMaxId and ChineseName is not null and Creadate > '2020-03-25' order by epid`,
     //==============================================================
     //=========================== chemical ===========================
     //==============================================================
