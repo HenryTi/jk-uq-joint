@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.httpClient = exports.WebApiClient = void 0;
 const config_1 = __importDefault(require("config"));
+const node_fetch_1 = __importDefault(require("node-fetch"));
 const uq_joint_1 = require("uq-joint");
 const webApiBaseUrl = config_1.default.get("busOutUrl");
 class WebApiClient extends uq_joint_1.Fetch {
@@ -47,6 +48,23 @@ class WebApiClient extends uq_joint_1.Fetch {
         try {
             await this.post(`PointShop/Exchange?saleOrderId=${orderId}`, undefined);
             return true;
+        }
+        catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+    async getPrice(packageId, salesRegionId) {
+        try {
+            /*
+            不能使用uq-joint中提供的Fetch，该Fetch要求返回结果的格式是{ok: true|false, res: data}，下面的方法不提供该格式
+            return await this.get("ProductCatalog/GetPrice", { packageId: packageId, salesRegionId: salesRegionId });
+            */
+            let res = await node_fetch_1.default(webApiBaseUrl + "ProductCatalog/GetPrice?packageId=" + packageId + "&salesRegionId=" + salesRegionId);
+            if (res.status === 200) {
+                return res.json();
+            }
+            return undefined;
         }
         catch (error) {
             console.log(error);

@@ -22,7 +22,7 @@ const facePointExchangePush = async (joint, uqBus, queue, orderIn) => {
     if (result) {
         let jdItems = orderIn.exchangeItems.filter(e => e.source === JD);
         if (jdItems.length > 0) {
-            result = await createJDOrder(orderIn);
+            // result = await createJDOrder(orderIn);
         }
     }
     return result;
@@ -50,7 +50,18 @@ async function createSelfOrder(orderIn) {
     });
     if (orderIn.Customer && orderOut.SaleOrderItems.length > 0) {
         // 调用7.253的web api
+        let promises = [];
+        orderOut.SaleOrderItems.forEach(element => {
+            promises.push(webApiClient_1.httpClient.getPrice(element.PackageId, 'CN'));
+        });
         try {
+            let prices = await Promise.all(promises);
+            orderOut.SaleOrderItems.forEach(element => {
+                let packageWithPrice = prices.find(e => e.Id === element.PackageId);
+                if (packageWithPrice && packageWithPrice.Price) {
+                    element.SalePrice = packageWithPrice.Price;
+                }
+            });
             await webApiClient_1.httpClient.newOrder(orderOut);
             await webApiClient_1.httpClient.ExchangePoint(orderOut.Id);
             return true;

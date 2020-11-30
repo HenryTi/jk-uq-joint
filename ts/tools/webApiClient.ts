@@ -1,4 +1,5 @@
 import config from 'config';
+import fetch from 'node-fetch';
 import { Fetch } from "uq-joint";
 
 const webApiBaseUrl = config.get<string>("busOutUrl");
@@ -46,6 +47,23 @@ export class WebApiClient extends Fetch {
         try {
             await this.post(`PointShop/Exchange?saleOrderId=${orderId}`, undefined);
             return true;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+
+    async getPrice(packageId: string, salesRegionId: string): Promise<any> {
+        try {
+            /*
+            不能使用uq-joint中提供的Fetch，该Fetch要求返回结果的格式是{ok: true|false, res: data}，下面的方法不提供该格式
+            return await this.get("ProductCatalog/GetPrice", { packageId: packageId, salesRegionId: salesRegionId });
+            */
+            let res = await fetch(webApiBaseUrl + "ProductCatalog/GetPrice?packageId=" + packageId + "&salesRegionId=" + salesRegionId);
+            if (res.status === 200) {
+                return res.json();
+            }
+            return undefined;
         } catch (error) {
             console.log(error);
             throw error;
