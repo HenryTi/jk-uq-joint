@@ -59,7 +59,7 @@ export class WebApiClient extends Fetch {
             不能使用uq-joint中提供的Fetch，该Fetch要求返回结果的格式是{ok: true|false, res: data}，下面的方法不提供该格式
             return await this.get("ProductCatalog/GetPrice", { packageId: packageId, salesRegionId: salesRegionId });
             */
-            let res = await fetch(webApiBaseUrl + "ProductCatalog/GetPrice?packageId=" + packageId + "&salesRegionId=" + salesRegionId);
+            let res = await fetch(webApiBaseUrl + "ProductCatalog/GetPrice?packageId=" + encodeURI(packageId) + "&salesRegionId=" + salesRegionId);
             if (res.status === 200) {
                 return res.json();
             }
