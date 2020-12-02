@@ -22,7 +22,7 @@ const facePointExchangePush = async (joint, uqBus, queue, orderIn) => {
     if (result) {
         let jdItems = orderIn.exchangeItems.filter(e => e.source === JD);
         if (jdItems.length > 0) {
-            // result = await createJDOrder(orderIn);
+            result = await createJDOrder(orderIn);
         }
     }
     return result;
