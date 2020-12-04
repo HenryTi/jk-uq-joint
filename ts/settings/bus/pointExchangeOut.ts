@@ -71,7 +71,7 @@ async function createSelfOrder(orderIn: any) {
             return true;
         } catch (error) {
             console.error(orderOut.Id + ":" + error);
-            return false;
+            throw error;
         }
     }
 }
@@ -99,7 +99,7 @@ async function createJDOrder(orderIn: any) {
         return false;
     } catch (error) {
         console.error(error);
-        return false;
+        throw error;
     }
 }
 

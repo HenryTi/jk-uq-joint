@@ -34,7 +34,7 @@
         "BuyerAccountID": 6762,
         "ProductMSDS": "031E9CCE-6383-432C-B8A1-DCAF205A1B61"
     },
-    "smsServer":{
+    "joint-SmsServer":{
         "baseUrl": "",
         "un": "",
         "pw": "",
@@ -43,6 +43,8 @@
         "tf": "",
         "messageHeader": ""
     },
+    "joint-enableNotify": false,
+    "joint-notifyInterval": 100,
     "firstEntities": [
         "Language",
         "Country",
