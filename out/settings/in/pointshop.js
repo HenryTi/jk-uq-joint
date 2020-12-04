@@ -3,7 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.WebUserPointDiff = void 0;
 const config_1 = __importDefault(require("config"));
+const uqs_1 = require("../uqs");
+const tool_1 = require("uq-joint/db/mysql/tool");
+const tools_1 = require("../../mssql/tools");
 const promiseSize = config_1.default.get("promiseSize");
 /**
  * TODO: 积分产品导入到tonva系统
@@ -80,5 +84,97 @@ export const PointShopOrder: UqInMap = {
         }
     }
 }
-*/ 
+*/
+exports.WebUserPointDiff = {
+    uq: uqs_1.uqs.jkPointShop,
+    type: 'map',
+    entity: 'WebUserPointDiff',
+    mapper: {
+        webuser: true,
+        customerId: true,
+        pointyear: true,
+        totalpoint: true,
+        point: true,
+        usedpoint: true,
+    },
+    pull: async (joint, uqin, queue) => {
+        let currentWebUser;
+        let getQueue = `select webuser from pointshop.tv_pointbook where webuser > ${queue} and pointyear > 2017 limit 1`;
+        let queueResult = await tool_1.execSql(getQueue);
+        if (queueResult.length === 1) {
+            currentWebUser = queueResult[0].webuser;
+        }
+        let sql = `select   a.webuser, c.no as customerId, a.pointyear, a.totalpoint, a.point, a.usedpoint 
+                   from     pointshop.tv_pointbook as a
+                            left join webuser.tv_webusercustomer as wc on wc.webuser = a.webuser
+                            left join customer.tv_customer as c on c.$unit = wc.$unit and c.id = wc.customer
+                    where   a.webuser = ? and a.pointyear > 2017`;
+        let result = await tool_1.execSql(sql, [currentWebUser]);
+        if (result.length > 0) {
+            let { webuser, customerId } = result[0];
+            let data = [{ webuser, customerId, points: [] }];
+            result.forEach((e) => {
+                data[0].points.push({ pointyear: e.pointyear, totalpoint: e.totalpoint, point: e.point, usedpoint: e.usedpoint });
+            });
+            return { lastPointer: currentWebUser, data: data };
+        }
+    },
+    pullWrite: async (joint, uqin, data) => {
+        let { webuser, customerId, points } = data;
+        let sql = `select   cid as customerId, Years as pointyear, allScore as totalpoint, scoreEffective as point, ScoreUsed as usedpoint
+                   from     dbs.dbo.CustomerScoreBook
+                   where    cid = @customerId and years > 2017`;
+        let result = await tools_1.execSql(sql, [{ "name": "customerId", "value": customerId }]);
+        let { rowsAffected, recordset } = result;
+        let diff = { webuser, customerId, diffs: [] };
+        points.forEach(p => {
+            let { pointyear, totalpoint, point, usedpoint } = p;
+            let cp = recordset.find(cp => cp.pointyear === pointyear);
+            if (cp !== undefined) {
+                let { totalpoint: ctotalpoint, point: cpoint, usedpoint: cusedpoint } = cp;
+                if (Math.abs(ctotalpoint - totalpoint) > 1 || Math.abs(cpoint - point) > 1 || Math.abs(cusedpoint - usedpoint) > 1) {
+                    diff.diffs.push({
+                        pointyear, ctotalpoint: ctotalpoint, cpoint: cpoint, cusedpoint: cusedpoint,
+                        totalpoint: totalpoint, point: point, usedpoint: usedpoint
+                    });
+                }
+            }
+            else {
+                diff.diffs.push({
+                    pointyear, ctotalpoint: undefined, cpoint: undefined, cusedpoint: undefined,
+                    totalpoint: totalpoint, point: point, usedpoint: usedpoint
+                });
+            }
+        });
+        recordset.forEach(cp => {
+            let { pointyear: cpointyear, totalpoint: ctotalpoint, point: cpoint, usedpoint: cusedpoint } = cp;
+            let p = points.find(p => p.pointyear === cpointyear);
+            if (p !== undefined) {
+                let { totalpoint, point, usedpoint } = cp;
+                if (Math.abs(ctotalpoint - totalpoint) > 1 || Math.abs(cpoint - point) > 1 || Math.abs(cusedpoint - usedpoint) > 1) {
+                    if (!diff.diffs.find(x => x.pointyear === cpointyear))
+                        diff.diffs.push({
+                            pointyear: cpointyear, ctotalpoint: ctotalpoint, cpoint: cpoint, cusedpoint: cusedpoint,
+                            totalpoint: totalpoint, point: point, usedpoint: usedpoint
+                        });
+                }
+            }
+            else {
+                diff.diffs.push({
+                    pointyear: cpointyear, ctotalpoint: cpointyear, cpoint: cpoint, cusedpoint: cusedpoint,
+                    totalpoint: undefined, point: undefined, usedpoint: undefined
+                });
+            }
+        });
+        if (diff.diffs.length > 0) {
+            let isql = "insert into dbs.dbo.CustomerScoreBookDiff(webuser, customerId, diff) values(@webuser, @customerId, @diff)";
+            await tools_1.execSql(isql, [
+                { name: "webuser", value: webuser },
+                { name: "customerId", value: customerId },
+                { name: "diff", value: JSON.stringify(diff.diffs) }
+            ]);
+        }
+        return true;
+    }
+};
 //# sourceMappingURL=pointshop.js.map
