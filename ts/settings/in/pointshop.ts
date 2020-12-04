@@ -2,7 +2,7 @@ import { UqInTuid, UqInMap, Joint, DataPullResult } from "uq-joint";
 import dateFormat from 'dateformat';
 import config from 'config';
 import { uqs } from "../uqs";
-import { execSql } from "uq-joint/db/mysql/tool";
+// import { execSql } from "uq-joint";
 import { execSql as msExecSql } from "../../mssql/tools";
 
 const promiseSize = config.get<number>("promiseSize");
@@ -83,7 +83,6 @@ export const PointShopOrder: UqInMap = {
         }
     }
 }
-*/
 
 export const WebUserPointDiff: UqInMap = {
     uq: uqs.jkPointShop,
@@ -104,7 +103,7 @@ export const WebUserPointDiff: UqInMap = {
         if (queueResult.length === 1) {
             currentWebUser = queueResult[0].webuser;
         }
-        let sql = `select   a.webuser, c.no as customerId, a.pointyear, a.totalpoint, a.point, a.usedpoint 
+        let sql = `select   a.webuser, c.no as customerId, a.pointyear, a.totalpoint, a.point, a.usedpoint
                    from     pointshop.tv_pointbook as a
                             left join webuser.tv_webusercustomer as wc on wc.webuser = a.webuser
                             left join customer.tv_customer as c on c.$unit = wc.$unit and c.id = wc.customer
@@ -179,3 +178,4 @@ export const WebUserPointDiff: UqInMap = {
         return true;
     }
 }
+*/
