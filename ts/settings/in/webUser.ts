@@ -200,6 +200,7 @@ export const WebUserCustomer: UqInMap = {
     mapper: {
         webUser: 'UserID',
         customer: 'CustomerID@Customer',
+        priority: 1,
     }
 };
 

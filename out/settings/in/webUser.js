@@ -192,6 +192,7 @@ exports.WebUserCustomer = {
     mapper: {
         webUser: 'UserID',
         customer: 'CustomerID@Customer',
+        priority: 1,
     }
 };
 exports.WebUserContacts = {
