@@ -94,9 +94,12 @@ async function createJDOrder(orderIn: any) {
             headers: { 'content-type': 'application/json' }
         });
         if (res.ok) {
-            return true;
+            let result = await res.json();
+            let { success } = result;
+            if (success) {
+                return true;
+            }
         }
-        return false;
     } catch (error) {
         console.error(error);
         throw error;
@@ -115,6 +118,7 @@ export const facePointExchange: UqBus = {
         Id: "no",
         Customer: "customer@Customer",
         shippingContact: true,
+        amount: true,
         freightFee: true,
         freeghtFeeRemitted: true,
         CreateDate: 'createDate',
@@ -125,8 +129,8 @@ export const facePointExchange: UqBus = {
             JDSkuId: "sourceId",
             source: true,
             Qty: "quantity",
-            // Price: "price",
-            // Currency: "^currency@Currency"
+            point: true,
+            subAmount: true,
         }
     },
     push: facePointExchangePush,
@@ -244,20 +248,24 @@ export const faceSignInPointOut: UqBus = {
     push: async (joint: Joint, uqBus: UqBus, queue: number, data: any): Promise<boolean> => {
         let { customer, pointYear, point, comments } = data;
         let title = '签到积分';
-        await execSql(
-            `if exists( select 1 from dbs.dbo.MScoreAlter where CID = @customer and MSYear = @year and title = @title)
+        await adjustInnerPoints(customer, point, pointYear, title, comments);
+        return true;
+    }
+}
+
+async function adjustInnerPoints(customer: string, point: number, pointYear: number, title: string, comments: string) {
+    await execSql(
+        `if exists( select 1 from dbs.dbo.MScoreAlter where CID = @customer and MSYear = @year and title = @title)
                 update dbs.dbo.MScoreAlter set MScore += @point where CID = @customer and MSYear = @year and title = @title
             else 
                 insert into dbs.dbo.MScoreAlter(CID, MScore, MSYear, title, Note, EPID, IsEffective)
                 values(@customer, @point, @year, @title, @note, 'LCT', 1)`, [
-            { 'name': 'customer', 'value': customer },
-            { 'name': 'point', 'value': point },
-            { 'name': 'year', 'value': pointYear },
-            { 'name': 'title', 'value': title },
-            { 'name': 'note', 'value': comments },
-        ]);
-        return true;
-    }
+        { 'name': 'customer', 'value': customer },
+        { 'name': 'point', 'value': point },
+        { 'name': 'year', 'value': pointYear },
+        { 'name': 'title', 'value': title },
+        { 'name': 'note', 'value': comments },
+    ]);
 }
 
 /*

@@ -88,9 +88,12 @@ async function createJDOrder(orderIn) {
             headers: { 'content-type': 'application/json' }
         });
         if (res.ok) {
-            return true;
+            let result = await res.json();
+            let { success } = result;
+            if (success) {
+                return true;
+            }
         }
-        return false;
     }
     catch (error) {
         console.error(error);
@@ -108,6 +111,7 @@ exports.facePointExchange = {
         Id: "no",
         Customer: "customer@Customer",
         shippingContact: true,
+        amount: true,
         freightFee: true,
         freeghtFeeRemitted: true,
         CreateDate: 'createDate',
@@ -118,6 +122,8 @@ exports.facePointExchange = {
             JDSkuId: "sourceId",
             source: true,
             Qty: "quantity",
+            point: true,
+            subAmount: true,
         }
     },
     push: facePointExchangePush,
@@ -230,20 +236,23 @@ exports.faceSignInPointOut = {
     push: async (joint, uqBus, queue, data) => {
         let { customer, pointYear, point, comments } = data;
         let title = '签到积分';
-        await tools_1.execSql(`if exists( select 1 from dbs.dbo.MScoreAlter where CID = @customer and MSYear = @year and title = @title)
+        await adjustInnerPoints(customer, point, pointYear, title, comments);
+        return true;
+    }
+};
+async function adjustInnerPoints(customer, point, pointYear, title, comments) {
+    await tools_1.execSql(`if exists( select 1 from dbs.dbo.MScoreAlter where CID = @customer and MSYear = @year and title = @title)
                 update dbs.dbo.MScoreAlter set MScore += @point where CID = @customer and MSYear = @year and title = @title
             else 
                 insert into dbs.dbo.MScoreAlter(CID, MScore, MSYear, title, Note, EPID, IsEffective)
                 values(@customer, @point, @year, @title, @note, 'LCT', 1)`, [
-            { 'name': 'customer', 'value': customer },
-            { 'name': 'point', 'value': point },
-            { 'name': 'year', 'value': pointYear },
-            { 'name': 'title', 'value': title },
-            { 'name': 'note', 'value': comments },
-        ]);
-        return true;
-    }
-};
+        { 'name': 'customer', 'value': customer },
+        { 'name': 'point', 'value': point },
+        { 'name': 'year', 'value': pointYear },
+        { 'name': 'title', 'value': title },
+        { 'name': 'note', 'value': comments },
+    ]);
+}
 /*
 // 删除——由CreditsUsedByCustomer替换——用于将tonva订单积分导入到内部系统
 export const facePointOut: UqBus = {
