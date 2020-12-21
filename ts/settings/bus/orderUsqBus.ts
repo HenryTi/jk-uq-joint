@@ -20,7 +20,6 @@ const faceOrderPush: DataPush<UqBus> = async (joint: Joint, uqBus: UqBus, queue:
         return success;
     } catch (error) {
         console.error(error);
-        return false;
     }
 }
 

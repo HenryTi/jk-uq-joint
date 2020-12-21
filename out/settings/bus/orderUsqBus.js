@@ -24,7 +24,6 @@ const faceOrderPush = async (joint, uqBus, queue, orderIn) => {
     }
     catch (error) {
         console.error(error);
-        return false;
     }
 };
 async function newSorder(orderIn) {
