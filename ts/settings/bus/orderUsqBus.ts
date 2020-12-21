@@ -68,6 +68,7 @@ export async function newSorder(orderIn: any) {
         return true;
     } catch (error) {
         console.error(error);
+        throw error;
     }
 }
 
@@ -80,6 +81,7 @@ export async function newTonvaSorderCustomer(orderIn: any) {
         return true;
     } catch (error) {
         console.error(error);
+        throw error;
     }
 }
 
