@@ -62,6 +62,8 @@ export const Promotion: UqInTuid = {
             data["EndDate"] = data["EndDate"] && data['EndDate'].getTime() / 1000; // dateFormat(data["EndDate"], "yyyy-mm-dd HH:MM:ss");
             data["CreateTime"] = data["CreateTime"] && data['CreateTime'].getTime() / 1000; // dateFormat(data["CreateTime"], "yyyy-mm-dd HH:MM:ss");
             await joint.uqIn(Promotion, _.pick(data, ["ID", "MarketingID", "Name", "Type", "Status", "StartDate", 'EndDate', 'CreateTime']));
+            // 下面这种方法是投机取巧将Map中MarkeingID为指定值的数据全部删除 - 不行，这个可能会在SalesRegion中引入无效值
+            await joint.uqIn(PromotionSalesRegion, { $: '-', 'MarketingID': data['MarketingID'] });
             await joint.uqIn(PromotionSalesRegion, _.pick(data, ["MarketingID", "SalesRegionID"]));
             return true;
         } catch (error) {
@@ -79,7 +81,7 @@ export const PromotionSalesRegion: UqInMap = {
     mapper: {
         promotion: 'MarketingID@Promotion',
         arr1: {
-            salesRegion: '^SalesRegionID@SalesRegion',
+            salesRegion: '^SalesRegionID@SalesRegion(-1)',
         }
     }
 };
