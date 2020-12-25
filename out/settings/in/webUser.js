@@ -131,7 +131,7 @@ async function userIn(joint, uqIn, data) {
         }
         let ret = await tryUserIn(body, mapToUq);
         if (!body.id && ret > 0) {
-            // await map(tuid, ret, keyVal);
+            // 从中心服务器生成的id，写入到map_webuser_webuser中（而非map_webuser_webusertonva中，不使用该表作为对照表）
             await uq_joint_1.map(uq_joint_1.getMapName(exports.WebUser), ret, keyVal);
         }
         return body.id || ret;
