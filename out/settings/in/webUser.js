@@ -217,7 +217,7 @@ exports.WebUserContacts = {
         for (let i = data.length - 1; i >= 0; i--) {
             const element = data[i];
             // if (dataCopy.lastIndexOf(element["AddressID"]) >= 0)
-            if (dataCopy.findIndex(e => e.AddressID === element.AddressID) > 0)
+            if (dataCopy.findIndex(e => e.ContactID === element.ContactID) > 0)
                 continue;
             dataCopy.push(element);
         }
