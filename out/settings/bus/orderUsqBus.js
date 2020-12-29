@@ -103,8 +103,11 @@ function getConsignee(shippingContact) {
             County: county && county.chineseName,
             zipcode: zipcode,
         };
+        Consignee.ConsigneeAddress.ConsigneeAddressDetail = addressString;
     }
-    Consignee.ConsigneeAddress.ConsigneeAddressDetail = addressString;
+    else {
+        throw new Error(JSON.stringify(shippingContact) + " has no valid address.");
+    }
     return Consignee;
 }
 exports.getConsignee = getConsignee;

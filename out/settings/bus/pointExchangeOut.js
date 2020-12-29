@@ -35,10 +35,11 @@ async function createSelfOrder(orderIn) {
     let orderOut = lodash_1.default.pick(orderIn, ['id']);
     orderOut.Id = 'POINTX' + orderIn.Id;
     orderOut.Customer = { Id: orderIn.Customer };
-    if (orderIn.shippingContact !== undefined) {
-        orderOut.Consignee = orderUsqBus_1.getConsignee(orderIn.shippingContact);
-        orderOut.InvoiceReceiver = orderUsqBus_1.getInvoiceReceiver(orderIn.shippingContact);
+    if (orderIn.shippingContact === undefined && orderIn.shippingContact.address === undefined) {
+        throw new Error(JSON.stringify(orderIn) + ' not have valid address');
     }
+    orderOut.Consignee = orderUsqBus_1.getConsignee(orderIn.shippingContact);
+    orderOut.InvoiceReceiver = orderUsqBus_1.getInvoiceReceiver(orderIn.shippingContact);
     orderOut.PaymentRule = { Id: '1' };
     orderOut.InvoiceService = { id: '正常开票' };
     orderOut.TransportMethodId = 'Y';

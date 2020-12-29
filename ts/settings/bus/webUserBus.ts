@@ -50,6 +50,9 @@ export const faceUser: UqBus = {
     }
 }
 
+/**
+ * 用于将“我的服务器上”客户信息发生的变化导入到官网系统中
+ */
 export const faceWebUser: UqBus = {
     face: '百灵威系统工程部/WebUser/WebUser',
     from: 'local',

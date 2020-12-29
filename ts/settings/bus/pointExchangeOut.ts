@@ -36,10 +36,11 @@ async function createSelfOrder(orderIn: any) {
     let orderOut: any = _.pick(orderIn, ['id']);
     orderOut.Id = 'POINTX' + orderIn.Id;
     orderOut.Customer = { Id: orderIn.Customer };
-    if (orderIn.shippingContact !== undefined) {
-        orderOut.Consignee = getConsignee(orderIn.shippingContact);
-        orderOut.InvoiceReceiver = getInvoiceReceiver(orderIn.shippingContact);
+    if (orderIn.shippingContact === undefined && orderIn.shippingContact.address === undefined) {
+        throw new Error(JSON.stringify(orderIn) + ' not have valid address');
     }
+    orderOut.Consignee = getConsignee(orderIn.shippingContact);
+    orderOut.InvoiceReceiver = getInvoiceReceiver(orderIn.shippingContact);
 
     orderOut.PaymentRule = { Id: '1' };
     orderOut.InvoiceService = { id: '正常开票' };

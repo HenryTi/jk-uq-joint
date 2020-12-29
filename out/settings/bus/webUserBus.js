@@ -56,6 +56,9 @@ exports.faceUser = {
         return true;
     }
 };
+/**
+ * 用于将“我的服务器上”客户信息发生的变化导入到官网系统中
+ */
 exports.faceWebUser = {
     face: '百灵威系统工程部/WebUser/WebUser',
     from: 'local',
