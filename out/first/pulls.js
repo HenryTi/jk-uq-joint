@@ -14,6 +14,7 @@ const customerDiscount_1 = require("../settings/in/customerDiscount");
 const hr_1 = require("../settings/in/hr");
 //import { PointShopOrder } from 'settings/in/pointshop';
 const VIPCardLevel_1 = require("settings/in/VIPCardLevel");
+const chemicalSynonymity_1 = require("settings/in/chemical/chemicalSynonymity");
 /** */
 exports.pulls = {
     "Language": { read: sqls_1.sqls.readLanguage, uqIn: salesRegion_1.Language },
@@ -38,6 +39,7 @@ exports.pulls = {
     // 品牌
     "Brand": { read: sqls_1.sqls.readBrand, uqIn: product_1.Brand },
     "Chemical": { read: sqls_1.sqls.readChemical, uqIn: chemical_1.Chemical },
+    "ChemicalSynonmity": { read: sqls_1.sqls.readChemicalSynonmity, uqIn: chemicalSynonymity_1.ChemicalSynonmity },
     // 产品
     "ProductX": { read: sqls_1.sqls.readProduct, uqIn: product_1.ProductX },
     "ProductLegallyProhibited": { read: sqls_1.sqls.readProductLegallyProhibited, uqIn: product_1.ProductLegallyProhibited },

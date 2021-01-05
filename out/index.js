@@ -69,11 +69,11 @@ const tools_1 = require("./mssql/tools");
             console.error(e);
         }
     });
-    let joint = new uq_joint_1.Joint(settings_1.settings);
+    let joint = new uq_joint_1.Joint(settings_1.settings, config_1.default.get('jointMode'));
     app.use('/joint-uq-jk', joint.createRouter());
     let port = config_1.default.get('port');
     app.listen(port, async () => {
-        console.log('UQ-API listening on port ' + port);
+        console.log('jk-uq-joint listening on port ' + port);
         let { host, user } = connection;
         console.log('process.env.NODE_ENV: %s\nDB host: %s, user: %s', process.env.NODE_ENV, host, user);
         joint.start();

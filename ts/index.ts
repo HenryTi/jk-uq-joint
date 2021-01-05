@@ -7,6 +7,7 @@ import { settings } from './settings';
 //import { host } from './uq-joint/tool/host';
 //import { centerApi } from './uq-joint/tool/centerApi';
 import { initMssqlPool } from './mssql/tools';
+import { ProdOrTest } from 'uq-joint/joint';
 
 (async function () {
     console.log(process.env.NODE_ENV);
@@ -48,12 +49,12 @@ import { initMssqlPool } from './mssql/tools';
         }
     });
 
-    let joint = new Joint(settings);
+    let joint = new Joint(settings, config.get<ProdOrTest>('jointMode'));
     app.use('/joint-uq-jk', joint.createRouter());
 
     let port = config.get<number>('port');
     app.listen(port, async () => {
-        console.log('UQ-API listening on port ' + port);
+        console.log('jk-uq-joint listening on port ' + port);
         let { host, user } = connection;
         console.log('process.env.NODE_ENV: %s\nDB host: %s, user: %s',
             process.env.NODE_ENV,

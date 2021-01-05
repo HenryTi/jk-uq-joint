@@ -13,6 +13,7 @@ import { Agreement } from '../settings/in/customerDiscount';
 import { Employee } from '../settings/in/hr';
 //import { PointShopOrder } from 'settings/in/pointshop';
 import { OrganizationVIPLevel } from 'settings/in/VIPCardLevel';
+import { ChemicalSynonmity } from 'settings/in/chemical/chemicalSynonymity';
 
 /**
  * joint的思路是：joint一直在运行，每隔一段时间执行一次数据交换，数据交换分为3种，
@@ -60,6 +61,8 @@ export const pulls: {
     // 品牌
     "Brand": { read: sqls.readBrand, uqIn: Brand },
     "Chemical": { read: sqls.readChemical, uqIn: Chemical },
+    "ChemicalSynonmity": { read: sqls.readChemicalSynonmity, uqIn: ChemicalSynonmity },
+
     // 产品
     "ProductX": { read: sqls.readProduct, uqIn: ProductX },
     "ProductLegallyProhibited": { read: sqls.readProductLegallyProhibited, uqIn: ProductLegallyProhibited },

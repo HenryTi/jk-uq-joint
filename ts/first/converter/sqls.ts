@@ -88,6 +88,13 @@ export const sqls = {
                 where reliability = 0 and chemID > @iMaxId and chemID > ${idBrokened.chemid} order by chemID
                         `,
 
+        // TODO:该SQL语句尚未完成
+        readChemicalSynonmity: `
+                select top ${promiseSize}
+                chemID as ID, CAS, Description, DescriptionC, MolWeight, MolFomula, MdlNumber
+                from opdata.dbo.sc_chemical
+                where reliability = 0 and chemID > @iMaxId and chemID > ${idBrokened.chemid} order by chemID`,
+
         //==============================================================
         //=========================== customer ===========================
         //==============================================================

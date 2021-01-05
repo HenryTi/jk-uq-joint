@@ -17,6 +17,7 @@
         "parseJSON": true,
         "pool.max": 10
     },
+    "jointMode": "test",
     "centerhost": "",
     "uqPath": "uq/test/",
     "uqUnitxPath": "uq/unitx-test/",
