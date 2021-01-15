@@ -39,12 +39,24 @@ export async function uqOutRead(sql: string, maxId: string | number, endPoint?: 
     }
 }
 
+/**
+ * 根据指针值读取单条记录（指针参数名称必须是iMaxId) 
+ * @param sql 要执行的sql语句 
+ * @param queue 指针值
+ * @returns object，其中:queue为新的指针；data：object，为所返回的数据
+ */
 export async function uqPullRead(sql: string, queue: number): Promise<{ queue: number, data: any }> {
     let ret = await readOne(sql, [{ name: 'iMaxId', value: queue }]);
     if (ret !== undefined)
         return { queue: Number(ret.lastId), data: ret.data };
 }
 
+/**
+ * 读取单条记录 
+ * @param sqlstring 要执行的sql语句
+ * @param params 参数
+ * @returns 
+ */
 const readOne = async (sqlstring: string, params?: { name: string, value: any }[]): Promise<{ lastId: string, data: any }> => {
 
     let result = await execSql(sqlstring, params);

@@ -39,6 +39,12 @@ async function getPool() {
 
 }
 */
+/**
+ *
+ * @param {string} sql 要执行的sql语句
+ * @param params 参数列表
+ * @returns {object} object, 其中：recordset: 对象数组，其中的对象属性名对应sql语句中的字段名，属性值为字段值；rowaffected?: sql语句影响的行数
+ */
 async function execSql(sql, params) {
     try {
         const request = __pool.request();
