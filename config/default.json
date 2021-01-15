@@ -141,6 +141,7 @@
         "faceOrderCoupon",
         "faceAssistAchievementBus",
         "faceAssistAchievementHistoryBus",
-        "faceAssistCustomerNowSales"
+        "faceAssistCustomerNowSales",
+        "faceShelfInOutBoundHistory"
     ]
 }
