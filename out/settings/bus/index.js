@@ -15,6 +15,7 @@ const orderHistory_1 = require("./orderHistory");
 const bulkInquiryBook_1 = require("./bulkInquiryBook");
 const assistCustomerNowSales_1 = require("./assistCustomerNowSales");
 const pointProductOut_1 = require("./out/pointProductOut");
+const shelfInOutBoundHistoryBus_1 = require("./shelfInOutBoundHistoryBus");
 exports.bus = {
     "faceOrder": orderUsqBus_1.faceOrder,
     "faceUser": webUserBus_1.faceUser,
@@ -41,5 +42,6 @@ exports.bus = {
     "faceAssistCustomerNowSales": assistCustomerNowSales_1.faceAssistCustomerNowSales,
     "faceOrderHistory": orderHistory_1.faceOrderHistory,
     "faceBulkInquiryBook": bulkInquiryBook_1.faceBulkInquiryBook,
+    "faceShelfInOutBoundHistory": shelfInOutBoundHistoryBus_1.faceShelfInOutBoundHistory
 };
 //# sourceMappingURL=index.js.map

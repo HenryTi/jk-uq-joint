@@ -196,11 +196,36 @@ exports.sqls = {
     //=========================== Warehouse ===========================
     //==============================================================
     readWarehouse: `
-                select top ${promiseSize} CompanyID as ID, CompanyID as WarehouseID, companyName as WarehouseName, companyAddr
-                from dbs.dbo.Scompany where CompanyID > @iMaxId order by CompanyId`,
+                select top ${promiseSize} zcl_mess.dbo.FC_ReplaceSpaceStartEnd(CompanyID) as ID, zcl_mess.dbo.FC_ReplaceSpaceStartEnd(CompanyID) as WarehouseID, 
+                       companyName as WarehouseName, companyAddr
+                from   dbs.dbo.Scompany where CompanyID > @iMaxId order by CompanyId`,
     readSalesRegionWarehouse: `
-                select top ${promiseSize} ID, CompanyID as WarehouseID, Location as SalesRegionID, minDeliverTime, maxDeliverTime
-                from dbs.dbo.CompanyLocation where ID > @iMaxId order by Id`,
+                select top ${promiseSize} ID, zcl_mess.dbo.FC_ReplaceSpaceStartEnd(CompanyID) as WarehouseID, Location as SalesRegionID, minDeliverTime, maxDeliverTime
+                from   dbs.dbo.CompanyLocation where ID > @iMaxId order by Id`,
+    readWarehouseRoom: `
+                select  top ${promiseSize} zcl_mess.dbo.FC_ReplaceSpaceStartEnd(room) as ID, zcl_mess.dbo.FC_ReplaceSpaceStartEnd(room) as WarehouseRoomID, 
+                        CASE WHEN Note IS NULL OR Note = '' THEN zcl_mess.dbo.FC_ReplaceSpaceStartEnd(room) ELSE zcl_mess.dbo.FC_ReplaceSpaceStartEnd(Note) END AS WarehouseRoomName,
+                        StockArea AS WarehouseID, 1 AS isValid
+                from    dbs.dbo.StockRoom where room > @iMaxId order by room`,
+    readShelf: `
+                select  top ${promiseSize} ShelfID as ID, ShelfID AS ShelfID, HJZDM AS ShelfName, room AS WarehouseRoomID, 1 AS isValid
+                from    (
+                        SELECT	DISTINCT zcl_mess.dbo.FC_ReplaceSpaceStartEnd(room) as room, zcl_mess.dbo.FC_ReplaceSpaceStartEnd(HJZDM) as HJZDM, 
+                                zcl_mess.dbo.FC_ReplaceSpaceStartEnd(room + HJZDM) AS ShelfID
+                        FROM	dbs.dbo.ShelfLevel
+                        ) a
+                where   a.ShelfID > @iMaxId order by a.ShelfID`,
+    readShelfLayer: `
+                select  top ${promiseSize} zcl_mess.dbo.FC_ReplaceSpaceStartEnd(ShelfLevNo) AS ID, zcl_mess.dbo.FC_ReplaceSpaceStartEnd(ShelfLevNo) AS ShelfLayerID, 
+                        zcl_mess.dbo.FC_ReplaceSpaceStartEnd(HJZFCDM) AS ShelfLayerName, 
+                        zcl_mess.dbo.FC_ReplaceSpaceStartEnd(room + HJZDM) AS ShelfID, 1 AS isValid
+                from    dbs.dbo.ShelfLevel
+                where   ShelfLevNo > @iMaxId order by ShelfLevNo`,
+    /*
+    readShelfBlock: `
+            select top ${promiseSize} ID, CompanyID as WarehouseID, Location as SalesRegionID, minDeliverTime, maxDeliverTime
+            from dbs.dbo.CompanyLocation where ID > @iMaxId order by Id`,
+    */
     //==============================================================
     //=========================== Promotion ===========================
     //==============================================================

@@ -31,6 +31,10 @@ exports.pulls = {
     // 库存
     "Warehouse": { read: sqls_1.sqls.readWarehouse, uqIn: warehouse_1.Warehouse },
     "SalesRegionWarehouse": { read: sqls_1.sqls.readSalesRegionWarehouse, uqIn: warehouse_1.SalesRegionWarehouse },
+    "WarehouseRoom": { read: sqls_1.sqls.readWarehouseRoom, uqIn: warehouse_1.WarehouseRoom },
+    "Shelf": { read: sqls_1.sqls.readShelf, uqIn: warehouse_1.Shelf },
+    "ShelfLayer": { read: sqls_1.sqls.readShelfLayer, uqIn: warehouse_1.ShelfLayer },
+    "ShelfBlock": { read: undefined, uqIn: warehouse_1.ShelfBlock },
     // 产品相关的数据表
     // 目录树
     "ProductCategory": { read: sqls_1.sqls.readProductCategory, uqIn: productCategory_1.ProductCategory },

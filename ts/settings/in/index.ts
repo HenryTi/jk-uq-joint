@@ -5,8 +5,8 @@ import {
     PriceX, AgentPrice, BrandSalesRegion, BrandDeliveryTime, ProductChemical, InvalidProduct,
     ProductMSDSFile, ProductSpecFile, ProductSalesRank
 } from "./product";
-import { Warehouse, SalesRegionWarehouse } from "./warehouse";
-import { Chemical } from "./chemical";
+import { Warehouse, SalesRegionWarehouse, WarehouseRoom, Shelf, ShelfLayer, ShelfBlock } from "./warehouse";
+import { Chemical, StorageCondition } from "./chemical";
 import { Promotion, PromotionSalesRegion, PromotionLanguage, PromotionPackDiscount, PromotionStatus, PromotionType } from "./promotion";
 import {
     Customer, Organization, OrganizationCustomer, CustomerContact, CustomerContacts, Contact, InvoiceInfo,
@@ -40,6 +40,7 @@ const uqIns = [
     Employee,
 
     Chemical,
+    StorageCondition,
 
     Brand,
     BrandSalesRegion,
@@ -65,6 +66,10 @@ const uqIns = [
 
     Warehouse,                  // 还没有日常的数据交换，变化较小，不必有？
     SalesRegionWarehouse,       // 还没有日常的数据交换，变化较小，不必有？
+    WarehouseRoom,
+    Shelf,
+    ShelfLayer,
+    ShelfBlock,
 
     PromotionType,
     PromotionStatus,

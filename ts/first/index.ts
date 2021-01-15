@@ -19,6 +19,7 @@ const pullEntities = config.get<string[]>("firstEntities");
 
     await initMssqlPool();
 
+    //let joint = new Joint(settings, 'test');
     let joint = new Joint(settings);
     await joint.init();
     logger.info('start');
