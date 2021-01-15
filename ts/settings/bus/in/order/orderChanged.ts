@@ -1,5 +1,5 @@
 import { uqPullRead } from "../../../../first/converter/uqOutRead";
-import { execSql } from "mssql/tools";
+import { execSql } from "../../../../mssql/tools";
 import { DataPullResult, Joint, UqBus } from "uq-joint";
 
 export const faceOrderChanged: UqBus = {

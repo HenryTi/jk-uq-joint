@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.faceOrderChanged = void 0;
 const uqOutRead_1 = require("../../../../first/converter/uqOutRead");
-const tools_1 = require("mssql/tools");
+const tools_1 = require("../../../../mssql/tools");
 exports.faceOrderChanged = {
     face: '百灵威系统工程部/orderChanged/orderChanged',
     from: 'local',
