@@ -16,5 +16,6 @@ exports.uqs = {
     jkSalestask: JKDev + '/salestask',
     jkPointShop: JKDev + '/积分商城',
     jkVIPCardType: JKDev + '/vipCardType',
+    jkAchievement: JKDev + '/achievement',
 };
 //# sourceMappingURL=uqs.js.map

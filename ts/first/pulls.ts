@@ -14,6 +14,7 @@ import { Employee } from '../settings/in/hr';
 //import { PointShopOrder } from 'settings/in/pointshop';
 import { OrganizationVIPLevel } from 'settings/in/VIPCardLevel';
 import { ChemicalSynonmity } from 'settings/in/chemical/chemicalSynonymity';
+import { SalesmanCommissionType, SalesVolumePlan } from 'settings/in/achievement/salesVolumePlan';
 
 /**
  * joint的思路是：joint一直在运行，每隔一段时间执行一次数据交换，数据交换分为3种，
@@ -95,4 +96,8 @@ export const pulls: {
 
     // 
     "OrganizationVIPLevel": { read: sqls.readOrganizationVIPLevel, uqIn: OrganizationVIPLevel },
+
+    // 
+    "SalesmanCommissionType": { read: sqls.readSalesmanCommissionType, uqIn: SalesmanCommissionType },
+    "SalesVolumePlan": { read: sqls.readSalesVolumePlan, uqIn: SalesVolumePlan }
 }

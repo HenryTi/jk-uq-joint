@@ -15,6 +15,7 @@ const hr_1 = require("../settings/in/hr");
 //import { PointShopOrder } from 'settings/in/pointshop';
 const VIPCardLevel_1 = require("settings/in/VIPCardLevel");
 const chemicalSynonymity_1 = require("settings/in/chemical/chemicalSynonymity");
+const salesVolumePlan_1 = require("settings/in/achievement/salesVolumePlan");
 /** */
 exports.pulls = {
     "Language": { read: sqls_1.sqls.readLanguage, uqIn: salesRegion_1.Language },
@@ -66,5 +67,8 @@ exports.pulls = {
     //"SaleOrder": { read: sqls.readSaleOrder, uqIn: PointShopOrder },
     // 
     "OrganizationVIPLevel": { read: sqls_1.sqls.readOrganizationVIPLevel, uqIn: VIPCardLevel_1.OrganizationVIPLevel },
+    // 
+    "SalesmanCommissionType": { read: sqls_1.sqls.readSalesmanCommissionType, uqIn: salesVolumePlan_1.SalesmanCommissionType },
+    "SalesVolumePlan": { read: sqls_1.sqls.readSalesVolumePlan, uqIn: salesVolumePlan_1.SalesVolumePlan }
 };
 //# sourceMappingURL=pulls.js.map

@@ -7,6 +7,7 @@ import { uqOutRead } from "./converter/uqOutRead";
 //import { centerApi } from "../uq-joint/tool/centerApi";
 import { initMssqlPool } from '../mssql/tools';
 import { logger } from '../tools/logger';
+import { ProdOrTest } from 'uq-joint/joint';
 
 const maxRows = config.get<number>("firstMaxRows");
 const promiseSize = config.get<number>("promiseSize");
@@ -20,7 +21,7 @@ const pullEntities = config.get<string[]>("firstEntities");
     await initMssqlPool();
 
     //let joint = new Joint(settings, 'test');
-    let joint = new Joint(settings);
+    let joint = new Joint(settings, config.get<ProdOrTest>('jointMode'));
     await joint.init();
     logger.info('start');
     let start = Date.now();

@@ -21,7 +21,7 @@ const pullEntities = config_1.default.get("firstEntities");
     //centerApi.initBaseUrl(host.centerUrl);
     await tools_1.initMssqlPool();
     //let joint = new Joint(settings, 'test');
-    let joint = new uq_joint_1.Joint(settings_1.settings);
+    let joint = new uq_joint_1.Joint(settings_1.settings, config_1.default.get('jointMode'));
     await joint.init();
     logger_1.logger.info('start');
     let start = Date.now();

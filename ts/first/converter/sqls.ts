@@ -295,4 +295,19 @@ export const sqls = {
                 `select top ${promiseSize} ID, OrganizationID, VIPLevel
                 from sales.dbo.OrganizationVIPLevel where ID > @iMaxId
                 order by ID`,
+
+        //==============================================================
+        //=========================== Achievement ===========================
+        //==============================================================
+        readSalesmanCommissionType:
+                `select top ${promiseSize} ID, EmployeeID, left(ID, 4) as year, Type
+                from dbs.dbo.SalesPlan
+                where ID > @iMaxId
+                order by ID`,
+        readSalesVolumePlan:
+                `select top ${promiseSize} a.ID, b.EmployeeID, a.YearA, a.MonthA, a.Amount 
+                from  dbs.dbo.SalesPlanDetail a
+                      inner join dbs.dbo.SalesPlan b on a.salesPlanId = b.Id
+                where a.ID > @iMaxId
+                order by a.ID`,
 }
