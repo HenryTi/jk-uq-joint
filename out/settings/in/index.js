@@ -13,6 +13,7 @@ const hr_1 = require("./hr");
 const salestask_1 = require("./salestask");
 const webUser_1 = require("./webUser");
 const VIPCardLevel_1 = require("./VIPCardLevel");
+const currency_1 = require("./common/currency");
 // import { WebUserPointDiff } from "./pointshop";
 const uqIns = [
     salestask_1.JkTaskType,
@@ -92,6 +93,8 @@ const uqIns = [
     salestask_1.JkTask,
     salestask_1.Importcustomerdata,
     VIPCardLevel_1.OrganizationVIPLevel,
+    // WebUserPointDiff
+    currency_1.CurrencyExchangeRate,
 ];
 exports.default = uqIns;
 //# sourceMappingURL=index.js.map

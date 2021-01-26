@@ -19,6 +19,7 @@ import { Employee } from "./hr";
 import { JkTaskType, JkTask, Importcustomerdata } from "./salestask";
 import { WebUser, WebUserTonva, WebUserContact, WebUserCustomer, WebUserSetting, WebUserSettingAlter, WebUserSettingType, WebUserContacts, WebUserBuyerAccount } from "./webUser";
 import { OrganizationVIPLevel } from "./VIPCardLevel";
+import { CurrencyExchangeRate } from "./common/currency";
 // import { WebUserPointDiff } from "./pointshop";
 
 const uqIns = [
@@ -118,6 +119,7 @@ const uqIns = [
     OrganizationVIPLevel,
 
     // WebUserPointDiff
+    CurrencyExchangeRate,
 ]
 
 export default uqIns;
