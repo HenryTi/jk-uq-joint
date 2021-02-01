@@ -310,4 +310,12 @@ export const sqls = {
                       inner join dbs.dbo.SalesPlan b on a.salesPlanId = b.Id
                 where a.ID > @iMaxId
                 order by a.ID`,
+
+        //==============================================================
+        //=========================== Pointshop ===========================
+        //==============================================================
+        readBrandMinDiscount:
+                `select top ${promiseSize} ID, MCode, (1 - Discount) as Discount, Active
+                from    dbs.dbo.MScoreManu 
+                where   ID > @iMaxId and MarketingID = 'A08-20160422A' order by ID`
 }

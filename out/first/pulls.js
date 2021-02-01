@@ -16,6 +16,7 @@ const hr_1 = require("../settings/in/hr");
 const VIPCardLevel_1 = require("settings/in/VIPCardLevel");
 const chemicalSynonymity_1 = require("settings/in/chemical/chemicalSynonymity");
 const salesVolumePlan_1 = require("settings/in/achievement/salesVolumePlan");
+const brandMinDiscount_1 = require("settings/in/pointshop/brandMinDiscount");
 /** */
 exports.pulls = {
     "Language": { read: sqls_1.sqls.readLanguage, uqIn: salesRegion_1.Language },
@@ -69,6 +70,7 @@ exports.pulls = {
     "OrganizationVIPLevel": { read: sqls_1.sqls.readOrganizationVIPLevel, uqIn: VIPCardLevel_1.OrganizationVIPLevel },
     // 
     "SalesmanCommissionType": { read: sqls_1.sqls.readSalesmanCommissionType, uqIn: salesVolumePlan_1.SalesmanCommissionType },
-    "SalesVolumePlan": { read: sqls_1.sqls.readSalesVolumePlan, uqIn: salesVolumePlan_1.SalesVolumePlan }
+    "SalesVolumePlan": { read: sqls_1.sqls.readSalesVolumePlan, uqIn: salesVolumePlan_1.SalesVolumePlan },
+    "BrandMinDiscount": { read: sqls_1.sqls.readBrandMinDiscount, uqIn: brandMinDiscount_1.BrandMinDiscount }
 };
 //# sourceMappingURL=pulls.js.map
