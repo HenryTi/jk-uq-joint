@@ -44,6 +44,7 @@ exports.bus = {
     "faceOrderHistory": orderHistory_1.faceOrderHistory,
     "faceBulkInquiryBook": bulkInquiryBook_1.faceBulkInquiryBook,
     "faceOrderChanged": orderChanged_1.faceOrderChanged,
+    "faceInnerOrderPaied": orderPayment_1.faceInnerOrderPaied,
     "faceShelfInOutBoundHistory": shelfInOutBoundHistoryBus_1.faceShelfInOutBoundHistory
 };
 //# sourceMappingURL=index.js.map
