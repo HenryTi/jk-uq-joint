@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.faceInnerOrderPaied = exports.faceOrderPayment = void 0;
+exports.faceInnerOrderPaid = exports.faceOrderPayment = void 0;
 const uqOutRead_1 = require("../../first/converter/uqOutRead");
 /**
  * 用于将付款结果导入到tonva系统（计算轻代理到账提成）——TODO:将被faceOrderPaied替换
@@ -25,7 +25,7 @@ exports.faceOrderPayment = {
 /**
  *
  */
-exports.faceInnerOrderPaied = {
+exports.faceInnerOrderPaid = {
     face: '百灵威系统工程部/FiReceivable/innerOrderPaied',
     from: 'local',
     mapper: {

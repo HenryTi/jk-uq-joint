@@ -4,7 +4,7 @@ import { faceProductInventory } from "./productInventoryBus";
 import { facePoint, faceCreditsInnerMatched } from "./pointBus";
 import { faceUser, faceWebUser, faceWebUserContact, faceWebUserContacts, faceWebUserInvoice, faceWebUserCustomer, faceCustomerContractor } from "./webUserBus";
 import { facePointExchange, faceCreditsUsedByCustomer, faceCreditsDrawedByCustomer, faceSignInPointOut } from "./pointExchangeOut";
-import { faceInnerOrderPaied, faceOrderPayment } from "./orderPayment";
+import { faceInnerOrderPaid, faceOrderPayment } from "./orderPayment";
 import { faceOrderAudit } from "./orderAuditBus";
 import { faceDeliveryConfirm } from "./deliveryConfirmBus";
 import { faceOrderCoupon } from "./orderCouponUsqBus";
@@ -48,6 +48,6 @@ export const bus: { [busName: string]: UqBus } = {
     "faceBulkInquiryBook": faceBulkInquiryBook,
 
     "faceOrderChanged": faceOrderChanged,
-    "faceInnerOrderPaied": faceInnerOrderPaied,
+    "faceInnerOrderPaid": faceInnerOrderPaid,
     "faceShelfInOutBoundHistory": faceShelfInOutBoundHistory
 };
