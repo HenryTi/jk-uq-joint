@@ -26,7 +26,7 @@ export const faceOrderPayment: UqBus = {
  * 
  */
 export const faceInnerOrderPaid: UqBus = {
-    face: '百灵威系统工程部/FiReceivable/innerOrderPaied',
+    face: '百灵威系统工程部/FiReceivable/innerOrderPaid',
     from: 'local',
     mapper: {
         orderItemId: 'orderItemId',

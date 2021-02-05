@@ -1,4 +1,3 @@
-import { Fetch } from "../uq-joint";
 import config from 'config';
 import fetch from "node-fetch";
 
