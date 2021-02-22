@@ -20,6 +20,7 @@ import { JkTaskType, JkTask, Importcustomerdata } from "./salestask";
 import { WebUser, WebUserTonva, WebUserContact, WebUserCustomer, WebUserSetting, WebUserSettingAlter, WebUserSettingType, WebUserContacts, WebUserBuyerAccount } from "./webUser";
 import { OrganizationVIPLevel } from "./VIPCardLevel";
 import { CurrencyExchangeRate } from "./common/currency";
+import { EpecCity, EpecCityMapping, EpecCounty, EpecCountyMapping, EpecProvince, EpecProvinceMapping, EpecUser } from "./uq-platform/epec";
 // import { WebUserPointDiff } from "./pointshop";
 
 const uqIns = [
@@ -120,6 +121,14 @@ const uqIns = [
 
     // WebUserPointDiff
     CurrencyExchangeRate,
+
+    EpecUser,
+    EpecProvince,
+    EpecCity,
+    EpecCounty,
+    EpecProvinceMapping,
+    EpecCityMapping,
+    EpecCountyMapping,
 ]
 
 export default uqIns;

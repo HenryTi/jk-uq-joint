@@ -26,7 +26,7 @@ const express_1 = __importDefault(require("express"));
 const bodyParser = __importStar(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
 const config_1 = __importDefault(require("config"));
-const uq_joint_1 = require("uq-joint");
+const uq_joint_1 = require("./uq-joint");
 const settings_1 = require("./settings");
 //import { host } from './uq-joint/tool/host';
 //import { centerApi } from './uq-joint/tool/centerApi';

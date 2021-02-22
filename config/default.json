@@ -73,7 +73,12 @@
         "Agreement",
         "PromotionType",
         "PromotionStatus",
-        "Promotion"
+        "EpecProvince",
+        "EpecCity",
+        "EpecCounty",
+        "EpecProvinceMapping",
+        "EpecCityMapping",
+        "EpecCountyMapping"
     ],
     "afterFirstEntities": [
         { "name": "Chemical", "inervalUnit": 720 },
@@ -116,7 +121,8 @@
         { "name": "JkTask", "intervalUnit": 1 },
         { "name": "Position", "inervalUnit": 1 },
         { "name": "PointShopOrder", "inervalUnit": 1 },
-        { "name": "ProductSalesRank", "inervalUnit": 1 }
+        { "name": "ProductSalesRank", "inervalUnit": 1 },
+        { "name": "EpecUser", "inervalUnit": 720 }
     ],
     "uqBus": [
         "faceOrder",

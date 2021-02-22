@@ -14,6 +14,7 @@ const salestask_1 = require("./salestask");
 const webUser_1 = require("./webUser");
 const VIPCardLevel_1 = require("./VIPCardLevel");
 const currency_1 = require("./common/currency");
+const epec_1 = require("./uq-platform/epec");
 // import { WebUserPointDiff } from "./pointshop";
 const uqIns = [
     salestask_1.JkTaskType,
@@ -95,6 +96,13 @@ const uqIns = [
     VIPCardLevel_1.OrganizationVIPLevel,
     // WebUserPointDiff
     currency_1.CurrencyExchangeRate,
+    epec_1.EpecUser,
+    epec_1.EpecProvince,
+    epec_1.EpecCity,
+    epec_1.EpecCounty,
+    epec_1.EpecProvinceMapping,
+    epec_1.EpecCityMapping,
+    epec_1.EpecCountyMapping,
 ];
 exports.default = uqIns;
 //# sourceMappingURL=index.js.map

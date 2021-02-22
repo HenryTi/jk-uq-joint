@@ -17,6 +17,7 @@ const VIPCardLevel_1 = require("settings/in/VIPCardLevel");
 const chemicalSynonymity_1 = require("settings/in/chemical/chemicalSynonymity");
 const salesVolumePlan_1 = require("settings/in/achievement/salesVolumePlan");
 const brandMinDiscount_1 = require("settings/in/pointshop/brandMinDiscount");
+const epec_1 = require("settings/in/uq-platform/epec");
 /** */
 exports.pulls = {
     "Language": { read: sqls_1.sqls.readLanguage, uqIn: salesRegion_1.Language },
@@ -71,6 +72,12 @@ exports.pulls = {
     // 
     "SalesmanCommissionType": { read: sqls_1.sqls.readSalesmanCommissionType, uqIn: salesVolumePlan_1.SalesmanCommissionType },
     "SalesVolumePlan": { read: sqls_1.sqls.readSalesVolumePlan, uqIn: salesVolumePlan_1.SalesVolumePlan },
-    "BrandMinDiscount": { read: sqls_1.sqls.readBrandMinDiscount, uqIn: brandMinDiscount_1.BrandMinDiscount }
+    "BrandMinDiscount": { read: sqls_1.sqls.readBrandMinDiscount, uqIn: brandMinDiscount_1.BrandMinDiscount },
+    "EpecProvince": { read: sqls_1.sqls.readEpecProvince, uqIn: epec_1.EpecProvince },
+    "EpecCity": { read: sqls_1.sqls.readEpecCity, uqIn: epec_1.EpecCity },
+    "EpecCounty": { read: sqls_1.sqls.readEpecCounty, uqIn: epec_1.EpecCounty },
+    "EpecProvinceMapping": { read: sqls_1.sqls.readEpecProvinceMapping, uqIn: epec_1.EpecProvinceMapping },
+    "EpecCityMapping": { read: sqls_1.sqls.readEpecCityMapping, uqIn: epec_1.EpecCityMapping },
+    "EpecCountyMapping": { read: sqls_1.sqls.readEpecCountyMapping, uqIn: epec_1.EpecCountyMapping },
 };
 //# sourceMappingURL=pulls.js.map

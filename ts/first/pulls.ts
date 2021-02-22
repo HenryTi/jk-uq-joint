@@ -16,6 +16,7 @@ import { OrganizationVIPLevel } from 'settings/in/VIPCardLevel';
 import { ChemicalSynonmity } from 'settings/in/chemical/chemicalSynonymity';
 import { SalesmanCommissionType, SalesVolumePlan } from 'settings/in/achievement/salesVolumePlan';
 import { BrandMinDiscount } from 'settings/in/pointshop/brandMinDiscount';
+import { EpecCity, EpecCounty, EpecProvince, EpecCityMapping, EpecCountyMapping, EpecProvinceMapping } from 'settings/in/uq-platform/epec';
 
 /**
  * joint的思路是：joint一直在运行，每隔一段时间执行一次数据交换，数据交换分为3种，
@@ -102,5 +103,12 @@ export const pulls: {
     "SalesmanCommissionType": { read: sqls.readSalesmanCommissionType, uqIn: SalesmanCommissionType },
     "SalesVolumePlan": { read: sqls.readSalesVolumePlan, uqIn: SalesVolumePlan },
 
-    "BrandMinDiscount": { read: sqls.readBrandMinDiscount, uqIn: BrandMinDiscount }
+    "BrandMinDiscount": { read: sqls.readBrandMinDiscount, uqIn: BrandMinDiscount },
+
+    "EpecProvince": { read: sqls.readEpecProvince, uqIn: EpecProvince },
+    "EpecCity": { read: sqls.readEpecCity, uqIn: EpecCity },
+    "EpecCounty": { read: sqls.readEpecCounty, uqIn: EpecCounty },
+    "EpecProvinceMapping": { read: sqls.readEpecProvinceMapping, uqIn: EpecProvinceMapping },
+    "EpecCityMapping": { read: sqls.readEpecCityMapping, uqIn: EpecCityMapping },
+    "EpecCountyMapping": { read: sqls.readEpecCountyMapping, uqIn: EpecCountyMapping },
 }

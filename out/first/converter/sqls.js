@@ -272,6 +272,55 @@ exports.sqls = {
     //==============================================================
     readBrandMinDiscount: `select top ${promiseSize} ID, MCode, (1 - Discount) as Discount, Active
                 from    dbs.dbo.MScoreManu 
-                where   ID > @iMaxId and MarketingID = 'A08-20160422A' order by ID`
+                where   ID > @iMaxId and MarketingID = 'A08-20160422A' order by ID`,
+    //==============================================================
+    //=========================== EPEC Address ===========================
+    //==============================================================
+    readEpecProvince: `
+                select top ${promiseSize} ID, ParentId, Name, JNKID
+                from alidb.jk_eb.dbo.epec_address
+                where ID > @iMaxId and parentId = 0
+                order by ID`,
+    readEpecCity: `
+                select top ${promiseSize} ID, ParentId, Name, JNKID
+                from alidb.jk_eb.dbo.epec_address
+                where ID > @iMaxId and parentId in (
+                    select id from alidb.jk_eb.dbo.epec_address where parentId = 0
+                )
+                order by ID`,
+    readEpecCounty: `
+                select top ${promiseSize} ID, ParentId, Name, JNKID
+                from alidb.jk_eb.dbo.epec_address
+                where ID > @iMaxId and parentId in (
+                    select ID 
+                    from alidb.jk_eb.dbo.epec_address
+                    where ID > @iMaxId and parentId in (
+                        select id from alidb.jk_eb.dbo.epec_address where parentId = 0
+                    )
+                )
+                order by ID`,
+    readEpecProvinceMapping: `
+                select top ${promiseSize} ID, ID as epecProvince, JNKID as province
+                from alidb.jk_eb.dbo.epec_address
+                where ID > @iMaxId and parentId = 0 and JNKID is not null
+                order by ID`,
+    readEpecCityMapping: `
+                select top ${promiseSize} ID, ID as epecCity, JNKID as city
+                from alidb.jk_eb.dbo.epec_address
+                where ID > @iMaxId and parentId in (
+                    select id from alidb.jk_eb.dbo.epec_address where parentId = 0
+                ) and JNKID is not null
+                order by ID`,
+    readEpecCountyMapping: `
+                select top ${promiseSize} ID, ID as epecCounty, JNKID as county
+                from alidb.jk_eb.dbo.epec_address
+                where ID > @iMaxId and parentId in (
+                    select ID 
+                    from alidb.jk_eb.dbo.epec_address
+                    where ID > @iMaxId and parentId in (
+                        select id from alidb.jk_eb.dbo.epec_address where parentId = 0
+                    )
+                ) and JNKID is not null
+                order by ID`,
 };
 //# sourceMappingURL=sqls.js.map
