@@ -7,7 +7,7 @@ import { settings } from './settings';
 //import { host } from './uq-joint/tool/host';
 //import { centerApi } from './uq-joint/tool/centerApi';
 import { initMssqlPool } from './mssql/tools';
-import { ProdOrTest } from 'uq-joint/joint';
+import { ProdOrTest } from 'uq-joint/out/joint';
 
 (async function () {
     console.log(process.env.NODE_ENV);

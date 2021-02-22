@@ -7,7 +7,7 @@ import { uqOutRead } from "./converter/uqOutRead";
 //import { centerApi } from "../uq-joint/tool/centerApi";
 import { initMssqlPool } from '../mssql/tools';
 import { logger } from '../tools/logger';
-import { ProdOrTest } from 'uq-joint/joint';
+import { ProdOrTest } from 'uq-joint/out/joint';
 
 const maxRows = config.get<number>("firstMaxRows");
 const promiseSize = config.get<number>("promiseSize");
