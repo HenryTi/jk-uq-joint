@@ -374,4 +374,13 @@ export const sqls = {
                     )
                 ) and JNKID is not null
                 order by ID`,
+
+        //==============================================================
+        //=========================== NeoTredent User ===========================
+        //==============================================================
+        readNeoTridentUser: `select top ${promiseSize} CIID as ID, CIID as WebUserId, UserName, SharedSecret, 
+                SharedSecretIdentity as Organization
+            from alidb.jk_eb.dbo.ClientLogin
+            where ID > @iMaxId and SharedSecretIdentity is not null
+            order by ID`,
 }

@@ -15,6 +15,7 @@ const webUser_1 = require("./webUser");
 const VIPCardLevel_1 = require("./VIPCardLevel");
 const currency_1 = require("./common/currency");
 const epec_1 = require("./uq-platform/epec");
+const neoTrident_1 = require("./uq-platform/neoTrident");
 // import { WebUserPointDiff } from "./pointshop";
 const uqIns = [
     salestask_1.JkTaskType,
@@ -103,6 +104,7 @@ const uqIns = [
     epec_1.EpecProvinceMapping,
     epec_1.EpecCityMapping,
     epec_1.EpecCountyMapping,
+    neoTrident_1.NeoTridentUser,
 ];
 exports.default = uqIns;
 //# sourceMappingURL=index.js.map

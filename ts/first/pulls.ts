@@ -17,6 +17,7 @@ import { ChemicalSynonmity } from 'settings/in/chemical/chemicalSynonymity';
 import { SalesmanCommissionType, SalesVolumePlan } from 'settings/in/achievement/salesVolumePlan';
 import { BrandMinDiscount } from 'settings/in/pointshop/brandMinDiscount';
 import { EpecCity, EpecCounty, EpecProvince, EpecCityMapping, EpecCountyMapping, EpecProvinceMapping } from 'settings/in/uq-platform/epec';
+import { NeoTridentUser } from 'settings/in/uq-platform/neoTrident';
 
 /**
  * joint的思路是：joint一直在运行，每隔一段时间执行一次数据交换，数据交换分为3种，
@@ -111,4 +112,6 @@ export const pulls: {
     "EpecProvinceMapping": { read: sqls.readEpecProvinceMapping, uqIn: EpecProvinceMapping },
     "EpecCityMapping": { read: sqls.readEpecCityMapping, uqIn: EpecCityMapping },
     "EpecCountyMapping": { read: sqls.readEpecCountyMapping, uqIn: EpecCountyMapping },
+
+    "NeoTridentUser": { read: sqls.readNeoTridentUser, uqIn: NeoTridentUser },
 }

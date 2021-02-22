@@ -21,6 +21,7 @@ import { WebUser, WebUserTonva, WebUserContact, WebUserCustomer, WebUserSetting,
 import { OrganizationVIPLevel } from "./VIPCardLevel";
 import { CurrencyExchangeRate } from "./common/currency";
 import { EpecCity, EpecCityMapping, EpecCounty, EpecCountyMapping, EpecProvince, EpecProvinceMapping, EpecUser } from "./uq-platform/epec";
+import { NeoTridentUser } from "./uq-platform/neoTrident";
 // import { WebUserPointDiff } from "./pointshop";
 
 const uqIns = [
@@ -129,6 +130,8 @@ const uqIns = [
     EpecProvinceMapping,
     EpecCityMapping,
     EpecCountyMapping,
+
+    NeoTridentUser,
 ]
 
 export default uqIns;

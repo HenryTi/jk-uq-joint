@@ -18,6 +18,7 @@ const chemicalSynonymity_1 = require("settings/in/chemical/chemicalSynonymity");
 const salesVolumePlan_1 = require("settings/in/achievement/salesVolumePlan");
 const brandMinDiscount_1 = require("settings/in/pointshop/brandMinDiscount");
 const epec_1 = require("settings/in/uq-platform/epec");
+const neoTrident_1 = require("settings/in/uq-platform/neoTrident");
 /** */
 exports.pulls = {
     "Language": { read: sqls_1.sqls.readLanguage, uqIn: salesRegion_1.Language },
@@ -79,5 +80,6 @@ exports.pulls = {
     "EpecProvinceMapping": { read: sqls_1.sqls.readEpecProvinceMapping, uqIn: epec_1.EpecProvinceMapping },
     "EpecCityMapping": { read: sqls_1.sqls.readEpecCityMapping, uqIn: epec_1.EpecCityMapping },
     "EpecCountyMapping": { read: sqls_1.sqls.readEpecCountyMapping, uqIn: epec_1.EpecCountyMapping },
+    "NeoTridentUser": { read: sqls_1.sqls.readNeoTridentUser, uqIn: neoTrident_1.NeoTridentUser },
 };
 //# sourceMappingURL=pulls.js.map
