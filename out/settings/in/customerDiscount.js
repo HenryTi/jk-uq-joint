@@ -25,6 +25,7 @@ exports.CustomerDiscount = {
         }
     },
     pull: async (joint, uqIn, queue) => {
+        // Export_AgreementManuDiscount在dbs.dbo.Agreement和相关表的trigger中更新
         let sql = `select top ${promiseSize} md.ID, a.CID as CustomerID, md.Manu as BrandID, md.DiscountValue as Discount, a.StartDate, a.EndDate
         from ProdData.dbo.Export_AgreementManuDiscount md
         inner join dbs.dbo.Agreement a on md.AgreementID = a.AgreementID
@@ -90,7 +91,10 @@ exports.Agreement = {
         startDate: 'StartDate',
         endDate: 'EndDate',
     },
-    pull: `select top ${promiseSize} ID, AgreementID, CID, ObjType, StartDate, EndDate from ProdData.dbo.Export_Agreement where ID > @iMaxId and objType in ( 'C', 'U' ) order by ID`,
+    pull: `select top ${promiseSize} ID, AgreementID, CID, ObjType, StartDate, EndDate 
+            from ProdData.dbo.Export_Agreement 
+            where ID > @iMaxId and objType in ( 'C', 'U' ) 
+            order by ID`,
     pullWrite: async (joint, uqIn, data) => {
         let sql = `select a.CID, md.Manu as BrandID, md.DiscountValue as Discount, a.StartDate, a.EndDate
                 from dbs.dbo.Agreement a

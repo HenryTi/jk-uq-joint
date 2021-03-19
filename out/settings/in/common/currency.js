@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CurrencyExchangeRate = void 0;
 const uqOutRead_1 = require("../../../first/converter/uqOutRead");
-const uqs_1 = require("settings/uqs");
+const uqs_1 = require("../../uqs");
 exports.CurrencyExchangeRate = {
     uq: uqs_1.uqs.jkAchievement,
     type: 'map',

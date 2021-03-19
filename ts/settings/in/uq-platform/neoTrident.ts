@@ -1,4 +1,4 @@
-import { uqs } from "settings/uqs";
+import { uqs } from "../../uqs";
 import { UqInMap } from "uq-joint";
 import config from 'config';
 
@@ -12,6 +12,7 @@ export const NeoTridentUser: UqInMap = {
         webUser: "WebUserId@WebUser",
         username: "UserName",
         organization: "Organization",
+        team: "SharedSecretTeamID",
         sharedSecret: "SharedSecret",
     }
 };
