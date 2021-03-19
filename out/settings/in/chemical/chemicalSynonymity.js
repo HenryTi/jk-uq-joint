@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ChemicalSynonmity = void 0;
-const uqs_1 = require("settings/uqs");
+const uqs_1 = require("../../uqs");
 exports.ChemicalSynonmity = {
     uq: uqs_1.uqs.jkChemical,
     type: 'map',

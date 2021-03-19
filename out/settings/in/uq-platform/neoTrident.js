@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NeoTridentUser = void 0;
-const uqs_1 = require("settings/uqs");
+const uqs_1 = require("../../uqs");
 const config_1 = __importDefault(require("config"));
 const promiseSize = config_1.default.get("promiseSize");
 exports.NeoTridentUser = {

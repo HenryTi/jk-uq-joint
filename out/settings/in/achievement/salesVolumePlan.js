@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SalesVolumePlan = exports.SalesmanCommissionType = void 0;
-const uqs_1 = require("settings/uqs");
+const uqs_1 = require("../../uqs");
 exports.SalesmanCommissionType = {
     uq: uqs_1.uqs.jkAchievement,
     type: 'map',

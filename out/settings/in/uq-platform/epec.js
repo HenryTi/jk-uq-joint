@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EpecCountyMapping = exports.EpecCityMapping = exports.EpecProvinceMapping = exports.EpecCounty = exports.EpecCity = exports.EpecProvince = exports.EpecUser = void 0;
-const uqs_1 = require("settings/uqs");
+const uqs_1 = require("../../uqs");
 const config_1 = __importDefault(require("config"));
 const promiseSize = config_1.default.get("promiseSize");
 exports.EpecUser = {
