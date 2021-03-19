@@ -12,6 +12,7 @@ export const NeoTridentUser: UqInMap = {
         webUser: "WebUserId@WebUser",
         username: "UserName",
         organization: "Organization",
+        team: "SharedSecretTeamID",
         sharedSecret: "SharedSecret",
     }
 };

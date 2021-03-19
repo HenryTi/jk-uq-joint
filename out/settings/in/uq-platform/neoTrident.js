@@ -15,6 +15,7 @@ exports.NeoTridentUser = {
         webUser: "WebUserId@WebUser",
         username: "UserName",
         organization: "Organization",
+        team: "SharedSecretTeamID",
         sharedSecret: "SharedSecret",
     }
 };
