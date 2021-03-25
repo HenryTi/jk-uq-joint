@@ -22,6 +22,7 @@ import { OrganizationVIPLevel } from "./VIPCardLevel";
 import { CurrencyExchangeRate } from "./common/currency";
 import { EpecCity, EpecCityMapping, EpecCounty, EpecCountyMapping, EpecProvince, EpecProvinceMapping, EpecUser } from "./uq-platform/epec";
 import { NeoTridentUser } from "./uq-platform/neoTrident";
+import { COA, Lot } from "./coa/coa";
 // import { WebUserPointDiff } from "./pointshop";
 
 const uqIns = [
@@ -132,6 +133,9 @@ const uqIns = [
     EpecCountyMapping,
 
     NeoTridentUser,
+
+    Lot,
+    COA,
 ]
 
 export default uqIns;
