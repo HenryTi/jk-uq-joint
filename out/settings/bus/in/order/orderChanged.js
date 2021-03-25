@@ -36,8 +36,10 @@ exports.faceOrderChanged = {
     },
     pull: async (joint, uqBus, queue) => {
         let result = await getNext(queue);
-        while (result === undefined) {
+        let round = 0;
+        while (result === undefined && round < 30) {
             queue++;
+            round++;
             result = await getNext(queue);
         }
         return result;
@@ -56,7 +58,7 @@ async function getNext(queue) {
         let sqlstring = `select top 1 ${newQueue} as ID, so.orderID as OrderItemID, so.SorderID as OrderID
                     , s.SaleCompany as SalesCompanyID, s.epid as SalesmanID, s.[location] as SalesRegionID
                     , isnull(so.UserId, so.CID) as CustomerID, so.CID as BuyerAccountID, null as OrganizationID
-                    , p.manufactory as BrandID, j.jkid as ProductID, so.jkcat as PackingID, so.Qty as Quantity
+                    , p.manufactory as BrandID, p.jkid as ProductID, so.jkcat as PackingID, so.Qty as Quantity
                     , so.UnitPriceRMB as Price, rtrim(so.UnitPriceRMBCurrency) as CurrencyID
                     , so.RMBPrice as Retail, rtrim(so.CatalogPriceCurrency) as RetailCurrencyID
                     , so.bottomLinePrice as BottomPrice, isnull(rtrim(so.bottomLinePriceCurrency), 'RMB') as BottomPriceCurrencyID
