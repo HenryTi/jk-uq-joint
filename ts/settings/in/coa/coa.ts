@@ -1,5 +1,5 @@
 import { uqPullRead } from "../../../first/converter/uqOutRead";
-import { execSql } from "mssql/tools";
+import { execSql } from "../../../mssql/tools";
 import { uqs } from "../../uqs";
 import { logger } from "../../../tools/logger";
 import { DataPullResult, UqIn } from "uq-joint";

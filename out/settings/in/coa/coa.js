@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.COA = exports.Lot = void 0;
 const uqOutRead_1 = require("../../../first/converter/uqOutRead");
-const tools_1 = require("mssql/tools");
+const tools_1 = require("../../../mssql/tools");
 const uqs_1 = require("../../uqs");
 const logger_1 = require("../../../tools/logger");
 const dateformat_1 = __importDefault(require("dateformat"));
