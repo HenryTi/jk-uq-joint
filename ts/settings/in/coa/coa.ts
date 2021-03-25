@@ -1,7 +1,7 @@
-import { uqPullRead } from "first/converter/uqOutRead";
+import { uqPullRead } from "../../../first/converter/uqOutRead";
 import { execSql } from "mssql/tools";
-import { uqs } from "settings/uqs";
-import { logger } from "tools/logger";
+import { uqs } from "../../uqs";
+import { logger } from "../../../tools/logger";
 import { DataPullResult, UqIn } from "uq-joint";
 import { Joint } from "uq-joint";
 import { UqInTuid, UqInMap } from "uq-joint";
