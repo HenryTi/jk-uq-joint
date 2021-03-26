@@ -48,8 +48,7 @@ export const COA: UqInMap = {
                     KeyWord, WordValue, sorting1, SubWord, SubWordValue, sorting2, LastUpdatedTime
                     from ProdData.dbo.Export_COAInfo
                     where LotNo = @LotNo and id >= @iMaxId
-                    order by Id                    
-                    `;
+                    order by Id`;
             let ret = await execSql(sqlstring, [{ name: 'LotNo', value: LotNo }, { name: 'iMaxId', value: queue }]);
             let { recordset, rowsAffected } = ret;
             if (rowsAffected > 0) {
@@ -62,19 +61,20 @@ export const COA: UqInMap = {
                     contentObj['molecularFormula'] = MolecularFormula;
                     contentObj['molecularWeight'] = MolecularWeight;
 
-                    //修正COA的签发日期
+                    // 修正COA的签发日期
                     let d = new Date(IssueDate && dateFormat(IssueDate, "yyyy-mm-dd HH:MM:ss"));
                     contentObj['issueDate'] = dateFormat(d.setHours(d.getHours() - 8), "yyyy-mm-dd HH:MM:ss");
-
-
 
                     if (e.WordValue) {
                         contentObj[KeyWord] = WordValue;
                     } else {
-                        if (contentObj[KeyWord] === undefined)
-                            contentObj[KeyWord] = {};
-                        contentObj[KeyWord][SubWord] = SubWordValue;
+                        if (SubWord && SubWordValue) {
+                            if (contentObj[KeyWord] === undefined)
+                                contentObj[KeyWord] = {};
+                            contentObj[KeyWord][SubWord] = SubWordValue;
+                        }
                     }
+
                     // 根据id是否连续判断是过跨过lot号
                     if (index > 0 && index < recordset.length && recordset[index - 1]['id'] + 1 != id) {
                         preId.push(recordset[index - 1]['id'] + 1);
