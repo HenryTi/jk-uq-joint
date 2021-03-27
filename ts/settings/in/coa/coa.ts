@@ -41,7 +41,6 @@ export const COA: UqInMap = {
         if (result) {
             let { queue: newQueue, data } = result;
             let { ID, LotNo } = data;
-            console.log(LotNo);
 
             let sqlstring = `select id, JKID as ProductID, LotNo, EnglishName, CASNO, Version
                     , MolecularFormula, MolecularWeight, IssueDate,
@@ -101,10 +100,10 @@ export const COA: UqInMap = {
             }
         }
     },
+
     pullWrite: async (joint: Joint, uqin: UqIn, data: any) => {
         try {
             await joint.uqIn(Lot, data);
-            // data["IssueDate"] = data["IssueDate"] && dateFormat(data["IssueDate"], "yyyy-mm-dd HH:MM:ss");
             await joint.uqIn(COA, data);
             return true;
         } catch (error) {

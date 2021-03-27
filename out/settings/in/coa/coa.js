@@ -40,7 +40,6 @@ exports.COA = {
         if (result) {
             let { queue: newQueue, data } = result;
             let { ID, LotNo } = data;
-            console.log(LotNo);
             let sqlstring = `select id, JKID as ProductID, LotNo, EnglishName, CASNO, Version
                     , MolecularFormula, MolecularWeight, IssueDate,
                     KeyWord, WordValue, sorting1, SubWord, SubWordValue, sorting2, LastUpdatedTime
@@ -95,7 +94,6 @@ exports.COA = {
     pullWrite: async (joint, uqin, data) => {
         try {
             await joint.uqIn(exports.Lot, data);
-            // data["IssueDate"] = data["IssueDate"] && dateFormat(data["IssueDate"], "yyyy-mm-dd HH:MM:ss");
             await joint.uqIn(exports.COA, data);
             return true;
         }
