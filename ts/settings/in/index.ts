@@ -3,7 +3,7 @@ import { SalesRegion, Currency, PackType, PackTypeStandard, PackTypeMapToStandar
 import {
     Brand, ProductSalesRegion, ProductLegallyProhibited, ProductX, ProductPackX,
     PriceX, AgentPrice, BrandSalesRegion, BrandDeliveryTime, ProductChemical, InvalidProduct,
-    ProductMSDSFile, ProductSpecFile, ProductSalesRank
+    ProductMSDSFile, ProductSpecFile, ProductSalesRank, ProductExtensionProperty
 } from "./product";
 import { Warehouse, SalesRegionWarehouse, WarehouseRoom, Shelf, ShelfLayer, ShelfBlock, ExpressLogistics, OutInBoundReason } from "./warehouse";
 import { Chemical, StorageCondition } from "./chemical";
@@ -22,6 +22,8 @@ import { OrganizationVIPLevel } from "./VIPCardLevel";
 import { CurrencyExchangeRate } from "./common/currency";
 import { EpecCity, EpecCityMapping, EpecCounty, EpecCountyMapping, EpecProvince, EpecProvinceMapping, EpecUser } from "./uq-platform/epec";
 import { NeoTridentUser } from "./uq-platform/neoTrident";
+import { COA, Lot } from "./coa/coa";
+import { ProductExtention } from "./product/productextention";
 // import { WebUserPointDiff } from "./pointshop";
 
 const uqIns = [
@@ -134,6 +136,11 @@ const uqIns = [
     EpecCountyMapping,
 
     NeoTridentUser,
+
+    Lot,
+    COA,
+
+    ProductExtention,
 ]
 
 export default uqIns;

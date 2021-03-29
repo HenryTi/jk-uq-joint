@@ -85,8 +85,7 @@ export const sqls = {
                 select top ${promiseSize}
                 chemID as ID, CAS, Description, DescriptionC, MolWeight, MolFomula, MdlNumber
                 from opdata.dbo.sc_chemical
-                where reliability = 0 and chemID > @iMaxId and chemID > ${idBrokened.chemid} order by chemID
-                        `,
+                where reliability = 0 and chemID > @iMaxId and chemID > ${idBrokened.chemid} order by chemID`,
 
         // TODO:该SQL语句尚未完成
         readChemicalSynonmity: `
@@ -387,7 +386,7 @@ export const sqls = {
         //=========================== NeoTredent User ===========================
         //==============================================================
         readNeoTridentUser: `select top ${promiseSize} CIID as ID, CIID as WebUserId, UserName, SharedSecret, 
-                SharedSecretIdentity as Organization
+                SharedSecretIdentity as Organization, SharedSecretTeamID
             from alidb.jk_eb.dbo.ClientLogin
             where ID > @iMaxId and SharedSecretIdentity is not null
             order by ID`,

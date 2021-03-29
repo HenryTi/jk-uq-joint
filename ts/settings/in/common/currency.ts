@@ -1,5 +1,5 @@
 import { uqOutRead } from "../../../first/converter/uqOutRead";
-import { uqs } from "settings/uqs";
+import { uqs } from "../../uqs";
 import { DataPullResult } from "uq-joint";
 import { Joint, UqInMap } from "uq-joint";
 

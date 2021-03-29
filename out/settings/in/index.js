@@ -16,6 +16,8 @@ const VIPCardLevel_1 = require("./VIPCardLevel");
 const currency_1 = require("./common/currency");
 const epec_1 = require("./uq-platform/epec");
 const neoTrident_1 = require("./uq-platform/neoTrident");
+const coa_1 = require("./coa/coa");
+const productextention_1 = require("./product/productextention");
 // import { WebUserPointDiff } from "./pointshop";
 const uqIns = [
     salestask_1.JkTaskType,
@@ -105,6 +107,9 @@ const uqIns = [
     epec_1.EpecCityMapping,
     epec_1.EpecCountyMapping,
     neoTrident_1.NeoTridentUser,
+    coa_1.Lot,
+    coa_1.COA,
+    productextention_1.ProductExtention,
 ];
 exports.default = uqIns;
 //# sourceMappingURL=index.js.map

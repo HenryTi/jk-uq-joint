@@ -1,4 +1,4 @@
-import { uqs } from "settings/uqs";
+import { uqs } from "../../uqs";
 import { UqInMap } from "uq-joint";
 
 export const ChemicalSynonmity: UqInMap = {

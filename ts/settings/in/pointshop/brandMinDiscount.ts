@@ -1,5 +1,5 @@
 import config from 'config';
-import { uqs } from "settings/uqs";
+import { uqs } from "../../uqs";
 import { UqInMap } from "uq-joint";
 
 const promiseSize = config.get<number>("promiseSize");
