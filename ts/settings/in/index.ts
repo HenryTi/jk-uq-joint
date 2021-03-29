@@ -5,7 +5,7 @@ import {
     PriceX, AgentPrice, BrandSalesRegion, BrandDeliveryTime, ProductChemical, InvalidProduct,
     ProductMSDSFile, ProductSpecFile, ProductSalesRank
 } from "./product";
-import { Warehouse, SalesRegionWarehouse, WarehouseRoom, Shelf, ShelfLayer, ShelfBlock } from "./warehouse";
+import { Warehouse, SalesRegionWarehouse, WarehouseRoom, Shelf, ShelfLayer, ShelfBlock, ExpressLogistics, OutInBoundReason } from "./warehouse";
 import { Chemical, StorageCondition } from "./chemical";
 import { Promotion, PromotionSalesRegion, PromotionLanguage, PromotionPackDiscount, PromotionStatus, PromotionType } from "./promotion";
 import {
@@ -73,6 +73,8 @@ const uqIns = [
     Shelf,
     ShelfLayer,
     ShelfBlock,
+    ExpressLogistics,
+    OutInBoundReason,
 
     PromotionType,
     PromotionStatus,
