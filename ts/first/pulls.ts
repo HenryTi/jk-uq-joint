@@ -6,7 +6,7 @@ import { Country, Province, City, County } from "../settings/in/Address";
 import { Language, PackTypeStandard, Currency, SalesRegion, PackType, InvoiceType } from "../settings/in/salesRegion";
 import { Chemical } from "../settings/in/chemical";
 import { Brand, ProductLegallyProhibited, ProductX, ProductExtensionProperty, ProductMSDSFile, ProductSpecFile } from "../settings/in/product";
-import { Warehouse, SalesRegionWarehouse, WarehouseRoom, Shelf, ShelfLayer, ShelfBlock } from "../settings/in/warehouse";
+import { Warehouse, SalesRegionWarehouse, WarehouseRoom, Shelf, ShelfLayer, ShelfBlock, ExpressLogistics, OutInBoundReason } from "../settings/in/warehouse";
 import { Organization, Customer, Contact, BuyerAccount, CustomerBuyerAccount, CustomerContact } from "../settings/in/customer";
 import { Promotion, PromotionType, PromotionStatus } from '../settings/in/promotion';
 import { Agreement } from '../settings/in/customerDiscount';
@@ -59,6 +59,8 @@ export const pulls: {
     "Shelf": { read: sqls.readShelf, uqIn: Shelf },
     "ShelfLayer": { read: sqls.readShelfLayer, uqIn: ShelfLayer },
     "ShelfBlock": { read: undefined, uqIn: ShelfBlock },
+    "ExpressLogistics": { read: sqls.readExpressLogistics, uqIn: ExpressLogistics },
+    "OutInBoundReason": { read: sqls.readOutInBoundReason, uqIn: OutInBoundReason },
 
     // 产品相关的数据表
     // 目录树

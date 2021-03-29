@@ -83,3 +83,29 @@ export const ShelfBlock: UqInTuid = {
     }
 };
 
+export const ExpressLogistics: UqInTuid = {
+    uq: uqs.jkWarehouse,
+    type: 'tuid',
+    entity: 'ExpressLogistics',
+    key: 'ID',
+    mapper: {
+        $id: 'ID@ExpressLogistics',
+        no: "TransWay",
+        name: "TransMode",
+        isValid: "isvalid",
+        salesRegion: "Region@SalesRegion"
+    }
+};
+
+export const OutInBoundReason: UqInTuid = {
+    uq: uqs.jkWarehouse,
+    type: 'tuid',
+    entity: 'OutInBoundReason',
+    key: 'ID',
+    mapper: {
+        $id: 'ID@OutInBoundReason',
+        no: "OIReasonID",
+        name: "RsnDescription",
+        note: "definition"
+    }
+};
