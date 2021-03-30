@@ -18,7 +18,7 @@ exports.ProductExtention = {
     pull: async (joint, uqIn, queue) => {
         let result = await getNext(queue);
         let round = 0;
-        while (result === undefined && round < 30) {
+        while (result === undefined && round < 300) {
             queue++;
             round++;
             result = await getNext(queue);

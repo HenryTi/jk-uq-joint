@@ -14,7 +14,7 @@ export const ProductExtention: UqInMap = {
     pull: async (joint: Joint, uqIn: UqInMap, queue: number): Promise<DataPullResult> => {
         let result = await getNext(queue);
         let round = 0;
-        while (result === undefined && round < 30) {
+        while (result === undefined && round < 300) {
             queue++;
             round++;
             result = await getNext(queue);
