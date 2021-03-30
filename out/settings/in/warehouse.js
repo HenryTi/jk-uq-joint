@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ShelfBlock = exports.ShelfLayer = exports.Shelf = exports.WarehouseRoom = exports.SalesRegionWarehouse = exports.Warehouse = void 0;
+exports.OutInBoundReason = exports.ExpressLogistics = exports.ShelfBlock = exports.ShelfLayer = exports.Shelf = exports.WarehouseRoom = exports.SalesRegionWarehouse = exports.Warehouse = void 0;
 const uqs_1 = require("../uqs");
 exports.Warehouse = {
     uq: uqs_1.uqs.jkWarehouse,
@@ -75,6 +75,31 @@ exports.ShelfBlock = {
         no: "ShelfBlockID",
         name: "ShelfBlockID",
         shelfLayer: "ShelfLayerID@ShelfLayer"
+    }
+};
+exports.ExpressLogistics = {
+    uq: uqs_1.uqs.jkWarehouse,
+    type: 'tuid',
+    entity: 'ExpressLogistics',
+    key: 'ID',
+    mapper: {
+        $id: 'ID@ExpressLogistics',
+        no: "TransWay",
+        name: "TransMode",
+        isValid: "isvalid",
+        salesRegion: "Region@SalesRegion"
+    }
+};
+exports.OutInBoundReason = {
+    uq: uqs_1.uqs.jkWarehouse,
+    type: 'tuid',
+    entity: 'OutInBoundReason',
+    key: 'ID',
+    mapper: {
+        $id: 'ID@OutInBoundReason',
+        no: "OIReasonID",
+        name: "RsnDescription",
+        note: "definition"
     }
 };
 //# sourceMappingURL=warehouse.js.map

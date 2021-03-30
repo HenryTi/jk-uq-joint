@@ -86,6 +86,13 @@ exports.sqls = {
                 from opdata.dbo.sc_chemical
                 where reliability = 0 and chemID > @iMaxId and chemID > ${idBrokened.chemid} order by chemID`,
     //==============================================================
+    //=========================== chemicalSecurity ===========================
+    //==============================================================
+    readJNKRestrict: `
+                select top ${promiseSize} ID, ID as JNKRestrictID, ClassE as Description 
+                from  zcl_mess.dbo.JKRestrict 
+                where ID > @iMaxId order by ID`,
+    //==============================================================
     //=========================== customer ===========================
     //==============================================================
     readCustomer: `
@@ -220,6 +227,14 @@ exports.sqls = {
                         zcl_mess.dbo.FC_ReplaceSpaceStartEnd(room + HJZDM) AS ShelfID, 1 AS isValid
                 from    dbs.dbo.ShelfLevel
                 where   ShelfLevNo > @iMaxId order by ShelfLevNo`,
+    readExpressLogistics: `
+                SELECT	TOP ${promiseSize} zcl_mess.dbo.FC_ReplaceSpaceStartEnd(TransWay) as ID, zcl_mess.dbo.FC_ReplaceSpaceStartEnd(TransWay) as TransWay, TransMode, isvalid, Region
+                FROM	dbs.dbo.TransWAY
+                WHERE	TransWay > @iMaxId ORDER BY TransWay `,
+    readOutInBoundReason: `
+                SELECT	TOP ${promiseSize} zcl_mess.dbo.FC_ReplaceSpaceStartEnd(OIReasonID) as ID,  zcl_mess.dbo.FC_ReplaceSpaceStartEnd(OIReasonID) as OIReasonID, RsnDescription, definition
+                FROM	dbs.dbo.OIReason
+                WHERE	OIReasonID > @iMaxId ORDER BY OIReasonID `,
     /*
     readShelfBlock: `
             select top ${promiseSize} ID, CompanyID as WarehouseID, Location as SalesRegionID, minDeliverTime, maxDeliverTime

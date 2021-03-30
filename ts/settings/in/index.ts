@@ -24,6 +24,8 @@ import { EpecCity, EpecCityMapping, EpecCounty, EpecCountyMapping, EpecProvince,
 import { NeoTridentUser } from "./uq-platform/neoTrident";
 import { COA, Lot } from "./coa/coa";
 import { ProductExtention } from "./product/productextention";
+import { JNKRestrict } from "./ChemicalSecurity/JNKRestrict";
+import { ChemicalJNKRestrict } from "./chemical/chemicalJNKRestirct";
 // import { WebUserPointDiff } from "./pointshop";
 
 const uqIns = [
@@ -45,6 +47,7 @@ const uqIns = [
     Employee,
 
     Chemical,
+    ChemicalJNKRestrict,
     StorageCondition,
 
     Brand,
@@ -141,6 +144,8 @@ const uqIns = [
     COA,
 
     ProductExtention,
+
+    JNKRestrict,
 ]
 
 export default uqIns;

@@ -1,6 +1,6 @@
 import config from 'config';
 import { settings } from "../settings";
-import { Joint, DataPullResult } from 'uq-joint';
+import { Joint, DataPullResult } from '../uq-joint';
 import { pulls, UqOutConverter } from "./pulls";
 import { uqOutRead } from "./converter/uqOutRead";
 //import { host } from "../uq-joint/tool/host";

@@ -95,6 +95,14 @@ export const sqls = {
                 where reliability = 0 and chemID > @iMaxId and chemID > ${idBrokened.chemid} order by chemID`,
 
         //==============================================================
+        //=========================== chemicalSecurity ===========================
+        //==============================================================
+        readJNKRestrict: `
+                select top ${promiseSize} ID, ID as JNKRestrictID, ClassE as Description 
+                from  zcl_mess.dbo.JKRestrict 
+                where ID > @iMaxId order by ID`,
+
+        //==============================================================
         //=========================== customer ===========================
         //==============================================================
         readCustomer: `

@@ -16,4 +16,5 @@ export const uqs = {
     jkVIPCardType: JKDev + '/vipCardType',
     jkAchievement: JKDev + '/achievement',
     jkPlatformJoint: JKDev + '/platformJoint',
+    jkChemicalSecurity: JKDev + '/chemicalSecurity',
 }

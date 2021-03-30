@@ -19,6 +19,7 @@ const salesVolumePlan_1 = require("settings/in/achievement/salesVolumePlan");
 const brandMinDiscount_1 = require("settings/in/pointshop/brandMinDiscount");
 const epec_1 = require("settings/in/uq-platform/epec");
 const neoTrident_1 = require("settings/in/uq-platform/neoTrident");
+const JNKRestrict_1 = require("settings/in/ChemicalSecurity/JNKRestrict");
 /** */
 exports.pulls = {
     "Language": { read: sqls_1.sqls.readLanguage, uqIn: salesRegion_1.Language },
@@ -39,6 +40,8 @@ exports.pulls = {
     "Shelf": { read: sqls_1.sqls.readShelf, uqIn: warehouse_1.Shelf },
     "ShelfLayer": { read: sqls_1.sqls.readShelfLayer, uqIn: warehouse_1.ShelfLayer },
     "ShelfBlock": { read: undefined, uqIn: warehouse_1.ShelfBlock },
+    "ExpressLogistics": { read: sqls_1.sqls.readExpressLogistics, uqIn: warehouse_1.ExpressLogistics },
+    "OutInBoundReason": { read: sqls_1.sqls.readOutInBoundReason, uqIn: warehouse_1.OutInBoundReason },
     // 产品相关的数据表
     // 目录树
     "ProductCategory": { read: sqls_1.sqls.readProductCategory, uqIn: productCategory_1.ProductCategory },
@@ -81,5 +84,7 @@ exports.pulls = {
     "EpecCityMapping": { read: sqls_1.sqls.readEpecCityMapping, uqIn: epec_1.EpecCityMapping },
     "EpecCountyMapping": { read: sqls_1.sqls.readEpecCountyMapping, uqIn: epec_1.EpecCountyMapping },
     "NeoTridentUser": { read: sqls_1.sqls.readNeoTridentUser, uqIn: neoTrident_1.NeoTridentUser },
+    // ChemicalSecurity
+    "JNKRestrict": { read: sqls_1.sqls.readJNKRestrict, uqIn: JNKRestrict_1.JNKRestrict },
 };
 //# sourceMappingURL=pulls.js.map

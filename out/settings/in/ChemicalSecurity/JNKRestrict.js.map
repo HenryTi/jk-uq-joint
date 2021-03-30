@@ -1,0 +1,1 @@
+{"version":3,"file":"JNKRestrict.js","sourceRoot":"","sources":["../../../../ts/settings/in/ChemicalSecurity/JNKRestrict.ts"],"names":[],"mappings":";;;AAAA,+CAA4C;AAG/B,QAAA,WAAW,GAAa;IACjC,EAAE,EAAE,SAAG,CAAC,kBAAkB;IAC1B,IAAI,EAAE,MAAM;IACZ,MAAM,EAAE,aAAa;IACrB,GAAG,EAAE,eAAe;IACpB,MAAM,EAAE;QACJ,GAAG,EAAE,2BAA2B;QAChC,EAAE,EAAE,eAAe;QACnB,WAAW,EAAE,aAAa;KAC7B;CACJ,CAAA"}

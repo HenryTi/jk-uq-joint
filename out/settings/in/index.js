@@ -18,6 +18,8 @@ const epec_1 = require("./uq-platform/epec");
 const neoTrident_1 = require("./uq-platform/neoTrident");
 const coa_1 = require("./coa/coa");
 const productextention_1 = require("./product/productextention");
+const JNKRestrict_1 = require("./ChemicalSecurity/JNKRestrict");
+const chemicalJNKRestirct_1 = require("./chemical/chemicalJNKRestirct");
 // import { WebUserPointDiff } from "./pointshop";
 const uqIns = [
     salestask_1.JkTaskType,
@@ -35,6 +37,7 @@ const uqIns = [
     salesRegion_1.InvoiceType,
     hr_1.Employee,
     chemical_1.Chemical,
+    chemicalJNKRestirct_1.ChemicalJNKRestrict,
     chemical_1.StorageCondition,
     product_1.Brand,
     product_1.BrandSalesRegion,
@@ -59,6 +62,8 @@ const uqIns = [
     warehouse_1.Shelf,
     warehouse_1.ShelfLayer,
     warehouse_1.ShelfBlock,
+    warehouse_1.ExpressLogistics,
+    warehouse_1.OutInBoundReason,
     promotion_1.PromotionType,
     promotion_1.PromotionStatus,
     promotion_1.Promotion,
@@ -110,6 +115,7 @@ const uqIns = [
     coa_1.Lot,
     coa_1.COA,
     productextention_1.ProductExtention,
+    JNKRestrict_1.JNKRestrict,
 ];
 exports.default = uqIns;
 //# sourceMappingURL=index.js.map
