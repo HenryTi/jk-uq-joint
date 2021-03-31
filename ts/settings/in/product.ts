@@ -5,7 +5,7 @@ import { execSql } from "../../mssql/tools";
 import config from 'config';
 import dateFormat from 'dateformat';
 import { logger } from "../../tools/logger";
-import { uqOutRead } from "../../first/converter/uqOutRead";
+import { uqOutRead, uqPullRead } from "../../first/converter/uqOutRead";
 
 const promiseSize = config.get<number>("promiseSize");
 const interval = config.get<number>("interval");
@@ -268,7 +268,11 @@ export const ProductLegallyProhibited: UqInMap = {
             salesRegion: '^SalesRegionID@SalesRegion',
             reason: '^Reason',
         }
-    }
+    },
+    pull: `SELECT TOP ${promiseSize} ID, jkid as ProductID,Market_code as SalesRegionID,Reason , case mark when 3 then '-' else '' end as [$]
+            FROM ProdData.dbo.Export_ProductDangerous
+            where ID > @iMaxId
+            order by ID`,
 };
 
 export const ProductExtensionProperty: UqInMap = {

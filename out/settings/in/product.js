@@ -259,7 +259,11 @@ exports.ProductLegallyProhibited = {
             salesRegion: '^SalesRegionID@SalesRegion',
             reason: '^Reason',
         }
-    }
+    },
+    pull: `SELECT TOP ${promiseSize} ID, jkid as ProductID,Market_code as SalesRegionID,Reason , case mark when 3 then '-' else '' end as [$]
+            FROM ProdData.dbo.Export_ProductDangerous
+            where ID > @iMaxId
+            order by ID`,
 };
 exports.ProductExtensionProperty = {
     uq: uqs_1.uqs.jkProduct,
