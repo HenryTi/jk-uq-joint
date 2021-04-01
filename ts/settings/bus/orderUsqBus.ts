@@ -119,14 +119,18 @@ export function getInvoiceReceiver(invoiceContact: any): any {
             InvoiceReceiverTelephone: invoiceContact.telephone,
             InvoiceReceiverUserMobile: invoiceContact.mobile,
             InvoiceReceiverEmail: invoiceContact.email,
-            InvoiceAddrssDetail: invoiceContact.addressString,
         };
         if (invoiceContact.address !== undefined) {
             let { country, province, city, county, zipcode } = invoiceContact.address;
             InvoiceReceiver.InvoiceReceiverProvince = province && province.chineseName;
             InvoiceReceiver.InvoiceReceiverCity = city && city.chineseName;
             InvoiceReceiver.InvoiceReceiverZipCode = zipcode;
+            InvoiceReceiver.InvoiceAddrssDetail = (province && province.chineseName != undefined ? province.chineseName : '') + (city && city.chineseName != undefined ? city.chineseName : '') + (county && county.chineseName != undefined ? county.chineseName : '') + invoiceContact.addressString;
         }
+        else {
+            throw new Error(JSON.stringify(invoiceContact) + " has no valid address.")
+        }
+
         return InvoiceReceiver;
     }
 }
