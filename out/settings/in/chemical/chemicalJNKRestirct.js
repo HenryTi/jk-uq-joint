@@ -10,20 +10,29 @@ exports.ChemicalJNKRestrict = {
     entity: 'ChemicalJNKRestrict',
     mapper: {
         chemical: "ChemicalID@Chemical",
-        jnkRestrict: "JNKRestrictID@JNKRestrict",
-    },
-    pull: async (joint, uqIn, queue) => {
-        let sql = `select DATEDIFF(s, '1970-01-01', Update__Time) + 1 as ID, Chemid as ChemicalID, restrict_code as JNKRestrictID
-            from zcl_mess.dbo.sc_restrict
-            where Update__Time >= DATEADD(s, @iMaxId, '1970-01-01') and Update__Time <= DATEADD(s, @endPoint, '1970-01-01')
-            order by Update__time`;
-        try {
-            return await timeAsQueue_1.timeAsQueue(sql, queue, 3600);
+        arr1: {
+            jnkRestrict: "^JNKRestrictID@JNKRestrict",
         }
-        catch (error) {
-            logger_1.logger.error(error);
-            throw error;
+    },
+    pull: pullChemicalJNKRestrict
+};
+pullChemicalJNKRestrict.lastLength = 0;
+async function pullChemicalJNKRestrict(joint, uqIn, queue) {
+    let { lastLength } = pullChemicalJNKRestrict;
+    let sql = `select top --topn-- DATEDIFF(s, '1970-01-01', Update__Time) as ID, Chemid as ChemicalID, restrict_code as JNKRestrictID
+            from zcl_mess.dbo.sc_restrict
+            where Update__Time >= DATEADD(s, @iMaxId, '1970-01-01')
+            order by Update__time`;
+    try {
+        let ret = await timeAsQueue_1.timeAsQueue(sql, queue, lastLength);
+        if (ret !== undefined) {
+            pullChemicalJNKRestrict.lastLength = ret.lastLength;
+            return ret.ret;
         }
     }
-};
+    catch (error) {
+        logger_1.logger.error(error);
+        throw error;
+    }
+}
 //# sourceMappingURL=chemicalJNKRestirct.js.map

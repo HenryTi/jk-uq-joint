@@ -3,15 +3,26 @@ import { uqOutRead } from "../first/converter/uqOutRead";
 
 const interval = config.get<number>("interval");
 
-export async function timeAsQueue(sql: string, queue: number, step_seconds?: number) {
-    if (!step_seconds)
-        step_seconds = Math.max(interval * 10 / 1000, 300);
-    if ((queue - 8 * 60 * 60 + step_seconds) * 1000 > Date.now())
-        return undefined;
-    let nextQueue = queue + step_seconds;
-    let ret = await uqOutRead(sql, queue, nextQueue);
-    if (ret === undefined) {
-        ret = { lastPointer: nextQueue, data: [] };
+export async function timeAsQueue(sql: string, queue: number, lastLength: number) {
+    let topn = 30;
+    topn += lastLength;
+    sql = sql.replace('--topn--', topn.toString());
+    console.log(sql);
+    let ret = await uqOutRead(sql, queue);
+    if (ret !== undefined) {
+        let { lastPointer, data } = ret;
+        data.splice(0, lastLength);
+        let lastL = data.filter(e => e.ID === lastPointer).length;
+        if (lastL === 0)
+            ret = undefined;
+        else {
+            if (queue === lastPointer)
+                lastLength += lastL;
+            else
+                lastLength = lastL;
+        }
     }
-    return ret;
+
+    if (ret !== undefined)
+        return { lastLength: lastLength, ret: ret }
 }
