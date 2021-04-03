@@ -91,6 +91,7 @@ exports.Agreement = {
         startDate: 'StartDate',
         endDate: 'EndDate',
     },
+    // Export_Agreement在dbs.dbo.Agreement表的触发器上更新
     pull: `select top ${promiseSize} ID, AgreementID, CID, ObjType, StartDate, EndDate 
             from ProdData.dbo.Export_Agreement 
             where ID > @iMaxId and objType in ( 'C', 'U' ) 
