@@ -5,6 +5,7 @@ import { customerPullWrite, contactPullWrite } from '../../first/converter/custo
 import config from 'config';
 import { logger } from '../../tools/logger';
 import { uqOutRead } from "../../first/converter/uqOutRead";
+import { timeAsQueue } from '../../settings/timeAsQueue';
 
 const promiseSize = config.get<number>("promiseSize");
 
@@ -187,44 +188,6 @@ export const BuyerAccount: UqInTuid = {
         createTime: 'CreateTime',
         isValid: 'IsValid',
     },
-    /*
-    pull: `select top ${promiseSize} ID, CustomerID as BuyerAccountID, OrganizationID, Name, FirstName, LastName
-           , IsValid, CreateTime
-           from ProdData.dbo.Export_Customer
-           where ID > @iMaxId and CustomerID in (select CID from dbs.dbo.vw_sordersBJSH)
-           order by ID`,
-    pull: async (joint: Joint, uqIn: UqInTuid, queue: number): Promise<DataPullResult> => {
-        let step_seconds = 60;
-        if ((queue - 8 * 60 * 60 + step_seconds) * 1000 > Date.now())
-            return undefined;
-        let nextQueue = queue + step_seconds;
-        let sql = `select DATEDIFF(s, '1970-01-01', a.SODDateB) + 1 as ID, b.CID as BuyerAccountID, b.UnitID as OrganizationID
-            , b.Name, b.FirstName, b.LastName
-            , case b.C5 when 'xx' then 0 else 1 end as IsValid
-            , b.creaDate as CreateTime
-            from dbs.dbo.vw_TermsABJSH a inner join dbs.dbo.Customers b on a.CID_T = b.CID
-            where a.SODDateB >= DATEADD(s, @iMaxId, '1970-01-01') and a.SODDateB <= DATEADD(s, ${nextQueue}, '1970-01-01')
-            order by a.SODDateB`
-        try {
-            let ret = await uqOutRead(sql, queue);
-            if (ret === undefined) {
-                ret = { lastPointer: nextQueue, data: [] };
-            }
-            return ret;
-        } catch (error) {
-            logger.error(error);
-            throw error;
-        }
-    },
-    pullWrite: async (joint: Joint, data: any) => {
-        data["CreateTime"] = data["CreateTime"] && data['CreateTime'].getTime() / 1000;
-        await joint.uqIn(BuyerAccount, data);
-        // 本人的BuyerAccount设置为本人
-        let buyerAccountID = data['BuyerAccountID'];
-        await joint.uqIn(CustomerBuyerAccount, { "CustomerID": buyerAccountID, 'BuyerAccountID': buyerAccountID });
-        return true;
-    }
-    */
 };
 
 export const CustomerBuyerAccount: UqInMap = {
@@ -237,32 +200,7 @@ export const CustomerBuyerAccount: UqInMap = {
             buyerAccount: '^BuyerAccountID@BuyerAccount',
         }
     },
-    pull: async (joint: Joint, uqIn: UqIn, queue: number): Promise<DataPullResult> => {
-        // queue是当前时间举例1970-01-01的秒数
-        let step_seconds = 10 * 60;
-        if ((queue - 8 * 60 * 60 + step_seconds) * 1000 > Date.now())
-            return undefined;
-        let nextQueue = queue + step_seconds;
-        let sql = `select DATEDIFF(s, '1970-01-01', a.Update__time) + 1 as ID, a.MakeOrderCID as CustomerID, a.Contractor as BuyerAccountID
-            , case when a.Invalid = 0 then '-' else '' end as [$]
-            , c.UnitID as Organization, c.Name, c.FirstName, c.LastName
-            , case c.C5 when 'xx' then 0 else 1 end as IsValid
-            , c.creaDate as CreateTime
-            from dbs.dbo.MakeOrderPersonAndContractorRelationship a
-                 inner join dbs.dbo.Customers c on a.Contractor = c.CID
-            where a.Update__time >= DATEADD(s, @iMaxId, '1970-01-01') and a.Update__time <= DATEADD(s, ${nextQueue}, '1970-01-01')
-            order by a.Update__time`
-        try {
-            let ret = await uqOutRead(sql, queue);
-            if (ret === undefined) {
-                ret = { lastPointer: nextQueue, data: [] };
-            }
-            return ret;
-        } catch (error) {
-            logger.error(error);
-            throw error;
-        }
-    },
+    pull: pullCustomerBuyerAccount,
     pullWrite: async (joint: Joint, uqIn: UqIn, data: any) => {
         data["CreateTime"] = data["CreateTime"] && data['CreateTime'].getTime() / 1000;
         await joint.uqIn(BuyerAccount, data);
@@ -271,6 +209,28 @@ export const CustomerBuyerAccount: UqInMap = {
     }
 };
 
+pullCustomerBuyerAccount.lastLenght = 0;
+async function pullCustomerBuyerAccount(joint: Joint, uqIn: UqIn, queue: number): Promise<DataPullResult> {
+    let sql = `select top --topn-- DATEDIFF(s, '1970-01-01', a.Update__time) as ID, a.MakeOrderCID as CustomerID, a.Contractor as BuyerAccountID
+            , case when a.Invalid = 0 then '-' else '' end as [$]
+            , c.UnitID as Organization, c.Name, c.FirstName, c.LastName
+            , case c.C5 when 'xx' then 0 else 1 end as IsValid
+            , c.creaDate as CreateTime
+            from dbs.dbo.MakeOrderPersonAndContractorRelationship a
+                 inner join dbs.dbo.Customers c on a.Contractor = c.CID
+            where a.Update__time >= DATEADD(s, @iMaxId, '1970-01-01')
+            order by a.Update__time`
+    try {
+        let ret = await timeAsQueue(sql, queue, pullCustomerBuyerAccount.lastLenght);
+        if (ret !== undefined) {
+            pullCustomerBuyerAccount.lastLenght = ret.lastLength;
+            return ret.ret;
+        }
+    } catch (error) {
+        logger.error(error);
+        throw error;
+    }
+}
 
 export const Department: UqInTuid = {
     uq: uqs.jkCustomer,

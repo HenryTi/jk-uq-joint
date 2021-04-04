@@ -1,30 +1,6 @@
 import { DataPullResult } from 'uq-joint';
 import { execSql } from '../../mssql/tools';
 
-/**
- * 按照时间范围读取要导出的数据（仅适用时间是分散发布的情况）
- * @param sql
- * @param queue
- * @param interval
- */
-export async function uqOutReadTimeScope(sql: string, queue: number, interval: number) {
-    // queue是当前时间举例1970-01-01的秒数
-    let step_seconds = interval * 60;
-    if ((queue - 8 * 60 * 60 + step_seconds) * 1000 > Date.now())
-        return undefined;
-    let nextQueue = queue + step_seconds;
-    try {
-        let ret = await uqOutRead(sql, queue);
-        if (ret === undefined) {
-            ret = { lastPointer: nextQueue, data: [] };
-        }
-        return ret;
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
-}
-
 export async function uqOutRead(sql: string, maxId: string | number, endPoint?: string | number): Promise<DataPullResult> {
     // let iMaxId = maxId === "" ? 0 : Number(maxId);
     let param = [{ name: 'iMaxId', value: maxId }];

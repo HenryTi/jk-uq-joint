@@ -11,7 +11,6 @@ async function timeAsQueue(sql, queue, lastLength) {
     let topn = 30;
     topn += lastLength;
     sql = sql.replace('--topn--', topn.toString());
-    console.log(sql);
     let ret = await uqOutRead_1.uqOutRead(sql, queue);
     if (ret !== undefined) {
         let { lastPointer, data } = ret;

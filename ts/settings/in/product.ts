@@ -5,7 +5,7 @@ import { execSql } from "../../mssql/tools";
 import config from 'config';
 import dateFormat from 'dateformat';
 import { logger } from "../../tools/logger";
-import { uqOutRead, uqPullRead } from "../../first/converter/uqOutRead";
+import { timeAsQueue } from "../../settings/timeAsQueue";
 
 const promiseSize = config.get<number>("promiseSize");
 const interval = config.get<number>("interval");
@@ -304,34 +304,33 @@ export const ProductMSDSFile: UqInMap = {
             fileName: "^FileName"
         }
     },
-    pull: async (joint: Joint, uqIn: UqInMap, queue: number): Promise<DataPullResult> => {
-        let step_seconds = Math.max(interval * 10 / 1000, 300);
-        if ((queue - 8 * 60 * 60 + step_seconds) * 1000 > Date.now())
-            return undefined;
-        let nextQueue = queue + step_seconds;
-        let sql = `select DATEDIFF(s, '1970-01-01', a.InputTime) + 1 as ID, c.jkid as ProductID
+    pull: pullProductMSDSFile
+};
+
+pullProductMSDSFile.lastLength = 0;
+async function pullProductMSDSFile(joint: Joint, uqIn: UqInMap, queue: number): Promise<DataPullResult> {
+    let sql = `select top --topn-- DATEDIFF(s, '1970-01-01', a.InputTime) as ID, c.jkid as ProductID
             , case a.LanguageID when 'CN' then 'zh-CN' when 'EN' then 'en' 
                 when 'DE' then 'de' when 'EN-US' then 'en-US' 
                 when 'FR' then 'fr' end as LanguageID
             , a.fileName + '.pdf' as FileName 
             from opdata.dbo.PProducts_MSDSInfo a inner join opdata.dbo.JKProdIDInOut b on a.OriginalID = b.JKIDIn
                 inner join zcl_mess.dbo.Products c on c.OriginalID = b.JKIDOut and c.manufactory in ( 'A01', 'A10' )
-            where a.InputTime >= DATEADD(s, @iMaxId, '1970-01-01') and a.InputTime <= DATEADD(s, ${nextQueue}, '1970-01-01')
+            where a.InputTime >= DATEADD(s, @iMaxId, '1970-01-01')
                 and a.FileType = 'PDF'
                 and c.jkid not in ( select jkid from zcl_mess.dbo.Invalid_products )
             order by a.InputTime`
-        try {
-            let ret = await uqOutRead(sql, queue);
-            if (ret === undefined) {
-                ret = { lastPointer: nextQueue, data: [] };
-            }
-            return ret;
-        } catch (error) {
-            logger.error(error);
-            throw error;
+    try {
+        let ret = await timeAsQueue(sql, queue, pullProductMSDSFile.lastLength);
+        if (ret !== undefined) {
+            pullProductMSDSFile.lastLength = ret.lastLength;
+            return ret.ret;
         }
+    } catch (error) {
+        logger.error(error);
+        throw error;
     }
-};
+}
 
 export const ProductSpecFile: UqInMap = {
     uq: uqs.jkProduct,
@@ -341,31 +340,28 @@ export const ProductSpecFile: UqInMap = {
         product: "ProductID@ProductX",
         fileName: "FileName"
     },
-    pull: async (joint: Joint, uqIn: UqInMap, queue: number): Promise<DataPullResult> => {
-        let step_seconds = Math.max(interval * 10 / 1000, 300);
-        if ((queue - 8 * 60 * 60 + step_seconds) * 1000 > Date.now())
-            return undefined;
-        let nextQueue = queue + step_seconds;
-        let sql = `select DATEDIFF(s, '1970-01-01', a.UpdateDatetime) + 1 as ID, a.jkid as ProductID
-            , a.filePath as FileName 
-            from opdata.dbo.FileResource a
-            where a.UpdateDatetime >= DATEADD(s, @iMaxId, '1970-01-01') and a.UpdateDatetime <= DATEADD(s, ${nextQueue}, '1970-01-01')
-                and a.FileType = 0 and a.FillState = 1
-            order by a.UpdateDatetime`
-        try {
-            let ret = await uqOutRead(sql, queue);
-            if (ret === undefined) {
-                ret = { lastPointer: nextQueue, data: [] };
-            }
-            return ret;
-        } catch (error) {
-            logger.error(error);
-            throw error;
-        }
-    }
+    pull: pullProductSpecFile
 }
 
-
+pullProductSpecFile.lastLength = 0;
+async function pullProductSpecFile(joint: Joint, uqIn: UqInMap, queue: number): Promise<DataPullResult> {
+    let sql = `select top --topn-- DATEDIFF(s, '1970-01-01', a.UpdateDatetime) as ID, a.jkid as ProductID
+            , a.filePath as FileName 
+            from opdata.dbo.FileResource a
+            where a.UpdateDatetime >= DATEADD(s, @iMaxId, '1970-01-01')
+                and a.FileType = 0 and a.FillState = 1
+            order by a.UpdateDatetime`
+    try {
+        let ret = await timeAsQueue(sql, queue, pullProductSpecFile.lastLength);
+        if (ret !== undefined) {
+            pullProductSpecFile.lastLength = ret.lastLength;
+            return ret.ret;
+        }
+    } catch (error) {
+        logger.error(error);
+        throw error;
+    }
+}
 
 export const ProductSalesRank: UqInMap = {
     uq: uqs.jkProduct,
