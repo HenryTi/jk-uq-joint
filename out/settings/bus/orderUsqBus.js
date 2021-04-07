@@ -125,7 +125,7 @@ function getInvoiceReceiver(invoiceContact) {
             InvoiceReceiver.InvoiceReceiverProvince = province && province.chineseName;
             InvoiceReceiver.InvoiceReceiverCity = city && city.chineseName;
             InvoiceReceiver.InvoiceReceiverZipCode = zipcode;
-            InvoiceReceiver.InvoiceAddrssDetail = (province && province.chineseName != undefined ? province.chineseName : '') + (city && city.chineseName != undefined ? city.chineseName : '') + (county && county.chineseName != undefined ? county.chineseName : '') + invoiceContact.addressString;
+            InvoiceReceiver.InvoiceAddressDetail = (province && province.chineseName != undefined ? province.chineseName : '') + (city && city.chineseName != undefined ? city.chineseName : '') + (county && county.chineseName != undefined ? county.chineseName : '') + invoiceContact.addressString;
         }
         else {
             throw new Error(JSON.stringify(invoiceContact) + " has no valid address.");
