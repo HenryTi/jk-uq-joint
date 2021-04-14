@@ -116,6 +116,8 @@ const uqIns = [
     coa_1.COA,
     productextention_1.ProductExtention,
     JNKRestrict_1.JNKRestrict,
+    //产品检查
+    //ProductxDiff, ProductxDiffResultCheck2nd
 ];
 exports.default = uqIns;
 //# sourceMappingURL=index.js.map

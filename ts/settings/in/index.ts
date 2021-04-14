@@ -3,7 +3,8 @@ import { SalesRegion, Currency, PackType, PackTypeStandard, PackTypeMapToStandar
 import {
     Brand, ProductSalesRegion, ProductLegallyProhibited, ProductX, ProductPackX,
     PriceX, AgentPrice, BrandSalesRegion, BrandDeliveryTime, ProductChemical, InvalidProduct,
-    ProductMSDSFile, ProductSpecFile, ProductSalesRank, ProductExtensionProperty
+    ProductMSDSFile, ProductSpecFile, ProductSalesRank, ProductExtensionProperty,
+    //ProductxDiff, ProductxDiffResultCheck2nd
 } from "./product";
 import { Warehouse, SalesRegionWarehouse, WarehouseRoom, Shelf, ShelfLayer, ShelfBlock, ExpressLogistics, OutInBoundReason } from "./warehouse";
 import { Chemical, StorageCondition } from "./chemical";
@@ -146,6 +147,8 @@ const uqIns = [
     ProductExtention,
 
     JNKRestrict,
+    //产品检查
+    //ProductxDiff, ProductxDiffResultCheck2nd
 ]
 
 export default uqIns;
