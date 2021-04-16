@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.WebUserBuyerAccount = exports.WebUserSettingType = exports.WebUserSettingAlter = exports.WebUserSetting = exports.WebUserContacts = exports.WebUserCustomer = exports.WebUserContact = exports.WebUser = exports.WebUserTonva = void 0;
+exports.WebUserBuyerAccount = exports.WebUserSettingType = exports.WebUserSettingAlter = exports.WebUserSetting = exports.WebUserContacts = exports.WebUserCustomer = exports.WebUserContact = exports.WebUser = exports.splitOldBankInfo = exports.splitOldTax = exports.WebUserTonva = void 0;
 const uq_joint_1 = require("uq-joint");
 const uq_joint_2 = require("uq-joint");
 const lodash_1 = __importDefault(require("lodash"));
@@ -140,16 +140,52 @@ async function userIn(joint, uqIn, data) {
         throw error;
     }
 }
+/**
+ *
+ * @param joint
+ * @param data
+ * @param userId
+ */
 async function InvoiceInfoIn(joint, data, userId) {
     if (data['InvoiceTitle']) {
+        let taxNoSplited = splitOldTax(data['TaxNo']);
+        let bankInfoSplited = splitOldBankInfo(data['BankAccountName']);
         await joint.uqIn(customer_1.InvoiceInfo, {
             "CustomerID": data["WebUserID"], "InvoiceTitle": data["InvoiceTitle"],
-            "RegisteredAddress": data['TaxNo'], "BankName": data['BankAccountName'], 'InvoiceType': data['InvoiceType']
+            "TaxNo": taxNoSplited[0], "RegisteredAddress": taxNoSplited[1] || data['TaxNo'], "RegisteredTelephone": taxNoSplited[2],
+            "BankName": bankInfoSplited[1] || data['BankAccountName'], "BankAccountNumber": bankInfoSplited[0],
+            'InvoiceType': data['InvoiceType']
         });
         exports.WebUserSettingAlter.mapper.arr1["contentId"] = "^contentID@InvoiceInfo";
         await joint.uqIn(exports.WebUserSettingAlter, { 'UserID': userId, 'Type': 'ivInvoiceInfo', 'contentID': data['WebUserID'] });
     }
 }
+/**
+ *
+ * @param oldTax
+ * @returns
+ */
+function splitOldTax(oldTax) {
+    if (!oldTax)
+        return [];
+    let matched = oldTax.match(/(\w+)?(.+[\s\b$])?([\w-]{1,30})?/);
+    if (matched && matched.length === 4) {
+        matched.shift();
+        return matched.map(e => e && e.trim());
+    }
+}
+exports.splitOldTax = splitOldTax;
+function splitOldBankInfo(oldBankInfo) {
+    if (!oldBankInfo)
+        return [];
+    let rev = oldBankInfo.split('').reverse().join('');
+    let matched = rev.match(/([\w-\s]{1,50})?(.+)/);
+    if (matched && matched.length === 3) {
+        matched.shift();
+        return matched.map(e => e && e.trim().split('').reverse().join(''));
+    }
+}
+exports.splitOldBankInfo = splitOldBankInfo;
 /*
 */
 exports.WebUser = {

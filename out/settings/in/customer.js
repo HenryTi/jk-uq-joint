@@ -120,6 +120,7 @@ exports.InvoiceInfo = {
     mapper: {
         $id: 'CustomerID@InvoiceInfo',
         title: 'InvoiceTitle',
+        taxNo: 'TaxNo',
         address: 'RegisteredAddress',
         telephone: 'RegisteredTelephone',
         bank: 'BankName',

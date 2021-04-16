@@ -124,6 +124,7 @@ export const InvoiceInfo: UqInTuid = {
     mapper: {
         $id: 'CustomerID@InvoiceInfo',
         title: 'InvoiceTitle',
+        taxNo: 'TaxNo',
         address: 'RegisteredAddress',
         telephone: 'RegisteredTelephone',
         bank: 'BankName',

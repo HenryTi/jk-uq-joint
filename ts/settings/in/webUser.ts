@@ -144,15 +144,48 @@ async function userIn(joint: Joint, uqIn: UqInTuid, data: any): Promise<number> 
 
 
 
-
+/**
+ * 
+ * @param joint 
+ * @param data 
+ * @param userId 
+ */
 async function InvoiceInfoIn(joint: Joint, data: any, userId: number): Promise<any> {
     if (data['InvoiceTitle']) {
+        let taxNoSplited = splitOldTax(data['TaxNo']);
+        let bankInfoSplited = splitOldBankInfo(data['BankAccountName']);
         await joint.uqIn(InvoiceInfo, {
             "CustomerID": data["WebUserID"], "InvoiceTitle": data["InvoiceTitle"]
-            , "RegisteredAddress": data['TaxNo'], "BankName": data['BankAccountName'], 'InvoiceType': data['InvoiceType']
+            , "TaxNo": taxNoSplited[0], "RegisteredAddress": taxNoSplited[1] || data['TaxNo'], "RegisteredTelephone": taxNoSplited[2]
+            , "BankName": bankInfoSplited[1] || data['BankAccountName'], "BankAccountNumber": bankInfoSplited[0]
+            , 'InvoiceType': data['InvoiceType']
         });
         WebUserSettingAlter.mapper.arr1["contentId"] = "^contentID@InvoiceInfo";
         await joint.uqIn(WebUserSettingAlter, { 'UserID': userId, 'Type': 'ivInvoiceInfo', 'contentID': data['WebUserID'] });
+    }
+}
+
+/**
+ * 
+ * @param oldTax 
+ * @returns 
+ */
+export function splitOldTax(oldTax: string) {
+    if (!oldTax) return [];
+    let matched = oldTax.match(/(\w+)?(.+[\s\b$])?([\w-]{1,30})?/);
+    if (matched && matched.length === 4) {
+        matched.shift();
+        return matched.map(e => e && e.trim());
+    }
+}
+
+export function splitOldBankInfo(oldBankInfo: string) {
+    if (!oldBankInfo) return [];
+    let rev = oldBankInfo.split('').reverse().join('');
+    let matched = rev.match(/([\w-\s]{1,50})?(.+)/);
+    if (matched && matched.length === 3) {
+        matched.shift();
+        return matched.map(e => e && e.trim().split('').reverse().join(''));
     }
 }
 
