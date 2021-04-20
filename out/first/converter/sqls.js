@@ -308,7 +308,7 @@ exports.sqls = {
                 where ID > @iMaxId and parentId in (
                     select ID 
                     from alidb.jk_eb.dbo.epec_address
-                    where ID > @iMaxId and parentId in (
+                    where parentId in (
                         select id from alidb.jk_eb.dbo.epec_address where parentId = 0
                     )
                 )
@@ -331,7 +331,7 @@ exports.sqls = {
                 where ID > @iMaxId and parentId in (
                     select ID 
                     from alidb.jk_eb.dbo.epec_address
-                    where ID > @iMaxId and parentId in (
+                    where parentId in (
                         select id from alidb.jk_eb.dbo.epec_address where parentId = 0
                     )
                 ) and JNKID is not null
