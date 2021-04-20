@@ -243,7 +243,7 @@ exports.WebUserContacts = {
     },
     pull: async (joint, uqMap, queue) => {
         let sql = `select top ${promiseSize} wa.ID, wa.AddressID as ContactID, wa.WebUserID, wa.Name, wa.OrganizationName, wa.Mobile, wa.Telephone
-           , wa.CountryID, wa.ProvinceID, wa.CityID, wa.[Address] as Addr, wa.ZipCode, wa.Email, wa.IsDefault, wa.AddressType
+           , wa.CountryID, wa.ProvinceID, wa.CityID, wa.CountyID, wa.[Address] as Addr, wa.ZipCode, wa.Email, wa.IsDefault, wa.AddressType
            from alidb.ProdData.dbo.Export_WebUserAddress wa
            inner join alidb.jk_eb.dbo.ClientLogin cl on cl.CIID = wa.WebUserID
            where wa.ID > @iMaxId and cl.State in (0, 1, 5) order by wa.ID`;
@@ -275,7 +275,10 @@ exports.WebUserContacts = {
                 throw 'web user not import, wait next. ID:' + data['ID'];
             let addressId = data['CountyID'] || data['CityID'] || data['ProvinceID'] || data["CountryID"];
             if (addressId) {
-                await joint.uqIn(Address_1.Address, { 'ID': addressId, 'CountryID': addressId.substr(0, 2), 'ProvinceID': data['ProvinceID'], 'CityID': data['CityID'] });
+                await joint.uqIn(Address_1.Address, {
+                    'ID': addressId, 'CountryID': addressId.substr(0, 2),
+                    'ProvinceID': data['ProvinceID'], 'CityID': data['CityID'], 'CountyID': data['CountyID']
+                });
             }
             data['AddressID'] = addressId;
             await joint.uqIn(customer_1.Contact, data);
