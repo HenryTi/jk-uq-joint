@@ -18,7 +18,7 @@ exports.faceDeliveryConfirm = {
         outBoundItemId: 'outBoundItemId',
         outBoundId: 'outBoundId',
         warehouseName: 'warehouseName',
-        logisticsCompanyId: 'logisticsCompanyId@ExpressLogistics',
+        logisticsCompanyId: 'logisticsCompanyId',
         logisticsNumber: 'logisticsNumber',
         deliveryGoodsTime: 'deliveryGoodsTime',
         deliveryAddress: 'deliveryAddress',
