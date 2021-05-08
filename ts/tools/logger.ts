@@ -1,16 +1,8 @@
 import { configure, getLogger } from 'log4js';
-configure({
-    appenders: {
-        joint: { type: 'console' },
-        'console': { type: 'console' }
-    },
-    categories: {
-        joint: { appenders: ['joint'], level: 'debug' },
-        default: { appenders: ['console'], level: 'debug' }
-    },
-    pm2: true
-})
+import config from 'config';
 
-const logger = getLogger();
+configure(config.get<any>('log4js'));
+
+const logger = getLogger('joint');
 
 export { logger }

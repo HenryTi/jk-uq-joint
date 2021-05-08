@@ -46,6 +46,17 @@
     },
     "joint-enableNotify": false,
     "joint-notifyInterval": 100,
+    "log4js": {
+        "appenders": {
+            "joint": { "type": "file", "filename": "./log/joint.log", "maxLogSize": 1024000000 },
+            "console": { "type": "console" }
+        },
+        "categories": {
+            "joint": { "appenders": ["joint"], "level": "debug" },
+            "default": { "appenders": ["console"], "level": "debug" }
+        },
+        "pm2": false
+    },
     "firstEntities": [
         "Language",
         "Country",
