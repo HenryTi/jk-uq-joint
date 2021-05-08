@@ -8,3 +8,4 @@ package-lock.json
 /ts/uq-joint.old
 /out/uq-joint
 /out/uq-joint.old
+*.log
