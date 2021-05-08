@@ -8,7 +8,7 @@ const deliveryConfirmPull = async (joint, uqBus, queue) => {
     let sql = `SELECT  TOP 1 ID, outBoundItemId, outBoundId, warehouseName, logisticsCompanyId, logisticsNumber, deliveryGoodsTime, deliveryAddress, 
         saleOrderId, saleOrderItemId, packageId, quantity, operatorId, operatorName, operatorPhone, customerId
         FROM	ProdData.dbo.Export_deliveryConfirm
-        WHERE	ID > @iMaxId order by ID`;
+        WHERE	ID > @iMaxId order by ID `;
     return await uqOutRead_1.uqOutRead(sql, queue);
 };
 exports.faceDeliveryConfirm = {
