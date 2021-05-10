@@ -1,7 +1,18 @@
 import { uqs } from "../../uqs";
-import { DataPullResult } from "uq-joint";
+import { DataPullResult, UqInTuid } from "uq-joint";
 import { Joint, UqInMap } from "uq-joint";
 import { timeAsQueue } from "../../../settings/timeAsQueue";
+
+export const Currency: UqInTuid = {
+    uq: uqs.jkCommon,
+    type: 'tuid',
+    entity: 'Currency',
+    key: 'ID',
+    mapper: {
+        $id: 'ID@Currency',
+        name: "ID",
+    }
+};
 
 export const CurrencyExchangeRate: UqInMap = {
     uq: uqs.jkCommon,

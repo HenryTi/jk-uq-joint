@@ -29,7 +29,7 @@ const uqIns = [
     Address_1.City,
     Address_1.County,
     Address_1.Address,
-    salesRegion_1.Currency,
+    currency_1.Currency,
     salesRegion_1.SalesRegion,
     salesRegion_1.PackType,
     salesRegion_1.PackTypeMapToStandard,

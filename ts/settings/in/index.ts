@@ -1,5 +1,5 @@
 import { Country, Province, City, County, Address } from "./Address";
-import { SalesRegion, Currency, PackType, PackTypeStandard, PackTypeMapToStandard, Language, InvoiceType } from "./salesRegion";
+import { SalesRegion, PackType, PackTypeStandard, PackTypeMapToStandard, Language, InvoiceType } from "./salesRegion";
 import {
     Brand, ProductSalesRegion, ProductLegallyProhibited, ProductX, ProductPackX,
     PriceX, AgentPrice, BrandSalesRegion, BrandDeliveryTime, ProductChemical, InvalidProduct,
@@ -20,7 +20,7 @@ import { Employee } from "./hr";
 import { JkTaskType, JkTask, Importcustomerdata } from "./salestask";
 import { WebUser, WebUserTonva, WebUserContact, WebUserCustomer, WebUserSetting, WebUserSettingAlter, WebUserSettingType, WebUserContacts, WebUserBuyerAccount } from "./webUser";
 import { OrganizationVIPLevel } from "./VIPCardLevel";
-import { CurrencyExchangeRate } from "./common/currency";
+import { Currency, CurrencyExchangeRate } from "./common/currency"
 import { EpecCity, EpecCityMapping, EpecCounty, EpecCountyMapping, EpecProvince, EpecProvinceMapping, EpecUser } from "./uq-platform/epec";
 import { NeoTridentUser } from "./uq-platform/neoTrident";
 import { COA, Lot } from "./coa/coa";

@@ -20,6 +20,7 @@ const brandMinDiscount_1 = require("settings/in/pointshop/brandMinDiscount");
 const epec_1 = require("settings/in/uq-platform/epec");
 const neoTrident_1 = require("settings/in/uq-platform/neoTrident");
 const JNKRestrict_1 = require("settings/in/ChemicalSecurity/JNKRestrict");
+const currency_1 = require("settings/in/common/currency");
 /** */
 exports.pulls = {
     "Language": { read: sqls_1.sqls.readLanguage, uqIn: salesRegion_1.Language },
@@ -29,7 +30,7 @@ exports.pulls = {
     "County": { read: sqls_1.sqls.readCounty, uqIn: Address_1.County },
     "PackTypeStandard": { read: sqls_1.sqls.readPackTypeStandard, uqIn: salesRegion_1.PackTypeStandard },
     "PackType": { read: sqls_1.sqls.readPackType, uqIn: salesRegion_1.PackType },
-    "Currency": { read: sqls_1.sqls.readCurrency, uqIn: salesRegion_1.Currency },
+    "Currency": { read: sqls_1.sqls.readCurrency, uqIn: currency_1.CurrencyExchangeRate },
     "SalesRegion": { read: sqls_1.sqls.readSalesRegion, uqIn: salesRegion_1.SalesRegion },
     "InvoiceType": { read: sqls_1.sqls.readInvoiceType, uqIn: salesRegion_1.InvoiceType },
     "Employee": { read: sqls_1.sqls.readEmployee, uqIn: hr_1.Employee },

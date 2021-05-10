@@ -3,7 +3,7 @@ import { UqIn, DataPullResult } from "uq-joint";
 
 import { ProductCategory, ProductCategoryLanguage, ProductProductCategory } from "../settings/in/productCategory";
 import { Country, Province, City, County } from "../settings/in/Address";
-import { Language, PackTypeStandard, Currency, SalesRegion, PackType, InvoiceType } from "../settings/in/salesRegion";
+import { Language, PackTypeStandard, SalesRegion, PackType, InvoiceType } from "../settings/in/salesRegion";
 import { Chemical } from "../settings/in/chemical";
 import { Brand, ProductLegallyProhibited, ProductX, ProductExtensionProperty, ProductMSDSFile, ProductSpecFile } from "../settings/in/product";
 import { Warehouse, SalesRegionWarehouse, WarehouseRoom, Shelf, ShelfLayer, ShelfBlock, ExpressLogistics, OutInBoundReason } from "../settings/in/warehouse";
@@ -19,6 +19,7 @@ import { BrandMinDiscount } from 'settings/in/pointshop/brandMinDiscount';
 import { EpecCity, EpecCounty, EpecProvince, EpecCityMapping, EpecCountyMapping, EpecProvinceMapping } from 'settings/in/uq-platform/epec';
 import { NeoTridentUser } from 'settings/in/uq-platform/neoTrident';
 import { JNKRestrict } from 'settings/in/ChemicalSecurity/JNKRestrict';
+import { CurrencyExchangeRate } from 'settings/in/common/currency';
 
 /**
  * joint的思路是：joint一直在运行，每隔一段时间执行一次数据交换，数据交换分为3种，
@@ -48,7 +49,7 @@ export const pulls: {
     "County": { read: sqls.readCounty, uqIn: County },
     "PackTypeStandard": { read: sqls.readPackTypeStandard, uqIn: PackTypeStandard },
     "PackType": { read: sqls.readPackType, uqIn: PackType },
-    "Currency": { read: sqls.readCurrency, uqIn: Currency },
+    "Currency": { read: sqls.readCurrency, uqIn: CurrencyExchangeRate },
     "SalesRegion": { read: sqls.readSalesRegion, uqIn: SalesRegion },
     "InvoiceType": { read: sqls.readInvoiceType, uqIn: InvoiceType },
     "Employee": { read: sqls.readEmployee, uqIn: Employee },

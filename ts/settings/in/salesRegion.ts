@@ -14,17 +14,6 @@ export const SalesRegion: UqInTuid = {
     }
 };
 
-export const Currency: UqInTuid = {
-    uq: uqs.jkCommon,
-    type: 'tuid',
-    entity: 'Currency',
-    key: 'ID',
-    mapper: {
-        $id: 'ID@Currency',
-        name: "ID",
-    }
-};
-
 export const PackType: UqInTuid = {
     uq: uqs.jkCommon,
     type: 'tuid',

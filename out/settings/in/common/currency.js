@@ -1,8 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CurrencyExchangeRate = void 0;
+exports.CurrencyExchangeRate = exports.Currency = void 0;
 const uqs_1 = require("../../uqs");
 const timeAsQueue_1 = require("../../../settings/timeAsQueue");
+exports.Currency = {
+    uq: uqs_1.uqs.jkCommon,
+    type: 'tuid',
+    entity: 'Currency',
+    key: 'ID',
+    mapper: {
+        $id: 'ID@Currency',
+        name: "ID",
+    }
+};
 exports.CurrencyExchangeRate = {
     uq: uqs_1.uqs.jkCommon,
     type: 'map',
