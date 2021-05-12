@@ -163,8 +163,11 @@ export const ProductPackX: UqInTuidArr = {
         radiox: "PackNr",
         radioy: "Quantity",
         unit: "Name",
+        salesLevel: "SalesLevel@PackSalesLevel"
     },
-    pull: `select top ${promiseSize} ID, PackagingID as PackingID, ProductID, PackagingQuantity as PackNr, PackagingVolume as Quantity, PackagingUnit as Name
+    pull: `select top ${promiseSize} ID, PackagingID as PackingID, ProductID
+        , PackagingQuantity as PackNr, PackagingVolume as Quantity
+        , PackagingUnit as Name, PackingType as SalesLevel
         from ProdData.dbo.Export_Packaging where ID > @iMaxId order by ID`,
     firstPullWrite: packFirstPullWrite,
 };
@@ -198,6 +201,21 @@ export const PriceX: UqInMap = {
         }
     }
 };
+
+/**
+ * 
+ */
+export const PackSalesLevel: UqInTuid = {
+    uq: uqs.jkProduct,
+    type: 'tuid',
+    entity: 'PackSalesLevel',
+    key: 'ID',
+    mapper: {
+        $id: 'ID@PackSalesLevel',
+        no: "ID",
+        name: "ID",
+    }
+}
 
 export const AgentPrice: UqInMap = {
     uq: uqs.jkProduct,

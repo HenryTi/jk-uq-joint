@@ -176,6 +176,15 @@ export const sqls = {
                 where p.jkid > @iMaxId and p.jkid > '${idBrokened.jkid}'
                       and p.jkid not in ( select jkid from zcl_mess.dbo.Invalid_products ) order by p.jkid`,
 
+        readProductPackX: `select top ${promiseSize} j.jkcat as ID, j.jkcat as PackingID, j.jkid as ProductID
+                        , j.PackNr, j.Quantity, j.Unit as Name, j.PrepackBulkMedical as SalesLevel
+                    from zcl_mess.dbo.jkcat j
+                    where j.jkcat > @iMaxId and j.jkcat > '${idBrokened.jkcat}' and j.unit in ( select unitE from opdata.dbo.supplierPackingUnit )
+                        and j.PrepackBulkMedical = 'NP'
+                    order by j.jkcat`,
+
+        readPackSalesLevel: `select ID from (select 'P' as ID union select 'NP' as ID) as s where ID > @iMaxId`,
+
         readProductLegallyProhibited: `
                 select top ${promiseSize} jkid + market_code as ID, jkid as ProductID, market_code as SalesRegionID, left(description, 20) as Reason
                 from zcl_mess.dbo.sc_safe_ProdCache where jkid + market_code > @iMaxId order by jkid + market_code`,

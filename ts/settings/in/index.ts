@@ -3,7 +3,7 @@ import { SalesRegion, PackType, PackTypeStandard, PackTypeMapToStandard, Languag
 import {
     Brand, ProductSalesRegion, ProductLegallyProhibited, ProductX, ProductPackX,
     PriceX, AgentPrice, BrandSalesRegion, BrandDeliveryTime, ProductChemical, InvalidProduct,
-    ProductMSDSFile, ProductSpecFile, ProductSalesRank, ProductExtensionProperty,
+    ProductMSDSFile, ProductSpecFile, ProductSalesRank, ProductExtensionProperty, PackSalesLevel,
     //ProductxDiff, ProductxDiffResultCheck2nd
 } from "./product";
 import { Warehouse, SalesRegionWarehouse, WarehouseRoom, Shelf, ShelfLayer, ShelfBlock, ExpressLogistics, OutInBoundReason } from "./warehouse";
@@ -60,6 +60,7 @@ const uqIns = [
     ProductChemical,
     ProductPackX,
     PriceX,
+    PackSalesLevel,
     AgentPrice,
     ProductSalesRegion,
     ProductLegallyProhibited,    // 还没有日常的数据交换

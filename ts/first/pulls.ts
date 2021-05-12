@@ -5,7 +5,7 @@ import { ProductCategory, ProductCategoryLanguage, ProductProductCategory } from
 import { Country, Province, City, County } from "../settings/in/Address";
 import { Language, PackTypeStandard, SalesRegion, PackType, InvoiceType } from "../settings/in/salesRegion";
 import { Chemical } from "../settings/in/chemical";
-import { Brand, ProductLegallyProhibited, ProductX, ProductExtensionProperty, ProductMSDSFile, ProductSpecFile } from "../settings/in/product";
+import { Brand, ProductLegallyProhibited, ProductX, ProductExtensionProperty, ProductMSDSFile, ProductSpecFile, ProductPackX, PackSalesLevel } from "../settings/in/product";
 import { Warehouse, SalesRegionWarehouse, WarehouseRoom, Shelf, ShelfLayer, ShelfBlock, ExpressLogistics, OutInBoundReason } from "../settings/in/warehouse";
 import { Organization, Customer, Contact, BuyerAccount, CustomerBuyerAccount, CustomerContact } from "../settings/in/customer";
 import { Promotion, PromotionType, PromotionStatus } from '../settings/in/promotion';
@@ -79,6 +79,8 @@ export const pulls: {
     "ProductX": { read: sqls.readProduct, uqIn: ProductX },
     "ProductLegallyProhibited": { read: sqls.readProductLegallyProhibited, uqIn: ProductLegallyProhibited },
     "ProductExtensionProperty": { read: sqls.readProductExtensionProperty, uqIn: ProductExtensionProperty },
+    "ProductPackX": { read: sqls.readProductPackX, uqIn: ProductPackX },
+    "PackSalesLevel": { read: sqls.readPackSalesLevel, uqIn: PackSalesLevel },
 
     "ProductMSDSFile": { read: sqls.readProductMSDSFile, uqIn: ProductMSDSFile },
     "ProductSpecFile": { read: sqls.readProductSpecFile, uqIn: ProductSpecFile },

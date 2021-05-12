@@ -47,6 +47,7 @@ const uqIns = [
     product_1.ProductChemical,
     product_1.ProductPackX,
     product_1.PriceX,
+    product_1.PackSalesLevel,
     product_1.AgentPrice,
     product_1.ProductSalesRegion,
     product_1.ProductLegallyProhibited,

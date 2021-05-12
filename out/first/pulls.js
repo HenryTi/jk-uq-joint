@@ -56,6 +56,8 @@ exports.pulls = {
     "ProductX": { read: sqls_1.sqls.readProduct, uqIn: product_1.ProductX },
     "ProductLegallyProhibited": { read: sqls_1.sqls.readProductLegallyProhibited, uqIn: product_1.ProductLegallyProhibited },
     "ProductExtensionProperty": { read: sqls_1.sqls.readProductExtensionProperty, uqIn: product_1.ProductExtensionProperty },
+    "ProductPackX": { read: sqls_1.sqls.readProductPackX, uqIn: product_1.ProductPackX },
+    "PackSalesLevel": { read: sqls_1.sqls.readPackSalesLevel, uqIn: product_1.PackSalesLevel },
     "ProductMSDSFile": { read: sqls_1.sqls.readProductMSDSFile, uqIn: product_1.ProductMSDSFile },
     "ProductSpecFile": { read: sqls_1.sqls.readProductSpecFile, uqIn: product_1.ProductSpecFile },
     // 客户和客户单位基本信息

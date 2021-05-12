@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ProductSalesRank = exports.ProductSpecFile = exports.ProductMSDSFile = exports.ProductExtensionProperty = exports.ProductLegallyProhibited = exports.ProductSalesRegion = exports.ProductChemical = exports.AgentPrice = exports.PriceX = exports.ProductPackX = exports.InvalidProduct = exports.ProductX = exports.BrandDeliveryTime = exports.BrandSalesRegion = exports.Brand = void 0;
+exports.ProductSalesRank = exports.ProductSpecFile = exports.ProductMSDSFile = exports.ProductExtensionProperty = exports.ProductLegallyProhibited = exports.ProductSalesRegion = exports.ProductChemical = exports.AgentPrice = exports.PackSalesLevel = exports.PriceX = exports.ProductPackX = exports.InvalidProduct = exports.ProductX = exports.BrandDeliveryTime = exports.BrandSalesRegion = exports.Brand = void 0;
 const uqs_1 = require("../uqs");
 const productPullWrite_1 = require("../../first/converter/productPullWrite");
 const tools_1 = require("../../mssql/tools");
@@ -156,8 +156,11 @@ exports.ProductPackX = {
         radiox: "PackNr",
         radioy: "Quantity",
         unit: "Name",
+        salesLevel: "SalesLevel@PackSalesLevel"
     },
-    pull: `select top ${promiseSize} ID, PackagingID as PackingID, ProductID, PackagingQuantity as PackNr, PackagingVolume as Quantity, PackagingUnit as Name
+    pull: `select top ${promiseSize} ID, PackagingID as PackingID, ProductID
+        , PackagingQuantity as PackNr, PackagingVolume as Quantity
+        , PackagingUnit as Name, PackingType as SalesLevel
         from ProdData.dbo.Export_Packaging where ID > @iMaxId order by ID`,
     firstPullWrite: productPullWrite_1.packFirstPullWrite,
 };
@@ -189,6 +192,20 @@ exports.PriceX = {
             logger_1.logger.error(error);
             throw error;
         }
+    }
+};
+/**
+ *
+ */
+exports.PackSalesLevel = {
+    uq: uqs_1.uqs.jkProduct,
+    type: 'tuid',
+    entity: 'PackSalesLevel',
+    key: 'ID',
+    mapper: {
+        $id: 'ID@PackSalesLevel',
+        no: "ID",
+        name: "ID",
     }
 };
 exports.AgentPrice = {
