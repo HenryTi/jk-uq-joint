@@ -1,10 +1,8 @@
 import { UqBus, DataPull, DataPush, Joint, DataPullResult } from "uq-joint";
-//import { UqBus, DataPull, DataPush, Joint, DataPullResult } from "../../uq-joint";
 import { uqPullRead, uqOutRead } from "../../first/converter/uqOutRead";
 
 const deliveryConfirmPull: DataPull<UqBus> = async (joint: Joint, uqBus: UqBus, queue: string | number): Promise<DataPullResult> => {
-    // console.log(orderIn);
-    let sql = `SELECT  TOP 1 ID, outBoundItemId, outBoundId, warehouseName, logisticsCompanyId, logisticsNumber, deliveryGoodsTime, deliveryAddress, 
+    let sql = `SELECT TOP 1 ID, outBoundItemId, outBoundId, warehouseName, logisticsCompanyId, logisticsNumber, deliveryGoodsTime, deliveryAddress, 
         saleOrderId, saleOrderItemId, packageId, quantity, operatorId, operatorName, operatorPhone, customerId
         FROM	ProdData.dbo.Export_deliveryConfirm
         WHERE	ID > @iMaxId order by ID `;
