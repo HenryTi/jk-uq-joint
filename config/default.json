@@ -159,6 +159,7 @@
         "faceAssistAchievementBus",
         "faceAssistAchievementHistoryBus",
         "faceAssistCustomerNowSales",
-        "faceShelfInOutBoundHistory"
+        "faceShelfInOutBoundHistory",
+        "faceOutProductChanged"
     ]
 }

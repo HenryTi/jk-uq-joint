@@ -6,32 +6,19 @@ exports.faceOutProductChanged = {
     face: '百灵威系统工程部/Adapter/outProductChanged',
     from: 'local',
     mapper: {
-        customerUnitOnPlatformId: true,
-        packageId: true,
-        brandId: true,
-        cas: true,
-        salePrice: true,
-        catalogPrice: true,
-        salePriceCurrency: true,
-        discount: true,
-        packageType: true,
-        priceValidity: true,
-        salesRegionId: true,
-        isHazard: true,
-        storage: true,
-        onlyInStock: true,
-        onlyNotDuplicate: true,
-        dataMode: true,
-        isDelete: true,
-        stateName: true,
+        customerUnitOnPlatformId: 'CustomerUnitOnPlatformId',
+        packageId: 'PackageId@ProductX_PackX',
+        salesPrice: 'SalePrice',
+        salesPriceCurrency: 'SalePriceCurrency',
+        stock: 'Storage',
+        isDelete: 'IsDelete',
     },
     pull: async (joint, uqBus, queue) => {
-        let sql = `SELECT TOP 1 ID, entryId, customerUnitOnPlatformId, salesRegionId, thirdPartyPlatformTemplateTypeId,
-            packageId, brandId, cas, isHazard, catalogPrice, salePrice, salePriceCurrency, discount, storage,
-            priceValidity, packageType, onlyInStock, onlyNotDuplicate, dataMode, isDelete, stateName,
-            customerUnitOnPlatformDiscountId
-        FROM	ProdData.dbo.Export_ThirdPartyPlatformEntryResult
-        WHERE	ID > @iMaxId order by ID `;
+        let sql = `SELECT TOP 1 ID, CustomerUnitOnPlatformId, PackageId, CONVERT(DECIMAL(18, 2), SalePrice) AS SalePrice,
+                        SalePriceCurrency, Storage, IsDelete
+                    FROM ProdData.dbo.Export_ThirdPartyPlatformEntryResult
+                    WHERE DataMode = 2 AND ID > @iMaxId
+                    ORDER BY ID;`;
         return await uqOutRead_1.uqOutRead(sql, queue);
     }
 };

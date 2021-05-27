@@ -17,6 +17,7 @@ const assistCustomerNowSales_1 = require("./assistCustomerNowSales");
 const pointProductOut_1 = require("./out/pointProductOut");
 const orderChanged_1 = require("./in/order/orderChanged");
 const shelfInOutBoundHistoryBus_1 = require("./shelfInOutBoundHistoryBus");
+const outerProductChanged_1 = require("./in/outerProductChanged");
 exports.bus = {
     "faceOrder": orderUsqBus_1.faceOrder,
     "faceUser": webUserBus_1.faceUser,
@@ -44,6 +45,7 @@ exports.bus = {
     "faceOrderHistory": orderHistory_1.faceOrderHistory,
     "faceBulkInquiryBook": bulkInquiryBook_1.faceBulkInquiryBook,
     "faceOrderChanged": orderChanged_1.faceOrderChanged,
+    "faceOutProductChanged": outerProductChanged_1.faceOutProductChanged,
     "faceInnerOrderPaid": orderPayment_1.faceInnerOrderPaid,
     "faceShelfInOutBoundHistory": shelfInOutBoundHistoryBus_1.faceShelfInOutBoundHistory
 };
