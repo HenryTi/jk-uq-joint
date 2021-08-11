@@ -18,6 +18,7 @@ import { faceShelfInOutBoundHistory } from "./shelfInOutBoundHistoryBus";
 import { faceOutProductChanged } from "./in/outerProductChanged";
 
 export const bus: { [busName: string]: UqBus } = {
+    /*
     "faceOrder": faceOrder,
     "faceUser": faceUser,
     "faceWebUser": faceWebUser,
@@ -47,9 +48,11 @@ export const bus: { [busName: string]: UqBus } = {
     "faceAssistCustomerNowSales": faceAssistCustomerNowSales,
     "faceOrderHistory": faceOrderHistory,
     "faceBulkInquiryBook": faceBulkInquiryBook,
-
+*/
     "faceOrderChanged": faceOrderChanged,
+/*
     "faceOutProductChanged": faceOutProductChanged,
     "faceInnerOrderPaid": faceInnerOrderPaid,
     "faceShelfInOutBoundHistory": faceShelfInOutBoundHistory
+*/
 };

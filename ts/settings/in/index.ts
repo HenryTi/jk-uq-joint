@@ -27,9 +27,12 @@ import { COA, Lot } from "./coa/coa";
 import { ProductExtention } from "./product/productextention";
 import { JNKRestrict } from "./ChemicalSecurity/JNKRestrict";
 import { ChemicalJNKRestrict } from "./chemical/chemicalJNKRestirct";
+import { OrderDetialEx, OrderMainEx } from "./order";
 // import { WebUserPointDiff } from "./pointshop";
 
 const uqIns = [
+    OrderMainEx,
+    OrderDetialEx,
 
     JkTaskType,
     Language,

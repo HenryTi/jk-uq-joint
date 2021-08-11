@@ -28,9 +28,6 @@ const cors_1 = __importDefault(require("cors"));
 const config_1 = __importDefault(require("config"));
 const uq_joint_1 = require("uq-joint");
 const settings_1 = require("./settings");
-//import { host } from './uq-joint/tool/host';
-//import { centerApi } from './uq-joint/tool/centerApi';
-const tools_1 = require("./mssql/tools");
 (async function () {
     console.log(process.env.NODE_ENV);
     //await host.start();
@@ -40,7 +37,7 @@ const tools_1 = require("./mssql/tools");
         console.log("mysql connection must defined in config/default.json or config/production.json");
         return;
     }
-    await tools_1.initMssqlPool();
+    //await initMssqlPool();
     let app = express_1.default();
     app.use((err, req, res, next) => {
         res.status(err.status || 500);
@@ -76,8 +73,7 @@ const tools_1 = require("./mssql/tools");
         console.log('jk-uq-joint listening on port ' + port);
         let { host, user } = connection;
         console.log('process.env.NODE_ENV: %s\nDB host: %s, user: %s', process.env.NODE_ENV, host, user);
-        joint.start();
-        //await startTimer();
+        await joint.start();
     });
 })();
 //# sourceMappingURL=index.js.map

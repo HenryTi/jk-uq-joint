@@ -136,6 +136,7 @@
         { "name": "EpecUser", "inervalUnit": 720 }
     ],
     "uqBus": [
+        "faceOrderChanged",
         "faceOrder",
         "faceUser",
         "faceWebUser",

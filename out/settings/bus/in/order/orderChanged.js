@@ -8,6 +8,8 @@ exports.faceOrderChanged = {
     face: '百灵威系统工程部/orderChanged/orderChanged',
     from: 'local',
     mapper: {
+        orderMainId: "OrderID@OrderMainEx",
+        orderDetailId: "OrderItemID@OrderDetailEx",
         orderId: "OrderID",
         orderItemId: "OrderItemID",
         seller: 'SalesCompanyID',
@@ -35,6 +37,7 @@ exports.faceOrderChanged = {
         createDate: "CreateDate",
     },
     pull: async (joint, uqBus, queue) => {
+        /*
         let result = await getNext(queue);
         let round = 0;
         while (result === undefined && round < 30) {
@@ -43,6 +46,39 @@ exports.faceOrderChanged = {
             result = await getNext(queue);
         }
         return result;
+        */
+        return {
+            lastPointer: 160635,
+            data: [
+                {
+                    OrderID: 'jk001',
+                    OrderItemID: 'jk001-item001',
+                    SalesCompanyID: 'salesCommpanyID',
+                    SalesmanID: 100,
+                    SalesRegionID: 1,
+                    CustomerID: 1,
+                    BuyerAccountID: 1,
+                    OrganizationID: 2,
+                    BrandID: 3,
+                    ProductID: 4,
+                    PackingID: 5,
+                    Quantity: 101,
+                    Price: 99.99,
+                    CurrencyID: 1,
+                    Retail: 99.98,
+                    RetailCurrencyID: 1,
+                    BottomPrice: 98.00,
+                    BottomPriceCurrencyID: 1,
+                    CostPrice: 97.00,
+                    CostPriceCurrencyID: 1,
+                    Mark: 'a-mark',
+                    sTradeType: 'trade-type',
+                    TaxRate: 0.10,
+                    Mtype: 'a-a-a',
+                    CreateDate: Date.now() / 1000,
+                },
+            ]
+        };
     }
 };
 async function getNext(queue) {

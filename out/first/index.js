@@ -14,7 +14,41 @@ const tools_1 = require("../mssql/tools");
 const logger_1 = require("../tools/logger");
 const maxRows = config_1.default.get("firstMaxRows");
 const promiseSize = config_1.default.get("promiseSize");
-const pullEntities = config_1.default.get("firstEntities");
+//const pullEntities = config.get<string[]>("firstEntities");
+const pullEntities = [
+    "Language",
+    "Country",
+    "Province",
+    "City",
+    "County",
+    "PackTypeStandard",
+    "PackType",
+    "Currency",
+    "SalesRegion",
+    "InvoiceType",
+    "Employee",
+    "Warehouse",
+    "SalesRegionWarehouse",
+    "ProductCategory",
+    "Brand",
+    "Chemical",
+    "ProductX",
+    "ProductProductCategory",
+    "ProductLegallyProhibited",
+    "Organization",
+    "Customer",
+    "CustomerShippingAddress",
+    "CustomerInvoiceAddress",
+    "Agreement",
+    "PromotionType",
+    "PromotionStatus",
+    "EpecProvince",
+    "EpecCity",
+    "EpecCounty",
+    "EpecProvinceMapping",
+    "EpecCityMapping",
+    "EpecCountyMapping"
+];
 (async function () {
     logger_1.logger.info(process.env.NODE_ENV);
     //await host.start();

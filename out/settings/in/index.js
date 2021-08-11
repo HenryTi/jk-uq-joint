@@ -20,8 +20,11 @@ const coa_1 = require("./coa/coa");
 const productextention_1 = require("./product/productextention");
 const JNKRestrict_1 = require("./ChemicalSecurity/JNKRestrict");
 const chemicalJNKRestirct_1 = require("./chemical/chemicalJNKRestirct");
+const order_1 = require("./order");
 // import { WebUserPointDiff } from "./pointshop";
 const uqIns = [
+    order_1.OrderMainEx,
+    order_1.OrderDetialEx,
     salestask_1.JkTaskType,
     salesRegion_1.Language,
     Address_1.Country,
@@ -117,6 +120,8 @@ const uqIns = [
     coa_1.COA,
     productextention_1.ProductExtention,
     JNKRestrict_1.JNKRestrict,
+    //产品检查
+    //ProductxDiff, ProductxDiffResultCheck2nd
 ];
 exports.default = uqIns;
 //# sourceMappingURL=index.js.map

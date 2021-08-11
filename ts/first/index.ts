@@ -7,11 +7,45 @@ import { uqOutRead } from "./converter/uqOutRead";
 //import { centerApi } from "../uq-joint/tool/centerApi";
 import { initMssqlPool } from '../mssql/tools';
 import { logger } from '../tools/logger';
-import { ProdOrTest } from 'uq-joint/out/joint';
+import { ProdOrTest } from 'uq-joint';
 
 const maxRows = config.get<number>("firstMaxRows");
 const promiseSize = config.get<number>("promiseSize");
-const pullEntities = config.get<string[]>("firstEntities");
+//const pullEntities = config.get<string[]>("firstEntities");
+const pullEntities = [
+    "Language",
+    "Country",
+    "Province",
+    "City",
+    "County",
+    "PackTypeStandard",
+    "PackType",
+    "Currency",
+    "SalesRegion",
+    "InvoiceType",
+    "Employee",
+    "Warehouse",
+    "SalesRegionWarehouse",
+    "ProductCategory",
+    "Brand",
+    "Chemical",
+    "ProductX",
+    "ProductProductCategory",
+    "ProductLegallyProhibited",
+    "Organization",
+    "Customer",
+    "CustomerShippingAddress",
+    "CustomerInvoiceAddress",
+    "Agreement",
+    "PromotionType",
+    "PromotionStatus",
+    "EpecProvince",
+    "EpecCity",
+    "EpecCounty",
+    "EpecProvinceMapping",
+    "EpecCityMapping",
+    "EpecCountyMapping"
+];
 
 (async function () {
     logger.info(process.env.NODE_ENV);
